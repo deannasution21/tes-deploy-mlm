@@ -1,12 +1,35 @@
-import { type NextAuthOptions } from 'next-auth';
+import { type NextAuthOptions, User } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import GoogleProvider from 'next-auth/providers/google';
-import { env } from '@/env.mjs';
-import isEqual from 'lodash/isEqual';
 import { pagesOptions } from './pages-options';
+
+interface ApiLoginResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data?: {
+    attribute?: {
+      nama: string;
+      username: string;
+      email: string;
+      no_hp: string;
+      nama_bank: string;
+      no_rekening: string;
+      nama_pemilik_rekening: string;
+      role: string;
+      status: {
+        code: number;
+        name: string;
+      };
+    };
+  };
+  token?: string;
+}
+
+const env = process.env;
 
 export const authOptions: NextAuthOptions = {
   // debug: true,
+  secret: env.NEXTAUTH_SECRET,
   pages: {
     ...pagesOptions,
   },
@@ -14,31 +37,27 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
+  // ✅ Attach token & session callbacks
   callbacks: {
-    async session({ session, token }) {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: token.idToken as string,
-        },
-      };
-    },
     async jwt({ token, user }) {
       if (user) {
-        // return user as JWT
+        token.accessToken = user.token;
         token.user = user;
       }
       return token;
     },
-    async redirect({ url, baseUrl }) {
-      // const parsedUrl = new URL(url, baseUrl);
-      // if (parsedUrl.searchParams.has('callbackUrl')) {
-      //   return `${baseUrl}${parsedUrl.searchParams.get('callbackUrl')}`;
-      // }
-      // if (parsedUrl.origin === baseUrl) {
-      //   return url;
-      // }
+    async session({ session, token }) {
+      if (token.user) {
+        session.user = token.user; // ✅ assign only when defined
+      }
+
+      if (token.accessToken) {
+        session.accessToken = token.accessToken;
+      }
+
+      return session;
+    },
+    async redirect({ baseUrl }) {
       return baseUrl;
     },
   },
@@ -46,31 +65,55 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       id: 'credentials',
       name: 'Credentials',
-      credentials: {},
-      async authorize(credentials: any) {
-        // You need to provide your own logic here that takes the credentials
-        // submitted and returns either a object representing a user or value
-        // that is false/null if the credentials are invalid
-        const user = {
-          email: 'admin@admin.com',
-          password: 'admin',
-        };
-
-        if (
-          isEqual(user, {
-            email: credentials?.email,
-            password: credentials?.password,
-          })
-        ) {
-          return user as any;
-        }
-        return null;
+      credentials: {
+        username: { label: 'Username', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+        role: { label: 'Role', type: 'text' },
       },
-    }),
-    GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID || '',
-      clientSecret: env.GOOGLE_CLIENT_SECRET || '',
-      allowDangerousEmailAccountLinking: true,
+      async authorize(
+        credentials: Record<string, string> | undefined
+      ): Promise<User | null> {
+        if (!credentials) return null;
+        try {
+          const res = await fetch(`${env.NEXTAUTH_API_URL}/_auth/sign-in`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              username: credentials.username,
+              password: credentials.password,
+              type: credentials.role,
+            }),
+          });
+
+          const data = (await res.json()) as ApiLoginResponse;
+
+          // ✅ Validate response
+          if (!res.ok || !data.success || !data.data?.attribute) {
+            throw new Error(
+              data?.message ||
+                'Login gagal, periksa kembali email/password Anda.'
+            );
+          }
+
+          // ✅ Extract user info
+          const userAttr = data.data.attribute;
+
+          // ✅ Return formatted user object for NextAuth
+          return {
+            id: userAttr.username,
+            name: userAttr.nama_pemilik_rekening || userAttr.nama,
+            email: userAttr.email,
+            role: userAttr.role,
+            status: userAttr.status?.code,
+            token: data.token, // store JWT
+          };
+        } catch (err) {
+          if (env.NODE_ENV !== 'production') {
+            console.error('Authorize error:', err);
+          }
+          return null;
+        }
+      },
     }),
   ],
 };

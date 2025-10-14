@@ -36,7 +36,7 @@ export default async function RootLayout({
       <body
         // to prevent any warning that is caused by third party extensions like Grammarly
         suppressHydrationWarning
-        className={cn(inter.variable, lexendDeca.variable, 'font-inter')}
+        className={`${inter.variable} ${lexendDeca.variable} ${gildaDisplay.variable} ${barlow.variable}`}
       >
         <AuthProvider session={session}>
           <ThemeProvider>

@@ -8,7 +8,7 @@ export const Preloader = () => {
   useEffect(() => {
     const handleLoad = () => {
       // Wait a bit, then mark loaded
-      setTimeout(() => setLoaded(true), 2000);
+      setTimeout(() => setLoaded(true), 200);
     };
 
     // Trigger immediately if already loaded

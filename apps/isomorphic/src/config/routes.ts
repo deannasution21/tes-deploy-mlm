@@ -110,7 +110,7 @@ export const routes = {
     pinning: '/tables/pinning',
     dnd: '/tables/dnd',
   },
-  multiStep: '/multi-step',
+  // multiStep: '/multi-step',
   forms: {
     profileSettings: '/forms/profile-settings',
     notificationPreference: '/forms/profile-settings/notification',

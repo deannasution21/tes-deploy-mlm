@@ -317,11 +317,6 @@ export const lithiumMenuItems: LithiumMenuItem = {
         icon: 'NewsletterAnnouncement',
       },
       {
-        name: 'Multi Step',
-        href: routes.multiStep,
-        icon: 'MultiStepArrowIcon',
-      },
-      {
         name: 'Payment Checkout',
         href: routes.eCommerce.checkout,
         icon: 'OnlinePaymentIcon',

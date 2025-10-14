@@ -396,11 +396,6 @@ export const menuItems = [
     icon: <PiEnvelopeSimpleOpenDuotone />,
   },
   {
-    name: 'Multi Step',
-    href: routes.multiStep,
-    icon: <PiStepsDuotone />,
-  },
-  {
     name: 'Payment Checkout',
     href: routes.eCommerce.checkout,
     icon: <PiCreditCardDuotone />,

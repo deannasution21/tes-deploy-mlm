@@ -392,11 +392,6 @@ export const menuItems = [
     icon: <PiEnvelopeSimpleOpen />,
   },
   {
-    name: 'Multi Step',
-    href: routes.multiStep,
-    icon: <PiSteps />,
-  },
-  {
     name: 'Payment Checkout',
     href: routes.eCommerce.checkout,
     icon: <PiCreditCard />,

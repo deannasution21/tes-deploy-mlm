@@ -8,35 +8,29 @@ import { PiArrowRightBold } from 'react-icons/pi';
 import { Checkbox, Password, Button, Input, Text } from 'rizzui';
 import { Form } from '@core/ui/form';
 import { routes } from '@/config/routes';
+import { loginSchema, LoginSchema } from '@/validators/login.schema';
 import { useRouter } from 'next/navigation';
 import { Preloader } from '@/app/shared/preloader';
-import { z } from 'zod';
 
-const initialValuesAdmin = {
+const initialValuesAdmin: LoginSchema = {
   username: 'adm0000001',
   password: 'berkahselalu',
   rememberMe: true,
 };
 
-const initialValuesUser = {
+const initialValuesUser: LoginSchema = {
   username: 'ipg0000008',
   password: 'berkahselalu',
   rememberMe: true,
 };
 
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1),
-  rememberMe: z.boolean().optional(),
-});
-
-export default function SignInForm(role) {
+export default function SignInForm({ role }: { role: string }) {
   const router = useRouter();
   const [reset, setReset] = useState({});
-  const [error, setError] = (useState < string) | (null > null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (data) => {
+  const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
     setLoading(true);
     setError(null);
 
@@ -76,7 +70,7 @@ export default function SignInForm(role) {
         </div>
       )}
 
-      <Form
+      <Form<LoginSchema>
         validationSchema={loginSchema}
         resetValues={reset}
         onSubmit={onSubmit}

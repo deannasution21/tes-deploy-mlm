@@ -5,11 +5,9 @@ import { Title, Collapse } from 'rizzui';
 import cn from '@core/utils/class-names';
 import { PiCaretDownBold } from 'react-icons/pi';
 import {
-  menuItems,
   menuItemsAdmin,
   menuItemsUser,
 } from '@/layouts/helium/helium-menu-items';
-import StatusBadge from '@core/components/get-status-badge';
 import { useSession } from 'next-auth/react';
 
 export function HeliumSidebarMenu() {
@@ -98,9 +96,6 @@ export function HeliumSidebarMenu() {
                               {dropdownItem?.name}
                             </span>
                           </div>
-                          {dropdownItem?.badge?.length ? (
-                            <StatusBadge status={dropdownItem?.badge} />
-                          ) : null}
                         </Link>
                       );
                     })}
@@ -130,9 +125,6 @@ export function HeliumSidebarMenu() {
                       )}
                       <span className="truncate">{item.name}</span>
                     </div>
-                    {item?.badge?.length ? (
-                      <StatusBadge status={item?.badge} />
-                    ) : null}
                   </Link>
                 )}
               </>

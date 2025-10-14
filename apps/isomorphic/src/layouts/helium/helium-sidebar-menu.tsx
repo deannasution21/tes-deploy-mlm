@@ -14,7 +14,7 @@ export function HeliumSidebarMenu() {
   const pathname = usePathname();
   const session = useSession();
   const role = session?.data?.user?.role || 'user';
-  const menuFInal = role === 'admin' ? menuItemsAdmin : menuItemsUser;
+  const menuFInal = role === 'admin' ? menuItemsUser : menuItemsUser;
 
   return (
     <div className="mt-4 pb-3 3xl:mt-6">

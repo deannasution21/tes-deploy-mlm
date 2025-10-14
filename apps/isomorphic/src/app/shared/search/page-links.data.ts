@@ -19,15 +19,15 @@ export const pageLinks = [
   // label end
   {
     name: 'Generate PIN',
-    href: routes.dashboard.index,
+    href: routes.generatePin.index,
   },
   {
     name: 'Transfer PIN',
-    href: routes.dashboard.index,
+    href: routes.transferPin.index,
   },
   {
     name: 'Posting PIN',
-    href: routes.dashboard.index,
+    href: routes.postingPin.index,
   },
   // label start
   {
@@ -36,15 +36,15 @@ export const pageLinks = [
   // label end
   {
     name: 'History Generate PIN',
-    href: routes.dashboard.index,
+    href: routes.generatePin.history,
   },
   {
     name: 'History Transfer PIN',
-    href: routes.dashboard.index,
+    href: routes.transferPin.history,
   },
   {
     name: 'History Posting PIN',
-    href: routes.dashboard.index,
+    href: routes.postingPin.history,
   },
   // label start
   {

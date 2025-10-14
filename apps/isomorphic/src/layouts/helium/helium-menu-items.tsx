@@ -630,11 +630,11 @@ export const menuItemsUser = [
     dropdownItems: [
       {
         name: 'Generate PIN A ',
-        href: routes.historyBonus.index,
+        href: routes.generatePin.index,
       },
       {
         name: 'History Generate PIN A ',
-        href: routes.historyBonus.index,
+        href: routes.generatePin.history,
       },
     ],
   },
@@ -645,11 +645,11 @@ export const menuItemsUser = [
     dropdownItems: [
       {
         name: 'Transfer PIN A ',
-        href: routes.historyBonus.index,
+        href: routes.transferPin.index,
       },
       {
         name: 'History Transfer PIN A ',
-        href: routes.historyBonus.index,
+        href: routes.transferPin.history,
       },
     ],
   },
@@ -660,11 +660,11 @@ export const menuItemsUser = [
     dropdownItems: [
       {
         name: 'Posting PIN A ',
-        href: routes.historyBonus.index,
+        href: routes.postingPin.index,
       },
       {
         name: 'History Posting PIN A ',
-        href: routes.historyBonus.index,
+        href: routes.postingPin.history,
       },
     ],
   },

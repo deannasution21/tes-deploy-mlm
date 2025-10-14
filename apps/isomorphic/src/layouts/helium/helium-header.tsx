@@ -13,8 +13,8 @@ import Image from 'next/image';
 
 function HeaderMenuRight() {
   return (
-    <div className="ms-auto grid shrink-0 grid-cols-2 items-center gap-2 text-gray-700 xs:gap-3 xl:gap-4">
-      <SettingsButton className="rounded-full before:absolute before:h-full before:w-full before:-rotate-45 before:rounded-full before:bg-gradient-to-l before:from-green-dark/25 before:via-green-dark/0 before:to-green-dark/0 3xl:h-10 3xl:w-10">
+    <div className="ms-auto grid shrink-0 grid-cols-1 items-center gap-2 text-gray-700 xs:gap-3 xl:gap-4">
+      <SettingsButton className="hidden rounded-full before:absolute before:h-full before:w-full before:-rotate-45 before:rounded-full before:bg-gradient-to-l before:from-green-dark/25 before:via-green-dark/0 before:to-green-dark/0 3xl:h-10 3xl:w-10">
         <PiGearFill className="h-[22px] w-auto animate-spin-slow" />
       </SettingsButton>
       <ProfileMenu />

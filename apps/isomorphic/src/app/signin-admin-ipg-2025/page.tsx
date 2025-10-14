@@ -9,7 +9,7 @@ import '@public/assets/css/animate.css';
 import '@public/assets/css/main.css';
 
 export const metadata = {
-  ...metaObject('Sign In'),
+  ...metaObject('Sign In Admin'),
 };
 
 export default function SignIn() {

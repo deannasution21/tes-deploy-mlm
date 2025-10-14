@@ -17,15 +17,23 @@ export const presetDark = {
 };
 
 // defaults from global css line 38
+// export const DEFAULT_PRESET_COLORS = {
+//   lighter: '#d7e3fe',
+//   light: '#608efb',
+//   default: '#3872fa',
+//   dark: '#1d58d8',
+//   foreground: '#ffffff',
+// };
+
 export const DEFAULT_PRESET_COLORS = {
-  lighter: '#d7e3fe',
-  light: '#608efb',
-  default: '#3872fa',
-  dark: '#1d58d8',
+  lighter: '#fef9c3', // Yellow 100
+  light: '#fde047', // Yellow 300
+  default: '#ca8a04', // Yellow 600
+  dark: '#a16207', // Yellow 800
   foreground: '#ffffff',
 };
 
-export const DEFAULT_PRESET_COLOR_NAME = 'Blue';
+export const DEFAULT_PRESET_COLOR_NAME = 'Yellow';
 
 export const usePresets = () => {
   const { theme } = useTheme();

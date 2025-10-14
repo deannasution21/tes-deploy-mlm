@@ -10,13 +10,14 @@ export default withAuth({
 export const config = {
   // restricted routes
   matcher: [
-    '/',
-    '/executive',
-    '/financial',
-    '/analytics',
-    '/logistics/:path*',
-    '/ecommerce/:path*',
-    '/support/:path*',
+    '/dashboard',
+    '/profil/:path',
+    '/generate-pin',
+    '/history-generate-pin',
+    '/transfer-pin',
+    '/history-transfer-pin',
+    '/posting-pin',
+    '/history-posting-pin',
     '/file/:path*',
     '/file-manager',
     '/invoice/:path*',

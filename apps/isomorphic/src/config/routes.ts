@@ -9,6 +9,18 @@ export const routes = {
   historyBonus: {
     index: '/',
   },
+  generatePin: {
+    index: '/generate-pin',
+    history: '/history-generate-pin',
+  },
+  transferPin: {
+    index: '/transfer-pin',
+    history: '/history-transfer-pin',
+  },
+  postingPin: {
+    index: '/posting-pin',
+    history: '/history-posting-pin',
+  },
   eCommerce: {
     dashboard: '/ecommerce',
     products: '/ecommerce/products',

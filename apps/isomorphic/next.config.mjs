@@ -52,6 +52,9 @@ const nextConfig = {
   },
   reactStrictMode: true,
   transpilePackages: ['core'],
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

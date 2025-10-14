@@ -1,0 +1,251 @@
+.gt-booking-reserve-wrapper {
+    padding: 80px;
+    border-radius: 12px;
+    background-color: #1C1C1C;
+    position: relative;
+    z-index: 99;
+
+    &.style-2 {
+        padding: 48px;
+        margin-top: -100px;
+
+        h4 {
+            text-align: center;
+            margin-top: 50px;
+        }
+    }
+
+    @include breakpoint (max-xl){
+        padding: 60px;
+    }
+
+    @include breakpoint (max-lg){
+        padding: 50px;
+    }
+
+    @include breakpoint (max-md){
+        padding: 40px;
+    }
+
+    @include breakpoint (max-sm){
+        padding: 30px;
+    }
+
+    .form-clt {
+        margin-top: 30px;
+
+        span {
+            font-size: 18px;
+            font-weight: 400;
+            display: inline-block;
+            font-family: $gt-heading-font;
+            color: $gt-white;
+            margin-bottom: 10px;
+        }
+
+        input {
+            border: none;
+            width: 100%;
+            background: transparent;
+            border-bottom: 1px solid #4D4D4D;
+            padding-bottom: 12px;
+            color-scheme: dark;
+
+             &::placeholder {
+                color: $gt-white;
+            }
+        }
+
+        .form {
+            .single-select {
+                border: none;
+                background-color: transparent;
+                border-bottom: 1px solid #4D4D4D;
+                border-radius: 0;
+                padding: 0;
+                padding-bottom: 19px;
+                line-height: initial;
+                height: initial;
+
+                span {
+                    margin-bottom: 0;
+                }
+
+                .list {
+                    width: 100%;
+                }
+
+                &::after {
+                    width: 8px;
+                    height: 8px;
+                    top: 33%;
+                    border-bottom: 2px solid #fff;
+                    border-right: 2px solid #fff;
+                }
+            }
+        }
+
+        .gt-theme-btn {
+            &::before {
+                width: 82%;
+            }
+
+            &:hover {
+               &::before {
+                 height: 2000%;
+                 background-color: $gt-white;
+               }
+               color: $gt-header-color;
+            }
+        }
+    }
+}
+
+.gt-booking-reserve-video {
+    margin-top: -200px;
+
+    .gt-video-items {
+        padding: 390px 0 200px;
+    }
+    .video-btn {
+        display: block;
+        width: 88px;
+        height: 88px;
+        line-height: 88px;
+        text-align: center;
+        border-radius: 50%;
+        background-color: $gt-theme-color;
+        color: $gt-white;
+        text-align: center;
+        position: relative;
+        margin: 0 auto;
+        font-size: 22px;
+
+        &::before {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            content: "";
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border-radius: 77px;
+            border: 2px solid $gt-white;
+            background: rgba(183, 142, 90, 0.33);
+        }
+    }
+}
+
+.gt-booking-reserve-section {
+    position: relative;
+
+    .gt-car-shape {
+        position: absolute;
+        left: 0;
+        top: 17%;
+        z-index: -1;
+    }
+}
+
+.gt-contact-wrapper {
+    .gt-contact-left-items {
+        margin-right: 40px;
+
+        @include breakpoint (max-xl){
+            margin-right: 0;
+        }
+
+        .gt-section-title {
+            h2 {
+                font-size: 40px;
+            }
+        }
+
+        .gt-contact-list {
+            margin-top: 50px;
+
+            li {
+                border-radius: 8px;
+                background-color: $gt-bg-color;
+                @include flex;
+                gap: 20px;
+                margin-top: 30px;
+                padding: 32px;
+
+                @include breakpoint (max-xxl){
+                    display: grid;
+                }
+
+                .icon {
+                    border-radius: 4px;
+                    background-color: $gt-theme-color;
+                    display: inline-block;
+                    max-width: 64px;
+                    width: 100%;
+                    height: 64px;
+                    line-height: 75px;
+                    text-align: center;
+
+                    i {
+                        font-size: 32px;
+                        color: $gt-white;
+                    }
+                }
+
+                h4 {
+                    font-family: $gt-body-font;
+                    margin-top: 5px;
+                    font-weight: 500;
+                }
+            }
+        }
+    }
+
+    .gt-contact-right-items {
+        border-radius: 8px;
+        background-color: $gt-bg-color;
+        padding: 43px;
+
+        @include breakpoint (max-md){
+            padding: 30px;
+        }
+        
+        h2 {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .contact-form-box {
+            margin-top: 30px;
+
+            h4 {
+                margin-bottom: 10px;
+            }
+
+            .form-clt {
+                input,textarea {
+                    border-radius: 4px;
+                    border: none;
+                    background: $gt-white;
+                    line-height: 1;
+                    padding: 20px 25px;
+                    width: 100%;
+                    text-transform: capitalize;
+                    color: $gt-text-color;
+                }
+
+                textarea {
+                    padding-bottom: 110px;
+                }
+            }
+        }
+    }
+}
+
+.googpemap-2 {
+    iframe {
+        width: 100%;
+        height: 716px;
+    }
+}

@@ -1,0 +1,113 @@
+/*
+Theme Name: Arlux 
+Author: Gramentheme
+Author URI: https://themeforest.net/user/Gramentheme/portfolio
+Description: Arlux- Hotel & Resort Booking HTML Template
+Service Html Template 
+Version: 1.0.0
+*/
+
+/*----------------------------------------*/
+/*  
+    Table of Contents:
+    
+    >> 01. Mixins
+    >> 02. Variables
+    >> 03. Buttons
+    >> 04. Typography
+    >> 05. Basic End
+    
+    >> Template Section Styles:
+
+       >> 06. About
+       >> 07. Animation
+       >> 08. Contact
+       >> 09. CTA
+       >> 10. Room
+       >> 11. FAQ
+       >> 12. Feature
+       >> 13. Footer
+       >> 14. Header
+       >> 15. Helping
+       >> 16. Hero
+       >> 17. MeanMenu
+       >> 18. News
+       >> 19. Preloader
+       >> 20. Section
+       >> 21. Service
+       >> 22. Team
+       >> 23. Testimonial
+
+/*----------------------------------------*/
+
+
+// >> 01. Mixins <<
+@import "_mixins";
+
+// >> 02. Variables <<	
+@import "_variables";
+
+// >> 03. Buttons <<
+@import "_buttons";
+
+// >> 04. Typography <<
+@import "_typography";
+
+// >> 05. Basic End <<
+
+
+// >> Template Section Styles <<
+
+// >> 06. About <<
+@import "_about";
+
+// >> 07. Animation <<
+@import "_animation";
+
+// >> 08. Contact <<
+@import "_contact";
+
+// >> 09. CTA <<
+@import "_cta";
+
+// >> 10. Room <<
+@import "_room";
+
+// >> 11. FAQ <<
+@import "_faq";
+
+// >> 12. Feature <<
+@import "_feature";
+
+// >> 13. Footer <<
+@import "_footer";
+
+// >> 14. Header <<
+@import "_header";
+
+// >> 15. Helping <<
+@import "_helping";
+
+// >> 16. Hero <<
+@import "_hero";
+
+// >> 17. MeanMenu <<
+@import "_meanmenu";
+
+// >> 18. News <<
+@import "_news";
+
+// >> 19. Preloader <<
+@import "_preloader";
+
+// >> 20. Section <<
+@import "_section";
+
+// >> 21. Service <<
+@import "_service";
+
+// >> 22. Team <<
+@import "_team";
+
+// >> 23. Testimonial <<
+@import "_testimonial";

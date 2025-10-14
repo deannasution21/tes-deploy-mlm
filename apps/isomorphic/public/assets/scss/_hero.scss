@@ -1,0 +1,441 @@
+.gt-hero-1 {
+
+    @include breakpoint (max-xxl){
+        padding-bottom: 0;
+    }
+
+     @include breakpoint (max-xl){
+        padding-bottom: 0;
+    }
+
+    .container-fluid {
+        padding: 0 155px;
+        padding-right: 0;
+
+        @include breakpoint (max-xxxl){
+            padding: 0 50px;
+        }
+
+        @include breakpoint (max-xxl){
+            padding: 0 40px;
+        }
+
+        @include breakpoint (max-xl){
+            padding: 0 30px;
+        }
+    }
+
+    .gt-hero-content {
+        padding-top: 110px;
+        position: relative;
+        z-index: 9;
+
+        span {
+            font-size: 18px;
+            font-weight: 400;
+            color: $gt-theme-color;
+            font-family: $gt-heading-font;
+            display: flex;
+            line-height: 1;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 25px;
+
+             @include breakpoint (max-sm){
+                font-size: 14px;
+            }
+
+            i {
+                font-size: 55px;
+
+                 @include breakpoint (max-sm){
+                   font-size: 40px;
+                }
+            }
+        }
+
+        h1 {
+            color: $gt-white;
+        }
+
+        p {
+            max-width: 720px;
+            color: $gt-white;
+            opacity: .7;
+            margin-top: 20px;
+        }
+
+        .gt-hero-button {
+            @include flex;
+            margin-top: 48px;
+            gap: 18px;
+
+            @include breakpoint (max-xl){
+                flex-wrap: wrap;
+                margin-top: 30px;
+            }
+        }
+
+        .gt-theme-btn {
+            border: 1px solid $gt-theme-color;
+            min-width: 190px;
+
+            &::before {
+                background-color: $gt-white;
+            }
+
+            &:hover {
+                color: $gt-header-color;
+            }
+
+            &.style-2 {
+                background: transparent;
+                border: 1px solid $gt-theme-color;
+
+                &::before {
+                    background-color: $gt-theme-color;
+                }
+
+                &:hover {
+                    color: $gt-white;
+                }
+            }
+        }
+    }
+
+    .gt-hero-image {
+        width: 1536px;
+        margin-left: -112%;
+        position: relative;
+        padding-top: 60px;
+
+        @include breakpoint (max-xxl){
+            width: 1120px;
+            margin-left: -66%;
+            padding-top: 0;
+        }
+
+        @include breakpoint (max-xl){
+            margin-left: 0;
+            width: initial;
+            margin-right: -30px;
+        }
+
+        .gt-arrow-shape {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+
+            @include breakpoint (max-xl){
+               display: none;
+            }
+        }
+
+        img {
+            @include imgw;
+        }
+    }
+}
+
+.gt-hero-2 {
+   padding: 200px 0 270px;
+
+   @include breakpoint (max-xl){
+        padding: 170px 0;
+   }
+
+   @include breakpoint (max-md){
+        padding: 150px 0;
+   }
+
+   z-index: 9;
+   position: relative;
+
+   .social-icon {
+        gap: 16px;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg) translateY(-50%);
+        position: absolute;
+        top: 10%;
+        right: 30px;
+
+        @include breakpoint (max-xxl){
+            display: none !important;
+        }
+
+        span {
+            color: $gt-white;
+        }
+        a {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            background-color: $gt-white;
+            color: $gt-header-color;
+            border-radius: 50%;
+            text-align: center;
+            transform: rotate(-180deg);
+
+            &:hover {
+                background-color: $gt-theme-color;
+                color: $gt-white;
+            }
+        }
+   }
+
+    &::before {
+        @include before;
+        background: rgba(28, 28, 28, 0.80);
+        z-index: -1;
+    }
+
+    .hero-shape-bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        @include breakpoint (max-xl){
+            display: none;
+        }
+    }
+
+    .hero-shape-right {
+        position: absolute;
+        right: 200px;
+        top: 30px;
+    }
+
+    .gt-hero-content {
+        max-width: 970px;
+        text-align: center;
+        margin: 0 auto;
+
+            span {
+                color: $gt-theme-color;
+                display: inline-block;
+                margin-bottom: 20px;
+                font-size: 18px;
+                font-weight: 400;
+
+                @include breakpoint (max-sm){
+                font-size: 16px;
+                }
+            }
+
+            h1 {
+                font-size: 72px;
+
+                @include breakpoint (max-lg){
+                    font-size: 65px;
+                }
+
+                @include breakpoint (max-md){
+                    font-size: 52px;
+                }
+
+                @include breakpoint (max-sm){
+                    font-size: 40px;
+                }
+            }
+
+            p {
+                font-weight: 500;
+                max-width: 870px;
+                opacity: .7;
+
+                @include breakpoint (max-sm){
+                font-size: 14px;
+                }
+            }
+
+            .gt-hero-button {
+                @include flex;
+                margin-top: 48px;
+                gap: 18px;
+                justify-content: center;
+
+                @include breakpoint (max-xl){
+                flex-wrap: wrap;
+                gap: 15px;
+                }
+
+                @include breakpoint (max-md){
+                margin-top: 30px;
+                }
+            }
+
+            .gt-theme-btn {
+                border: 1px solid $gt-theme-color;
+                min-width: 190px;
+
+                &::before {
+                    background-color: $gt-white;
+                }
+
+                &:hover {
+                    color: $gt-header-color;
+                }
+
+                &.style-2 {
+                    background: transparent;
+                    border: 1px solid $gt-theme-color;
+
+                    &::before {
+                        background-color: $gt-theme-color;
+                    }
+
+                    &:hover {
+                        color: $gt-white;
+                    }
+                }
+            }
+    }   
+
+    .hero-contact {
+        @include flex;
+        gap: 30px;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg) translateY(-50%);
+        position: absolute;
+        top: -10%;
+        left: 30px;
+
+        @include breakpoint (max-xxl){
+            display: none !important;
+        }
+
+        li {
+            color: $gt-white;
+            @include flex;
+            gap: 10px;
+
+            a {
+                color: $gt-white;
+            }
+
+            img {
+                transform: rotate(90deg);
+            }
+        }
+    }
+}
+
+.hero-3 {
+    @include breakpoint (max-xxl){
+      padding: 90px 0 180px;
+    }
+    .gt-hero-image {
+        direction: rtl;
+
+         @include breakpoint (max-xxl){
+            img {
+                @include imgw;
+            }
+        }
+    }
+
+    .hero-content {
+        margin-right: -120px;
+        margin-top: -60px;
+
+        @include breakpoint (max-xl){
+            margin-right: 0;
+            margin-top: 0;
+        }
+
+        .star-items {
+            i {
+                color: #FCD554;
+            }
+
+            span {
+                color: $gt-theme-color;
+                text-transform: uppercase;
+                display: inline-block;
+                margin-left: 10px;
+                font-size: 18px;
+                font-family: $gt-heading-font;
+                margin-bottom: 30px;
+            }
+        }
+
+        @include breakpoint (max-xxxl){
+            margin-right: -50px;
+        }
+
+        @include breakpoint (max-xxl){
+            margin-right: 0;
+        }
+
+        h1 {
+            color: $gt-white;
+            //font-size: 72px;
+        }
+
+        p {
+            color: #fff;
+            opacity: 0.7;
+            max-width: 720px;
+            margin-top: 15px;
+        }
+
+        .gt-hero-button {
+            @include flex;
+            gap: 24px;
+            margin-top: 48px;
+
+            @include breakpoint (max-xl){
+                flex-wrap: wrap;
+                gap: 18px;
+                margin-top: 30px;
+            }
+
+            .gt-theme-btn {
+                min-width: 175px;
+
+                &::before {
+                    background-color: $gt-white
+                }
+
+                &:hover {
+                    color: $gt-header-color;
+                }
+            }
+
+            .gt-call-icon {
+                @include flex;
+                gap: 12px;
+
+                .gt-call {
+                    width: 56px;
+                    height: 56px;
+                    line-height: 62px;
+                    text-align: center;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.12);
+                    font-size: 24px;
+                    color: $gt-white;
+                }
+
+                .gt-content {
+                    span {
+                        font-size: 16px;
+                        font-weight: 400;
+                        color: $gt-white;
+                        display: block;
+                    }
+
+                    a {
+                        font-size: 20px;
+                        font-weight: 500;
+                        color: $gt-theme-color;
+                        font-family: $gt-heading-font;
+                    }
+                }
+            }
+        }
+    }
+}
+

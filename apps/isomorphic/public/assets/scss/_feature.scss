@@ -1,0 +1,772 @@
+.gt-why-choose-us-section-2 {
+    position: relative;
+
+    .gt-choose-us-shape {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        z-index: -1;
+    }
+}
+
+.gt-discount-section-2 {
+
+    @include breakpoint (max-lg){
+        background-position: 0% !important;
+    }
+}
+
+.gt-why-choose-us-images {
+    margin-top: 30px;
+
+    .gt-choose-us-image {
+        position: relative;
+        overflow: hidden;
+         border-radius: 0px 0px 8px 8px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        .gt-content {
+            background-color: $gt-header-color;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 24px 40px;
+            border-radius: 0px 0px 8px 8px;
+            transform: translateY(75px);
+            @include transition;
+
+            @include breakpoint (max-lg){
+                transform: translateY(108px);
+            }
+
+            @include breakpoint (max-md){
+               transform: translateY(75px);
+            }
+
+            h3 {
+                color: $gt-white;
+                margin-bottom: 15px;
+                line-height: 1;
+            }
+
+            p {
+                color: $gt-white;
+            }
+        }
+
+        &:hover {
+            .gt-content {
+                background-color: $gt-theme-color;
+
+                transform: translateY(0);
+            }
+        }
+    }
+}
+
+.gt-hotel-facilities-section-2 {
+    position: relative;
+
+    .gt-hotel-facilities-shape {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+}
+
+.gt-hotel-facilities-wrapper-2 {
+    position: relative;
+    margin-bottom: 25px;
+
+    @include breakpoint (max-xl){
+        margin-bottom: 0;
+    }
+
+    .gt-hotel-left-images {
+        max-width: 416px;
+        position: relative;
+
+        @include breakpoint (max-xl){
+            max-width: 800px;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+        }
+
+        .video-btn {
+            width: 88px;
+            height: 88px;
+            line-height: 88px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: $gt-theme-color;
+            color: $gt-white;
+            text-align: center;
+            margin: 0 auto;
+            font-size: 22px;
+            display: inline-block;
+            position: absolute;
+            top: 110px;
+            right: -130px;
+
+            @include breakpoint (max-xl){
+              right: 0;
+              top: 0;
+            }
+
+        }
+
+        .gt-counter {
+            border-radius: 8px;
+            background: $gt-header-color;
+            padding: 40px 22px;
+            position: absolute;
+            left: 70px;
+            bottom: -130px;
+            z-index: 9;
+            text-align: center;
+            min-width: 210px;
+
+            @include breakpoint (max-xl){
+               left: 0;
+               bottom: initial;
+               top: 0;
+            }
+
+            h2 {
+                color: $gt-white;
+                font-size: 72px;
+                font-weight: 400;
+            }
+
+            p {
+                font-size: 18px;
+                font-weight: 400;
+                color: $gt-white;
+                font-family: "Gilda Display";
+            }
+        }
+
+        .gt-hotel-img {
+            max-width: 383px;
+            position: absolute;
+            bottom: -175px;
+            right: -160px;
+
+             @include breakpoint (max-xxl){
+                right: -90px;
+            }
+
+            @include breakpoint (max-xl){
+                right: 0;
+                bottom: 0;
+            }
+
+            @include breakpoint (max-sm){
+               max-width: 200px;
+            }
+
+            img {
+                width: 100%;
+                height: 100%;
+                border-radius: 16px;
+            }
+        }
+    }
+
+    .gt-hotel-right-content {
+        .gt-hotel-text {
+            margin-top: 25px;
+        }
+
+        .gt-skill-feature-items {
+            margin-top: 30px;
+
+            .gt-skill-feature {
+                &:not(:last-child){
+                    margin-bottom: 30px;
+                }
+
+                .gt-box-title {
+                    font-size: 16px;
+                    font-weight: 500;
+                    font-family: $gt-body-font;
+                }
+
+                .gt-progress-value {
+                    margin-bottom: 10px;
+                    //margin-top: -0.5em;
+                    color: $gt-header-color;
+                    text-transform: capitalize;
+                }
+                .gt-progress {
+                    position: relative;
+                    height: 10px;
+                    background-color: $gt-bg-color;
+                    border-radius: 0;
+                    overflow: visible;
+                    margin-top: 15px;
+                }
+            
+                .gt-progress-bar {
+                    background-color: $gt-theme-color;
+                    height: 10px;
+                    margin: 0;
+                    border-radius: inherit;
+                    overflow: visible;
+                    position: relative;
+                    margin-top: 0;
+                    border-radius: 16px 0px 0px 16px;
+                }
+                .gt-progress-value {
+                    position: absolute;
+                    top: -38px;
+                    right: -8px;
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: $gt-header-color;
+                    font-family: $gt-heading-font;
+                }
+            }
+        }
+
+        .gt-theme-btn {
+            margin-top: 50px;
+            background-color: $gt-header-color;
+
+            &::before {
+                background-color: $gt-theme-color;
+            }
+        }
+    }
+}
+
+.gt-hotel-feature-area {
+    display: flex;
+    justify-content: space-between;
+
+    @include breakpoint (max-xl){
+       flex-wrap: wrap;
+       gap: 30px;
+    }
+
+    .gt-hotel-feature-items {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        .icon {
+            i {
+                font-size: 64px;
+                color: $gt-theme-color;
+            }
+        }
+    }
+}
+
+.gt-enjoy-hotel-wrapper-3 {
+    margin-top: 120px;
+
+    @include breakpoint (max-lg){
+        margin-top: 0;
+    }
+
+    .gt-hotel-images-items {
+        position: relative;
+      
+
+        .gt-hotel-image {
+            margin-top: 20px;
+            max-width: 490px;
+            margin-left: 100px;
+
+            @include breakpoint (max-lg){
+                margin-left: 0;
+            }
+
+            img {
+                border-radius: 16px;
+                @include imgw;
+            }
+
+            .gt-counter {
+                border-radius: 8px;
+                background: $gt-header-color;
+                padding: 40px 22px;
+                position: absolute;
+                left: 0;
+                bottom: 30px;
+                z-index: 9;
+                text-align: center;
+                min-width: 210px;
+
+                h2 {
+                    color: $gt-white;
+                    font-size: 72px;
+                    font-weight: 400;
+                }
+
+                p {
+                    font-size: 18px;
+                    font-weight: 400;
+                    color: $gt-white;
+                    font-family: "Gilda Display";
+                }
+            }
+
+            .gt-hotel-image-2 {
+                max-width: 443px;
+                position: absolute;
+                top: -175px;
+                left: 0;
+
+                @include breakpoint (max-lg){
+                    top: 0;
+                }
+            }
+        }
+    }
+
+    .gt-enjoy-hotel-content {
+        margin-top: -110px;
+
+        @include breakpoint (max-lg){
+           margin-top: 0;
+        }
+
+        .gt-hotel-text {
+            margin-top: 15px;
+        }
+
+        .nav {
+            @include flex;
+            gap: 24px;
+            margin-top: 18px;
+
+            @include breakpoint (max-xl){
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .nav-item {
+                .nav-link {
+                    border-radius: 4px;
+                    background: #F8F8F8;
+                    padding: 18px 16px;
+                    line-height: 1;
+                    color: $gt-header-color;
+                    font-weight: 500;
+                    font-size: 18px;
+                    text-align: center;
+                    font-family: $gt-heading-font;
+
+                    &.active {
+                        background-color: $gt-theme-color;
+                        color: $gt-white;
+                    }
+                }
+            }
+        }
+
+        .menu-list {
+            margin-top: 15px;
+            max-width: 330px;
+
+            p {
+                font-size: 18px;
+                font-weight: 400;
+                color: $gt-header-color;
+            }
+
+            ul {
+                margin-top: 10px;
+                margin-bottom: 40px;
+
+                li {
+                    @include flex;
+                    gap: 50px;
+                    justify-content: space-between;
+
+                    &:not(:last-child){
+                        margin-bottom: 10px;
+                    }
+
+                    span {
+                        font-size: 16px;
+                        font-weight: 500;
+                        color: $gt-header-color;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.gt-counter-wrapper {
+    border-radius: 12px 0px 0px 12px;
+    border: 1px solid rgba(155, 155, 155, 0.32);
+    background: $gt-white;
+    position: relative;
+    @include flex;
+    justify-content: space-between;
+    text-align: center;
+    padding: 0 40px;
+
+    @include breakpoint (max-lg){
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+
+    .gt-counter {
+        position: relative;
+        min-width: 230px;
+        width: 100%;
+        text-align: center;
+        border-right: 1px solid rgba(155, 155, 155, 0.32);
+        height: 190px;
+        padding-top: 40px;
+
+         @include breakpoint (max-lg){
+            padding-top: 0;
+            height: initial;
+            border-right: none;
+        }
+
+        &.border-none {
+            border-right: none;
+        }
+    }
+
+    h2 {
+        font-size: 100px;
+        opacity: 0.32;
+        color: $gt-theme-color;
+        font-weight: 400;
+    }
+
+    p {
+        font-size: 20px;
+        font-weight: 400;
+        font-family: $gt-heading-font;
+        color: $gt-header-color;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+    }
+}
+
+.gt-counter-section {
+    position: relative;
+
+    &::before {
+        background-color: #F7F3EE;
+        @include before;
+        top: 50%;
+    }
+
+    &.bg-white-style {
+        z-index: 9;
+        
+        &::before {
+            display: none;
+        }
+
+         &::after {
+            @include before;
+            top: 50%;
+            background-color: $gt-white;
+            z-index: -1;
+        }
+    }
+}
+
+.marquee {
+    position: relative;
+    --duration: 30s;
+    --gap: 0px;
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    gap: 0;
+    background-color: #1C1C1C;
+    padding: 30px 0;
+
+
+    .marquee-group {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      gap: 0;
+      min-width: 100%;
+      animation: scroll var(--duration) linear infinite;
+    
+
+    }
+    .text {
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 400;
+      text-transform: capitalize;
+      margin: 0 0;
+      position: relative;
+      color: transparent;
+      color: $gt-white;
+      font-family: $gt-heading-font;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .marquee-group {
+        animation-play-state: play;
+      }
+    }
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(calc(-100% - var(--gap)));
+      }
+    }
+}
+
+.gt-discount-wrapper {
+    .discount-left {
+        margin-top: 100px;
+
+        @include breakpoint (max-xl){
+            margin-top: 0;
+        }
+
+        .text {
+            margin-top: 20px;
+            color: $gt-white;
+            opacity: .7;
+        }
+
+        .gt-theme-btn {
+            margin-top: 40px;
+            background-color: transparent;
+            color: $gt-theme-color;
+            border: 1px solid $gt-theme-color;
+
+            &::before,&::after {
+                background-color: $gt-theme-color;
+            }
+
+            &:hover {
+                color: $gt-white;
+            }
+        }
+
+        &.style-2 {
+            text-align: right;
+            margin-top: 0;
+
+            .gt-theme-btn {
+                background-color: $gt-theme-color;
+                color: $gt-white;
+                border: 1px solid transparent;
+
+                &::before,&::after {
+                    background-color: $gt-header-color;
+                }
+            }
+        }
+    }
+}
+
+.gt-enjoy-hotel-section-3 {
+    position: relative;
+    z-index: 9;
+
+    .right-shape {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        z-index: -1;
+    }
+}
+
+.gt-offer-content-left-3 {
+    position: relative;
+    z-index: 9;
+
+    h2 {
+        color: $gt-white;
+        font-size: 72px;
+        margin-top: 50px;
+
+        @include breakpoint (max-lg){
+            font-size: 45px;
+        }
+
+        span {
+            font-size: 100px;
+
+             @include breakpoint (max-lg){
+                font-size: 45px;
+            }
+        }
+    }
+
+    h5 {
+        font-size: 18px;
+        color: $gt-theme-color;
+        text-transform: uppercase;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    h4 {
+        font-size: 56px;
+        color: $gt-white;
+        margin-bottom: 10px;
+    }
+
+    p {
+        color: $gt-white;
+        opacity: 0.7;
+        max-width: 528px;
+    }
+}
+
+.gt-offer-section-3 {
+    position: relative;
+    z-index: 9;
+
+    .left-shape {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 1020px;
+
+        @include breakpoint (max-xl){
+            width: initial;
+        }
+
+        img {
+            height: 100%;
+            width: 100%;
+        }
+
+         .video-btn {
+            width: 88px;
+            height: 88px;
+            line-height: 88px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: $gt-theme-color;
+            color: $gt-white;
+            text-align: center;
+            margin: 0 auto;
+            font-size: 22px;
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            right: -30px;
+            transform: translateY(-50%);
+            z-index: 9;
+
+             @include breakpoint (max-xl){
+               display: none;
+            }
+
+        }
+    }
+
+    .book-text{
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        color: $gt-white;
+        -webkit-text-stroke-width: 0.4px;
+        -webkit-text-stroke-color: $gt-white;
+        font-family: "Gilda Display";
+        font-size: 140px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1;
+        letter-spacing: -1.4px;
+        opacity: 0.32;
+        z-index: -1;
+
+         @include breakpoint (max-xl){
+           display: none;
+        }
+    }
+}
+
+.gt-restaurant-gallery-image {
+    margin-top: 30px;
+    img {
+        @include imgw;
+        border-radius: 8px;
+    }
+}
+
+.gt-food-menu-list {
+    @include flex;
+    justify-content: space-between;
+    border-radius: 8px;
+    background-color: $gt-white;
+    padding: 15px;
+    margin-top: 30px;
+    position: relative;
+
+    li {
+        @include flex;
+        gap: 20px;
+    }
+
+    span {
+        font-size: 20px;
+        font-weight: 400;
+        font-family: $gt-heading-font;
+        position: absolute;
+        right: 30px;
+        color: $gt-header-color;
+        top: 40px;
+    }
+}
+
+.gt-food-menu-section {
+    .nav {
+        @include flex;
+        justify-content: center;
+        margin-bottom: 20px;
+        margin-top: 30px;
+        gap: 50px;
+       border-bottom: 1.5px solid rgba(155, 155, 155, 0.32);
+       padding-bottom: 40px;
+
+        .nav-item {
+            .nav-link {
+                font-size: 24px;
+                font-weight: 400;
+                font-family: $gt-heading-font;
+                color: $gt-header-color;
+
+                img {
+                    margin-right: 10px;
+                }
+
+                &.active {
+                    color: $gt-theme-color;
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}

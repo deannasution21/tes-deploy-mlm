@@ -9,45 +9,87 @@ import { Checkbox, Password, Button, Input, Text } from 'rizzui';
 import { Form } from '@core/ui/form';
 import { routes } from '@/config/routes';
 import { loginSchema, LoginSchema } from '@/validators/login.schema';
+import { useRouter } from 'next/navigation';
+import { Preloader } from '@/app/shared/preloader';
 
-const initialValues: LoginSchema = {
-  email: 'admin@admin.com',
-  password: 'admin',
+const initialValuesAdmin: LoginSchema = {
+  username: 'adm0000001',
+  password: 'berkahselalu',
   rememberMe: true,
 };
 
-export default function SignInForm() {
-  //TODO: why we need to reset it here
-  const [reset, setReset] = useState({});
+const initialValuesUser: LoginSchema = {
+  username: 'ipg0000008',
+  password: 'berkahselalu',
+  rememberMe: true,
+};
 
-  const onSubmit: SubmitHandler<LoginSchema> = (data) => {
-    console.log(data);
-    signIn('credentials', {
-      ...data,
+export default function SignInForm({ role }: { role: string }) {
+  const router = useRouter();
+  const [reset, setReset] = useState({});
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
+    setLoading(true);
+    setError(null);
+
+    const res = await signIn('credentials', {
+      redirect: false,
+      username: data.username,
+      password: data.password,
+      role: role,
     });
+
+    if (res?.error) {
+      setError('Username atau password salah.');
+      setLoading(false); // stop loader if login failed
+      return;
+    }
+
+    // ✅ Wait for the router navigation to complete
+    if (!res?.error) {
+      router.push('/dashboard');
+      setTimeout(() => setLoading(false), 800); // hide loader after short delay
+    }
   };
 
   return (
     <>
+      <Preloader loading={loading} />
+
+      {error && (
+        <div className="mb-5 flex items-center justify-between rounded-xl border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700 shadow transition-all duration-300">
+          <span>{error}</span>
+          <button
+            onClick={() => setError(null)}
+            className="rounded p-1 text-red-500 hover:bg-red-200 hover:text-red-700"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       <Form<LoginSchema>
         validationSchema={loginSchema}
         resetValues={reset}
         onSubmit={onSubmit}
         useFormProps={{
-          defaultValues: initialValues,
+          defaultValues:
+            role === 'admin' ? initialValuesAdmin : initialValuesUser,
         }}
       >
         {({ register, formState: { errors } }) => (
           <div className="space-y-5">
             <Input
-              type="email"
+              type="text"
               size="lg"
-              label="Email"
-              placeholder="Enter your email"
+              label="Username"
+              placeholder="Enter your username"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
-              {...register('email')}
-              error={errors.email?.message}
+              {...register('username')}
+              error={errors.username?.message}
             />
             <Password
               label="Password"
@@ -61,32 +103,28 @@ export default function SignInForm() {
             <div className="flex items-center justify-between pb-2">
               <Checkbox
                 {...register('rememberMe')}
-                label="Remember Me"
+                label="Ingat Saya"
                 className="[&>label>span]:font-medium"
               />
-              <Link
-                href={routes.auth.forgotPassword1}
-                className="h-auto p-0 text-sm font-semibold text-blue underline transition-colors hover:text-gray-900 hover:no-underline"
-              >
-                Forget Password?
-              </Link>
             </div>
-            <Button className="w-full" type="submit" size="lg">
-              <span>Sign in</span>{' '}
-              <PiArrowRightBold className="ms-2 mt-0.5 h-5 w-5" />
+            <Button
+              className="w-full bg-[#AA8453] text-white hover:bg-[#a16207]"
+              type="submit"
+              size="lg"
+              disabled={loading}
+            >
+              {loading ? (
+                <span>Memproses...</span>
+              ) : (
+                <>
+                  <span>Masuk</span>
+                  <PiArrowRightBold className="ms-2 mt-0.5 h-5 w-5" />
+                </>
+              )}
             </Button>
           </div>
         )}
       </Form>
-      <Text className="mt-6 text-center leading-loose text-gray-500 lg:mt-8 lg:text-start">
-        Don’t have an account?{' '}
-        <Link
-          href={routes.auth.signUp1}
-          className="font-semibold text-gray-700 transition-colors hover:text-blue"
-        >
-          Sign Up
-        </Link>
-      </Text>
     </>
   );
 }

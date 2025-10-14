@@ -1,0 +1,260 @@
+.team-card-item-3 {
+    margin-top: 30px;
+
+    .team-image {
+        position: relative;
+       
+
+        .team-content {
+            background-color: $gt-white;
+            padding: 16px 35px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            border-radius: 0px 16px;
+
+            h4 {
+                font-weight: 800;
+                margin-bottom: 5px;
+
+                a {
+                    &:hover {
+                        color: $gt-theme-color
+                    }
+                }
+            }
+        }
+
+        .social-icon {
+            @include flex;
+            gap: 20px;
+            transform: rotate(90deg);
+            position: absolute;
+            background-color: $gt-theme-color;
+            padding: 12px 24px;
+            border-radius: 4px;
+            top: 40%;
+            right: -30%;
+            @include transition;
+            opacity: 0;
+            visibility: hidden;
+
+            a {
+                width: 32px;
+                height: 32px;
+                line-height: 32px;
+                text-align: center;
+                background-color: $gt-header-color;
+                border-radius: 100px;
+                color: $gt-white;
+                transform: rotate(-90deg);
+
+                &:hover {
+                    background-color: $gt-white;
+                    color: $gt-header-color;
+                }
+            }
+
+            span {
+                color: $gt-white;
+                font-weight: 600;
+                font-size: 18px;
+                font-family: $gt-heading-font;
+            }
+        }
+
+        img {
+            @include imgw;
+            border-radius: 16px;
+        }
+    }
+
+    &:hover {
+        .team-image {
+            .social-icon {
+                 opacity: 1;
+                 visibility: visible;
+                 right: -120px;
+            }
+        }
+    }
+}
+
+.gt-team-details-wrapper {
+
+    .gt-thumb {
+
+        img {
+            @include imgw;
+            border-radius: 16px;
+        }
+    }
+
+    .gt-details-content {
+        margin-left: 40px;
+
+        @include breakpoint (max-xl){
+            margin-left: 0;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        span {
+            font-size: 18px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .gt-list {
+            margin-top: 30px;
+
+            li {
+                color: $gt-header-color;
+
+                &:not(:last-child) {
+                    margin-bottom: 10px;
+                }
+
+                i {
+                    color: $gt-header-color;
+                    margin-right: 5px;
+                }
+            }
+        }
+
+        .gt-social-icon {
+            margin-top: 40px;
+            @include flex;
+            gap: 10px;
+
+            a {
+                width: 44px;
+                height: 44px;
+                line-height: 44px;
+                display: inline-block;
+                text-align: center;
+                color: $gt-header-color;
+                background-color: #F4F4F4;
+                @include transition;
+                border-radius: 4px;
+
+                &:hover {
+                    background-color: $gt-theme-color;
+                    color: $gt-white;
+                }
+            }
+        }
+    }
+}
+
+.gt-team-experience-wrapper {
+
+    .gt-team-experience-content {
+
+         .gt-skill-feature-items {
+            margin-top: 35px;
+            max-width: 550px;
+
+            .gt-skill-feature {
+                &:not(:last-child){
+                    margin-bottom: 15px;
+                }
+
+                .gt-box-title {
+                    font-size: 18px;
+                    font-weight: 500;
+                    font-family: $gt-heading-font;
+                }
+
+                .gt-progress-value {
+                    margin-bottom: 10px;
+                    //margin-top: -0.5em;
+                    color: $gt-header-color;
+                    text-transform: capitalize;
+                }
+                .gt-progress {
+                    position: relative;
+                    height: 10px;
+                    background-color: $gt-white;
+                    border-radius: 0;
+                    overflow: visible;
+                    margin-top: 15px;
+                }
+            
+                .gt-progress-bar {
+                    background-color: $gt-theme-color;
+                    height: 10px;
+                    margin: 0;
+                    border-radius: inherit;
+                    overflow: visible;
+                    position: relative;
+                    margin-top: 0;
+                }
+                .gt-progress-value {
+                    position: absolute;
+                    top: -38px;
+                    right: -8px;
+                    font-size: 18px;
+                    font-weight: 500;
+                    color: $gt-header-color;
+                    font-family: $gt-heading-font;
+                }
+            }
+        }
+    }
+
+    .contact-form-items {
+
+        h3 {
+            font-size: 36px;
+            margin-bottom: 20px;
+
+            @include breakpoint (max-xl) {
+                font-size: 30px;
+            }
+
+            @include breakpoint (max-sm) {
+                font-size: 25px;
+            }
+        }
+
+        .form-clt {
+            input,textarea {
+                width: 100%;
+                outline: none;
+                border: none;
+                background-color: $gt-white;
+                padding-bottom: 20px;
+                padding: 16px 20px;
+                @include transition;
+                color: $gt-text-color;
+                font-size: 16px;
+                border-radius: 4px;
+    
+                &::placeholder {
+                    color: $gt-text-color;
+                }
+            }
+    
+            textarea {
+                padding-bottom: 30px;
+                resize: none;
+            }
+        }
+    
+        button {
+            &.gt-theme-btn {
+
+                .gt-icon-btn {
+                    background-color: $gt-header-color;
+
+                    &::after {
+                        background-color: $gt-theme-color;
+                    }
+                }
+            }
+        }
+    }
+}

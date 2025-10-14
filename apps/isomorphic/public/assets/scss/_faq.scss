@@ -1,0 +1,131 @@
+.gt-faq-wrapper {
+   
+    .gt-faq-content {
+        .gt-faq-text {
+            margin-top: 25px;
+        }
+
+        .gt-faq-button {
+            margin-top: 50px;
+            @include flex;
+            gap: 24px;
+
+            @include breakpoint (max-xl){
+               flex-wrap: wrap;
+               gap: 20px;
+               margin-top: 30px;
+            }
+
+            .gt-theme-btn {
+                &.gt-border-style {
+                    border: 1px solid $gt-theme-color;
+                    background-color: transparent;
+                    color: $gt-header-color;
+
+                    &::before {
+                        background-color: $gt-theme-color;
+                    }
+
+                    &:hover {
+                        color: $gt-white;
+                    }
+                }
+            }
+        }
+    }
+
+    .faq-items {
+        background-color: $gt-white;
+        border-radius: 16px;
+        padding: 48px;
+
+         @include breakpoint (max-xl){
+            padding: 35px;
+        }
+
+        @include breakpoint (max-md){
+            padding: 30px;
+        }
+
+         @include breakpoint (max-sm){
+            padding: 25px;
+        }
+
+        .accordion {
+
+            .accordion-item {
+                border-radius: 8px;
+                border: none;
+                margin-bottom: 25px;
+                background: #F2F2F2;
+                padding: 0;
+    
+                h2 {
+                    button {
+                        font-size: 20px;
+                        line-height: 1;
+                        font-weight: 500;
+                        box-shadow: none;
+                        border-radius: 0 !important;
+                        padding: 24px 30px;
+                        font-family: $gt-heading-font;
+                        color: $gt-header-color;
+                        border-radius: 8px !important;
+                        border-bottom-left-radius: 0 !important;
+                        border-bottom-right-radius: 0 !important;
+                    }
+                }
+                .accordion-body {
+                  padding: 20px 30px;
+
+                    p {
+                        color: $gt-text-color;
+                        font-size: 1x;
+                        line-height: 32px;
+                        font-weight: 400;
+                        font-size: 16px;
+                    }
+                }
+            }
+
+            .accordion-button {
+                background-color: $gt-theme-color;
+                color: $gt-white !important;
+                border-radius: 8px;
+    
+                &::after {
+                    display: none;
+                }
+                &::before {
+                    position: absolute;
+                    content: "\f324";
+                    font-family: $fa;
+                    font-weight: 700;
+                    transform: rotate(90deg);
+                    top: 13px;
+                    right: 22px;
+                    font-size: 14px;
+                    text-align: center;
+                    @include transition;
+                    color: $gt-theme-color;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
+                    text-align: center;
+                    border-radius: 4px;
+                    background-color: $gt-white;
+                }
+            }
+            .accordion-button.collapsed {
+                background-color: transparent;
+                color: $gt-header-color !important;
+                
+                &::before {
+                    color: $gt-white;
+                    background-color: $gt-theme-color;
+                     transform: rotate(0deg);
+                }
+            }
+        }
+    }
+}

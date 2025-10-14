@@ -1,0 +1,506 @@
+.gt-footer-widget-wrapper {
+    padding: 90px 0 120px;
+
+    @include breakpoint (max-xl){
+       padding: 70px 0 100px;
+    }
+
+    @include breakpoint (max-lg){
+       padding: 50px 0 80px;
+    }
+
+    .gt-footer-widget-items {
+        margin-top: 30px;
+
+        .gt-widget-head {
+            margin-bottom: 30px;
+            
+            h3 {
+                font-size: 24px;
+                color: $gt-white;
+
+                &:hover {
+                    color: $gt-theme-color;
+                }
+            }
+        }
+
+        .gt-footer-content {
+            
+
+            .gt-social-icon {
+                gap: 20px;
+                margin-top: 40px;
+
+                a {
+                    color: rgba(255,255,255, .7);
+                    font-size: 28px;
+
+                    &:hover {
+                        color: $gt-theme-color;
+                    }
+                }
+            }
+        }
+
+        .gt-list-area {
+            li {
+                &:not(:last-child){
+                    margin-bottom: 16px;
+                }
+
+                a {
+                    color: rgba(255,255,255, .7);
+                    font-size: 16px;
+                }
+
+                &:hover {
+                    a {
+                        color: $gt-theme-color;
+                    }
+                }
+            }
+       }
+
+       .gt-working-hour {
+            li {
+                &:not(:last-child){
+                    margin-bottom: 16px;
+                }
+
+                color: rgba(255,255,255, .7);
+
+                &:hover {
+                    color: $gt-theme-color;
+                }
+            }
+       }
+
+       .gt-contact-list {
+            li {
+                display: flex;
+                gap: 20px;
+                color: rgba(255,255,255, .7);
+
+                &:not(:last-child){
+                    margin-bottom: 20px;
+                }
+
+                a {
+                    color: rgba(255,255,255, .7);
+                }
+            }
+       }
+    }
+}
+
+.footer-bottom {
+    position: relative;
+    z-index: 9;
+    z-index: 9;
+    border-top: 1.5px solid rgba(155, 155, 155, 0.24);
+    
+    .footer-wrapper {
+        position: relative;
+        z-index: 9;
+        padding: 20px 0;
+
+        @include breakpoint (max-lg){
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center !important;
+            text-align: center;
+        }
+
+        p {
+            color: rgba(255,255,255, .7);
+
+            a {
+               color: $gt-theme-color;
+            }
+        }
+        
+        ul {
+            @include flex;
+            gap: 20px;
+
+             @include breakpoint (max-sm){
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center !important;
+                text-align: center;
+            }
+
+            li {
+                a {
+                    color: rgba(255,255,255, .7);
+                    background-image: linear-gradient($gt-theme-color,$gt-theme-color);
+                    background-position: 0 95%;
+                    background-repeat: no-repeat;
+                    background-size: 0% 2px;
+                    display: inline-block;
+                    @include transition;
+
+                    &:hover {
+                        background-size: 100% 1px;
+                        color: $gt-theme-color;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.gt-footer-widget-wrapper-2 {
+    padding: 120px 0 120px;
+
+    @include breakpoint (max-xl){
+        padding: 100px 0 100px;
+    }
+
+    @include breakpoint (max-lg){
+        padding: 80px 0 80px;
+    }
+
+    .footer-left {
+        //max-width: 550px;
+        border-right: 2px solid rgba(155, 155, 155, 0.24);
+        padding-right: 100px;
+
+        @include breakpoint (max-xl){
+           padding-right: 0;
+           border-right: 0;
+        }
+
+        .footer-logo {
+            margin-bottom: 30px;
+            display: inline-block;
+        }
+
+        p {
+            color: $gt-white;
+            opacity: .7;
+        }
+
+        .contact-list {
+            @include flex;
+            gap: 48px;
+            margin-top: 32px;
+
+            @include breakpoint (max-xl){
+               flex-wrap: wrap;
+               gap: 20px;
+            }
+
+            li {
+                border-radius: 4px;
+                border: 1px solid rgba(155, 155, 155, 0.32);
+                background: #1C1C1C;
+                font-size: 20px;
+                font-weight: 500;
+                padding: 10px 16px;
+
+                img {
+                    margin-right: 8px;
+                }
+
+                a {
+                    color: $gt-white;
+                    opacity: .7;
+                }
+            }
+        }
+
+        .footer-menu-list {
+            @include flex;
+            justify-content: space-between;
+            margin-top: 48px;
+
+              @include breakpoint (max-xl){
+               flex-wrap: wrap;
+               gap: 20px;
+               margin-top: 30px;
+               justify-content: start;
+            }
+
+            li {
+                font-size: 20px;
+                font-weight: 500;
+
+                a {
+                    color: $gt-white;
+                    opacity: .7;
+
+                    &:hover {
+                        color: $gt-theme-color;
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+    
+    .footer-right-items {
+        padding-left: 50px;
+
+        @include breakpoint (max-xl){
+            padding-left: 0;
+        }
+    }
+
+    .footer-widget-items {
+        .widget-title {
+            color: $gt-white;
+            margin-bottom: 30px;
+        }
+
+        .gt-working-hour {
+            li {
+                &:not(:last-child){
+                    margin-bottom: 16px;
+                }
+                color: rgba(255,255,255, .7);
+            }
+       }
+
+        .gt-contact-list {
+            li {
+                display: flex;
+                gap: 20px;
+                color: rgba(255,255,255, .7);
+
+                &:not(:last-child){
+                    margin-bottom: 20px;
+                }
+
+                a {
+                    color: rgba(255,255,255, .7);
+                }
+            }
+       }
+
+       .gt-social-icon {
+            @include flex;
+            gap: 20px;
+            margin-top: 70px;
+
+            @include breakpoint (max-xl){
+               flex-wrap: wrap;
+               margin-top: 30px;
+            }
+
+            span {
+                font-size: 18px;
+                font-family: $gt-heading-font;
+                color: $gt-white;
+            }
+
+            a {
+                color: $gt-white;
+                font-size: 28px;
+                opacity: .7;
+
+                &:hover {
+                    color: $gt-theme-color;
+                    opacity: 1;
+                }
+            }
+       }
+    }
+}
+
+.gt-footer-top-wrapper-3{
+    padding: 100px 0;
+    border-bottom: 1px solid rgba(155, 155, 155, .24);
+    @include flex;
+    justify-content: space-between;
+
+    @include breakpoint (max-xl){
+        flex-wrap: wrap;
+        gap: 30px;
+        justify-content: start
+    }
+
+    @include breakpoint (max-lg){
+        padding: 80px 0;
+    }
+
+    .footer-left {
+        @include flex;
+        gap: 120px;
+
+        @include breakpoint (max-xl){
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+         .footer-menu-list {
+            @include flex;
+            justify-content: space-between;
+            gap: 48px;
+
+                @include breakpoint (max-xl){
+                flex-wrap: wrap;
+                gap: 20px;
+                margin-top: 30px;
+                justify-content: start;
+            }
+
+            li {
+                font-size: 20px;
+                font-weight: 500;
+
+                a {
+                    color: $gt-white;
+                    opacity: 0.88;
+
+                    &:hover {
+                        color: $gt-theme-color;
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+   
+    .gt-social-icon {
+        @include flex;
+        gap: 20px;
+
+        @include breakpoint (max-xl){
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        span {
+            font-size: 18px;
+            font-family: $gt-heading-font;
+            color: $gt-white;
+        }
+
+        a {
+            color: $gt-white;
+            font-size: 28px;
+            opacity: .7;
+
+            &:hover {
+                color: $gt-theme-color;
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.gt-footer-widget-wrapper-3 {
+    padding: 100px 0 100px;
+    
+     @include breakpoint (max-lg){
+        padding: 80px 0;
+    }
+
+    .footer-content {
+        h3 {
+            font-size: 32px;
+            color: $gt-white;
+        }
+
+        p {
+            color: $gt-white;
+            opacity: .7;
+            max-width: 420px;
+            margin-top: 10px;
+        }
+
+        form {
+            max-width: 546px;
+            width: 100%;
+            position: relative;
+            margin-top: 32px;
+
+            input {
+                background-color: $gt-white;
+                outline: none;
+                border: none;
+                width: 100%;
+                border-radius: 4px;
+                padding: 22px 22px;
+                line-height: 1;
+                color: $gt-text-color;
+            }
+
+            button {
+                position: absolute;
+                top: 4px;
+                right: 4px;
+            }
+        }
+    }
+
+    .footer-right-items {
+        padding-left: 50px;
+
+        @include breakpoint (max-xl){
+            padding-left: 0;
+        }
+
+        .footer-widget-items {
+        .widget-title {
+            color: $gt-white;
+            margin-bottom: 30px;
+        }
+
+        .gt-working-hour {
+            li {
+                &:not(:last-child){
+                    margin-bottom: 16px;
+                }
+                color: rgba(255,255,255, .7);
+            }
+       }
+
+        .gt-contact-list {
+            li {
+                display: flex;
+                gap: 20px;
+                color: rgba(255,255,255, .7);
+
+                &:not(:last-child){
+                    margin-bottom: 20px;
+                }
+
+                a {
+                    color: rgba(255,255,255, .7);
+                }
+            }
+       }
+
+       .gt-social-icon {
+            @include flex;
+            gap: 20px;
+            margin-top: 70px;
+
+            @include breakpoint (max-xl){
+               flex-wrap: wrap;
+               margin-top: 30px;
+            }
+
+            span {
+                font-size: 18px;
+                font-family: $gt-heading-font;
+                color: $gt-white;
+            }
+
+            a {
+                color: $gt-white;
+                font-size: 28px;
+                opacity: .7;
+
+                &:hover {
+                    color: $gt-theme-color;
+                    opacity: 1;
+                }
+            }
+       }
+    }
+    }
+}

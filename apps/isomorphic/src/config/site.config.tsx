@@ -10,13 +10,14 @@ enum MODE {
 }
 
 export const siteConfig = {
-  title: 'Isomorphic - React Typescript Admin Dashboard Template',
-  description: `Isomorphic the ultimate React TypeScript Admin Template. Streamline your admin dashboard development with our feature-rich, responsive, and highly customizable solution. Boost productivity and create stunning admin interfaces effortlessly.`,
+  title: 'PT. Infinite Prestige Global (IPG)',
+  description:
+    'Bergabung Sekarang — Jadilah Orang Pertama di Kota Anda! PT. Infinite Prestige Global (IPG) adalah platform pemasaran jaringan yang berfokus pada penjualan produk unggulan di Indonesia.',
   logo: logoImg,
-  icon: logoIconImg,
+  icon: '/assets/img/logo/logo-ipg2.jpeg',
+  url: 'https://ipglobal.co.id',
   mode: MODE.LIGHT,
   layout: LAYOUT_OPTIONS.HYDROGEN,
-  // TODO: favicon
 };
 
 export const metaObject = (
@@ -24,21 +25,39 @@ export const metaObject = (
   openGraph?: OpenGraph,
   description: string = siteConfig.description
 ): Metadata => {
+  const metaTitle = title
+    ? `${title} - PT. Infinite Prestige Global (IPG)`
+    : siteConfig.title;
+
   return {
-    title: title ? `${title} - Isomorphic Furyroad` : siteConfig.title,
+    title: metaTitle,
     description,
+    metadataBase: new URL(siteConfig.url),
     openGraph: openGraph ?? {
-      title: title ? `${title} - Isomorphic Furyroad` : title,
+      title: metaTitle,
       description,
-      url: 'https://isomorphic-furyroad.vercel.app',
-      siteName: 'Isomorphic Furyroad', // https://developers.google.com/search/docs/appearance/site-names
-      images: {
-        url: 'https://s3.amazonaws.com/redqteam.com/isomorphic-furyroad/itemdep/isobanner.png',
-        width: 1200,
-        height: 630,
-      },
-      locale: 'en_US',
+      url: siteConfig.url,
+      siteName: 'PT. Infinite Prestige Global (IPG)',
+      images: [
+        {
+          url: '/assets/img/logo/logo-ipg3.jpeg', // sediakan banner OG 1200x630 di public/
+          width: 1024,
+          height: 1024,
+          alt: 'PT. Infinite Prestige Global (IPG)',
+        },
+      ],
+      locale: 'id_ID',
       type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: metaTitle,
+      description,
+      images: ['/assets/img/logo/logo-ipg3.jpeg'],
+      creator: '@ipglobal', // opsional, kalau ada akun Twitter
+    },
+    icons: {
+      icon: siteConfig.icon,
     },
   };
 };

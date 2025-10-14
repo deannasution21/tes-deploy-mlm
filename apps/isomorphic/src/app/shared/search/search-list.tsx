@@ -52,7 +52,7 @@ export default function SearchList({ onClose }: { onClose?: () => void }) {
           value={searchText}
           ref={inputRef}
           onChange={(e) => setSearchText(() => e.target.value)}
-          placeholder="Search pages here"
+          placeholder="Cari disini"
           className="flex-1"
           prefix={
             <PiMagnifyingGlassBold className="h-[18px] w-[18px] text-gray-600" />

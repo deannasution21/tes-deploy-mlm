@@ -4,15 +4,23 @@ import { usePathname } from 'next/navigation';
 import { Title, Collapse } from 'rizzui';
 import cn from '@core/utils/class-names';
 import { PiCaretDownBold } from 'react-icons/pi';
-import { menuItems } from '@/layouts/helium/helium-menu-items';
+import {
+  menuItems,
+  menuItemsAdmin,
+  menuItemsUser,
+} from '@/layouts/helium/helium-menu-items';
 import StatusBadge from '@core/components/get-status-badge';
+import { useSession } from 'next-auth/react';
 
 export function HeliumSidebarMenu() {
   const pathname = usePathname();
+  const session = useSession();
+  const role = session?.data?.user?.role || 'user';
+  const menuFInal = role === 'admin' ? menuItemsAdmin : menuItemsUser;
 
   return (
     <div className="mt-4 pb-3 3xl:mt-6">
-      {menuItems.map((item, index) => {
+      {menuFInal.map((item, index) => {
         const isActive = pathname === (item?.href as string);
         const pathnameExistInDropdowns: any = item?.dropdownItems?.filter(
           (dropdownItem) => dropdownItem.href === pathname

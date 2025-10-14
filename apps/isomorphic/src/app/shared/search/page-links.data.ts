@@ -5,6 +5,65 @@ import { DUMMY_ID } from '@/config/constants';
 export const pageLinks = [
   // label start
   {
+    name: 'Dashboard',
+  },
+  // label end
+  {
+    name: 'Dashboard Pengguna',
+    href: routes.dashboard.index,
+  },
+  // label start
+  {
+    name: 'PIN',
+  },
+  // label end
+  {
+    name: 'Generate PIN',
+    href: routes.dashboard.index,
+  },
+  {
+    name: 'Transfer PIN',
+    href: routes.dashboard.index,
+  },
+  {
+    name: 'Posting PIN',
+    href: routes.dashboard.index,
+  },
+  // label start
+  {
+    name: 'History PIN',
+  },
+  // label end
+  {
+    name: 'History Generate PIN',
+    href: routes.dashboard.index,
+  },
+  {
+    name: 'History Transfer PIN',
+    href: routes.dashboard.index,
+  },
+  {
+    name: 'History Posting PIN',
+    href: routes.dashboard.index,
+  },
+  // label start
+  {
+    name: 'Profil',
+  },
+  // label end
+  {
+    name: 'Informasi Personal',
+    href: routes.profil.index,
+  },
+  {
+    name: 'Ubah Password',
+    href: routes.profil.ubahPassword,
+  },
+];
+
+export const pageLinksB = [
+  // label start
+  {
     name: 'Home',
   },
   // label end

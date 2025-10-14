@@ -50,13 +50,13 @@ export default function SignInForm({ role }: { role: string }) {
     // ✅ Wait for the router navigation to complete
     if (!res?.error) {
       router.push('/dashboard');
-      setTimeout(() => setLoading(false), 800); // hide loader after short delay
+      setTimeout(() => setLoading(false), 800); // hide loader after short delayhel
     }
   };
 
   return (
     <>
-      <Preloader loading={loading} />
+      <Preloader />
 
       {error && (
         <div className="mb-5 flex items-center justify-between rounded-xl border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700 shadow transition-all duration-300">

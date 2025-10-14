@@ -50,6 +50,11 @@ import {
   PiArrowsOutLineHorizontalBold,
   PiPushPinDuotone,
   PiArrowsOut,
+  PiHouseLineDuotone,
+  PiPackageDuotone,
+  PiUsers,
+  PiTreeStructure,
+  PiCurrencyCircleDollarDuotone,
 } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
@@ -598,5 +603,147 @@ export const menuItems = [
         href: routes.auth.otp5,
       },
     ],
+  },
+];
+
+export const menuItemsUser = [
+  // label start
+  {
+    name: 'Overview',
+  },
+  // label end
+  {
+    name: 'Dashboard',
+    href: routes.dashboard.index,
+    icon: <PiHouseLineDuotone />,
+  },
+  {
+    name: 'Diagram Jaringan',
+    href: '#',
+    icon: <PiTreeStructure />,
+    badge: '',
+  },
+  {
+    name: 'Generate PIN',
+    href: '#',
+    icon: <ProjectWriteIcon />,
+    dropdownItems: [
+      {
+        name: 'Generate PIN A ',
+        href: routes.historyBonus.index,
+      },
+      {
+        name: 'History Generate PIN A ',
+        href: routes.historyBonus.index,
+      },
+    ],
+  },
+  {
+    name: 'Transfer PIN',
+    href: '#',
+    icon: <ProjectWriteIcon />,
+    dropdownItems: [
+      {
+        name: 'Transfer PIN A ',
+        href: routes.historyBonus.index,
+      },
+      {
+        name: 'History Transfer PIN A ',
+        href: routes.historyBonus.index,
+      },
+    ],
+  },
+  {
+    name: 'Posting PIN',
+    href: '#',
+    icon: <PiUserPlus />,
+    dropdownItems: [
+      {
+        name: 'Posting PIN A ',
+        href: routes.historyBonus.index,
+      },
+      {
+        name: 'History Posting PIN A ',
+        href: routes.historyBonus.index,
+      },
+    ],
+  },
+  {
+    name: 'Withdrawal',
+    href: '#',
+    icon: <PiCurrencyCircleDollarDuotone />,
+    dropdownItems: [
+      {
+        name: 'Withdrawal PIN A ',
+        href: routes.historyBonus.index,
+      },
+      {
+        name: 'History Withdrawal PIN A ',
+        href: routes.historyBonus.index,
+      },
+    ],
+  },
+];
+
+export const menuItemsAdmin = [
+  // label start
+  {
+    name: 'Overview',
+  },
+  // label end
+  {
+    name: 'Dashboard',
+    href: routes.dashboard.index,
+    icon: <PiHouseLineDuotone />,
+  },
+  {
+    name: 'Diagram Jaringan',
+    href: '#',
+    icon: <PiTreeStructure />,
+    badge: 'NEW',
+  },
+  {
+    name: 'Request PIN',
+    href: '#',
+    icon: <ProjectWriteIcon />,
+    dropdownItems: [
+      {
+        name: 'Request PIN ',
+        href: routes.historyBonus.index,
+        badge: '',
+      },
+      {
+        name: 'History Request PIN ',
+        href: routes.historyBonus.index,
+        badge: '',
+      },
+    ],
+  },
+  {
+    name: 'Generate PIN',
+    href: '#',
+    icon: <ProjectWriteIcon />,
+    dropdownItems: [
+      {
+        name: 'Generate PIN ',
+        href: routes.historyBonus.index,
+        badge: '',
+      },
+      {
+        name: 'History Generate PIN ',
+        href: routes.historyBonus.index,
+        badge: '',
+      },
+    ],
+  },
+  {
+    name: 'Kelola Produk',
+    href: routes.historyBonus.index,
+    icon: <PiPackageDuotone />,
+  },
+  {
+    name: 'Daftar Stockist',
+    href: routes.historyBonus.index,
+    icon: <PiUsers />,
   },
 ];

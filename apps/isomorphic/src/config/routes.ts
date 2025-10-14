@@ -1,4 +1,14 @@
 export const routes = {
+  dashboard: {
+    index: '/dashboard',
+  },
+  profil: {
+    index: '/profil',
+    ubahPassword: '/profil/ubah-password',
+  },
+  historyBonus: {
+    index: '/',
+  },
   eCommerce: {
     dashboard: '/ecommerce',
     products: '/ecommerce/products',

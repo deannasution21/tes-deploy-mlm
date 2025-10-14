@@ -8,7 +8,7 @@ export default function DrawerHeader({ onClose }: { onClose: () => void }) {
   return (
     <div className="flex items-center justify-between border-b border-muted px-5 py-3.5">
       <Title as="h5" className={cn('font-semibold')}>
-        Settings
+        Pengaturan Tampilan Sistem
       </Title>
       <ActionIcon
         variant="text"

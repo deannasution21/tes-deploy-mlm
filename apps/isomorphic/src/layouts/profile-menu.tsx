@@ -3,9 +3,9 @@
 import { Title, Text, Avatar, Button, Popover } from 'rizzui';
 import cn from '@core/utils/class-names';
 import { routes } from '@/config/routes';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function ProfileMenu({
@@ -17,6 +17,8 @@ export default function ProfileMenu({
   avatarClassName?: string;
   username?: boolean;
 }) {
+  const session = useSession();
+
   return (
     <ProfileMenuPopover>
       <Popover.Trigger>
@@ -33,14 +35,18 @@ export default function ProfileMenu({
           />
           {!!username && (
             <span className="username hidden text-gray-200 dark:text-gray-700 md:inline-flex">
-              Hi, Andry
+              Halo, {session?.data?.user?.name ?? 'Pengguna'}
             </span>
           )}
         </button>
       </Popover.Trigger>
 
       <Popover.Content className="z-[9999] p-0 dark:bg-gray-100 [&>svg]:dark:fill-gray-100">
-        <DropdownMenu />
+        <DropdownMenu
+          name={session?.data?.user?.name ?? null}
+          email={session?.data?.user?.email ?? null}
+          role={session?.data?.user?.role ?? null}
+        />
       </Popover.Content>
     </ProfileMenuPopover>
   );
@@ -68,20 +74,31 @@ function ProfileMenuPopover({ children }: React.PropsWithChildren<{}>) {
 
 const menuItems = [
   {
-    name: 'My Profile',
-    href: routes.profile,
+    name: 'Profil Saya',
+    href: routes.profil.index,
   },
   {
-    name: 'Account Settings',
-    href: routes.forms.profileSettings,
-  },
-  {
-    name: 'Activity Log',
-    href: '#',
+    name: 'Ubah Password',
+    href: routes.profil.ubahPassword,
   },
 ];
 
-function DropdownMenu() {
+function DropdownMenu({
+  name,
+  email,
+  role,
+}: {
+  name: string | null;
+  email: string | null;
+  role: string | null;
+}) {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await signOut({ redirect: false }); // disable default redirect
+    router.push(role === 'admin' ? '/signin-admin-ipg-2025' : '/signin');
+  };
+
   return (
     <div className="w-64 text-left rtl:text-right">
       <div className="flex items-center border-b border-gray-300 px-6 pb-5 pt-6">
@@ -91,9 +108,11 @@ function DropdownMenu() {
         />
         <div className="ms-3">
           <Title as="h6" className="font-semibold">
-            Albert Flores
+            {name ?? 'Pengguna'}
           </Title>
-          <Text className="text-gray-600">flores@doe.io</Text>
+          <Text className="text-gray-600">
+            {email ?? 'email@pglobal.co.id'}
+          </Text>
         </div>
       </div>
       <div className="grid px-3.5 py-3.5 font-medium text-gray-700">
@@ -111,9 +130,9 @@ function DropdownMenu() {
         <Button
           className="h-auto w-full justify-start p-0 font-medium text-gray-700 outline-none focus-within:text-gray-600 hover:text-gray-900 focus-visible:ring-0"
           variant="text"
-          onClick={() => signOut()}
+          onClick={handleLogout}
         >
-          Sign Out
+          Keluar
         </Button>
       </div>
     </div>

@@ -41,7 +41,7 @@ export default function SettingsButton({
 
   return (
     <ActionIcon
-      aria-label="Settings"
+      aria-label="Pengaturan Tampilan Sistem"
       variant="text"
       className={cn(
         'relative h-[34px] w-[34px] shadow backdrop-blur-md dark:bg-gray-100 md:h-9 md:w-9',

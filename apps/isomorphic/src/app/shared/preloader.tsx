@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-export const Preloader = (loading, setLoading) => {
+export const Preloader = () => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -30,8 +30,8 @@ export const Preloader = (loading, setLoading) => {
       <div className="animation-preloader">
         <div className="spinner"></div>
         <div
-          className="txt-loading relative tracking-[20px]"
-          style={{ right: '-10px' }}
+          className="txt-loading relative"
+          style={{ right: '-10px', letterSpacing: '25px' }}
         >
           <span data-text-preloader="I" className="letters-loading">
             I

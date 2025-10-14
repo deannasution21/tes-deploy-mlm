@@ -5,6 +5,9 @@ import UnderlineShape from '@core/components/shape/underline';
 import { metaObject } from '@/config/site.config';
 import loginImg from '@public/assets/img/image (1).png';
 
+import '@public/assets/css/animate.css';
+import '@public/assets/css/main.css';
+
 export const metadata = {
   ...metaObject('Sign In'),
 };

@@ -29,7 +29,7 @@ export default function AuthWrapperOne({
   pageImage?: React.ReactNode;
   isSocialLoginActive?: boolean;
   isSignIn?: boolean;
-  role: string;
+  role?: string | null;
 }) {
   function handleSignIn() {
     toast.error(

@@ -125,6 +125,9 @@ export const routes = {
     upload: '/file-manager/upload',
     create: '/file-manager/create',
   },
+  pos: {
+    index: '/point-of-sale',
+  },
   eventCalendar: '/event-calendar',
   rolesPermissions: '/roles-permissions',
   invoice: {

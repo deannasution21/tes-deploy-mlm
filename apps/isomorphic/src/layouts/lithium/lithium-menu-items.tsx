@@ -387,11 +387,6 @@ export const lithiumMenuItems: LithiumMenuItem = {
         href: routes.searchAndFilter.flight,
       },
       {
-        name: 'Point of Sell',
-        href: routes.pos.index,
-        icon: 'PointOfSellIcon',
-      },
-      {
         name: 'NFT',
         icon: 'NftIcon',
         href: routes.searchAndFilter.nft,

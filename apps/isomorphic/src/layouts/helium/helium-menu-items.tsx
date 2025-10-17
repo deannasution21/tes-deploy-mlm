@@ -306,11 +306,6 @@ export const menuItems = [
     icon: <PiFolderLock />,
   },
   {
-    name: 'Point of Sale',
-    href: routes.pos.index,
-    icon: <PiCreditCard />,
-  },
-  {
     name: 'Invoice Builder',
     href: routes.invoice.builder,
     icon: <PiNewspaperClippingDuotone />,

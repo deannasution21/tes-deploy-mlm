@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { Title, Text, Button } from 'rizzui';
-import cn from '../../utils/class-names';
-import { toCurrency } from '../../utils/to-currency';
-import { PiMinus, PiPlus } from 'react-icons/pi';
-import { useCart } from '../../../../../apps/isomorphic/src/store/quick-cart/cart.context';
-import { CartItem, PosProduct } from '../../types';
+import Image from "next/image";
+import { Title, Text, Button } from "rizzui";
+import cn from "../../utils/class-names";
+import { toCurrency } from "../../utils/to-currency";
+import { PiMinus, PiPlus } from "react-icons/pi";
+import { useCart } from "../../../../../apps/isomorphic/src/store/quick-cart/cart.context";
+import { CartItem, PosProduct } from "../../types";
 
 interface ProductProps {
   product: PosProduct;
@@ -19,10 +19,10 @@ export default function ProductClassicCard({
 }: ProductProps) {
   const { name, description, price, image, salePrice, discount } = product;
 
-  const { addItemToCart, isInCart } = useCart();
+  // const { addItemToCart, isInCart } = useCart();
 
   return (
-    <div className={cn('pb-0.5', className)}>
+    <div className={cn("pb-0.5", className)}>
       <div className="relative">
         <div className="relative mx-auto aspect-square w-full overflow-hidden rounded-lg bg-gray-100">
           <Image
@@ -61,7 +61,7 @@ export default function ProductClassicCard({
             </del>
           )}
         </div>
-        <div className="mt-3">
+        {/* <div className="mt-3">
           {isInCart(product.id) ? (
             <QuantityControl item={product} />
           ) : (
@@ -73,7 +73,7 @@ export default function ProductClassicCard({
               Order
             </Button>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );

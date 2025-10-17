@@ -55,6 +55,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    nftTracing: true,
+  },
 };
 
 export default nextConfig;

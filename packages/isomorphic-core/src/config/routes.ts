@@ -6,26 +6,44 @@ export const routes = {
     index: "/profil",
     ubahPassword: "/profil/ubah-password",
   },
-  historyBonus: {
-    index: "/",
+  bonus: {
+    index: "/bonus",
+    history: "/bonus/history",
+  },
+  requestPin: {
+    index: "/request-pin",
+    history: "/history-request-pin",
   },
   generatePin: {
     index: "/generate-pin",
-    history: "/history-generate-pin",
+    history: "/generate-pin/history",
   },
   transferPin: {
     index: "/transfer-pin",
-    history: "/history-transfer-pin",
+    history: "/transfer-pin/history",
   },
   postingPin: {
     index: "/posting-pin",
-    history: "/history-posting-pin",
+    history: "/posting-pin/history",
+  },
+  withdrawalPin: {
+    index: "/withdrawal-pin",
+    history: "/withdrawal-pin/history",
   },
   produk: {
     index: "/produk",
     detail: (slug: string) => `/produk/${slug}`,
     history: "/produk/history",
-    ajaib: "/produk/ajaib",
+    keranjang: "/produk/keranjang",
+    checkout: "/produk/checkout",
+  },
+  kelolaProduk: {
+    index: "/produk/kelola",
+    transaksi: "/produk/transaksi",
+  },
+  stockist: {
+    index: "/stockist",
+    daftar: "/stockist/daftar",
   },
   eCommerce: {
     dashboard: "/ecommerce",
@@ -103,9 +121,6 @@ export const routes = {
     manager: "/file-manager",
     upload: "/file-manager/upload",
     create: "/file-manager/create",
-  },
-  pos: {
-    index: "/point-of-sale",
   },
   eventCalendar: "/event-calendar",
   rolesPermissions: "/roles-permissions",

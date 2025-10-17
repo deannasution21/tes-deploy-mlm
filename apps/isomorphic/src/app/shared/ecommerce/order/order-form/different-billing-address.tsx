@@ -12,7 +12,7 @@ export default function DifferentBillingAddress({
 
   return (
     <Controller
-      name="sameShippingAddress"
+      name="shippingMethod"
       control={control}
       render={({ field: { value, onChange } }) => (
         <Checkbox

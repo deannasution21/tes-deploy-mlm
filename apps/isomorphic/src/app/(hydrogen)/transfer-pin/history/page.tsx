@@ -14,7 +14,11 @@ const pageHeader = {
       name: 'Dashboard',
     },
     {
-      name: 'History Transfer PIN',
+      href: routes.transferPin.index,
+      name: 'Transfer PIN',
+    },
+    {
+      name: 'History',
     },
   ],
 };

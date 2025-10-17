@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import { Button, Title, Text } from 'rizzui';
-import LaptopImg from '@public/welcome-laptop.png';
-import MobileImg from '@public/welcome-mobile.png';
+import logoImg from '@public/assets/img/logo/logo-ipg3.jpeg';
+import { routes } from '@/config/routes';
+import Link from 'next/link';
 
 export default function WelcomePage() {
   return (
@@ -12,41 +13,48 @@ export default function WelcomePage() {
             as="h2"
             className="mb-3 text-[22px] font-bold leading-snug sm:text-2xl md:mb-5 md:text-3xl md:leading-snug xl:mb-7 xl:text-4xl xl:leading-normal 2xl:text-[40px] 3xl:text-5xl 3xl:leading-snug"
           >
-            Welcome to Isomorphic <br />
-            Ultimate Dashboard.
+            Selamat Datang di <br />
+            Infinite Prestige Global (IPG)
           </Title>
           <Text className="mb-6 max-w-[612px] text-sm leading-loose text-gray-500 md:mb-8 xl:mb-10 xl:text-base xl:leading-loose">
-            We have been spending long hours in order to launch our new website.
-            Join our <br className="hidden sm:inline-block lg:hidden" /> mailing
-            list or follow us on Facebook for get latest update.
+            PT. Infinite Prestige Global (IPG) adalah platform pemasaran
+            jaringan yang membuka peluang bisnis bagi siapa pun untuk meraih
+            kesuksesan melalui penjualan produk unggulan. Bergabung Sekarang —
+            Jadilah Orang Pertama di Kota Anda!
           </Text>
           <div className="mt-8 flex flex-col justify-center gap-4 lg:flex-row lg:justify-start xl:gap-6">
-            <Button
-              color="primary"
-              size="lg"
-              className="h-12 px-4 xl:h-14 xl:px-6"
-            >
-              Start Installation
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-12 px-4 xl:h-14 xl:px-6"
-            >
-              User Guide
-            </Button>
+            <Link href={routes.signIn}>
+              <Button
+                color="primary"
+                size="lg"
+                className="h-12 px-4 xl:h-14 xl:px-6"
+              >
+                Mulai Sekarang!
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="relative">
+          <style>{`
+  @keyframes pinFloat {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px); /* subtle upward motion */
+    }
+  }
+
+  .animate-pin-float {
+    animation: pinFloat 4s ease-in-out infinite;
+    transform-style: preserve-3d;
+  }
+`}</style>
+
           <Image
-            src={LaptopImg}
+            src={logoImg}
             alt="coming-soon"
-            className="aspect-[632/630] max-w-[256px] sm:max-w-xs lg:max-w-lg 2xl:max-w-xl 3xl:max-w-[632px]"
-          />
-          <Image
-            src={MobileImg}
-            alt="coming-soon"
-            className="absolute left-0 top-1/2 z-10 aspect-[275/390] max-w-[100px] -translate-y-1/2 lg:max-w-[210px]"
+            className="animate-pin-float aspect-[632/630] max-w-[256px] rounded-xl sm:max-w-xs lg:max-w-lg 2xl:max-w-xl 3xl:max-w-[632px]"
           />
           <div className="mx-auto h-20 w-32 bg-gray-1000/50 blur-[57px] [transform:rotateX(80deg)]"></div>
           <div className="absolute bottom-10 left-3 mx-auto h-20 w-32 bg-gray-1000/50 blur-[57px] [transform:rotateX(80deg)] lg:left-7"></div>

@@ -29,7 +29,9 @@ import {
 } from '@/store/checkout';
 import {
   CreateOrderInput,
+  CreateOrderInputNew,
   orderFormSchema,
+  orderFormSchemaNew,
 } from '@/validators/create-order.schema';
 import { useState } from 'react';
 
@@ -47,11 +49,7 @@ export default function CheckoutPageWrapper({
 
   const methods = useForm({
     mode: 'onChange',
-    resolver: zodResolver(orderFormSchema),
-    defaultValues: {
-      sameShippingAddress: orderData.sameShippingAddress,
-      shippingMethod: orderData.shippingMethod,
-    },
+    resolver: zodResolver(orderFormSchemaNew),
   });
 
   const sameShippingAddress = useWatch({
@@ -59,18 +57,8 @@ export default function CheckoutPageWrapper({
     name: 'sameShippingAddress',
   });
 
-  const onSubmit: SubmitHandler<CreateOrderInput> = (data) => {
+  const onSubmit: SubmitHandler<CreateOrderInputNew> = (data) => {
     // set timeout ony required to display loading state of the create order button
-    setOrderNote(data?.note as string);
-    if (sameShippingAddress) {
-      setBillingAddress(data.billingAddress);
-      setShippingAddress(data.billingAddress);
-    } else {
-      if (!isEmpty(data.shippingAddress)) {
-        setShippingAddress(data.shippingAddress);
-      }
-    }
-
     setLoading(true);
 
     setTimeout(() => {

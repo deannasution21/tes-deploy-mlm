@@ -1,4 +1,7 @@
-import { CreateOrderInput } from '@/validators/create-order.schema';
+import {
+  CreateOrderInput,
+  CreateOrderInputNew,
+} from '@/validators/create-order.schema';
 
 export function defaultValues(order?: CreateOrderInput) {
   return {
@@ -33,6 +36,18 @@ export function defaultValues(order?: CreateOrderInput) {
       cardUserName: order?.cardPayment?.cardUserName,
       isSaveCard: order?.cardPayment?.isSaveCard,
     },
+  };
+}
+
+export function defaultValuesNew(order?: CreateOrderInputNew) {
+  return {
+    customer_name: order?.customer_name,
+    customer_phone: order?.customer_phone,
+    shipping_method: order?.shipping_method,
+    shipping_address: order?.shipping_address,
+    province: order?.province,
+    city: order?.city,
+    payment_method: order?.payment_method,
   };
 }
 

@@ -34,10 +34,8 @@ export default function OrderProducts({
     );
   }
 
-  console.log(items);
-
   return (
-    <SimpleBar className={cn('h-[calc(100vh_-_170px)] pb-3', className)}>
+    <SimpleBar className={cn('h-[calc(100vh_-_370px)] pb-3', className)}>
       <div className={cn('grid gap-3.5', className)}>
         {items.map((item) => (
           <div
@@ -113,7 +111,6 @@ function QuantityControl({
   addItemToCart: (item: ProductCartItem, quantity: number) => void;
   removeItemFromCart: (id: string) => void;
 }) {
-  console.log(product);
   return (
     <div className="mt-2 inline-flex items-center rounded bg-gray-100 p-0.5 text-xs">
       <button

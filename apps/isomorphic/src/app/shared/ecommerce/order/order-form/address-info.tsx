@@ -60,8 +60,8 @@ export default function AddressInfo({
   const [dataKelurahan, setDataKelurahan] = useState<OptionType[]>([]);
 
   // Watch selected values
-  const selectedProvinsi = watch('provinsi');
-  const selectedKabupaten = watch('kabupaten');
+  const selectedProvinsi = watch('province');
+  const selectedKabupaten = watch('city');
   const selectedKecamatan = watch('kecamatan');
 
   // Fetch provinsi list
@@ -138,12 +138,12 @@ export default function AddressInfo({
       <Input
         label="Nama Lengkap"
         placeholder="Nama Lengkap"
-        {...register(`${type}.customerName`)}
+        {...register(`customer_name`)}
         // @ts-ignore
-        error={errors?.[type]?.customerName?.message as any}
+        error={errors?.customer_name?.message as any}
       />
       <Controller
-        name={`${type}.phoneNumber`}
+        name="customer_phone"
         control={control}
         render={({ field: { value, onChange } }) => (
           <PhoneNumber
@@ -152,14 +152,14 @@ export default function AddressInfo({
             value={value}
             onChange={onChange}
             // @ts-ignore
-            error={errors?.[type]?.phoneNumber?.message as string}
+            error={errors?.customer_phone?.message as string}
           />
         )}
       />
       {/* Provinsi */}
       <Controller
         control={control}
-        name="provinsi"
+        name="province"
         render={({ field: { onChange, value } }) => (
           <Select
             label="Provinsi"
@@ -174,7 +174,7 @@ export default function AddressInfo({
             displayValue={(selected) =>
               dataProvinsi.find((p) => p.value === selected)?.label ?? ''
             }
-            // error={errors?.provinsi?.message}
+            error={errors?.province?.message as string | undefined}
           />
         )}
       />
@@ -182,7 +182,7 @@ export default function AddressInfo({
       {/* Kabupaten */}
       <Controller
         control={control}
-        name="kabupaten"
+        name="city"
         render={({ field: { onChange, value } }) => (
           <Select
             label="Kota/Kabupaten"
@@ -197,7 +197,7 @@ export default function AddressInfo({
             displayValue={(selected) =>
               dataKabupaten.find((k) => k.value === selected)?.label ?? ''
             }
-            // error={errors?.kabupaten?.message}
+            error={errors?.kabupaten?.message as string | undefined}
             disabled={!selectedProvinsi}
           />
         )}
@@ -221,7 +221,7 @@ export default function AddressInfo({
             displayValue={(selected) =>
               dataKecamatan.find((d) => d.value === selected)?.label ?? ''
             }
-            // error={errors?.kecamatan?.message}
+            error={errors?.kecamatan?.message as string | undefined}
             disabled={!selectedKabupaten}
           />
         )}
@@ -245,7 +245,7 @@ export default function AddressInfo({
             displayValue={(selected) =>
               dataKelurahan.find((v) => v.value === selected)?.label ?? ''
             }
-            // error={errors?.kelurahan?.message}
+            error={errors?.kelurahan?.message as string | undefined}
             disabled={!selectedKecamatan}
           />
         )}
@@ -253,16 +253,16 @@ export default function AddressInfo({
       <Textarea
         label="Alamat"
         placeholder="Alamat"
-        {...register('note')}
-        error={errors.note?.message as string}
+        {...register('shipping_address')}
+        error={errors.shipping_address?.message as string}
         textareaClassName="h-20"
       />
       <Input
         label="Kode Pos"
         placeholder="Kode Pos"
-        {...register(`${type}.zip`)}
+        {...register(`zip`)}
         // @ts-ignore
-        error={errors?.[type]?.zip?.message as string}
+        error={errors?.zip?.message as string}
       />
     </div>
   );

@@ -7,7 +7,8 @@ export const routes = {
     ubahPassword: '/profil/ubah-password',
   },
   bonus: {
-    history: '/history-bonus',
+    index: '/bonus',
+    history: '/bonus/history',
   },
   requestPin: {
     index: '/request-pin',
@@ -15,19 +16,19 @@ export const routes = {
   },
   generatePin: {
     index: '/generate-pin',
-    history: '/history-generate-pin',
+    history: '/generate-pin/history',
   },
   transferPin: {
     index: '/transfer-pin',
-    history: '/history-transfer-pin',
+    history: '/transfer-pin/history',
   },
   postingPin: {
     index: '/posting-pin',
-    history: '/history-posting-pin',
+    history: '/posting-pin/history',
   },
   withdrawalPin: {
     index: '/withdrawal-pin',
-    history: '/history-withdrawal-pin',
+    history: '/withdrawal-pin/history',
   },
   produk: {
     index: '/produk',
@@ -41,7 +42,8 @@ export const routes = {
     transaksi: '/produk/transaksi',
   },
   stockist: {
-    index: '/stockist/daftar',
+    index: '/stockist',
+    daftar: '/stockist/daftar',
   },
   eCommerce: {
     dashboard: '/ecommerce',

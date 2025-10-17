@@ -38,8 +38,6 @@ export default function ProductDetailsSummery({
         quantity: data.quantity,
       });
 
-      console.log(item);
-
       setLoading(true);
       setTimeout(() => {
         setLoading(false);

@@ -16,18 +16,6 @@ const addressSchema = z.object({
   street: z.string().optional(),
 });
 
-// const addressSchema = z.object({
-//   namaLengkap: z.string().min(1, { message: messages.kolomIsRequired }),
-//   noHp: z
-//     .string({
-//       required_error: messages.hpIsRequired,
-//     })
-//     .min(2, { message: messages.kolomIsRequired }),
-//   provinsi: z.string().min(1, { message: messages.kolomIsRequired }),
-//   kodePos: z.string().min(1, { message: messages.kolomIsRequired }),
-//   alamat: z.string().min(1, { message: messages.kolomIsRequired }),
-// });
-
 // form zod validation schema
 export const orderFormSchema = z.object({
   billingAddress: addressSchema,
@@ -59,5 +47,21 @@ export const orderFormSchema = z.object({
     .optional(),
 });
 
+export const orderFormSchemaNew = z.object({
+  customer_name: z.string().min(1, { message: messages.kolomIsRequired }),
+  customer_phone: z
+    .string({
+      required_error: messages.hpIsRequired,
+    })
+    .min(2, { message: messages.kolomIsRequired }),
+  shipping_method: z.boolean().optional(),
+  shipping_address: z.string().min(1, { message: messages.kolomIsRequired }),
+  province: z.string({ required_error: messages.kolomIsRequired }),
+  city: z.string().min(1, { message: messages.kolomIsRequired }),
+  zip: z.string().min(1, { message: messages.kolomIsRequired }),
+  payment_method: z.string({ required_error: messages.kolomIsRequired }),
+});
+
 // generate form types from zod validation schema
 export type CreateOrderInput = z.infer<typeof orderFormSchema>;
+export type CreateOrderInputNew = z.infer<typeof orderFormSchemaNew>;

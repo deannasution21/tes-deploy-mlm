@@ -24,32 +24,65 @@ import {
 } from 'react-icons/pi';
 import { paymentMethodData } from '@/data/checkout-data';
 
-type CardExpiredType = NumberInputProps & {
-  isMask?: boolean;
-};
-
-function CardExpired({ isMask = false, ...props }: CardExpiredType) {
-  const { format } = usePatternFormat({
-    ...props,
-    format: '##/##',
-  });
-  const _format = (val: string) => {
-    let month = val.substring(0, 2);
-    const year = val.substring(2, 4);
-
-    if (month.length === 1 && parseInt(month[0]) > 1) {
-      month = `0${month[0]}`;
-    } else if (month.length === 2) {
-      if (Number(month) === 0) {
-        month = '01';
-      } else if (Number(month) > 12) {
-        month = '12';
-      }
-    }
-    return isMask && format ? format(`${month}${year}`) : `${month}/${year}`;
-  };
-  return <NumberInput {...props} format={_format} />;
+// types.ts
+export interface PaymentOption {
+  value: string;
+  label: string;
+  icon: string;
 }
+
+export const dataMetodePembayaran: PaymentOption[] = [
+  {
+    value: 'bca_va',
+    label: 'BCA Virtual Account',
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/5/5a/BCA_logo.svg',
+  },
+  {
+    value: 'bni_va',
+    label: 'BNI Virtual Account',
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/BNI_logo.svg',
+  },
+  {
+    value: 'bri_va',
+    label: 'BRI Virtual Account',
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Bank_BRI_logo.svg',
+  },
+  {
+    value: 'mandiri_va',
+    label: 'Mandiri Virtual Account',
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/9/9f/Bank_Mandiri_logo.svg',
+  },
+  {
+    value: 'qris',
+    label: 'QRIS',
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/Logo_QRIS.svg',
+  },
+  {
+    value: 'gopay',
+    label: 'GoPay',
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/4/46/GoPay_logo.svg',
+  },
+  {
+    value: 'ovo',
+    label: 'OVO',
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/5/58/Logo_ovo_purple.svg',
+  },
+  {
+    value: 'dana',
+    label: 'DANA',
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/9/9f/Logo_dana_blue.svg',
+  },
+  {
+    value: 'shopeepay',
+    label: 'ShopeePay',
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/1/1a/ShopeePay_logo.svg',
+  },
+  {
+    value: 'credit_card',
+    label: 'Kartu Kredit / Debit',
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png',
+  },
+];
 
 export default function PaymentMethod({ className }: { className?: string }) {
   const {
@@ -63,48 +96,6 @@ export default function PaymentMethod({ className }: { className?: string }) {
     control,
     name: 'paymentMethod',
   });
-
-  // ✅ Adjusted dummy data for "metode pembayaran"
-  async function fetchDataMetodePembayaran() {
-    const raw = [
-      {
-        group: 'Bank Transfer',
-        items: [
-          { id: 'bni', text: 'BNI - 123456' },
-          { id: 'bri', text: 'BRI - 123456' },
-          { id: 'bca', text: 'BCA - 123456' },
-          { id: 'mandiri', text: 'MANDIRI - 123456' },
-        ],
-      },
-      {
-        group: 'Virtual Account',
-        items: [
-          { id: 'va_bni', text: 'BNI VA - 123456' },
-          { id: 'va_bri', text: 'BRI VA - 123456' },
-          { id: 'va_bca', text: 'BCA VA - 123456' },
-          { id: 'va_mandiri', text: 'MANDIRI VA - 123456' },
-        ],
-      },
-    ];
-
-    // ✅ Map into your select-friendly structure
-    const formatted = raw.flatMap((group) =>
-      group.items.map((item) => ({
-        label: `${group.group} — ${item.text}`,
-        value: item.id,
-      }))
-    );
-
-    return formatted;
-  }
-
-  const [dataMetodePembayaran, setDataMetodePembayaran] = useState<
-    { label: string; value: string }[]
-  >([]);
-
-  useEffect(() => {
-    fetchDataMetodePembayaran().then(setDataMetodePembayaran);
-  }, []);
 
   return (
     <div>
@@ -165,7 +156,7 @@ export default function PaymentMethod({ className }: { className?: string }) {
         /> */}
         <Controller
           control={control}
-          name="metode"
+          name="payment_method"
           render={({ field: { onChange, value } }) => (
             <Select
               label="Pilih Metode Pembayaran"
@@ -181,7 +172,7 @@ export default function PaymentMethod({ className }: { className?: string }) {
                 dataMetodePembayaran.find((k) => k.value === selected)?.label ??
                 ''
               }
-              error={'Kolom wajib diisi'}
+              error={errors?.payment_method?.message as string | undefined}
             />
           )}
         />

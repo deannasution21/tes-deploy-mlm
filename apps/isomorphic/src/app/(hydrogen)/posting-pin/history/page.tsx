@@ -3,18 +3,22 @@ import { routes } from '@/config/routes';
 import { metaObject } from '@/config/site.config';
 
 export const metadata = {
-  ...metaObject('History Generate PIN'),
+  ...metaObject('History Posting PIN'),
 };
 
 const pageHeader = {
-  title: 'History Generate PIN',
+  title: 'History Posting PIN',
   breadcrumb: [
     {
       href: routes.dashboard.index,
       name: 'Dashboard',
     },
     {
-      name: 'History Generate PIN',
+      href: routes.postingPin.index,
+      name: 'Posting PIN',
+    },
+    {
+      name: 'History',
     },
   ],
 };

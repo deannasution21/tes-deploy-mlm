@@ -17,9 +17,9 @@ export default function DifferentBillingAddress({
       render={({ field: { value, onChange } }) => (
         <Checkbox
           value={value}
-          defaultChecked={value}
+          defaultChecked={false}
           onChange={onChange}
-          label="Shipping Address is the same as Billing Address"
+          label="Ambil di Kantor"
         />
       )}
     />

@@ -1,36 +1,66 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import ProductDetailsRelatedProducts from '@/app/shared/ecommerce/product/product-details-related-products';
-import ProductDetailsDescription from '@/app/shared/ecommerce/product/product-details-description';
-import ProductDeliveryOptions from '@/app/shared/ecommerce/product/product-delivery-options';
 import ProductDetailsGallery from '@/app/shared/ecommerce/product/product-details-gallery';
 import ProductDetailsSummery from '@/app/shared/ecommerce/product/product-details-summery';
-import ProductDetailsReview from '@/app/shared/ecommerce/product/product-details-review';
-import { modernProductsGrid } from '@/data/shop-products';
-import { generateSlug } from '@core/utils/generate-slug';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { ProductDetailResponse, ProductItem } from '@/types';
+import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
 
 export default function ProductDetails() {
+  const { data: session } = useSession();
   const params = useParams();
-  const product =
-    modernProductsGrid.find(
-      (item) => generateSlug(item.title) === params.slug
-    ) ?? modernProductsGrid[0];
+
+  // Ensure it's always treated as a string
+  const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug;
+
+  // example: 'kopi-stamina-prd0002' → 'prd0002'
+  const productId = slug ? slug.split('-').pop() : undefined;
+
+  const [product, setProduct] = useState<ProductItem | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getDataProduk = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/_products/${productId}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-app-token': session?.accessToken ?? '',
+            },
+          }
+        );
+
+        if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
+
+        const data = (await res.json()) as ProductDetailResponse;
+        setProduct(data.data);
+      } catch (error) {
+        console.error('Fetch data error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (session?.accessToken && productId) getDataProduk();
+  }, [session?.accessToken, productId]);
+
+  if (!product) return <div>Produk tidak ditemukan.</div>;
 
   return (
     <div className="@container">
       <div className="@3xl:grid @3xl:grid-cols-12">
         <div className="col-span-7 mb-7 @container @lg:mb-10 @3xl:pe-10">
-          <ProductDetailsGallery />
+          <ProductDetailsGallery image={defaultPlaceholder} />
         </div>
         <div className="col-span-5 @container">
           <ProductDetailsSummery product={product} />
-          <ProductDeliveryOptions />
-          <ProductDetailsDescription />
-          <ProductDetailsReview />
         </div>
       </div>
-      <ProductDetailsRelatedProducts />
     </div>
   );
 }

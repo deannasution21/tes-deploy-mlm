@@ -623,48 +623,53 @@ export const menuItemsUser = [
     icon: <PiTreeStructure />,
     badge: '',
   },
+
   {
-    name: 'Generate PIN',
+    name: 'History Bonus',
     href: '#',
     icon: <ProjectWriteIcon />,
     dropdownItems: [
       {
-        name: 'Generate PIN A ',
-        href: routes.generatePin.index,
-      },
-      {
-        name: 'History Generate PIN A ',
-        href: routes.generatePin.history,
+        name: 'History Bonus PIN A ',
+        href: routes.bonus.history,
       },
     ],
   },
   {
-    name: 'Transfer PIN',
-    href: '#',
-    icon: <ProjectWriteIcon />,
-    dropdownItems: [
-      {
-        name: 'Transfer PIN A ',
-        href: routes.transferPin.index,
-      },
-      {
-        name: 'History Transfer PIN A ',
-        href: routes.transferPin.history,
-      },
-    ],
-  },
-  {
-    name: 'Posting PIN',
+    name: 'Withdrawal Bonus',
     href: '#',
     icon: <PiUserPlus />,
     dropdownItems: [
       {
-        name: 'Posting PIN A ',
-        href: routes.postingPin.index,
+        name: 'Withdrawal PIN A ',
+        href: routes.withdrawalPin.index,
       },
       {
-        name: 'History Posting PIN A ',
-        href: routes.postingPin.history,
+        name: 'History Withdrawal PIN A ',
+        href: routes.withdrawalPin.history,
+      },
+    ],
+  },
+  {
+    name: 'Transfer PIN/Beli Produk',
+    href: '#',
+    icon: <PiShoppingCart />,
+    dropdownItems: [
+      {
+        name: 'Pembelian Produk',
+        href: routes.produk.index,
+      },
+      {
+        name: 'History Pembelian Produk',
+        href: routes.produk.history,
+      },
+      {
+        name: 'Transfer PIN A',
+        href: routes.transferPin.index,
+      },
+      {
+        name: 'History Transfer PIN A',
+        href: routes.transferPin.history,
       },
     ],
   },
@@ -675,11 +680,11 @@ export const menuItemsUser = [
     dropdownItems: [
       {
         name: 'Withdrawal PIN A ',
-        href: routes.historyBonus.index,
+        href: routes.withdrawalPin.index,
       },
       {
         name: 'History Withdrawal PIN A ',
-        href: routes.historyBonus.index,
+        href: routes.withdrawalPin.history,
       },
     ],
   },
@@ -688,7 +693,7 @@ export const menuItemsUser = [
 export const menuItemsAdmin = [
   // label start
   {
-    name: 'Overview',
+    name: 'Dashboard',
   },
   // label end
   {
@@ -708,13 +713,13 @@ export const menuItemsAdmin = [
     icon: <ProjectWriteIcon />,
     dropdownItems: [
       {
-        name: 'Request PIN ',
-        href: routes.historyBonus.index,
+        name: 'Request PIN A',
+        href: routes.requestPin.index,
         badge: '',
       },
       {
-        name: 'History Request PIN ',
-        href: routes.historyBonus.index,
+        name: 'History Request PIN A',
+        href: routes.requestPin.history,
         badge: '',
       },
     ],
@@ -725,25 +730,35 @@ export const menuItemsAdmin = [
     icon: <ProjectWriteIcon />,
     dropdownItems: [
       {
-        name: 'Generate PIN ',
-        href: routes.historyBonus.index,
-        badge: '',
+        name: 'Generate PIN A',
+        href: routes.generatePin.index,
       },
       {
-        name: 'History Generate PIN ',
-        href: routes.historyBonus.index,
-        badge: '',
+        name: 'History Generate PIN A',
+        href: routes.generatePin.history,
       },
     ],
   },
   {
     name: 'Kelola Produk',
-    href: routes.historyBonus.index,
+    href: '#',
     icon: <PiPackageDuotone />,
+    dropdownItems: [
+      {
+        name: 'Daftar Produk',
+        href: routes.kelolaProduk.index,
+        badge: '',
+      },
+      {
+        name: 'Transaksi Produk',
+        href: routes.kelolaProduk.transaksi,
+        badge: '',
+      },
+    ],
   },
   {
     name: 'Daftar Stockist',
-    href: routes.historyBonus.index,
+    href: routes.stockist.index,
     icon: <PiUsers />,
   },
 ];

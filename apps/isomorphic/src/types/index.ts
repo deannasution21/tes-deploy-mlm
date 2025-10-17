@@ -1,4 +1,5 @@
 import { CouponType } from '@/config/enums';
+import { StaticImageData } from 'next/image';
 
 export interface Coupon {
   id: string;
@@ -122,4 +123,45 @@ export interface FlightingCardProps {
   cheapest?: boolean;
   best?: boolean;
   quickest?: boolean;
+}
+
+export interface ProductResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: ProductItem[];
+}
+
+export interface ProductDetailResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: ProductItem;
+}
+
+export interface ProductItem {
+  product_id: string;
+  attribute: ProductAttribute;
+}
+
+export interface ProductAttribute {
+  name: string;
+  stock: number;
+  stock_pin?: number;
+  description: string;
+  price: ProductPrice;
+}
+
+export interface ProductPrice {
+  amount: number;
+  currency: string;
+}
+
+export interface ProductCartItem extends ProductAttribute {
+  id: string;
+  slug: string;
+  quantity: number;
+  image: string | StaticImageData;
+  size?: number;
+  discount?: number;
 }

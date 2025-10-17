@@ -37,18 +37,18 @@ export default function OrderSummery({
       )}
     >
       <Title as="h4" className="mb-3 font-semibold">
-        Your Order
+        Pesanan Anda
       </Title>
       <div className="rounded-lg border border-muted p-4 @xs:p-6 @5xl:rounded-none @5xl:border-none @5xl:px-0">
         <div className="flex justify-between rounded-tl-lg rounded-tr-lg border-b border-muted pb-4 @xs:pb-6">
-          Ordered items
-          <Link href={routes.eCommerce.cart}>
+          Produk
+          <Link href={routes.produk.keranjang}>
             <Button
               as="span"
               variant="text"
               className="h-auto w-auto p-0 text-primary underline hover:text-gray-1000"
             >
-              Edit Cart
+              Edit Keranjang
             </Button>
           </Link>
         </div>
@@ -67,13 +67,13 @@ export default function OrderSummery({
             </Text>
           </div>
           <div className="mb-4 flex items-center justify-between last:mb-0">
-            Tax
+            Pajak
             <Text as="span" className="font-medium text-gray-900">
               {toCurrency(0)}
             </Text>
           </div>
           <div className="mb-4 flex items-center justify-between last:mb-0">
-            Shipping
+            Pengiriman
             <Text as="span" className="font-medium text-gray-900">
               {toCurrency(0)}
             </Text>
@@ -89,14 +89,14 @@ export default function OrderSummery({
               isLoading={isLoading}
               className="mt-3 w-full text-base @md:h-12"
             >
-              {params?.id ? 'Update Order' : 'Place Order'}
+              {params?.id ? 'Ubah Pesanan' : 'Buat Pesanan'}
             </Button>
           ) : (
             <Link href={routes.eCommerce.shop}>
               <Button
                 as="span"
                 className="mt-3 w-full text-base @md:h-12"
-              >{`Back to Store`}</Button>
+              >{`Kembali ke Produk`}</Button>
             </Link>
           )}
         </div>

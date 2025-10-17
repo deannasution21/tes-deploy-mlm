@@ -1,4 +1,32 @@
 export const routes = {
+  dashboard: {
+    index: "/dashboard",
+  },
+  profil: {
+    index: "/profil",
+    ubahPassword: "/profil/ubah-password",
+  },
+  historyBonus: {
+    index: "/",
+  },
+  generatePin: {
+    index: "/generate-pin",
+    history: "/history-generate-pin",
+  },
+  transferPin: {
+    index: "/transfer-pin",
+    history: "/history-transfer-pin",
+  },
+  postingPin: {
+    index: "/posting-pin",
+    history: "/history-posting-pin",
+  },
+  produk: {
+    index: "/produk",
+    detail: (slug: string) => `/produk/${slug}`,
+    history: "/produk/history",
+    ajaib: "/produk/ajaib",
+  },
   eCommerce: {
     dashboard: "/ecommerce",
     products: "/ecommerce/products",

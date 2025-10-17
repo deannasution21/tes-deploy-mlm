@@ -54,7 +54,7 @@ export function FilterDrawerView({
           onClick={() => setOpenDrawer(false)}
           className="mt-5 h-11 w-full text-sm"
         >
-          Show Results
+          Tampilkan Data
         </Button>
       </div>
     </Drawer>

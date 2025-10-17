@@ -61,6 +61,7 @@ export const messages = {
   folderNameLengthMin: 'Folder name must be at least 3 letters',
   productColorRequired: 'Product Color is Required',
   productSizeRequired: 'Product Size is Required',
+  quantityRequired: 'Quantity is Required',
   descriptionIsRequired: 'Description is Required',
   locationIsRequired: 'Location is Required',
   startDateIsRequired: 'Start Date is required',
@@ -71,4 +72,10 @@ export const messages = {
   roleNameLengthMin: 'Role name must be at least 3 letters',
   errorSendingEmail: 'Error sending email',
   emailSentSuccessfully: 'Your email has been sent successfully.',
+  namaIsRequired: 'Kolom wajib diisi',
+  hpIsRequired: 'Kolom wajib diisi',
+  alamatIsRequired: 'Kolom wajib diisi',
+  kodePosIsRequired: 'Kolom wajib diisi',
+  paymentIsRequired: 'Kolom wajib diisi',
+  kolomIsRequired: 'Kolom wajib diisi',
 };

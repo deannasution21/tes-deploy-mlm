@@ -9,7 +9,7 @@ import { Checkbox, Password, Button, Input, Text } from 'rizzui';
 import { Form } from '@core/ui/form';
 import { routes } from '@/config/routes';
 import { loginSchema, LoginSchema } from '@/validators/login.schema';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Preloader } from '@/app/shared/preloader';
 
 const initialValuesAdmin: LoginSchema = {
@@ -26,6 +26,9 @@ const initialValuesUser: LoginSchema = {
 
 export default function SignInForm({ role }: { role: string }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+
   const [reset, setReset] = useState({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -47,11 +50,10 @@ export default function SignInForm({ role }: { role: string }) {
       return;
     }
 
-    // ✅ Wait for the router navigation to complete
-    if (!res?.error) {
-      router.push('/dashboard');
-      setTimeout(() => setLoading(false), 800); // hide loader after short delayhel
-    }
+    const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+    router.push(callbackUrl);
+
+    setTimeout(() => setLoading(false), 800);
   };
 
   return (

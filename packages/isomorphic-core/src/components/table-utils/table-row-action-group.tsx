@@ -7,15 +7,19 @@ import DeletePopover from "../delete-popover";
 
 export default function TableRowActionGroup({
   onDelete,
+  isEdit,
   editUrl = "#",
   viewUrl = "#",
+  isDelete,
   deletePopoverTitle = "Delete the appointment",
   deletePopoverDescription = "Are you sure you want to delete this item?",
   className,
 }: {
   onDelete?: () => void;
+  isEdit?: boolean;
   editUrl?: string;
   viewUrl?: string;
+  isDelete?: boolean;
   deletePopoverTitle?: string;
   deletePopoverDescription?: string;
   className?: string;
@@ -27,29 +31,21 @@ export default function TableRowActionGroup({
       gap="3"
       className={cn("pe-3", className)}
     >
-      <Tooltip
-        size="sm"
-        content="Edit Item"
-        placement="top"
-        color="invert"
-      >
-        <Link href={editUrl}>
-          <ActionIcon
-            as="span"
-            size="sm"
-            variant="outline"
-            aria-label="Edit Item"
-          >
-            <PencilIcon className="size-4" />
-          </ActionIcon>
-        </Link>
-      </Tooltip>
-      <Tooltip
-        size="sm"
-        content="View Item"
-        placement="top"
-        color="invert"
-      >
+      {isEdit && (
+        <Tooltip size="sm" content="Edit Item" placement="top" color="invert">
+          <Link href={editUrl}>
+            <ActionIcon
+              as="span"
+              size="sm"
+              variant="outline"
+              aria-label="Edit Item"
+            >
+              <PencilIcon className="size-4" />
+            </ActionIcon>
+          </Link>
+        </Tooltip>
+      )}
+      <Tooltip size="sm" content="View Item" placement="top" color="invert">
         <Link href={viewUrl}>
           <ActionIcon
             as="span"
@@ -61,11 +57,13 @@ export default function TableRowActionGroup({
           </ActionIcon>
         </Link>
       </Tooltip>
-      <DeletePopover
-        title={deletePopoverTitle}
-        description={deletePopoverDescription}
-        onDelete={onDelete}
-      />
+      {isDelete && (
+        <DeletePopover
+          title={deletePopoverTitle}
+          description={deletePopoverDescription}
+          onDelete={onDelete}
+        />
+      )}
     </Flex>
   );
 }

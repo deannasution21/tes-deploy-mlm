@@ -17,13 +17,13 @@ export const ordersColumns = (expanded: boolean = true) => {
     columnHelper.display({
       id: 'id',
       size: 120,
-      header: 'Order Id',
+      header: 'ID',
       cell: ({ row }) => <>#{row.original.id}</>,
     }),
     columnHelper.accessor('name', {
       id: 'customer',
       size: 300,
-      header: 'Customer',
+      header: 'Nama',
       enableSorting: false,
       cell: ({ row }) => (
         <TableAvatar
@@ -36,7 +36,7 @@ export const ordersColumns = (expanded: boolean = true) => {
     columnHelper.display({
       id: 'items',
       size: 150,
-      header: 'Items',
+      header: 'Produk',
       cell: ({ row }) => (
         <Text className="font-medium text-gray-700">{row.original.items}</Text>
       ),
@@ -44,7 +44,7 @@ export const ordersColumns = (expanded: boolean = true) => {
     columnHelper.accessor('price', {
       id: 'price',
       size: 150,
-      header: 'Price',
+      header: 'Total',
       cell: ({ row }) => (
         <Text className="font-medium text-gray-700">${row.original.price}</Text>
       ),
@@ -52,14 +52,8 @@ export const ordersColumns = (expanded: boolean = true) => {
     columnHelper.accessor('createdAt', {
       id: 'createdAt',
       size: 200,
-      header: 'Created',
+      header: 'Tanggal',
       cell: ({ row }) => <DateCell date={new Date(row.original.createdAt)} />,
-    }),
-    columnHelper.accessor('updatedAt', {
-      id: 'updatedAt',
-      size: 200,
-      header: 'Modified',
-      cell: ({ row }) => <DateCell date={new Date(row.original.updatedAt)} />,
     }),
     columnHelper.accessor('status', {
       id: 'status',
@@ -78,11 +72,13 @@ export const ordersColumns = (expanded: boolean = true) => {
         },
       }) => (
         <TableRowActionGroup
-          editUrl={routes.eCommerce.editOrder(row.original.id)}
+          isEdit={false}
+          // editUrl={routes.eCommerce.editOrder(row.original.id)}
           viewUrl={routes.eCommerce.orderDetails(row.original.id)}
-          deletePopoverTitle={`Delete the order`}
-          deletePopoverDescription={`Are you sure you want to delete this #${row.original.id} order?`}
-          onDelete={() => meta?.handleDeleteRow?.(row.original)}
+          isDelete={false}
+          // deletePopoverTitle={`Delete the order`}
+          // deletePopoverDescription={`Are you sure you want to delete this #${row.original.id} order?`}
+          // onDelete={() => meta?.handleDeleteRow?.(row.original)}
         />
       ),
     }),

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { PiMinus, PiPlus, PiTrash } from 'react-icons/pi';
 import { toCurrency } from '@core/utils/to-currency';
-import { CartItem } from '@/types';
+import { ProductCartItem } from '@/types';
 import Link from 'next/link';
 import { routes } from '@/config/routes';
 import { generateSlug } from '@core/utils/generate-slug';
@@ -18,13 +18,13 @@ export default function OrderProducts({
   addItemToCart,
   removeItemFromCart,
 }: {
-  items: CartItem[];
+  items: ProductCartItem[];
   className?: string;
   itemClassName?: string;
   showControls?: boolean;
-  clearItemFromCart: (id: number) => void;
-  addItemToCart: (item: CartItem, quantity: number) => void;
-  removeItemFromCart: (id: number) => void;
+  clearItemFromCart: (id: string) => void;
+  addItemToCart: (item: ProductCartItem, quantity: number) => void;
+  removeItemFromCart: (id: string) => void;
 }) {
   if (!items.length) {
     return (
@@ -33,6 +33,8 @@ export default function OrderProducts({
       </div>
     );
   }
+
+  console.log(items);
 
   return (
     <SimpleBar className={cn('h-[calc(100vh_-_170px)] pb-3', className)}>
@@ -73,15 +75,15 @@ export default function OrderProducts({
                   className="mb-1 text-sm font-medium text-gray-700"
                 >
                   <Link
-                    href={routes.eCommerce.productDetails(
-                      generateSlug(item.name)
+                    href={routes.produk.detail(
+                      generateSlug(`${item.name}-${item.id}`)
                     )}
                   >
                     {item.name}
                   </Link>
                 </Title>
                 <div className="text-gray-500">
-                  {toCurrency(item.price)} x {item.quantity}
+                  {toCurrency(item?.price?.amount)} x {item.quantity}
                 </div>
                 {showControls && (
                   <QuantityControl
@@ -93,7 +95,7 @@ export default function OrderProducts({
               </div>
             </div>
             <div className="flex items-center gap-3 font-medium text-gray-700">
-              {toCurrency(item.price * item.quantity)}
+              {toCurrency(item?.price?.amount * item.quantity)}
             </div>
           </div>
         ))}
@@ -107,10 +109,11 @@ function QuantityControl({
   addItemToCart,
   removeItemFromCart,
 }: {
-  product: CartItem;
-  addItemToCart: (item: CartItem, quantity: number) => void;
-  removeItemFromCart: (id: number) => void;
+  product: ProductCartItem;
+  addItemToCart: (item: ProductCartItem, quantity: number) => void;
+  removeItemFromCart: (id: string) => void;
 }) {
+  console.log(product);
   return (
     <div className="mt-2 inline-flex items-center rounded bg-gray-100 p-0.5 text-xs">
       <button
@@ -122,7 +125,7 @@ function QuantityControl({
       </button>
       <span className="grid w-8 place-content-center">{product.quantity}</span>
       <button
-        title="Decrement"
+        title="Increment"
         className="grid h-5 w-5 place-content-center rounded bg-gray-100"
         onClick={() => addItemToCart(product, 1)}
       >
@@ -137,9 +140,9 @@ function RemoveItem({
   className,
   clearItemFromCart,
 }: {
-  product: CartItem;
+  product: ProductCartItem;
   className?: string;
-  clearItemFromCart: (id: number) => void;
+  clearItemFromCart: (id: string) => void;
 }) {
   return (
     <button

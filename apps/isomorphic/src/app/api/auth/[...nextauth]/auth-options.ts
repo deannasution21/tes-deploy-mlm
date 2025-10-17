@@ -1,6 +1,7 @@
 import { type NextAuthOptions, User } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { pagesOptions } from './pages-options';
+import { Session } from 'next-auth';
 
 interface ApiLoginResponse {
   code: number;
@@ -35,7 +36,7 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: 'jwt',
-    maxAge: 15 * 60, // expire after 15 minutes
+    maxAge: 8 * 60, // expire after 8 minutes
     updateAge: 5 * 60, // refresh token every 5 minutes
   },
   // ✅ Attach token & session callbacks
@@ -48,6 +49,11 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
+      if (!token.user || !token.accessToken) {
+        console.log('session expires');
+        return null as unknown as Session;
+      }
+
       if (token.user) {
         session.user = token.user; // ✅ assign only when defined
       }

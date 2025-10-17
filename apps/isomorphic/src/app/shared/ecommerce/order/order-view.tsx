@@ -18,11 +18,10 @@ import { formatDate } from '@core/utils/format-date';
 import usePrice from '@core/hooks/use-price';
 
 const orderStatus = [
-  { id: 1, label: 'Order Pending' },
-  { id: 2, label: 'Order Processing' },
-  { id: 3, label: 'Order At Local Facility' },
-  { id: 4, label: 'Order Out For Delivery' },
-  { id: 5, label: 'Order Completed' },
+  { id: 1, label: 'Pesanan Dibuat' },
+  { id: 2, label: 'Menunggu Pembayaran' },
+  { id: 3, label: 'Pembayaran Selesai' },
+  { id: 4, label: 'Produk Dikirimkan' },
 ];
 
 const transitions = [
@@ -55,7 +54,7 @@ const transitions = [
   },
 ];
 
-const currentOrderStatus = 3;
+const currentOrderStatus = 2;
 
 function WidgetCard({
   title,
@@ -116,22 +115,11 @@ export default function OrderView() {
           Total {totalPrice}
         </span>
         <span className="my-2 ms-5 rounded-3xl border-r border-muted bg-green-lighter px-2.5 py-1 text-xs text-green-dark first:ps-0 last:border-r-0">
-          Paid
+          Menunggu Pembayaran
         </span>
       </div>
       <div className="items-start pt-10 @5xl:grid @5xl:grid-cols-12 @5xl:gap-7 @6xl:grid-cols-10 @7xl:gap-10">
         <div className="space-y-7 @5xl:col-span-8 @5xl:space-y-10 @6xl:col-span-7">
-          {orderNote && (
-            <div className="">
-              <span className="mb-1.5 block text-sm font-medium text-gray-700">
-                Notes About Order
-              </span>
-              <div className="rounded-xl border border-muted px-5 py-3 text-sm leading-[1.85]">
-                {orderNote}
-              </div>
-            </div>
-          )}
-
           <div className="pb-5">
             <OrderViewProducts />
             <div className="border-t border-muted pt-7 @5xl:mt-3">
@@ -157,62 +145,34 @@ export default function OrderView() {
               as="h3"
               className="mb-3.5 text-base font-semibold @5xl:mb-5 @7xl:text-lg"
             >
-              Transactions
+              Metode Pembayaran
             </Title>
 
             <div className="space-y-4">
-              {transitions.map((item) => (
-                <div
-                  key={item.paymentMethod.name}
-                  className="flex items-center justify-between rounded-lg border border-gray-100 px-5 py-5 font-medium shadow-sm transition-shadow @5xl:px-7"
-                >
-                  <div className="flex w-1/3 items-center">
-                    <div className="shrink-0">
-                      <Image
-                        src={item.paymentMethod.image}
-                        alt={item.paymentMethod.name}
-                        height={60}
-                        width={60}
-                        className="object-contain"
-                      />
-                    </div>
-                    <div className="flex flex-col ps-4">
-                      <Text as="span" className="font-lexend text-gray-700">
-                        Payment
-                      </Text>
-                      <span className="pt-1 text-[13px] font-normal text-gray-500">
-                        Via {item.paymentMethod.name}
-                      </span>
-                    </div>
+              <div className="flex items-center justify-between rounded-lg border border-gray-100 px-5 py-5 font-medium shadow-sm transition-shadow @5xl:px-7">
+                <div className="flex w-1/3 items-center">
+                  <div className="shrink-0">
+                    <Image
+                      src={
+                        'https://isomorphic-furyroad.s3.amazonaws.com/public/payment/master.png'
+                      }
+                      alt="metode pembayaran"
+                      height={60}
+                      width={60}
+                      className="object-contain"
+                    />
                   </div>
-
-                  <div className="w-1/3 text-end">{item.price}</div>
+                  <div className="flex flex-col ps-4">
+                    <Text as="span" className="font-lexend text-gray-700">
+                      Transfer Bank BCA
+                    </Text>
+                    <span className="pt-1 text-[13px] font-normal text-gray-500">
+                      12399490013 - AN. PT IPGLOBAL
+                    </span>
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
 
-          <div className="">
-            <div className="mb-3.5 @5xl:mb-5">
-              <Title as="h3" className="text-base font-semibold @7xl:text-lg">
-                Balance
-              </Title>
-            </div>
-            <div className="space-y-6 rounded-xl border border-muted px-5 py-6 @5xl:space-y-7 @5xl:p-7">
-              <div className="flex justify-between font-medium">
-                Total Order <span>$5275.00</span>
-              </div>
-              <div className="flex justify-between font-medium">
-                Total Return <span>$350.00</span>
-              </div>
-              <div className="flex justify-between font-medium">
-                Paid By Customer <span>$3000.00</span>
-              </div>
-              <div className="flex justify-between font-medium">
-                Refunded <span>$350.00</span>
-              </div>
-              <div className="flex justify-between font-medium">
-                Balance <span>$4975.00</span>
+                <div className="w-1/3 text-end">Rp 500.000,-</div>
               </div>
             </div>
           </div>
@@ -276,7 +236,7 @@ export default function OrderView() {
           </WidgetCard>
 
           <WidgetCard
-            title="Shipping Address"
+            title="Alamat Pengiriman"
             childrenWrapperClass="@5xl:py-6 py-5"
           >
             <Title
@@ -291,24 +251,6 @@ export default function OrderView() {
               {billingAddress?.country}
             </Text>
           </WidgetCard>
-          {!isEmpty(shippingAddress) && (
-            <WidgetCard
-              title="Billing Address"
-              childrenWrapperClass="@5xl:py-6 py-5"
-            >
-              <Title
-                as="h3"
-                className="mb-2.5 text-base font-semibold @7xl:text-lg"
-              >
-                {shippingAddress?.customerName}
-              </Title>
-              <Text as="p" className="mb-2 leading-loose last:mb-0">
-                {shippingAddress?.street}, {shippingAddress?.city},{' '}
-                {shippingAddress?.state}, {shippingAddress?.zip},{' '}
-                {shippingAddress?.country}
-              </Text>
-            </WidgetCard>
-          )}
         </div>
       </div>
     </div>

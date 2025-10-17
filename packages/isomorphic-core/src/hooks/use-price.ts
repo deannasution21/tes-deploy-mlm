@@ -1,12 +1,12 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 // import { useRouter } from 'next/router';
 
-export const CURRENCY_CODE = 'USD';
+export const CURRENCY_CODE = "IDR";
 export const CURRENCY_OPTIONS = {
-  formation: 'en-US',
-  fractions: 2,
+  formation: "id-ID",
+  fractions: 0, // usually Rupiah has no decimal fractions
 };
-export const LOCALE = 'en';
+export const LOCALE = "id";
 
 export function formatPrice({
   amount,
@@ -20,7 +20,7 @@ export function formatPrice({
   fractions: number;
 }) {
   const formatCurrency = new Intl.NumberFormat(locale, {
-    style: 'currency',
+    style: "currency",
     currency: currencyCode,
     maximumFractionDigits: fractions,
   });
@@ -42,7 +42,7 @@ export function formatVariantPrice({
   fractions: number;
 }) {
   const hasDiscount = baseAmount > amount;
-  const formatDiscount = new Intl.NumberFormat(locale, { style: 'percent' });
+  const formatDiscount = new Intl.NumberFormat(locale, { style: "percent" });
   const discount = hasDiscount
     ? formatDiscount.format((baseAmount - amount) / baseAmount)
     : null;
@@ -71,7 +71,7 @@ export default function usePrice(
 
   // const { locale } = useRouter();
   const value = useMemo(() => {
-    if (typeof amount !== 'number' || !currencyCode) return '';
+    if (typeof amount !== "number" || !currencyCode) return "";
     const fractionalDigit = fractions ? fractions : 2;
     let currentLocale = formation ? formation : LOCALE;
     // if (process.env.NEXT_PUBLIC_ENABLE_MULTI_LANG) {
@@ -95,7 +95,7 @@ export default function usePrice(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount, baseAmount, currencyCode]);
 
-  return typeof value === 'string'
+  return typeof value === "string"
     ? { price: value, basePrice: null, discount: null }
     : value;
 }

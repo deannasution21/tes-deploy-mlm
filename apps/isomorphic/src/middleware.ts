@@ -11,6 +11,8 @@ export const config = {
   // restricted routes
   matcher: [
     '/dashboard',
+    '/dashboard/:path*',
+    '/produk/:path*',
     '/profil/:path',
     '/generate-pin',
     '/history-generate-pin',

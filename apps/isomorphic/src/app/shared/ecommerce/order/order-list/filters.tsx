@@ -53,7 +53,7 @@ export default function Filters<TData extends Record<string, any>>({
     <Flex align="center" justify="between" className="mb-4">
       <Input
         type="search"
-        placeholder="Search by customer name..."
+        placeholder="Cari transaksi disini..."
         value={table.getState().globalFilter ?? ''}
         onClear={() => table.setGlobalFilter('')}
         onChange={(e) => table.setGlobalFilter(e.target.value)}
@@ -64,7 +64,7 @@ export default function Filters<TData extends Record<string, any>>({
 
       <FilterDrawerView
         isOpen={openDrawer}
-        drawerTitle="Table Filters"
+        drawerTitle="Filter Transaksi"
         setOpenDrawer={setOpenDrawer}
       >
         <div className="grid grid-cols-1 gap-6">
@@ -99,7 +99,7 @@ export default function Filters<TData extends Record<string, any>>({
           Filters
         </Button>
 
-        <ToggleColumns table={table} />
+        {/* <ToggleColumns table={table} /> */}
       </Flex>
     </Flex>
   );
@@ -123,7 +123,7 @@ function FilterElements<T extends Record<string, any>>({
       <PriceField
         value={priceFieldValue}
         onChange={(v) => table.getColumn('amount')?.setFilterValue(v)}
-        label="Amount"
+        label="Total Transaksi"
       />
       <DateFiled
         selectsRange
@@ -135,7 +135,7 @@ function FilterElements<T extends Record<string, any>>({
         startDate={getDateRangeStateValues(createdDate[0])!}
         onChange={(date) => table.getColumn('createdAt')?.setFilterValue(date)}
         inputProps={{
-          label: 'Created Date',
+          label: 'Tanggal',
         }}
       />
       <DateFiled

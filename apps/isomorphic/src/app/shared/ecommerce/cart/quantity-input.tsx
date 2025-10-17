@@ -3,9 +3,13 @@
 import { PiMinusBold, PiPlusBold } from 'react-icons/pi';
 import { ActionIcon } from 'rizzui';
 import { useCart } from '@/store/quick-cart/cart.context';
-import { CartItem } from '@/types';
+import { ProductCartItem, ProductItem } from '@/types';
 
-export default function QuantityInput({ product }: { product: CartItem }) {
+export default function QuantityInput({
+  product,
+}: {
+  product: ProductCartItem;
+}) {
   const { addItemToCart, removeItemFromCart } = useCart();
 
   return (
@@ -21,8 +25,9 @@ export default function QuantityInput({ product }: { product: CartItem }) {
       </ActionIcon>
       <input
         type="number"
-        className="h-full w-12 border-none text-center outline-none focus:ring-0 sm:w-20 dark:bg-gray-50"
-        value={product.quantity}
+        name="quantity"
+        className="h-full w-12 border-none text-center outline-none focus:ring-0 dark:bg-gray-50 sm:w-20"
+        value={product.quantity ?? 1}
         readOnly
       />
       <ActionIcon

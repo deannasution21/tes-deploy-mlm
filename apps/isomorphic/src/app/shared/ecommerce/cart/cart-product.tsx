@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { CartItem } from '@/types';
-import isEmpty from 'lodash/isEmpty';
+import { ProductCartItem } from '@/types';
 import { toCurrency } from '@core/utils/to-currency';
 import { Title, Text } from 'rizzui';
 import { AddToWishList } from '@core/components/wishlist-button';
@@ -9,7 +8,7 @@ import RemoveItem from '@/app/shared/ecommerce/cart/remove-item';
 import QuantityInput from '@/app/shared/ecommerce/cart/quantity-input';
 import { routes } from '@/config/routes';
 
-export default function CartProduct({ product }: { product: CartItem }) {
+export default function CartProduct({ product }: { product: ProductCartItem }) {
   return (
     <div className="grid grid-cols-12 items-start gap-4 border-b border-muted py-6 first:pt-0 sm:flex sm:gap-6 2xl:py-8">
       <figure className="col-span-4 sm:max-w-[180px]">
@@ -34,49 +33,22 @@ export default function CartProduct({ product }: { product: CartItem }) {
             </Link>
           </Title>
           <span className="inline-block text-sm font-semibold text-gray-1000 sm:font-medium md:text-base 3xl:text-lg">
-            {toCurrency(product.price)}
+            {toCurrency(product.price?.amount)}
           </span>
         </div>
         <Text className="mt-1 w-full max-w-xs truncate leading-6 2xl:max-w-lg">
           {product.description}
         </Text>
 
-        {(!isEmpty(product.size) || !isEmpty(product.color)) && (
-          <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-3 sm:mt-4 sm:gap-x-8">
-            {product.size !== 0 && (
-              <li className="flex items-center gap-3 text-gray-500">
-                <span>Size :</span>
-                <span className="text-gray-1000">{product.size}</span>
-              </li>
-            )}
-            {!isEmpty(product.color) && (
-              <li className="flex items-center gap-3 text-gray-500">
-                <span>Color :</span>
-                <div className="flex items-center gap-2">
-                  <div
-                    className="inline-block h-4 w-4 rounded-full"
-                    style={{
-                      backgroundColor: product.color.code,
-                    }}
-                  ></div>
-                  <span className="text-gray-1000">{product.color.name}</span>
-                </div>
-              </li>
-            )}
-          </ul>
-        )}
-
         <div className="mt-3 hidden items-center justify-between xs:flex sm:mt-6">
           <QuantityInput product={product} />
           <div className="flex items-center gap-4">
-            <AddToWishList />
             <RemoveItem productID={product.id} placement="bottom-end" />
           </div>
         </div>
       </div>
       <div className="col-span-full flex items-center justify-between xs:hidden">
         <div className="flex items-center gap-4">
-          <AddToWishList />
           <RemoveItem productID={product.id} placement="bottom-start" />
         </div>
         <QuantityInput product={product} />

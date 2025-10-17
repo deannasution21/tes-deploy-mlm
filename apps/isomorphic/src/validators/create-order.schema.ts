@@ -12,8 +12,21 @@ const addressSchema = z.object({
   state: z.string().min(1, { message: messages.stateIsRequired }),
   city: z.string().min(1, { message: messages.cityIsRequired }),
   zip: z.string().min(1, { message: messages.zipCodeRequired }),
-  street: z.string().min(1, { message: messages.streetIsRequired }),
+  // street: z.string().min(1, { message: messages.streetIsRequired }),
+  street: z.string().optional(),
 });
+
+// const addressSchema = z.object({
+//   namaLengkap: z.string().min(1, { message: messages.kolomIsRequired }),
+//   noHp: z
+//     .string({
+//       required_error: messages.hpIsRequired,
+//     })
+//     .min(2, { message: messages.kolomIsRequired }),
+//   provinsi: z.string().min(1, { message: messages.kolomIsRequired }),
+//   kodePos: z.string().min(1, { message: messages.kolomIsRequired }),
+//   alamat: z.string().min(1, { message: messages.kolomIsRequired }),
+// });
 
 // form zod validation schema
 export const orderFormSchema = z.object({

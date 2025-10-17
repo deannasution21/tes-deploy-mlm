@@ -1,4 +1,4 @@
-import { CartItem as Item } from '@/types';
+import { ProductCartItem as Item } from '@/types';
 import {
   UpdateItemInput,
   addItemWithQuantity,

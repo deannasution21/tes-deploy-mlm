@@ -96,15 +96,9 @@ export default function CheckoutPageWrapper({
         <div className="items-start @5xl:grid @5xl:grid-cols-12 @5xl:gap-7 @6xl:grid-cols-10 @7xl:gap-10">
           <div className="gap-4 border-muted @container @5xl:col-span-8 @5xl:border-e @5xl:pb-12 @5xl:pe-7 @6xl:col-span-7 @7xl:pe-12">
             <div className="flex flex-col gap-4 @xs:gap-7 @5xl:gap-9">
-              <AddressInfo type="billingAddress" title="Billing Information" />
+              <AddressInfo type="billingAddress" title="Informasi Pembayaran" />
 
               <DifferentBillingAddress />
-
-              {!sameShippingAddress && <AddressInfo type="shippingAddress" />}
-
-              <OrderNote />
-
-              <ShippingMethod />
 
               <PaymentMethod />
             </div>

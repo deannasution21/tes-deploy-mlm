@@ -6,8 +6,12 @@ export const routes = {
     index: '/profil',
     ubahPassword: '/profil/ubah-password',
   },
-  historyBonus: {
-    index: '/',
+  bonus: {
+    history: '/history-bonus',
+  },
+  requestPin: {
+    index: '/request-pin',
+    history: '/history-request-pin',
   },
   generatePin: {
     index: '/generate-pin',
@@ -20,6 +24,24 @@ export const routes = {
   postingPin: {
     index: '/posting-pin',
     history: '/history-posting-pin',
+  },
+  withdrawalPin: {
+    index: '/withdrawal-pin',
+    history: '/history-withdrawal-pin',
+  },
+  produk: {
+    index: '/produk',
+    detail: (slug: string) => `/produk/${slug}`,
+    history: '/produk/history',
+    keranjang: '/produk/keranjang',
+    checkout: '/produk/checkout',
+  },
+  kelolaProduk: {
+    index: '/produk/kelola',
+    transaksi: '/produk/transaksi',
+  },
+  stockist: {
+    index: '/stockist/daftar',
   },
   eCommerce: {
     dashboard: '/ecommerce',

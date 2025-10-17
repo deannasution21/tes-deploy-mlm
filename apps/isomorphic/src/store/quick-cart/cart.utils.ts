@@ -1,4 +1,4 @@
-import { CartItem as Item } from '@/types';
+import { ProductCartItem as Item } from '@/types';
 
 export interface UpdateItemInput extends Partial<Omit<Item, 'id'>> {}
 
@@ -67,11 +67,11 @@ export function inStock(items: Item[], id: Item['id']) {
 export const calculateItemTotals = (items: Item[]) =>
   items.map((item) => ({
     ...item,
-    itemTotal: item.price * item.quantity!,
+    itemTotal: item.price?.amount * item.quantity!,
   }));
 
 export const calculateTotal = (items: Item[]) =>
-  items.reduce((total, item) => total + item.quantity! * item.price, 0);
+  items.reduce((total, item) => total + item.quantity! * item.price?.amount, 0);
 
 export const calculateTotalItems = (items: Item[]) =>
   items.reduce((sum, item) => sum + item.quantity!, 0);

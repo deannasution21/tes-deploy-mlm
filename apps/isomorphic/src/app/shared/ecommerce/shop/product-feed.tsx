@@ -1,17 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from 'rizzui';
-import ProductModernCard from '@core/components/cards/product-modern-card';
-import { modernProductsGrid } from '@/data/shop-products';
+import ProdukCard from '@core/components/cards/produk-card';
 import hasSearchedParams from '@core/utils/has-searched-params';
 // Note: using shuffle to simulate the filter effect
 import shuffle from 'lodash/shuffle';
 import { routes } from '@/config/routes';
+import { useSession } from 'next-auth/react';
+import { ProductItem, ProductResponse } from '@/types';
+import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
 
 let countPerPage = 12;
 
 export default function ProductFeed() {
+  const { data: session } = useSession();
+  const [dataProduct, setDataProduct] = useState<ProductItem[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [nextPage, setNextPage] = useState(countPerPage);
 
@@ -23,19 +27,47 @@ export default function ProductFeed() {
     }, 600);
   }
 
-  const filteredData = hasSearchedParams()
-    ? shuffle(modernProductsGrid)
-    : modernProductsGrid;
+  useEffect(() => {
+    const getDataProduk = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/_products`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-app-token': session?.accessToken ?? '',
+            },
+          }
+        );
+
+        if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
+
+        const data = (await res.json()) as ProductResponse;
+        console.log(data);
+        setDataProduct(data.data);
+      } catch (error) {
+        console.error('Fetch data error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (session?.accessToken) getDataProduk();
+  }, [session?.accessToken]);
+
+  const filteredData = hasSearchedParams() ? shuffle(dataProduct) : dataProduct;
 
   return (
     <div className="@container">
-      <div className="grid grid-cols-1 gap-x-5 gap-y-6 @md:grid-cols-[repeat(auto-fill,minmax(250px,1fr))] @xl:gap-x-7 @xl:gap-y-9 @4xl:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] @6xl:grid-cols-[repeat(auto-fill,minmax(364px,1fr))]">
+      <div className="grid grid-cols-2 gap-x-4 gap-y-6 @md:grid-cols-[repeat(auto-fill,minmax(210px,1fr))] @xl:gap-x-6 @xl:gap-y-12 @4xl:grid-cols-[repeat(auto-fill,minmax(270px,1fr))]">
         {filteredData
           ?.slice(0, nextPage)
           ?.map((product, index) => (
-            <ProductModernCard
-              key={product.id}
+            <ProdukCard
+              key={product.product_id}
               product={product}
+              image={defaultPlaceholder}
               routes={routes}
             />
           ))}

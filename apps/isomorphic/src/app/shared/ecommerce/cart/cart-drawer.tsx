@@ -21,6 +21,8 @@ export default function CartDrawer() {
   const includedPaths: string[] = [
     routes.eCommerce.shop,
     routes.eCommerce.productDetails(params?.slug as string),
+    routes.produk.index,
+    routes.produk.detail(params?.slug as string),
   ];
 
   const isPathIncluded = includedPaths.some((path) => pathname === path);

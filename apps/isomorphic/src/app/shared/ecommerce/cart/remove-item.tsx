@@ -7,7 +7,7 @@ import cn from '@core/utils/class-names';
 import { useCart } from '@/store/quick-cart/cart.context';
 
 interface RemoveItemProps {
-  productID: number;
+  productID: string;
   className?: string;
   placement: Placement;
 }
@@ -42,17 +42,17 @@ export default function RemoveItem({
               as="h6"
               className="mb-0.5 flex items-start text-sm sm:items-center"
             >
-              <PiTrashFill className="me-1 h-5 w-5" /> Delete the order
+              <PiTrashFill className="me-1 h-5 w-5" /> Hapus pembelian produk
             </Title>
             <Text className="mb-2 leading-relaxed">
-              Are you sure you want to delete this order?
+              Apakah Anda yakin untuk menghapus pembelian produk ini?
             </Text>
             <div className="flex items-center justify-end">
               <Button size="sm" className="me-1.5 h-7">
-                Yes
+                Hapus
               </Button>
               <Button size="sm" variant="outline" className="h-7">
-                No
+                Batal
               </Button>
             </div>
           </div>

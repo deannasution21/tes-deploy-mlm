@@ -3,14 +3,15 @@ import { messages } from '@/config/messages';
 
 // form zod validation schema
 export const productDetailsSchema = z.object({
-  productSize: z.coerce.number({
-    invalid_type_error: messages.productSizeRequired,
-  }),
-  productColor: z.object({
-    name: z.string(),
-    code: z.string(),
-  }),
+  // productSize: z.coerce.number({
+  //   invalid_type_error: messages.productSizeRequired,
+  // }),
+  // productColor: z.object({
+  //   name: z.string(),
+  //   code: z.string(),
+  // }),
   // productColor: z.array(z.string()).min(1),
+  quantity: z.coerce.number().min(1, { message: 'Minimal quantity adalah 1' }),
 });
 
 // generate form types from zod validation schema

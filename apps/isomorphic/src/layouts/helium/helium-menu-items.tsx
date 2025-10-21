@@ -656,7 +656,7 @@ export const menuItemsUser = [
       },
       {
         name: 'History Pembelian Produk',
-        href: routes.produk.history,
+        href: routes.produk.pesanan.index,
       },
       {
         name: 'Transfer PIN A',

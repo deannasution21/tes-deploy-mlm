@@ -109,7 +109,7 @@ importers:
         version: 0.11.1(typescript@5.6.3)(zod@3.23.8)
       '@tailwindcss/container-queries':
         specifier: ^0.1.1
-        version: 0.1.1(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3)))
+        version: 0.1.1(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)))
       '@tanstack/match-sorter-utils':
         specifier: ^8.19.4
         version: 8.19.4
@@ -118,7 +118,7 @@ importers:
         version: 8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@uploadthing/react':
         specifier: ^7.0.3
-        version: 7.0.3(next@14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(uploadthing@7.1.0(next@14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3))))
+        version: 7.0.3(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(uploadthing@7.1.0(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3))))
       ahooks:
         specifier: ^3.8.1
         version: 3.8.1(react@18.3.1)
@@ -160,13 +160,13 @@ importers:
         version: 14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-auth:
         specifier: ^4.24.8
-        version: 4.24.8(next@14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nodemailer@6.9.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 4.24.8(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nodemailer@6.9.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-themes:
         specifier: ^0.3.0
         version: 0.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nextjs-toploader:
         specifier: ^3.7.15
-        version: 3.7.15(next@14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 3.7.15(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nodemailer:
         specifier: ^6.9.15
         version: 6.9.15
@@ -272,6 +272,9 @@ importers:
       swapy:
         specifier: ^0.4.2
         version: 0.4.2
+      sweetalert2:
+        specifier: ^11.26.3
+        version: 11.26.3
       swiper:
         specifier: ^11.1.14
         version: 11.1.14
@@ -283,7 +286,7 @@ importers:
         version: 5.6.3
       uploadthing:
         specifier: ^7.1.0
-        version: 7.1.0(next@14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3)))
+        version: 7.1.0(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)))
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -296,7 +299,7 @@ importers:
         version: 3.9.0(react-hook-form@7.53.0(react@18.3.1))
       '@tailwindcss/forms':
         specifier: ^0.5.9
-        version: 0.5.9(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3)))
+        version: 0.5.9(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)))
       '@total-typescript/ts-reset':
         specifier: ^0.6.1
         version: 0.6.1
@@ -350,7 +353,7 @@ importers:
         version: link:../../packages/config-tailwind
       tailwindcss:
         specifier: ^3.4.13
-        version: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3))
+        version: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3))
       typescript-config:
         specifier: workspace:*
         version: link:../../packages/config-typescript
@@ -1319,13 +1322,13 @@ importers:
     devDependencies:
       '@tailwindcss/container-queries':
         specifier: 0.1.1
-        version: 0.1.1(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3)))
+        version: 0.1.1(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)))
       '@tailwindcss/forms':
         specifier: ^0.5.7
-        version: 0.5.9(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3)))
+        version: 0.5.9(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)))
       tailwindcss:
         specifier: ^3.4.1
-        version: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3))
+        version: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3))
       typescript-config:
         specifier: workspace:*
         version: link:../config-typescript
@@ -1411,13 +1414,13 @@ importers:
         version: 0.11.1(typescript@5.6.3)(zod@3.23.8)
       '@tailwindcss/container-queries':
         specifier: ^0.1.1
-        version: 0.1.1(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3)))
+        version: 0.1.1(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)))
       '@tanstack/react-table':
         specifier: ^8.20.5
         version: 8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@uploadthing/react':
         specifier: ^7.0.3
-        version: 7.0.3(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(uploadthing@7.1.0(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3))))
+        version: 7.0.3(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(uploadthing@7.1.0(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3))))
       ahooks:
         specifier: ^3.8.1
         version: 3.8.1(react@18.3.1)
@@ -1453,7 +1456,7 @@ importers:
         version: 4.17.21
       next:
         specifier: 14.2.15
-        version: 14.2.15(@babel/core@7.25.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-auth:
         specifier: ^4.24.8
         version: 4.24.8(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nodemailer@6.9.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1579,7 +1582,7 @@ importers:
         version: 5.6.3
       uploadthing:
         specifier: ^7.1.0
-        version: 7.1.0(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3)))
+        version: 7.1.0(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)))
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -1592,13 +1595,13 @@ importers:
         version: 3.9.0(react-hook-form@7.53.0(react@18.3.1))
       '@tailwindcss/forms':
         specifier: ^0.5.9
-        version: 0.5.9(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3)))
+        version: 0.5.9(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)))
       '@total-typescript/ts-reset':
         specifier: ^0.6.1
         version: 0.6.1
       '@turbo/gen':
         specifier: ^2.1.3
-        version: 2.1.3(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3)
+        version: 2.1.3(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)
       '@types/date-arithmetic':
         specifier: ^4.1.4
         version: 4.1.4
@@ -1646,7 +1649,7 @@ importers:
         version: link:../config-tailwind
       tailwindcss:
         specifier: ^3.4.13
-        version: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3))
+        version: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3))
       typescript-config:
         specifier: workspace:*
         version: link:../config-typescript
@@ -5577,6 +5580,9 @@ packages:
   swapy@0.4.2:
     resolution: {integrity: sha512-vxs9OjXCfaQRXUxUBZb7KAWSAJeWlOYsG8N6lJBseEaQZ3XfxW6uIvJo/ebyxQ3mdFxNHEWhxPSbfrfCvevh6Q==}
 
+  sweetalert2@11.26.3:
+    resolution: {integrity: sha512-VU0hGw/WfI9h7Mh+SCsDlWgtxDwWZ6ccqS7QcO8zEeWnwplN1GptcLstq76OluUBSLUza6ldvKd3558OhjpJ9A==}
+
   swiper@11.1.14:
     resolution: {integrity: sha512-VbQLQXC04io6AoAjIUWuZwW4MSYozkcP9KjLdrsG/00Q/yiwvhz9RQyt0nHXV10hi9NVnDNy1/wv7Dzq1lkOCQ==}
     engines: {node: '>= 4.7.0'}
@@ -6836,6 +6842,23 @@ snapshots:
   '@swc/core-win32-x64-msvc@1.7.26':
     optional: true
 
+  '@swc/core@1.7.26':
+    dependencies:
+      '@swc/counter': 0.1.3
+      '@swc/types': 0.1.12
+    optionalDependencies:
+      '@swc/core-darwin-arm64': 1.7.26
+      '@swc/core-darwin-x64': 1.7.26
+      '@swc/core-linux-arm-gnueabihf': 1.7.26
+      '@swc/core-linux-arm64-gnu': 1.7.26
+      '@swc/core-linux-arm64-musl': 1.7.26
+      '@swc/core-linux-x64-gnu': 1.7.26
+      '@swc/core-linux-x64-musl': 1.7.26
+      '@swc/core-win32-arm64-msvc': 1.7.26
+      '@swc/core-win32-ia32-msvc': 1.7.26
+      '@swc/core-win32-x64-msvc': 1.7.26
+    optional: true
+
   '@swc/core@1.7.26(@swc/helpers@0.5.13)':
     dependencies:
       '@swc/counter': 0.1.3
@@ -6887,10 +6910,19 @@ snapshots:
     dependencies:
       tailwindcss: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3))
 
+  '@tailwindcss/container-queries@0.1.1(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)))':
+    dependencies:
+      tailwindcss: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3))
+
   '@tailwindcss/forms@0.5.9(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3)))':
     dependencies:
       mini-svg-data-uri: 1.4.4
       tailwindcss: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3))
+
+  '@tailwindcss/forms@0.5.9(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)))':
+    dependencies:
+      mini-svg-data-uri: 1.4.4
+      tailwindcss: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3))
 
   '@tanstack/match-sorter-utils@8.19.4':
     dependencies:
@@ -6924,7 +6956,7 @@ snapshots:
 
   '@tsconfig/node16@1.0.4': {}
 
-  '@turbo/gen@2.1.3(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3)':
+  '@turbo/gen@2.1.3(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)':
     dependencies:
       '@turbo/workspaces': 2.1.3
       commander: 10.0.1
@@ -6934,7 +6966,7 @@ snapshots:
       node-plop: 0.26.3
       picocolors: 1.0.1
       proxy-agent: 6.4.0
-      ts-node: 10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3)
+      ts-node: 10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)
       update-check: 1.5.4
       validate-npm-package-name: 5.0.1
     transitivePeerDependencies:
@@ -7152,15 +7184,6 @@ snapshots:
 
   '@uploadthing/mime-types@0.3.0': {}
 
-  '@uploadthing/react@7.0.3(next@14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(uploadthing@7.1.0(next@14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3))))':
-    dependencies:
-      '@uploadthing/shared': 7.0.3
-      file-selector: 0.6.0
-      react: 18.3.1
-      uploadthing: 7.1.0(next@14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3)))
-    optionalDependencies:
-      next: 14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-
   '@uploadthing/react@7.0.3(next@14.2.15(@babel/core@7.25.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(uploadthing@7.1.0(next@14.2.15(@babel/core@7.25.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3))))':
     dependencies:
       '@uploadthing/shared': 7.0.3
@@ -7178,6 +7201,15 @@ snapshots:
       uploadthing: 7.1.0(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3)))
     optionalDependencies:
       next: 14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+
+  '@uploadthing/react@7.0.3(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(uploadthing@7.1.0(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3))))':
+    dependencies:
+      '@uploadthing/shared': 7.0.3
+      file-selector: 0.6.0
+      react: 18.3.1
+      uploadthing: 7.1.0(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)))
+    optionalDependencies:
+      next: 14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
   '@uploadthing/shared@7.0.3':
     dependencies:
@@ -8037,7 +8069,7 @@ snapshots:
       debug: 4.3.7
       enhanced-resolve: 5.17.1
       eslint: 8.57.0
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.8.1(eslint@8.57.0)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.0)
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.8.1(eslint@8.57.0)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.8.1(eslint@8.57.0)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@8.57.0))(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.8.1
       is-bun-module: 1.2.1
@@ -8050,7 +8082,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.8.1(eslint@8.57.0)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.0):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.8.1(eslint@8.57.0)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.8.1(eslint@8.57.0)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -8072,7 +8104,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.8.1(eslint@8.57.0)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.0)
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.8.1(eslint@8.57.0)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.8.1(eslint@8.57.0)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -9055,23 +9087,6 @@ snapshots:
 
   netmask@2.0.2: {}
 
-  next-auth@4.24.8(next@14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nodemailer@6.9.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
-    dependencies:
-      '@babel/runtime': 7.25.7
-      '@panva/hkdf': 1.2.1
-      cookie: 0.5.0
-      jose: 4.15.9
-      next: 14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      oauth: 0.9.15
-      openid-client: 5.7.0
-      preact: 10.24.2
-      preact-render-to-string: 5.2.6(preact@10.24.2)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      uuid: 8.3.2
-    optionalDependencies:
-      nodemailer: 6.9.15
-
   next-auth@4.24.8(next@14.2.15(@babel/core@7.25.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nodemailer@6.9.15)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.25.7
@@ -9095,7 +9110,7 @@ snapshots:
       '@panva/hkdf': 1.2.1
       cookie: 0.5.0
       jose: 4.15.9
-      next: 14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       oauth: 0.9.15
       openid-client: 5.7.0
       preact: 10.24.2
@@ -9179,7 +9194,7 @@ snapshots:
       postcss: 8.4.31
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      styled-jsx: 5.1.1(@babel/core@7.25.7)(react@18.3.1)
+      styled-jsx: 5.1.1(@babel/core@7.24.5)(react@18.3.1)
     optionalDependencies:
       '@next/swc-darwin-arm64': 14.2.15
       '@next/swc-darwin-x64': 14.2.15
@@ -9193,6 +9208,7 @@ snapshots:
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
+    optional: true
 
   next@14.2.3(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
@@ -9219,14 +9235,6 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
-  nextjs-toploader@3.7.15(next@14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
-    dependencies:
-      next: 14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      nprogress: 0.2.0
-      prop-types: 15.8.1
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-
   nextjs-toploader@3.7.15(next@14.2.15(@babel/core@7.25.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       next: 14.2.15(@babel/core@7.25.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -9237,7 +9245,7 @@ snapshots:
 
   nextjs-toploader@3.7.15(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      next: 14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nprogress: 0.2.0
       prop-types: 15.8.1
       react: 18.3.1
@@ -9497,6 +9505,14 @@ snapshots:
     optionalDependencies:
       postcss: 8.4.47
       ts-node: 10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3)
+
+  postcss-load-config@4.0.2(postcss@8.4.47)(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)):
+    dependencies:
+      lilconfig: 3.1.2
+      yaml: 2.5.1
+    optionalDependencies:
+      postcss: 8.4.47
+      ts-node: 10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)
 
   postcss-nested@6.2.0(postcss@8.4.47):
     dependencies:
@@ -10373,6 +10389,8 @@ snapshots:
 
   swapy@0.4.2: {}
 
+  sweetalert2@11.26.3: {}
+
   swiper@11.1.14: {}
 
   tabbable@6.2.0: {}
@@ -10403,6 +10421,33 @@ snapshots:
       postcss-import: 15.1.0(postcss@8.4.47)
       postcss-js: 4.0.1(postcss@8.4.47)
       postcss-load-config: 4.0.2(postcss@8.4.47)(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3))
+      postcss-nested: 6.2.0(postcss@8.4.47)
+      postcss-selector-parser: 6.1.2
+      resolve: 1.22.8
+      sucrase: 3.35.0
+    transitivePeerDependencies:
+      - ts-node
+
+  tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3)):
+    dependencies:
+      '@alloc/quick-lru': 5.2.0
+      arg: 5.0.2
+      chokidar: 3.6.0
+      didyoumean: 1.2.2
+      dlv: 1.1.3
+      fast-glob: 3.3.2
+      glob-parent: 6.0.2
+      is-glob: 4.0.3
+      jiti: 1.21.6
+      lilconfig: 2.1.0
+      micromatch: 4.0.8
+      normalize-path: 3.0.0
+      object-hash: 3.0.0
+      picocolors: 1.1.0
+      postcss: 8.4.47
+      postcss-import: 15.1.0(postcss@8.4.47)
+      postcss-js: 4.0.1(postcss@8.4.47)
+      postcss-load-config: 4.0.2(postcss@8.4.47)(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3))
       postcss-nested: 6.2.0(postcss@8.4.47)
       postcss-selector-parser: 6.1.2
       resolve: 1.22.8
@@ -10479,6 +10524,27 @@ snapshots:
       yn: 3.1.1
     optionalDependencies:
       '@swc/core': 1.7.26(@swc/helpers@0.5.13)
+    optional: true
+
+  ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.11
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 22.7.5
+      acorn: 8.12.1
+      acorn-walk: 8.3.4
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.6.3
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+    optionalDependencies:
+      '@swc/core': 1.7.26
 
   tsconfig-paths@3.15.0:
     dependencies:
@@ -10595,17 +10661,6 @@ snapshots:
       registry-auth-token: 3.3.2
       registry-url: 3.1.0
 
-  uploadthing@7.1.0(next@14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3))):
-    dependencies:
-      '@effect/platform': 0.63.2(@effect/schema@0.72.2(effect@3.7.2))(effect@3.7.2)
-      '@effect/schema': 0.72.2(effect@3.7.2)
-      '@uploadthing/mime-types': 0.3.0
-      '@uploadthing/shared': 7.0.3
-      effect: 3.7.2
-    optionalDependencies:
-      next: 14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      tailwindcss: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3))
-
   uploadthing@7.1.0(next@14.2.15(@babel/core@7.25.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3))):
     dependencies:
       '@effect/platform': 0.63.2(@effect/schema@0.72.2(effect@3.7.2))(effect@3.7.2)
@@ -10627,6 +10682,17 @@ snapshots:
     optionalDependencies:
       next: 14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       tailwindcss: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@22.7.5)(typescript@5.6.3))
+
+  uploadthing@7.1.0(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3))):
+    dependencies:
+      '@effect/platform': 0.63.2(@effect/schema@0.72.2(effect@3.7.2))(effect@3.7.2)
+      '@effect/schema': 0.72.2(effect@3.7.2)
+      '@uploadthing/mime-types': 0.3.0
+      '@uploadthing/shared': 7.0.3
+      effect: 3.7.2
+    optionalDependencies:
+      next: 14.2.15(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      tailwindcss: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@22.7.5)(typescript@5.6.3))
 
   upper-case-first@1.1.2:
     dependencies:

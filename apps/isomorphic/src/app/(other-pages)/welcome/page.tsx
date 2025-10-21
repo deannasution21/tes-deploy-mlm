@@ -27,7 +27,7 @@ export default function WelcomePage() {
               <Button
                 color="primary"
                 size="lg"
-                className="h-12 px-4 xl:h-14 xl:px-6"
+                className="h-12 bg-[#AA8453] px-4 text-white hover:bg-[#a16207] xl:h-14 xl:px-6"
               >
                 Mulai Sekarang!
               </Button>

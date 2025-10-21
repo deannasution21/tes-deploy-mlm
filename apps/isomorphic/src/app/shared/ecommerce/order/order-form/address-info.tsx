@@ -10,6 +10,8 @@ interface AddressInfoProps {
   type: string;
   title?: string;
   className?: string;
+  setSelectedProvinceName?: (value: string) => void;
+  setSelectedCityName?: (value: string) => void;
 }
 
 interface OptionType {
@@ -44,6 +46,8 @@ export default function AddressInfo({
   type,
   title,
   className,
+  setSelectedProvinceName,
+  setSelectedCityName,
 }: AddressInfoProps) {
   const {
     control,
@@ -167,7 +171,13 @@ export default function AddressInfo({
             inPortal={false}
             placeholder="Pilih Provinsi"
             options={dataProvinsi}
-            onChange={onChange}
+            onChange={(selectedId) => {
+              const selectedOption = dataProvinsi.find(
+                (p) => p.value === selectedId
+              );
+              onChange(selectedId); // ✅ store ID (used for API chaining)
+              setSelectedProvinceName?.(selectedOption?.label ?? ''); // ✅ store name separately
+            }}
             value={value}
             searchable={true}
             getOptionValue={(option) => option.value}
@@ -190,7 +200,13 @@ export default function AddressInfo({
             inPortal={false}
             placeholder="Pilih Kabupaten"
             options={dataKabupaten}
-            onChange={onChange}
+            onChange={(selectedId) => {
+              const selectedOption = dataKabupaten.find(
+                (p) => p.value === selectedId
+              );
+              onChange(selectedId); // ✅ store ID (used for API chaining)
+              setSelectedCityName?.(selectedOption?.label ?? ''); // ✅ store name separately
+            }}
             value={value}
             searchable={true}
             getOptionValue={(option) => option.value}

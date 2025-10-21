@@ -9,8 +9,10 @@ import DateCell from '@core/ui/date-cell';
 import { createColumnHelper } from '@tanstack/react-table';
 import { PiCaretDownBold, PiCaretUpBold } from 'react-icons/pi';
 import { ActionIcon, Text } from 'rizzui';
+import { Transaction } from './table';
 
 const columnHelper = createColumnHelper<OrdersDataType>();
+const columnHelperNew = createColumnHelper<Transaction>();
 
 export const ordersColumns = (expanded: boolean = true) => {
   const columns = [
@@ -87,7 +89,115 @@ export const ordersColumns = (expanded: boolean = true) => {
   return expanded ? [expandedOrdersColumns, ...columns] : columns;
 };
 
+export const ordersColumnsNew = (expanded: boolean = true) => {
+  const columns = [
+    columnHelperNew.display({
+      id: 'id',
+      size: 120,
+      header: 'ID',
+      cell: ({ row }) => <>#{row.original.ref_id}</>,
+    }),
+    columnHelperNew.accessor('attributes.buyer.customer_name', {
+      id: 'customer',
+      size: 300,
+      header: 'Nama',
+      enableSorting: false,
+      cell: ({ row }) => (
+        <TableAvatar
+          src={
+            'https://isomorphic-furyroad.s3.amazonaws.com/public/avatars-blur/avatar-15.webp'
+          }
+          name={row.original.attributes.buyer.customer_name}
+          description={row.original.attributes.buyer.customer_phone}
+        />
+      ),
+    }),
+    columnHelperNew.display({
+      id: 'items',
+      size: 150,
+      header: 'Produk',
+      cell: ({ row }) => (
+        <Text className="font-medium text-gray-700">
+          {row.original.attributes.products?.length}
+        </Text>
+      ),
+    }),
+    columnHelperNew.accessor('attributes.totals.sub_total_currency', {
+      id: 'price',
+      size: 150,
+      header: 'Total',
+      cell: ({ row }) => (
+        <Text className="font-medium text-gray-700">
+          {row.original.attributes.totals.sub_total_currency}
+        </Text>
+      ),
+    }),
+    columnHelperNew.accessor('attributes.created_at', {
+      id: 'createdAt',
+      size: 200,
+      header: 'Tanggal',
+      cell: ({ row }) => (
+        <DateCell date={new Date(row.original.attributes.created_at)} />
+      ),
+    }),
+    columnHelperNew.accessor('attributes.status.message', {
+      id: 'status',
+      size: 140,
+      header: 'Status',
+      enableSorting: false,
+      cell: ({ row }) => getStatusBadge(row.original.attributes.status.message),
+    }),
+    columnHelperNew.display({
+      id: 'action',
+      size: 130,
+      cell: ({
+        row,
+        table: {
+          options: { meta },
+        },
+      }) => (
+        <TableRowActionGroup
+          isEdit={false}
+          // editUrl={routes.eCommerce.editOrder(row.original.id)}
+          viewUrl={routes.produk.pesanan.detail(row.original.ref_id)}
+          isDelete={false}
+          // deletePopoverTitle={`Delete the order`}
+          // deletePopoverDescription={`Are you sure you want to delete this #${row.original.id} order?`}
+          // onDelete={() => meta?.handleDeleteRow?.(row.original)}
+        />
+      ),
+    }),
+  ];
+
+  return expanded ? [expandedOrdersColumnsNew, ...columns] : columns;
+};
+
 const expandedOrdersColumns = columnHelper.display({
+  id: 'expandedHandler',
+  size: 60,
+  cell: ({ row }) => (
+    <>
+      {row.getCanExpand() && (
+        <ActionIcon
+          size="sm"
+          rounded="full"
+          aria-label="Expand row"
+          className="ms-2"
+          variant={row.getIsExpanded() ? 'solid' : 'outline'}
+          onClick={row.getToggleExpandedHandler()}
+        >
+          {row.getIsExpanded() ? (
+            <PiCaretUpBold className="size-3.5" />
+          ) : (
+            <PiCaretDownBold className="size-3.5" />
+          )}
+        </ActionIcon>
+      )}
+    </>
+  ),
+});
+
+const expandedOrdersColumnsNew = columnHelperNew.display({
   id: 'expandedHandler',
   size: 60,
   cell: ({ row }) => (

@@ -78,4 +78,6 @@ export const messages = {
   kodePosIsRequired: 'Kolom wajib diisi',
   paymentIsRequired: 'Kolom wajib diisi',
   kolomIsRequired: 'Kolom wajib diisi',
+  min10: 'Format harus minimal 10 angka',
+  max13: 'Format harus maksimal 13 angka',
 };

@@ -7,7 +7,8 @@ const addressSchema = z.object({
     .string({
       required_error: messages.phoneNumberIsRequired,
     })
-    .min(2, { message: messages.phoneNumberIsRequired }),
+    .min(10, { message: messages.min10 })
+    .max(13, { message: messages.max13 }),
   country: z.string().min(1, { message: messages.countryIsRequired }),
   state: z.string().min(1, { message: messages.stateIsRequired }),
   city: z.string().min(1, { message: messages.cityIsRequired }),
@@ -53,7 +54,8 @@ export const orderFormSchemaNew = z.object({
     .string({
       required_error: messages.hpIsRequired,
     })
-    .min(2, { message: messages.kolomIsRequired }),
+    .min(10, { message: messages.min10 })
+    .max(13, { message: messages.max13 }),
   shipping_method: z.boolean().optional(),
   shipping_address: z.string().min(1, { message: messages.kolomIsRequired }),
   province: z.string({ required_error: messages.kolomIsRequired }),

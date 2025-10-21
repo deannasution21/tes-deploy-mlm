@@ -36,6 +36,10 @@ export const routes = {
     history: '/produk/history',
     keranjang: '/produk/keranjang',
     checkout: '/produk/checkout',
+    pesanan: {
+      index: '/produk/pesanan',
+      detail: (id: string) => `/produk/pesanan/${id}`,
+    },
   },
   kelolaProduk: {
     index: '/produk/kelola',

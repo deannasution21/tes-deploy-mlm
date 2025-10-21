@@ -6,6 +6,8 @@ import { useCart } from '@/store/quick-cart/cart.context';
 import { Title, Text } from 'rizzui';
 import { toCurrency } from '@core/utils/to-currency';
 import { CartItem } from '@/types';
+import { TransactionProduct } from '../order-view';
+import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
 
 const columns = [
   {
@@ -18,7 +20,7 @@ const columns = [
         <div className="relative aspect-square w-12 overflow-hidden rounded-lg">
           <Image
             alt={row.name}
-            src={row.image}
+            src={row.image ?? defaultPlaceholder}
             fill
             sizes="(max-width: 768px) 100vw"
             className="object-cover"
@@ -64,11 +66,16 @@ const columns = [
   },
 ];
 
-export default function OrderViewProducts() {
+export default function OrderViewProducts({
+  data,
+}: {
+  data: TransactionProduct;
+}) {
   const { items } = useCart();
+  const datanya = data ?? items;
   return (
     <Table
-      data={items}
+      data={datanya}
       // @ts-ignore
       columns={columns}
       className="text-sm"

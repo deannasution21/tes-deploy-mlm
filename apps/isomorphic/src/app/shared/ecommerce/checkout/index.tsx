@@ -34,6 +34,96 @@ import {
   orderFormSchemaNew,
 } from '@/validators/create-order.schema';
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useCart } from '@/store/quick-cart/cart.context';
+import Swal from 'sweetalert2';
+
+export interface PaymentTransactionResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: {
+    type: string;
+    url: string;
+    id: string;
+    attribute: TransactionAttribute;
+  };
+}
+
+export interface TransactionAttribute {
+  transaction_id: string;
+  refference_id: string;
+  customer: CustomerInfo;
+  payment: PaymentInfo;
+  bill_payment: BillPaymentInfo;
+  metadata: PaymentMetadata;
+  form_data: FormDataInfo;
+  status: TransactionStatus;
+  waktu: string;
+}
+
+export interface CustomerInfo {
+  name: string;
+  phone: string;
+}
+
+export interface PaymentInfo {
+  gateway: string;
+  payment_method: string;
+  payment_channel: string;
+  payment_name: string;
+  payment_number: string;
+  expired_at: string;
+}
+
+export interface BillPaymentInfo {
+  sub_total: NominalInfo;
+  fee: NominalInfo;
+  total: NominalInfo;
+}
+
+export interface NominalInfo {
+  nominal: string;
+  nominal_rp: string;
+}
+
+export interface PaymentMetadata {
+  qr_string: string | null;
+  qr_image: string | null;
+  qr_template: string | null;
+  qr_image_encoded: string | null;
+  terminal: string | null;
+  nns_code: string | null;
+  nmid: string | null;
+}
+
+export interface FormDataInfo {
+  username: string;
+  customer_name: string;
+  customer_phone: string;
+  shipping_method: string;
+  shipping_address: string;
+  province: string;
+  city: string;
+  note: string | null;
+  products: ProductInfo[];
+}
+
+export interface ProductInfo {
+  id: string;
+  name: string;
+  price: number;
+  stock_pin: number;
+  quantity: number;
+  sub_total: number;
+  total_pin: number;
+  plan: string;
+}
+
+export interface TransactionStatus {
+  code: string;
+  message: string;
+}
 
 // main order form component for create and update order
 export default function CheckoutPageWrapper({
@@ -43,6 +133,12 @@ export default function CheckoutPageWrapper({
 }) {
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
+  const session = useSession();
+  const token = session?.data?.accessToken ?? undefined;
+  const { items } = useCart();
+  const [fee, setFee] = useState(0);
+  const [selectedProvinceName, setSelectedProvinceName] = useState<string>('');
+  const [selectedCityName, setSelectedCityName] = useState<string>('');
   const setOrderNote = useSetAtom(orderNoteAtom);
   const setBillingAddress = useSetAtom(billingAddressAtom);
   const setShippingAddress = useSetAtom(shippingAddressAtom);
@@ -61,12 +157,88 @@ export default function CheckoutPageWrapper({
     // set timeout ony required to display loading state of the create order button
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
-      console.log('checkout_data', data);
-      router.push(routes.eCommerce.orderDetails(DUMMY_ID));
-      toast.success(<Text as="b">Order placed successfully!</Text>);
-    }, 600);
+    // ✅ Transform items → products payload
+    const products = items.map((item) => ({
+      id: item.id,
+      quantity: item.quantity,
+    }));
+
+    const createInvoice = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/_transactions`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-app-token': token ?? '',
+            },
+            body: JSON.stringify({
+              username: session?.data?.user?.id,
+              customer_name: data?.customer_name,
+              customer_phone: data?.customer_phone,
+              shipping_method: data?.shipping_method
+                ? 'AMBIL DI KANTOR'
+                : 'PENGIRIMAN BIASA',
+              shipping_address: data?.shipping_address,
+              province: selectedProvinceName,
+              city: selectedCityName,
+              products: products,
+              note: '',
+              payment_method: data?.payment_method,
+              type: 'payment',
+            }),
+          }
+        );
+
+        if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
+
+        const response = (await res.json()) as PaymentTransactionResponse;
+
+        if (response?.success && response?.data) {
+          const invoiceID = response?.data?.id;
+          router.push(routes.produk.pesanan.detail(invoiceID));
+          toast.success(<Text as="b">Pesanan berhasil dibuat!</Text>);
+        }
+      } catch (error) {
+        setLoading(false);
+        console.error('Fetch data error:', error);
+        toast.error(
+          <Text as="b">Terjadi kesalahan saat membuat pesanan.</Text>
+        );
+      }
+    };
+
+    Swal.fire({
+      title: 'Konfirmasi Pesanan',
+      html: 'Harap pastikan data yang Anda masukkan benar. Jika sudah silakan <strong>LANJUTKAN</strong>',
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Lanjutkan',
+      cancelButtonText: 'Batal',
+      customClass: {
+        confirmButton:
+          'bg-[#AA8453] hover:bg-[#a16207] text-white font-semibold px-4 py-2 rounded me-3', // 👈 your custom class here
+        cancelButton:
+          'bg-gray-300 hover:bg-gray-400 text-black font-semibold px-4 py-2 rounded',
+      },
+      buttonsStyling: false, // 👈 important! disable default styling
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        createInvoice();
+      } else if (result.isDenied) {
+        setLoading(false);
+        toast.success(<Text as="b">Pesanan dibatalkan!</Text>);
+      }
+    });
+
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   console.log('checkout_data', data);
+    //   // router.push(routes.eCommerce.orderDetails(DUMMY_ID));
+    //   toast.success(<Text as="b">Order placed successfully!</Text>);
+    // }, 600);
   };
 
   // console.log('errors', methods.formState.errors);
@@ -84,15 +256,20 @@ export default function CheckoutPageWrapper({
         <div className="items-start @5xl:grid @5xl:grid-cols-12 @5xl:gap-7 @6xl:grid-cols-10 @7xl:gap-10">
           <div className="gap-4 border-muted @container @5xl:col-span-8 @5xl:border-e @5xl:pb-12 @5xl:pe-7 @6xl:col-span-7 @7xl:pe-12">
             <div className="flex flex-col gap-4 @xs:gap-7 @5xl:gap-9">
-              <AddressInfo type="billingAddress" title="Informasi Pembayaran" />
+              <AddressInfo
+                type="billingAddress"
+                title="Informasi Pembayaran"
+                setSelectedProvinceName={setSelectedProvinceName}
+                setSelectedCityName={setSelectedCityName}
+              />
 
               <DifferentBillingAddress />
 
-              <PaymentMethod />
+              <PaymentMethod token={token} setFee={setFee} />
             </div>
           </div>
 
-          <OrderSummery isLoading={isLoading} />
+          <OrderSummery isLoading={isLoading} fee={fee} />
         </div>
       </form>
     </FormProvider>

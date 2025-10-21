@@ -13,9 +13,11 @@ import { useCart } from '@/store/quick-cart/cart.context';
 export default function OrderSummery({
   isLoading,
   className,
+  fee,
 }: {
   className?: string;
   isLoading?: boolean;
+  fee?: number;
 }) {
   const params = useParams();
   const { items, total, addItemToCart, removeItemFromCart, clearItemFromCart } =
@@ -26,7 +28,7 @@ export default function OrderSummery({
     }
   );
   const { price: totalPrice } = usePrice({
-    amount: total,
+    amount: total + (fee ?? 0),
   });
 
   return (
@@ -42,7 +44,7 @@ export default function OrderSummery({
       <div className="rounded-lg border border-muted p-4 @xs:p-6 @5xl:rounded-none @5xl:border-none @5xl:px-0">
         <div className="flex justify-between rounded-tl-lg rounded-tr-lg border-b border-muted pb-4 @xs:pb-6">
           Produk
-          <Link href={routes.produk.keranjang}>
+          {/* <Link href={routes.produk.keranjang}>
             <Button
               as="span"
               variant="text"
@@ -50,7 +52,7 @@ export default function OrderSummery({
             >
               Edit Keranjang
             </Button>
-          </Link>
+          </Link> */}
         </div>
         <div className="pt-4 @xl:pt-6">
           <OrderProducts
@@ -67,15 +69,15 @@ export default function OrderSummery({
             </Text>
           </div>
           <div className="mb-4 flex items-center justify-between last:mb-0">
-            Pajak
+            Biaya Admin
             <Text as="span" className="font-medium text-gray-900">
-              {toCurrency(0)}
+              {fee !== 0 ? toCurrency(fee ?? 0) : 'FREE'}
             </Text>
           </div>
           <div className="mb-4 flex items-center justify-between last:mb-0">
             Pengiriman
             <Text as="span" className="font-medium text-gray-900">
-              {toCurrency(0)}
+              {/* {toCurrency(0)} */} FREE
             </Text>
           </div>
           <div className="flex items-center justify-between border-t border-muted py-4 text-base font-bold text-gray-1000">

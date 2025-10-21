@@ -24,78 +24,120 @@ import {
 } from 'react-icons/pi';
 import { paymentMethodData } from '@/data/checkout-data';
 
-// types.ts
-export interface PaymentOption {
-  value: string;
-  label: string;
-  icon: string;
+export interface PaymentMethodResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: PaymentData;
 }
 
-export const dataMetodePembayaran: PaymentOption[] = [
-  {
-    value: 'bca_va',
-    label: 'BCA Virtual Account',
-    icon: 'https://upload.wikimedia.org/wikipedia/commons/5/5a/BCA_logo.svg',
-  },
-  {
-    value: 'bni_va',
-    label: 'BNI Virtual Account',
-    icon: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/BNI_logo.svg',
-  },
-  {
-    value: 'bri_va',
-    label: 'BRI Virtual Account',
-    icon: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Bank_BRI_logo.svg',
-  },
-  {
-    value: 'mandiri_va',
-    label: 'Mandiri Virtual Account',
-    icon: 'https://upload.wikimedia.org/wikipedia/commons/9/9f/Bank_Mandiri_logo.svg',
-  },
-  {
-    value: 'qris',
-    label: 'QRIS',
-    icon: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/Logo_QRIS.svg',
-  },
-  {
-    value: 'gopay',
-    label: 'GoPay',
-    icon: 'https://upload.wikimedia.org/wikipedia/commons/4/46/GoPay_logo.svg',
-  },
-  {
-    value: 'ovo',
-    label: 'OVO',
-    icon: 'https://upload.wikimedia.org/wikipedia/commons/5/58/Logo_ovo_purple.svg',
-  },
-  {
-    value: 'dana',
-    label: 'DANA',
-    icon: 'https://upload.wikimedia.org/wikipedia/commons/9/9f/Logo_dana_blue.svg',
-  },
-  {
-    value: 'shopeepay',
-    label: 'ShopeePay',
-    icon: 'https://upload.wikimedia.org/wikipedia/commons/1/1a/ShopeePay_logo.svg',
-  },
-  {
-    value: 'credit_card',
-    label: 'Kartu Kredit / Debit',
-    icon: 'https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png',
-  },
-];
+export interface PaymentData {
+  va: PaymentItem[];
+  qris: PaymentItem[];
+}
 
-export default function PaymentMethod({ className }: { className?: string }) {
+export interface PaymentItem {
+  id: string;
+  payment_method: string; // e.g. "virtual_account", "wallet_account"
+  payment_channel: string; // e.g. "bca", "bni", "qris"
+  percentage_type: 'fix' | 'percentage';
+  fee: PaymentFee;
+}
+
+export interface PaymentFee {
+  value: number;
+  formatted: string; // e.g. "Rp 3.000,00" or "0.7%"
+}
+
+interface PaymentMethod {
+  id: string;
+  payment_method: string;
+  payment_channel: string;
+  percentage_type: string;
+  fee: {
+    value: number;
+    formatted: string;
+  };
+}
+
+interface PaymentOption {
+  value: string;
+  label: string;
+  fee?: number;
+}
+
+export default function PaymentMethod({
+  token,
+  setFee,
+}: {
+  token?: string;
+  setFee?: (value: number) => void;
+}) {
   const {
     register,
     control,
     formState: { errors },
   } = useFormContext();
-  const [collapseOpen, setCollapseOpen] = useState(true);
-
   const paymentMethod = useWatch({
     control,
     name: 'paymentMethod',
   });
+
+  const [dataMetodePembayaran, setDataMetodePembayaran] = useState<
+    PaymentOption[]
+  >([]);
+
+  useEffect(() => {
+    const fetchMetodePembayaran = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/_services/payment-method`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-app-token': token ?? '',
+            },
+          }
+        );
+
+        if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
+        const data = (await res.json()) as PaymentMethodResponse;
+
+        if (data?.data) {
+          const options: PaymentOption[] = [];
+
+          // VA methods
+          if (Array.isArray(data.data.va)) {
+            data.data.va.forEach((item) => {
+              options.push({
+                value: item.id,
+                label: `Virtual Account - ${item.payment_channel.toUpperCase()}`,
+                fee: item.fee.value,
+              });
+            });
+          }
+
+          // QRIS / wallet
+          if (Array.isArray(data.data.qris)) {
+            data.data.qris.forEach((item) => {
+              options.push({
+                value: item.id,
+                label: `${item.payment_channel.toUpperCase()}`,
+                fee: item.fee.value,
+              });
+            });
+          }
+
+          setDataMetodePembayaran(options);
+        }
+      } catch (err) {
+        console.error('Failed to fetch payment methods:', err);
+      }
+    };
+
+    fetchMetodePembayaran();
+  }, [token]);
 
   return (
     <div>
@@ -103,57 +145,6 @@ export default function PaymentMethod({ className }: { className?: string }) {
         Metode Pembayaran
       </Title>
       <div className="space-y-4 [&_label]:block">
-        {/* <Controller
-          name="paymentMethod"
-          control={control}
-          render={({ field: { value, onChange } }) => (
-            <RadioGroup
-              value={value}
-              setValue={(e) => {
-                onChange(e);
-                setCollapseOpen(false);
-              }}
-              className="grid gap-4"
-            >
-              {paymentMethodData.map((item) => (
-                <AdvancedRadio
-                  key={item.id}
-                  name="paymentMethod"
-                  value={item.value}
-                  checked={item.value === paymentMethod ? true : false}
-                  inputClassName="[&~span]:border-0 [&~span]:ring-1 [&~span]:ring-gray-200 [&~span:hover]:ring-primary [&:checked~span:hover]:ring-primary [&:checked~span]:border-1 [&:checked~.rizzui-advanced-checkbox]:ring-2"
-                >
-                  <span className="flex flex-col gap-4 py-6 ps-3.5 @md:flex-row @md:items-center @md:gap-6">
-                    <span className="inline-flex @md:shrink-0">
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        height={60}
-                        width={80}
-                        className="object-contain"
-                      />
-                    </span>
-                    <span className="block">
-                      <Title
-                        as="h6"
-                        className="mb-2.5 block text-base font-medium @md:mb-2"
-                      >
-                        {item.name}
-                      </Title>
-                      <Text
-                        as="span"
-                        className="block font-normal leading-[1.85] @md:pe-10"
-                      >
-                        {item.description}
-                      </Text>
-                    </span>
-                  </span>
-                  <PiCheckCircleFill className="icon absolute right-4 top-4 hidden h-6 w-6 text-primary @xs:right-6 @xs:top-6 rtl:left-4 rtl:right-auto @xs:rtl:left-6" />
-                </AdvancedRadio>
-              ))}
-            </RadioGroup>
-          )}
-        /> */}
         <Controller
           control={control}
           name="payment_method"
@@ -164,7 +155,17 @@ export default function PaymentMethod({ className }: { className?: string }) {
               inPortal={false}
               placeholder="Pilih Metode Pembayaran"
               options={dataMetodePembayaran}
-              onChange={onChange}
+              onChange={(selectedValue) => {
+                // 🔹 Update form field value
+                onChange(selectedValue);
+
+                // 🔹 Find the selected option
+                const selected = dataMetodePembayaran.find(
+                  (opt) => opt.value === selectedValue
+                );
+
+                setFee?.(selected?.fee ?? 0);
+              }}
               value={value}
               searchable={true}
               getOptionValue={(option) => option.value}

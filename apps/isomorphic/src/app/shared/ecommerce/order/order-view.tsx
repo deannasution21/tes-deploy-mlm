@@ -396,7 +396,7 @@ export default function OrderView() {
                 {invoice?.data?.attribute?.form_data?.customer_name ?? '-'}
               </Title>
               <Text as="p" className="mb-2 break-all last:mb-0">
-                {'@' + invoice?.data?.attribute?.form_data?.username ?? '-'}
+                {'@' + (invoice?.data?.attribute?.form_data?.username ?? '-')}
               </Text>
               <Text as="p" className="mb-2 last:mb-0">
                 {invoice?.data?.attribute?.form_data?.customer_phone ?? '-'}

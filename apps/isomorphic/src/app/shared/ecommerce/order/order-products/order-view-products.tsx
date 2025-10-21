@@ -66,11 +66,7 @@ const columns = [
   },
 ];
 
-export default function OrderViewProducts({
-  data,
-}: {
-  data: TransactionProduct;
-}) {
+export default function OrderViewProducts({ data }: { data: any }) {
   const { items } = useCart();
   const datanya = data ?? items;
   return (

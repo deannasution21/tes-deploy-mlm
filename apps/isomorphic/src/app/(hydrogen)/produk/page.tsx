@@ -12,20 +12,20 @@ const ShopFilters = dynamic(
 );
 
 const pageHeader = {
-  title: 'Pembelian Produk',
+  title: 'Belanja Produk',
   breadcrumb: [
     {
       href: routes.dashboard.index,
       name: 'Dashboard',
     },
     {
-      name: 'Produk',
+      name: 'Belanja Produk',
     },
   ],
 };
 
 export const metadata = {
-  ...metaObject('Produk'),
+  ...metaObject('Belanja Produk'),
 };
 
 export default function ShopPage() {

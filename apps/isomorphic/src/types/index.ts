@@ -165,3 +165,84 @@ export interface ProductCartItem extends ProductAttribute {
   size?: number;
   discount?: number;
 }
+
+export interface UserDataResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data?: {
+    attribute?: UserData;
+  };
+}
+
+export interface UserData {
+  nama: string;
+  username: string;
+  email: string;
+  no_hp: string;
+  nama_bank: string;
+  no_rekening: string;
+  nama_pemilik_rekening: string;
+  role: string;
+  status: {
+    code: number;
+    name: string;
+  };
+}
+
+export interface PinResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: {
+    count: number;
+    pins: Pin[];
+  };
+}
+
+export interface Pin {
+  pin_code: string;
+  mlm_user_id: string;
+  dealer_id: string;
+  type: string;
+  price: {
+    amount: number;
+    currency: string;
+  };
+  status: string;
+  created_at: string; // you can change to Date if you parse it later
+}
+
+export interface TransferPinResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: {
+    transferredPins: string[];
+  };
+}
+
+export interface HistoryTransferPinResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: {
+    count: number;
+    histories: HistoryTransferPinItem[];
+  };
+}
+
+export interface HistoryTransferPinItem {
+  pin_code: string;
+  attributes: HistoryTransferPinAttributes;
+}
+
+export interface HistoryTransferPinAttributes {
+  created_at: string;
+  from: string;
+  to: string;
+  total_pin: number;
+  note: string;
+  type_pin: string;
+  status: string;
+}

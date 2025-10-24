@@ -379,16 +379,7 @@ export default function OrderView() {
             title="Informasi Pembeli"
             childrenWrapperClass="py-5 @5xl:py-8 flex"
           >
-            <div className="relative aspect-square h-16 w-16 shrink-0 @5xl:h-20 @5xl:w-20">
-              <Image
-                fill
-                alt="avatar"
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw"
-                src="https://isomorphic-furyroad.s3.amazonaws.com/public/avatar.png"
-              />
-            </div>
-            <div className="ps-4 @5xl:ps-6">
+            <div className="">
               <Title
                 as="h3"
                 className="mb-2.5 text-base font-semibold @7xl:text-lg"

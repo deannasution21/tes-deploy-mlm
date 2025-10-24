@@ -4,6 +4,8 @@ import { Title, Text } from 'rizzui';
 import cn from '@core/utils/class-names';
 import pinImg from '@public/pin.png';
 import Image from 'next/image';
+import TagIcon from '@core/components/icons/tag';
+import TagIcon2 from '@core/components/icons/tag-2';
 
 const data = [
   { name: 'PIN General:', value: 20, color: '#3872FA' },
@@ -64,13 +66,35 @@ export default function FleetStatus({ className }: { className?: string }) {
                   className="me-2 h-2 w-2 rounded-full"
                   style={{ backgroundColor: item.color }}
                 />
-                <Title as="h5" className="text-sm font-medium">
+                <Title as="h5" className="text-sm font-semibold">
                   {item.name}
                 </Title>
               </div>
               <Text as="span">{item.value}</Text>
             </div>
           ))}
+        </div>
+      </div>
+      <div className="grid gap-5 rounded-lg border border-muted p-4 @2xl:grid-cols-2 @2xl:p-6">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-12 w-12 items-center justify-center">
+            {/* <HourGlassIcon className="h-8 w-8" /> */}
+            <TagIcon className="h-full w-full" />
+          </div>
+          <div>
+            <p className="text-base font-semibold text-gray-900">3 POIN</p>
+            <p>Total Poin Kiri</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-12 w-12 items-center justify-center">
+            {/* <WeighingScale className="h-8 w-8" /> */}
+            <TagIcon2 className="h-full w-full" />
+          </div>
+          <div>
+            <p className="text-base font-semibold text-gray-900">7 POIN</p>
+            <p>Total Poin Kanan</p>
+          </div>
         </div>
       </div>
     </div>

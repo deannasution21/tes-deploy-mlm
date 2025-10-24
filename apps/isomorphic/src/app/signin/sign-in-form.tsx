@@ -13,14 +13,14 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Preloader } from '@/app/shared/preloader';
 
 const initialValuesAdmin: LoginSchema = {
-  username: 'adm0000001',
-  password: 'berkahselalu',
+  username: 'adminpin2025',
+  password: 'adminpin2025',
   rememberMe: true,
 };
 
 const initialValuesUser: LoginSchema = {
-  username: 'ipg0000008',
-  password: 'berkahselalu',
+  username: 'admin',
+  password: 'infinitepg2025',
   rememberMe: true,
 };
 
@@ -32,6 +32,7 @@ export default function SignInForm({ role }: { role: string }) {
   const [reset, setReset] = useState({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
     setLoading(true);
@@ -52,13 +53,11 @@ export default function SignInForm({ role }: { role: string }) {
 
     const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
     router.push(callbackUrl);
-
-    setTimeout(() => setLoading(false), 800);
   };
 
   return (
     <>
-      <Preloader />
+      <Preloader loaded={loaded} setLoaded={setLoaded} />
 
       {error && (
         <div className="mb-5 flex items-center justify-between rounded-xl border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700 shadow transition-all duration-300">
@@ -76,10 +75,10 @@ export default function SignInForm({ role }: { role: string }) {
         validationSchema={loginSchema}
         resetValues={reset}
         onSubmit={onSubmit}
-        useFormProps={{
-          defaultValues:
-            role === 'admin' ? initialValuesAdmin : initialValuesUser,
-        }}
+        // useFormProps={{
+        //   defaultValues:
+        //     role === 'admin' ? initialValuesAdmin : initialValuesUser,
+        // }}
       >
         {({ register, formState: { errors } }) => (
           <div className="space-y-5">
@@ -92,6 +91,7 @@ export default function SignInForm({ role }: { role: string }) {
               inputClassName="text-sm"
               {...register('username')}
               error={errors.username?.message}
+              autoComplete="off"
             />
             <Password
               label="Password"

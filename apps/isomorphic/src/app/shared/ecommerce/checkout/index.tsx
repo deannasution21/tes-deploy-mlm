@@ -258,7 +258,7 @@ export default function CheckoutPageWrapper({
             <div className="flex flex-col gap-4 @xs:gap-7 @5xl:gap-9">
               <AddressInfo
                 type="billingAddress"
-                title="Informasi Pembayaran"
+                title="Informasi Pengiriman"
                 setSelectedProvinceName={setSelectedProvinceName}
                 setSelectedCityName={setSelectedCityName}
               />

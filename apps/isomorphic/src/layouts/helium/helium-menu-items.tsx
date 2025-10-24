@@ -55,6 +55,9 @@ import {
   PiUsers,
   PiTreeStructure,
   PiCurrencyCircleDollarDuotone,
+  PiPhoneTransfer,
+  PiArrowsHorizontal,
+  PiGift,
 } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
@@ -614,7 +617,7 @@ export const menuItemsUser = [
   },
   {
     name: 'Diagram Jaringan',
-    href: '#',
+    href: routes.diagramJaringan.index,
     icon: <PiTreeStructure />,
     badge: '',
   },
@@ -633,7 +636,7 @@ export const menuItemsUser = [
   {
     name: 'Withdrawal Bonus',
     href: '#',
-    icon: <PiUserPlus />,
+    icon: <PiGift />,
     dropdownItems: [
       {
         name: 'Withdrawal PIN A ',
@@ -646,28 +649,40 @@ export const menuItemsUser = [
     ],
   },
   {
-    name: 'Transfer PIN/Beli Produk',
+    name: 'Belanja Produk',
     href: '#',
     icon: <PiShoppingCart />,
     dropdownItems: [
       {
-        name: 'Pembelian Produk',
+        name: 'Belanja Produk',
         href: routes.produk.index,
       },
       {
-        name: 'History Pembelian Produk',
+        name: 'History Belanja Produk',
         href: routes.produk.pesanan.index,
-      },
-      {
-        name: 'Transfer PIN A',
-        href: routes.transferPin.index,
-      },
-      {
-        name: 'History Transfer PIN A',
-        href: routes.transferPin.history,
       },
     ],
   },
+  {
+    name: 'Transfer PIN',
+    href: routes.transferPin.index,
+    icon: <PiArrowsHorizontal />,
+  },
+  // {
+  //   name: 'Posting',
+  //   href: '#',
+  //   icon: <PiUserPlus />,
+  //   dropdownItems: [
+  //     {
+  //       name: 'Posting ',
+  //       href: routes.postingPin.index,
+  //     },
+  //     {
+  //       name: 'History Posting ',
+  //       href: routes.postingPin.history,
+  //     },
+  //   ],
+  // },
   {
     name: 'Withdrawal',
     href: '#',
@@ -698,7 +713,7 @@ export const menuItemsAdmin = [
   },
   {
     name: 'Diagram Jaringan',
-    href: '#',
+    href: routes.diagramJaringan.index,
     icon: <PiTreeStructure />,
     badge: 'NEW',
   },

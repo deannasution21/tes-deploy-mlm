@@ -6,6 +6,11 @@ export const routes = {
     index: '/profil',
     ubahPassword: '/profil/ubah-password',
   },
+  diagramJaringan: {
+    index: '/diagram-jaringan',
+    posting: (slug: string) => `/diagram-jaringan/${slug}/posting`,
+    clone: (slug: string) => `/diagram-jaringan/${slug}/clone`,
+  },
   bonus: {
     index: '/bonus',
     history: '/bonus/history',

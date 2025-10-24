@@ -128,9 +128,9 @@ export default function OrderTable({
         },
       },
       meta: {
-        handleDeleteRow: (row) => {
-          setData((prev) => prev.filter((r) => r.ref_id !== row.ref_id));
-        },
+        // handleDeleteRow: (row) => {
+        //   setData((prev) => prev.filter((r) => r.ref_id !== row.ref_id));
+        // },
       },
       enableColumnResizing: false,
     },

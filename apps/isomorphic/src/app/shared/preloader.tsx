@@ -2,9 +2,13 @@
 
 import { useState, useEffect } from 'react';
 
-export const Preloader = () => {
-  const [loaded, setLoaded] = useState(false);
-
+export const Preloader = ({
+  loaded,
+  setLoaded,
+}: {
+  loaded: boolean;
+  setLoaded: (value: boolean) => void;
+}) => {
   useEffect(() => {
     const handleLoad = () => {
       // Wait a bit, then mark loaded

@@ -2,8 +2,6 @@ import { type NextAuthOptions, User } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { pagesOptions } from './pages-options';
 import { Session } from 'next-auth';
-import jwt from 'jsonwebtoken';
-import { JWT } from 'next-auth/jwt';
 
 interface ApiLoginResponse {
   code: number;
@@ -28,12 +26,6 @@ interface ApiLoginResponse {
   token?: string;
 }
 
-interface CustomToken extends JWT {
-  accessToken?: string;
-  user?: any;
-  exp?: number;
-}
-
 const env = process.env;
 
 export const authOptions: NextAuthOptions = {
@@ -44,32 +36,34 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // fallback, but overridden below
+    maxAge: 8 * 60, // expire after 8 minutes
+    updateAge: 5 * 60, // refresh token every 5 minutes
   },
+  // ✅ Attach token & session callbacks
   callbacks: {
     async jwt({ token, user }) {
-      if (user && typeof user.token === 'string') {
-        const decoded = jwt.decode(user.token) as jwt.JwtPayload | null;
+      if (user) {
         token.accessToken = user.token;
         token.user = user;
-        token.exp = decoded?.exp;
       }
       return token;
     },
-
     async session({ session, token }) {
-      session.user = token.user;
-      session.accessToken = token.accessToken;
+      if (!token.user || !token.accessToken) {
+        console.log('session expires');
+        return null as unknown as Session;
+      }
 
-      if (token.exp) {
-        // ✅ convert JWT exp (seconds) into milliseconds and recalculate NextAuth-style expiry
-        const expiresIn = (token.exp as number) * 1000 - Date.now();
-        session.expires = new Date(Date.now() + expiresIn).toISOString();
+      if (token.user) {
+        session.user = token.user; // ✅ assign only when defined
+      }
+
+      if (token.accessToken) {
+        session.accessToken = token.accessToken;
       }
 
       return session;
     },
-
     async redirect({ baseUrl }) {
       return baseUrl;
     },

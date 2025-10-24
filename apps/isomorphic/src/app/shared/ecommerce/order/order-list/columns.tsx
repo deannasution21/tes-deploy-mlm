@@ -91,11 +91,19 @@ export const ordersColumns = (expanded: boolean = true) => {
 
 export const ordersColumnsNew = (expanded: boolean = true) => {
   const columns = [
-    columnHelperNew.display({
-      id: 'id',
-      size: 120,
-      header: 'ID',
-      cell: ({ row }) => <>#{row.original.ref_id}</>,
+    // columnHelperNew.display({
+    //   id: 'id',
+    //   size: 120,
+    //   header: 'ID',
+    //   cell: ({ row }) => <>#{row.original.ref_id}</>,
+    // }),
+    columnHelperNew.accessor('attributes.created_at', {
+      id: 'createdAt',
+      size: 180,
+      header: 'Tanggal',
+      cell: ({ row }) => (
+        <DateCell date={new Date(row.original.attributes.created_at)} />
+      ),
     }),
     columnHelperNew.accessor('attributes.buyer.customer_name', {
       id: 'customer',
@@ -103,19 +111,20 @@ export const ordersColumnsNew = (expanded: boolean = true) => {
       header: 'Nama',
       enableSorting: false,
       cell: ({ row }) => (
-        <TableAvatar
-          src={
-            'https://isomorphic-furyroad.s3.amazonaws.com/public/avatars-blur/avatar-15.webp'
-          }
-          name={row.original.attributes.buyer.customer_name}
-          description={row.original.attributes.buyer.customer_phone}
-        />
+        <>
+          <Text className="font-medium text-gray-700">
+            {row.original.attributes.buyer.customer_name}
+          </Text>
+          <Text className="font-medium text-gray-700">
+            {row.original.attributes.buyer.customer_phone}
+          </Text>
+        </>
       ),
     }),
     columnHelperNew.display({
       id: 'items',
       size: 150,
-      header: 'Produk',
+      header: 'Jumlah Produk',
       cell: ({ row }) => (
         <Text className="font-medium text-gray-700">
           {row.original.attributes.products?.length}
@@ -130,14 +139,6 @@ export const ordersColumnsNew = (expanded: boolean = true) => {
         <Text className="font-medium text-gray-700">
           {row.original.attributes.totals.sub_total_currency}
         </Text>
-      ),
-    }),
-    columnHelperNew.accessor('attributes.created_at', {
-      id: 'createdAt',
-      size: 200,
-      header: 'Tanggal',
-      cell: ({ row }) => (
-        <DateCell date={new Date(row.original.attributes.created_at)} />
       ),
     }),
     columnHelperNew.accessor('attributes.status.message', {

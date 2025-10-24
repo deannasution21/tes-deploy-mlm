@@ -1,34 +1,34 @@
 import { routes } from '@/config/routes';
 import PageHeader from '@/app/shared/page-header';
-import CheckoutPageWrapper from '@/app/shared/ecommerce/checkout';
 import { metaObject } from '@/config/site.config';
+import Posting from '@/app/shared/forms/posting';
 
 export const metadata = {
-  ...metaObject('Checkout'),
+  ...metaObject('Posting'),
 };
 
 const pageHeader = {
-  title: 'Checkout',
+  title: 'Order',
   breadcrumb: [
     {
-      name: 'Dashboard',
       href: routes.dashboard.index,
+      name: 'Dashboard',
     },
     {
-      href: routes.produk.index,
-      name: 'Belanja Produk',
+      href: routes.diagramJaringan.index,
+      name: 'Diagram jaringan',
     },
     {
-      name: 'Checkout',
+      name: 'Posting',
     },
   ],
 };
 
-export default function CheckoutPage() {
+export default function PostingPage() {
   return (
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
-      <CheckoutPageWrapper />
+      <Posting />
     </>
   );
 }

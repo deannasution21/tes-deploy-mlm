@@ -4,12 +4,12 @@ import ProductDetails from '@/app/shared/ecommerce/product/product-details';
 import { metaObject } from '@/config/site.config';
 
 export const metadata = {
-  ...metaObject('Pembelian Produk'),
+  ...metaObject('Belanja Produk'),
 };
 
 export default function ProductDetailsPage({ params }: any) {
   const pageHeader = {
-    title: 'Pembelian Produk',
+    title: 'Belanja Produk',
     breadcrumb: [
       {
         href: routes.dashboard.index,
@@ -17,7 +17,7 @@ export default function ProductDetailsPage({ params }: any) {
       },
       {
         href: routes.produk.index,
-        name: 'Produk',
+        name: 'Belanja Produk',
       },
       {
         name: params.slug,

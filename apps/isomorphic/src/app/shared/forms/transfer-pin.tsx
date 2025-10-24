@@ -174,7 +174,7 @@ export default function TransferPinPage() {
       if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
 
       toast.success(<Text as="b">Transfer Berhasil!</Text>);
-      getDataPin(session.user.id);
+      getDataPin(session?.user?.id as string);
       rollbackTransfer();
       setLoading(false);
     } catch (error) {

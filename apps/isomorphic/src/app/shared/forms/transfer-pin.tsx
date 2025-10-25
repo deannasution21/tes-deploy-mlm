@@ -7,7 +7,7 @@ import { Text, Input, ActionIcon, Button, Password } from 'rizzui';
 import { FormBlockWrapper } from '@/app/shared/invoice/form-utils';
 import { toast } from 'react-hot-toast';
 import WidgetCard from '@core/components/cards/widget-card';
-import { PiMinusBold, PiPlusBold } from 'react-icons/pi';
+import { PiMinusBold, PiNotificationBold, PiPlusBold } from 'react-icons/pi';
 import {
   TransferPinInput,
   transferPinSchema,
@@ -27,46 +27,60 @@ function QuantityInput({
   error,
   onChange,
   defaultValue,
+  max,
 }: {
   name?: string;
   error?: string;
   onChange?: (value: number) => void;
   defaultValue?: number;
+  max: number; // user's available PINs
 }) {
   const [value, setValue] = useState(defaultValue ?? 1);
 
+  // cap the max amount to 2000
+  const finalMax = Math.min(max, 2000);
+
   function handleIncrement() {
     let newValue = value + 1;
+    if (newValue > finalMax) newValue = finalMax;
     setValue(newValue);
-    onChange && onChange(newValue);
+    onChange?.(newValue);
   }
 
   function handleDecrement() {
     let newValue = value > 1 ? value - 1 : 1;
     setValue(newValue);
-    onChange && onChange(newValue);
+    onChange?.(newValue);
   }
 
   function handleOnChange(inputValue: number) {
-    setValue(Number(inputValue));
-    onChange && onChange(inputValue);
+    // sanitize manual typing
+    let newValue = Number(inputValue);
+    if (isNaN(newValue)) newValue = 1;
+    if (newValue < 1) newValue = 1;
+    if (newValue > finalMax) newValue = finalMax;
+    setValue(newValue);
+    onChange?.(newValue);
   }
 
   useEffect(() => {
-    setValue(defaultValue ?? 1);
-    onChange && onChange(defaultValue ?? 1);
+    const initial = defaultValue ?? 1;
+    const bounded = Math.min(initial, finalMax);
+    setValue(bounded);
+    onChange?.(bounded);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [finalMax]);
 
   return (
     <Input
       label="Jumlah PIN yang akan ditransfer"
       type="number"
-      min={0}
+      min={1}
+      max={finalMax}
       name={name}
       value={value}
       placeholder="1"
-      disabled={value === 0}
+      disabled={finalMax === 0}
       onChange={(e) => handleOnChange(Number(e.target.value))}
       suffix={
         <>
@@ -75,8 +89,8 @@ function QuantityInput({
             size="sm"
             variant="outline"
             className="scale-90 shadow-sm"
-            disabled={value === 0}
-            onClick={() => handleDecrement()}
+            disabled={finalMax === 0 || value <= 1}
+            onClick={handleDecrement}
           >
             <PiMinusBold className="h-3.5 w-3.5" strokeWidth={2} />
           </ActionIcon>
@@ -85,8 +99,8 @@ function QuantityInput({
             size="sm"
             variant="outline"
             className="scale-90 shadow-sm"
-            disabled={value === 0}
-            onClick={() => handleIncrement()}
+            disabled={finalMax === 0 || value >= finalMax}
+            onClick={handleIncrement}
           >
             <PiPlusBold className="h-3.5 w-3.5" strokeWidth={2} />
           </ActionIcon>
@@ -207,14 +221,18 @@ export default function TransferPinPage() {
       }).then((result: any) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-          doTransfer({
-            from: session?.user?.id,
-            to: data.to,
-            amount: data.amount,
-            type_pin: 'plan_a',
-            note: '',
-            token: data.token,
-          });
+          if (data.amount > 2000) {
+            toast.error(<Text as="b">Max 2000 PIN dalam sekali transfer</Text>);
+          } else {
+            doTransfer({
+              from: session?.user?.id,
+              to: data.to,
+              amount: data.amount,
+              type_pin: 'plan_a',
+              note: '',
+              token: data.token,
+            });
+          }
         } else {
           toast.success(<Text as="b">Transfer dibatalkan!</Text>);
           setLoading(false);
@@ -258,7 +276,7 @@ export default function TransferPinPage() {
               onSubmit={onSubmit}
               useFormProps={{
                 defaultValues: {
-                  amount: pin,
+                  amount: pin > 0 ? 1 : 0,
                 },
               }}
               className="flex flex-grow flex-col @container [&_label]:font-medium"
@@ -266,6 +284,19 @@ export default function TransferPinPage() {
               {({ register, control, watch, formState: { errors } }) => (
                 <>
                   <div className="flex-grow pb-10">
+                    <div className="mb-7 flex items-center space-x-2 rounded-lg bg-green-500 px-4 py-3 text-white shadow-lg">
+                      <PiNotificationBold />
+                      <ol className="list-disc ps-5">
+                        <li>
+                          Anda memiliki <strong>{pin}</strong> PIN
+                        </li>
+                        <li>
+                          Maksimal <strong>2000</strong> PIN dalam sekali
+                          transfer
+                        </li>
+                      </ol>
+                    </div>
+
                     <div className="grid grid-cols-1 gap-8 divide-y divide-dashed divide-gray-200 @2xl:gap-10 @3xl:gap-12">
                       <FormBlockWrapper title={'Data Pengirim:'}>
                         <Input
@@ -282,13 +313,14 @@ export default function TransferPinPage() {
                               name={name}
                               onChange={(value) => onChange(value)}
                               defaultValue={value}
+                              max={pin}
                               error={errors?.amount?.message}
                             />
                           )}
                         />
                         <Password
-                          label="Token PIN"
-                          placeholder="Ketikkan token"
+                          label="Password Anda"
+                          placeholder="Ketikkan password"
                           {...register('token')}
                           error={errors.token?.message}
                         />

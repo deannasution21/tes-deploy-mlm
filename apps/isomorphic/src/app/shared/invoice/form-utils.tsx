@@ -135,7 +135,7 @@ export function FormBlockWrapper({
           <Text className="mt-1 text-sm text-gray-500">{description}</Text>
         ) : null}
       </header>
-      <div className="col-span-4 grid grid-cols-2 gap-3 @lg:gap-4 @2xl:gap-5">
+      <div className="col-span-4 grid grid-cols-1 gap-3 @lg:grid-cols-2 @lg:gap-4 @2xl:gap-5">
         {children}
       </div>
     </section>

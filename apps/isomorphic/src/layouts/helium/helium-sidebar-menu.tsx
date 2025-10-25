@@ -7,6 +7,7 @@ import { PiCaretDownBold } from 'react-icons/pi';
 import {
   menuItemsAdmin,
   menuItemsUser,
+  menuItemsStockist,
 } from '@/layouts/helium/helium-menu-items';
 import { useSession } from 'next-auth/react';
 
@@ -14,7 +15,12 @@ export function HeliumSidebarMenu() {
   const pathname = usePathname();
   const session = useSession();
   const role = session?.data?.user?.role || 'user';
-  const menuFInal = role === 'admin' ? menuItemsAdmin : menuItemsUser;
+  const menuFInal =
+    role === 'admin'
+      ? menuItemsAdmin
+      : role === 'stockist'
+        ? menuItemsStockist
+        : menuItemsUser;
 
   return (
     <div className="mt-4 pb-3 3xl:mt-6">

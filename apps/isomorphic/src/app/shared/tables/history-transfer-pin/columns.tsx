@@ -26,9 +26,7 @@ export const transactionHistoryColumns = [
     header: 'Pengirim',
     size: 180,
     cell: (info) => (
-      <Text className="whitespace-nowrap font-medium text-gray-900">
-        {info.getValue()}
-      </Text>
+      <Text className="whitespace-nowrap">{info.getValue()}</Text>
     ),
   }),
   columnHelper.accessor('attributes.to', {
@@ -36,9 +34,7 @@ export const transactionHistoryColumns = [
     header: 'Penerima',
     size: 180,
     cell: (info) => (
-      <Text className="whitespace-nowrap font-medium text-gray-900">
-        {info.getValue()}
-      </Text>
+      <Text className="whitespace-nowrap">{info.getValue()}</Text>
     ),
   }),
   columnHelper.accessor('attributes.total_pin', {
@@ -46,19 +42,15 @@ export const transactionHistoryColumns = [
     header: 'Total PIN',
     size: 100,
     cell: (info) => (
-      <Text className="whitespace-nowrap font-medium text-gray-900">
-        {info.getValue()}
-      </Text>
+      <Text className="whitespace-nowrap">{info.getValue()}</Text>
     ),
   }),
-  columnHelper.accessor('attributes.type_pin', {
-    id: 'type_pin',
+  columnHelper.display({
+    id: 'pin_code',
+    size: 250,
     header: 'PIN',
-    size: 100,
-    cell: (info) => (
-      <Text className="whitespace-nowrap font-medium text-gray-900">
-        {info.getValue()}
-      </Text>
+    cell: ({ row }) => (
+      <Text className="truncate !text-sm">{row.original.pin_code}</Text>
     ),
   }),
   columnHelper.accessor('attributes.status', {

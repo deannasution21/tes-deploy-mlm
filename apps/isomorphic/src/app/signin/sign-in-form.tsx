@@ -18,6 +18,12 @@ const initialValuesAdmin: LoginSchema = {
   rememberMe: true,
 };
 
+const initialValuesStockist: LoginSchema = {
+  username: 'adminpin2025',
+  password: 'adminpin2025',
+  rememberMe: true,
+};
+
 const initialValuesUser: LoginSchema = {
   username: 'admin',
   password: 'infinitepg2025',
@@ -77,7 +83,7 @@ export default function SignInForm({ role }: { role: string }) {
         onSubmit={onSubmit}
         // useFormProps={{
         //   defaultValues:
-        //     role === 'admin' ? initialValuesAdmin : initialValuesUser,
+        //     role === 'admin' ? initialValuesAdmin : role === 'stockist' ? initialValuesStockist : initialValuesUser,
         // }}
       >
         {({ register, formState: { errors } }) => (

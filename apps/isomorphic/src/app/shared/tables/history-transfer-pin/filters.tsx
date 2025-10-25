@@ -58,11 +58,12 @@ export default function Filters<TData extends Record<string, any>>({
           getOptionValue={(option) => option.value}
           value={type}
           onChange={(value: string) => setType(value)}
-          getOptionDisplayValue={(option: { value: any }) =>
-            renderOptionDisplayValue(option.value as string)
-          }
+          getOptionDisplayValue={(option) => renderOptionDisplayValue(option)}
           displayValue={(selected: string) =>
-            renderOptionDisplayValue(selected)
+            renderOptionDisplayValue(
+              statusOptions.find((opt) => opt.value === selected) ??
+                statusOptions[0]
+            )
           }
         />
       </Flex>
@@ -95,41 +96,49 @@ export default function Filters<TData extends Record<string, any>>({
   );
 }
 
-function renderOptionDisplayValue(value: string) {
-  switch (value.toLowerCase()) {
+function renderOptionDisplayValue(option: {
+  label: string;
+  value: string | number;
+}) {
+  const valueStr = String(option.value).toLowerCase();
+
+  switch (valueStr) {
     case 'received':
       return (
         <div className="flex items-center">
           <Badge color="warning" renderAsDot />
           <Text className="ms-2 font-medium capitalize text-orange-dark">
-            {value}
+            {option.label}
           </Text>
         </div>
       );
+
     case 'send':
       return (
         <div className="flex items-center">
           <Badge color="success" renderAsDot />
           <Text className="ms-2 font-medium capitalize text-green-dark">
-            {value}
+            {option.label}
           </Text>
         </div>
       );
+
     case 'canceled':
       return (
         <div className="flex items-center">
           <Badge color="danger" renderAsDot />
-          <Text className="ms-2 font-medium capitalize text-green-dark">
-            {value}
+          <Text className="ms-2 font-medium capitalize text-red-600">
+            {option.label}
           </Text>
         </div>
       );
+
     default:
       return (
         <div className="flex items-center">
           <Badge renderAsDot className="bg-gray-400" />
           <Text className="ms-2 font-medium capitalize text-gray-600">
-            {value}
+            {option.label}
           </Text>
         </div>
       );

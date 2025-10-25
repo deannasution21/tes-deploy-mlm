@@ -649,6 +649,87 @@ export const menuItemsUser = [
     ],
   },
   {
+    name: 'Transfer PIN',
+    href: routes.transferPin.index,
+    icon: <PiArrowsHorizontal />,
+  },
+  // {
+  //   name: 'Posting',
+  //   href: '#',
+  //   icon: <PiUserPlus />,
+  //   dropdownItems: [
+  //     {
+  //       name: 'Posting ',
+  //       href: routes.postingPin.index,
+  //     },
+  //     {
+  //       name: 'History Posting ',
+  //       href: routes.postingPin.history,
+  //     },
+  //   ],
+  // },
+  {
+    name: 'Withdrawal',
+    href: '#',
+    icon: <PiCurrencyCircleDollarDuotone />,
+    dropdownItems: [
+      {
+        name: 'Withdrawal PIN A ',
+        href: routes.withdrawalPin.index,
+      },
+      {
+        name: 'History Withdrawal PIN A ',
+        href: routes.withdrawalPin.history,
+      },
+    ],
+  },
+];
+
+export const menuItemsStockist = [
+  // label start
+  {
+    name: 'Overview',
+  },
+  // label end
+  {
+    name: 'Dashboard',
+    href: routes.dashboard.index,
+    icon: <PiHouseLineDuotone />,
+  },
+  {
+    name: 'Diagram Jaringan',
+    href: routes.diagramJaringan.index,
+    icon: <PiTreeStructure />,
+    badge: '',
+  },
+
+  {
+    name: 'History Bonus',
+    href: '#',
+    icon: <ProjectWriteIcon />,
+    dropdownItems: [
+      {
+        name: 'History Bonus PIN A ',
+        href: routes.bonus.history,
+      },
+    ],
+  },
+  {
+    name: 'Withdrawal Bonus',
+    href: '#',
+    icon: <PiGift />,
+    dropdownItems: [
+      {
+        name: 'Withdrawal PIN A ',
+        href: routes.withdrawalPin.index,
+      },
+      {
+        name: 'History Withdrawal PIN A ',
+        href: routes.withdrawalPin.history,
+      },
+    ],
+  },
+  {
     name: 'Belanja Produk',
     href: '#',
     icon: <PiShoppingCart />,

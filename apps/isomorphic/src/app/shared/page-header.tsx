@@ -21,6 +21,7 @@ export default function PageHeader({
           <Title
             as="h2"
             className="mb-2 text-[22px] lg:text-2xl 4xl:text-[26px]"
+            style={{ lineBreak: 'anywhere' }}
           >
             {title}
           </Title>

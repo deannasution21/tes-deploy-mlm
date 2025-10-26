@@ -4,6 +4,7 @@ import { pagesOptions } from './pages-options';
 import { Session } from 'next-auth';
 import jwt from 'jsonwebtoken';
 import { JWT } from 'next-auth/jwt';
+import { UserDataResponse } from '@/types';
 
 interface ApiLoginResponse {
   code: number;
@@ -44,27 +45,80 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // fallback, but overridden below
+    maxAge: 20 * 60, // fallback, but overridden below
   },
   callbacks: {
+    // async jwt({ token, user }) {
+    //   // when user first logs in
+    //   if (user && typeof user.token === 'string') {
+    //     const decoded = jwt.decode(user.token) as jwt.JwtPayload | null;
+    //     token.accessToken = user.token;
+    //     token.user = user;
+    //     token.exp = decoded?.exp;
+    //     return token;
+    //   }
+
+    //   // 🟡 every subsequent request: check if token is still valid
+    //   if (token.accessToken) {
+    //     const now = Date.now() / 1000; // seconds
+    //     if (typeof token.exp === 'number' && token.exp < now) {
+    //       console.log('⛔ Token expired, verifying via API...');
+
+    //       try {
+    //         // ✅ Call your backend to check or refresh token
+    //         const res = await fetch(
+    //           `${env.NEXT_PUBLIC_API_URL}/_users/${token?.user?.id}`,
+    //           {
+    //             headers: { Authorization: `Bearer ${token.accessToken}` },
+    //           }
+    //         );
+
+    //         if (!res.ok) {
+    //           // token is invalid
+    //           console.log('❌ Session invalid on server');
+    //           return {}; // clears token → user becomes logged out
+    //         }
+    //       } catch (err) {
+    //         console.error('Token validation failed:', err);
+    //         return {};
+    //       }
+    //     }
+    //   }
+
+    //   return token;
+    // },
+
+    // async session({ session, token }) {
+    //   session.user = token.user;
+    //   session.accessToken = token.accessToken;
+
+    //   if (typeof token.exp === 'number') {
+    //     const expiresIn = token.exp * 1000 - Date.now();
+    //     session.expires = new Date(Date.now() + expiresIn).toISOString();
+    //   }
+
+    //   return session;
+    // },
+
     async jwt({ token, user }) {
-      if (user && typeof user.token === 'string') {
-        const decoded = jwt.decode(user.token) as jwt.JwtPayload | null;
+      if (user) {
         token.accessToken = user.token;
         token.user = user;
-        token.exp = decoded?.exp;
       }
       return token;
     },
-
     async session({ session, token }) {
-      session.user = token.user;
-      session.accessToken = token.accessToken;
+      if (!token.user || !token.accessToken) {
+        console.log('session expires');
+        return null as unknown as Session;
+      }
 
-      if (token.exp) {
-        // ✅ convert JWT exp (seconds) into milliseconds and recalculate NextAuth-style expiry
-        const expiresIn = (token.exp as number) * 1000 - Date.now();
-        session.expires = new Date(Date.now() + expiresIn).toISOString();
+      if (token.user) {
+        session.user = token.user; // ✅ assign only when defined
+      }
+
+      if (token.accessToken) {
+        session.accessToken = token.accessToken;
       }
 
       return session;
@@ -119,6 +173,9 @@ export const authOptions: NextAuthOptions = {
             role: userAttr.role,
             status: userAttr.status?.code,
             token: data.token, // store JWT
+            bankName: userAttr.nama_bank,
+            bankAccount: userAttr.no_rekening,
+            bankOwner: userAttr.nama_pemilik_rekening,
           };
         } catch (err) {
           if (env.NODE_ENV !== 'production') {

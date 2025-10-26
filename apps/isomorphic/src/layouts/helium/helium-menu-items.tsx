@@ -639,12 +639,12 @@ export const menuItemsUser = [
     icon: <PiGift />,
     dropdownItems: [
       {
-        name: 'Withdrawal PIN A ',
-        href: routes.withdrawalPin.index,
+        name: 'Withdrawal Bonus',
+        href: routes.withdrawalBonus.index,
       },
       {
-        name: 'History Withdrawal PIN A ',
-        href: routes.withdrawalPin.history,
+        name: 'History Withdrawal Bonus',
+        href: routes.withdrawalBonus.history,
       },
     ],
   },

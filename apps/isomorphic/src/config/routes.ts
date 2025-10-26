@@ -35,6 +35,12 @@ export const routes = {
     index: '/withdrawal-pin',
     history: '/withdrawal-pin/history',
   },
+  withdrawalBonus: {
+    index: '/withdrawal-bonus',
+    historyRow: (slug: string) => `/withdrawal-bonus/${slug}/history`,
+    withdrawalRow: (slug: string) => `/withdrawal-bonus/${slug}/withdrawal`,
+    history: '/withdrawal-bonus/history',
+  },
   produk: {
     index: '/produk',
     detail: (slug: string) => `/produk/${slug}`,

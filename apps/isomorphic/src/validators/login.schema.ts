@@ -1,9 +1,10 @@
+import { messages } from '@/config/messages';
 import { z } from 'zod';
 
 // form zod validation schema
 export const loginSchema = z.object({
-  username: z.string(),
-  password: z.string().min(1),
+  username: z.string().min(1, { message: messages.kolomIsRequired }),
+  password: z.string().min(1, { message: messages.kolomIsRequired }),
   rememberMe: z.boolean().optional(),
 });
 

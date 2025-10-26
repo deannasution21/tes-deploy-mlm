@@ -87,49 +87,46 @@ export default function SignInForm({ role }: { role: string }) {
         // }}
       >
         {({ register, formState: { errors } }) => (
-          <div className="space-y-5">
+          <div className="space-y-7">
+            <style>{`
+              .rizzui-input-container input::placeholder,
+              .rizzui-password-container input::placeholder {
+                color: #cfa039;
+              }
+            `}</style>
+
             <Input
               type="text"
               size="lg"
-              label="Username"
-              placeholder="Enter your username"
-              className="[&>label>span]:font-medium"
-              inputClassName="text-sm"
+              // label="Username"
+              placeholder="Username"
+              className="[&>label>span]:border [&>label>span]:border-[#d4af37] [&>label>span]:font-medium [&>label>span]:focus:border-[#ffd700] [&>label>span]:focus:ring-2 [&>label>span]:focus:ring-[#d4af37]"
+              inputClassName="text-[#b17d1c] placeholder-[#d4af37]/70 text-sm"
               {...register('username')}
               error={errors.username?.message}
               autoComplete="off"
             />
             <Password
-              label="Password"
-              placeholder="Enter your password"
+              // label="Password"
+              placeholder="Password"
               size="lg"
-              className="[&>label>span]:font-medium"
-              inputClassName="text-sm"
+              className="[&>label>span]:border [&>label>span]:border-[#d4af37] [&>label>span]:font-medium [&>label>span]:focus:border-[#ffd700] [&>label>span]:focus:outline-none [&>label>span]:focus:ring-2 [&>label>span]:focus:ring-[#d4af37]"
+              inputClassName="text-[#f6e27f] placeholder-[#d4af37]/70 text-sm"
               {...register('password')}
               error={errors.password?.message}
             />
-            <div className="flex items-center justify-between pb-2">
-              <Checkbox
-                {...register('rememberMe')}
-                label="Ingat Saya"
-                className="[&>label>span]:font-medium"
-              />
-            </div>
             <Button
-              className="w-full bg-[#AA8453] text-white hover:bg-[#a16207]"
+              className="w-full bg-gradient-to-b from-[#bb8928] to-[#9e6810] text-2xl font-bold text-black shadow-[0_0_10px_#d4af37] transition hover:opacity-90"
               type="submit"
               size="lg"
               disabled={loading}
+              isLoading={loading}
             >
-              {loading ? (
-                <span>Memproses...</span>
-              ) : (
-                <>
-                  <span>Masuk</span>
-                  <PiArrowRightBold className="ms-2 mt-0.5 h-5 w-5" />
-                </>
-              )}
+              <span>LOGIN</span>
             </Button>
+            <Text className="mt-6 text-center text-[15px] leading-loose text-[#d4af37]/80 md:mt-7 lg:mt-9 lg:text-base">
+              © PT INFINITE PRESTIGE GLOBAL 2025
+            </Text>
           </div>
         )}
       </Form>

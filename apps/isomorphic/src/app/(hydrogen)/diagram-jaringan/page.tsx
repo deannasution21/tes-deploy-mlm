@@ -1,3 +1,4 @@
+import DiagramJaringanPage from '@/app/shared/diagram-jaringan/diagram';
 import PageHeader from '@/app/shared/page-header';
 import { routes } from '@/config/routes';
 import { metaObject } from '@/config/site.config';
@@ -40,6 +41,8 @@ export default function Page() {
           </Link>
         </div>
       </PageHeader>
+
+      <DiagramJaringanPage />
     </>
   );
 }

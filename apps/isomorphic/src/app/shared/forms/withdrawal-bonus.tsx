@@ -8,7 +8,7 @@ import { FormBlockWrapper } from '@/app/shared/invoice/form-utils';
 import { toast } from 'react-hot-toast';
 import WidgetCard from '@core/components/cards/widget-card';
 import { PiMinusBold, PiNotificationBold, PiPlusBold } from 'react-icons/pi';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import {
   UserData,
   UserDataResponse,
@@ -42,6 +42,12 @@ export default function WithdrawalBonusForm(slug: any) {
         }
       );
 
+      if (res.status === 401) {
+        toast.error(<Text as="b">Sesi berakhir. Silakan login ulang</Text>);
+        setTimeout(() => {
+          signOut();
+        }, 300);
+      }
       if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
 
       const data = (await res.json()) as PinResponse;

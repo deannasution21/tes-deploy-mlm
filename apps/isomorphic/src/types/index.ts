@@ -246,3 +246,21 @@ export interface HistoryTransferPinAttributes {
   type_pin: string;
   status: string;
 }
+
+export interface NetworkDiagramResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: NetworkNode;
+}
+
+export interface NetworkNode {
+  user_id: string | null;
+  name: string | null;
+  location: string | null;
+  position: 'left' | 'right' | null;
+  isPlaceholder: boolean;
+  hasData: boolean;
+  children?: NetworkNode[]; // recursive structure
+  childrenCount?: number;
+}

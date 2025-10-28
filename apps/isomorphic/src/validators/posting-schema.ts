@@ -11,7 +11,10 @@ export const postingSchema = z
     sponsor: z.string().min(1, { message: messages.kolomIsRequired }),
     position: z.string().min(1, { message: messages.kolomIsRequired }),
     full_name: z.string().min(1, { message: messages.kolomIsRequired }),
-    email: z.string().min(1, { message: messages.kolomIsRequired }),
+    email: z
+      .string()
+      .min(1, { message: messages.kolomIsRequired })
+      .email({ message: 'Format email tidak valid' }),
     phone: z.string().min(1, { message: messages.kolomIsRequired }),
     province: z.string().min(1, { message: messages.kolomIsRequired }),
     city: z.string().min(1, { message: messages.kolomIsRequired }),

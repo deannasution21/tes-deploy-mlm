@@ -232,6 +232,23 @@ function Formnya({
           disabled
         />
 
+        <Input
+          label="Sponsor"
+          placeholder="Sponsor"
+          {...register(`sponsor`)}
+          // @ts-ignore
+          error={errors?.sponsor?.message as any}
+        />
+
+        <Input
+          label="Email"
+          placeholder="Email"
+          {...register(`email`)}
+          // @ts-ignore
+          error={errors?.email?.message as any}
+          disabled={type === 'clone'}
+        />
+
         <hr className="col-span-full my-5 border-muted" />
 
         <Title as="h4" className="col-span-full font-semibold">
@@ -515,7 +532,6 @@ export default function Posting({
   upline?: string;
   type: string;
 }) {
-  console.log(type);
   const { data: session } = useSession();
   const [isLoading, setLoading] = useState(false);
 
@@ -571,20 +587,41 @@ export default function Posting({
         }
       );
 
-      if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
+      // Handle non-OK responses gracefully
+      if (!res.ok) {
+        let errorMessage = `HTTP error! ${res.status}`;
+
+        try {
+          const errorData = (await res.json()) as {
+            message?: string;
+            error?: string;
+            [key: string]: any;
+          };
+
+          errorMessage = errorData.message || errorData.error || errorMessage;
+        } catch {
+          // fallback: no JSON body
+        }
+
+        throw new Error(errorMessage);
+      }
 
       toast.success(
         <Text as="b">
           {type?.toLocaleUpperCase()} {payload?.mlm_user_id} Berhasil!
         </Text>
       );
-      setLoading(false);
+
       setTimeout(() => {
-        router.push(`/diagram-jaringan/${payload?.mlm_user_id}`);
+        router.push(`/diagram-jaringan/${upline}`);
       }, 300);
-    } catch (error) {
-      toast.error(<Text as="b">{type?.toLocaleUpperCase()} Gagal!</Text>);
+    } catch (error: any) {
       console.error('Fetch data error:', error);
+      toast.error(
+        <Text as="b">
+          {type?.toLocaleUpperCase()} Gagal: {error.message}
+        </Text>
+      );
     } finally {
       setLoading(false);
     }

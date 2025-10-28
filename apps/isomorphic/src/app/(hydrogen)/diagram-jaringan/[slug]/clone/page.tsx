@@ -4,12 +4,12 @@ import { metaObject } from '@/config/site.config';
 import Posting from '@/app/shared/forms/posting';
 
 export const metadata = {
-  ...metaObject('Posting'),
+  ...metaObject('Cloning'),
 };
 
-export default function PostingPage({ params }: any) {
+export default function CloningPage({ params }: any) {
   const pageHeader = {
-    title: `Posting Upline: ${params.slug}`,
+    title: `Cloning Upline: ${params.slug}`,
     breadcrumb: [
       {
         href: routes.dashboard.index,
@@ -20,7 +20,7 @@ export default function PostingPage({ params }: any) {
         href: routes.diagramJaringan.index,
       },
       {
-        name: 'Posting',
+        name: 'Cloning',
       },
       {
         name: params.slug,
@@ -31,7 +31,7 @@ export default function PostingPage({ params }: any) {
   return (
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
-      <Posting upline={params.slug} type="posting" />
+      <Posting upline={params.slug} type="clone" />
     </>
   );
 }

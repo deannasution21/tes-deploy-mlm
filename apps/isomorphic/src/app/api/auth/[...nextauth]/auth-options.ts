@@ -170,6 +170,7 @@ export const authOptions: NextAuthOptions = {
             id: userAttr.username,
             name: userAttr.nama_pemilik_rekening || userAttr.nama,
             email: userAttr.email,
+            phone: userAttr.no_hp,
             role: userAttr.role,
             status: userAttr.status?.code,
             token: data.token, // store JWT

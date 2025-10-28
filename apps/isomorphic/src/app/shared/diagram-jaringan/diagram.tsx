@@ -15,6 +15,7 @@ import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 import FiltersDiagramJaringan from './filters';
 import Link from 'next/link';
+import { PiCopyBold, PiUserPlusBold } from 'react-icons/pi';
 
 type TreeProps = {
   data: NetworkNode;
@@ -28,11 +29,15 @@ function Tree({ data }: TreeProps) {
       </div>
     );
 
-  function renderNode(node: NetworkNode, indexPath: string): React.ReactNode {
+  const renderNode = (
+    node: NetworkNode,
+    indexPath: string,
+    upline?: string | null
+  ) => {
     const isLeaf = !node.children || node.children.length === 0;
-    const label =
-      node.name ||
-      (node.isPlaceholder ? 'Placeholder' : node.user_id || 'User');
+
+    // if current node has user_id, update upline reference
+    const currentUpline = upline;
 
     return (
       <div
@@ -46,33 +51,74 @@ function Tree({ data }: TreeProps) {
         }`}
       >
         {/* Node box */}
-        <Link
-          href={`/diagram-jaringan/${node?.user_id}`}
-          className="rounded-md bg-yellow-50 p-3 text-center transition-all hover:bg-yellow-200"
-        >
-          <div className="relative mx-auto mb-2 aspect-square w-14 overflow-hidden rounded-full border-2 border-yellow-500 shadow-sm">
-            <Image
-              src={placeholderDiagram}
-              alt="Diagram"
-              fill
-              className="object-cover"
-            />
-          </div>
-          <div
-            className={`mb-1 whitespace-nowrap rounded border px-3 py-1 text-sm uppercase shadow-sm ${
-              node.hasData
-                ? 'border-yellow-400 bg-yellow-50 text-yellow-700'
-                : 'border-gray-300 bg-gray-50 text-gray-600'
-            }`}
+        {node.user_id ? (
+          // ✅ Non-null data
+          <Link
+            href={`/diagram-jaringan/${node.user_id}`}
+            className="rounded-md bg-yellow-50 p-3 text-center transition-all hover:bg-yellow-200"
           >
-            {label}
-          </div>
-          <span className="text-xs text-stone-500">
-            {node?.location ?? '-'}
-          </span>
-        </Link>
+            <div className="relative mx-auto mb-2 aspect-square w-14 overflow-hidden rounded-full border-2 border-yellow-500 shadow-sm">
+              <Image
+                src={placeholderDiagram}
+                alt="Diagram"
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div
+              className={`mb-1 whitespace-nowrap rounded border px-3 py-1 text-sm uppercase shadow-sm ${
+                node.hasData
+                  ? 'border-yellow-400 bg-yellow-50 text-yellow-700'
+                  : 'border-gray-300 bg-gray-50 text-gray-600'
+              }`}
+            >
+              {node.name ?? 'Unknown'}
+            </div>
+            <span className="text-xs text-stone-500">
+              {node.location ?? '-'}
+            </span>
+          </Link>
+        ) : (
+          // ❗ Null node (potential downline)
+          <div className="rounded-md border-2 border-dashed border-yellow-500 bg-white p-3 text-center shadow-sm transition-all">
+            <div className="relative mx-auto mb-2 aspect-square w-14 overflow-hidden rounded-full border-2 border-yellow-500 shadow-sm grayscale">
+              <Image
+                src={placeholderDiagram}
+                alt="Diagram"
+                fill
+                className="object-cover"
+              />
+            </div>
 
-        {/* Vertical connector to children */}
+            {/* Only show actions if we have a valid upline */}
+            {currentUpline ? (
+              <div className="flex gap-3">
+                <Link
+                  href={`/diagram-jaringan/${currentUpline}/clone?position=${node.position}`}
+                >
+                  <Button size="sm" variant="flat" disabled={!upline}>
+                    <PiCopyBold className="me-2" />
+                    <span>Clone</span>
+                  </Button>
+                </Link>
+                <Link
+                  href={`/diagram-jaringan/${currentUpline}/posting?position=${node.position}`}
+                >
+                  <Button size="sm" disabled={!upline}>
+                    <PiUserPlusBold className="me-2" />
+                    <span>Posting</span>
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <div className="mt-2 text-xs italic text-gray-400">
+                Upline belum aktif
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Children connectors */}
         {!isLeaf && (
           <div className="flex min-w-[300px] flex-col items-center">
             <div className="mt-1 h-4 w-px bg-gray-300" />
@@ -94,7 +140,8 @@ function Tree({ data }: TreeProps) {
                   }`}
                 >
                   <div className="mb-1 h-4 w-px bg-gray-300" />
-                  {renderNode(child, `${indexPath}-${i}`)}
+                  {/* 🔁 Pass the latest known upline */}
+                  {renderNode(child, `${indexPath}-${i}`, node.user_id)}
                 </div>
               ))}
             </div>
@@ -102,11 +149,13 @@ function Tree({ data }: TreeProps) {
         )}
       </div>
     );
-  }
+  };
 
   return (
     <div className="w-full overflow-x-auto p-6">
-      <div className="inline-block min-w-full">{renderNode(data, '0')}</div>
+      <div className="inline-block min-w-full">
+        {data && renderNode(data, '0', data.user_id)}
+      </div>
     </div>
   );
 }

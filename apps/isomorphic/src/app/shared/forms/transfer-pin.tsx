@@ -122,7 +122,7 @@ export default function TransferPinPage() {
   const getDataPin = async (id: string) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/_pins/dealer/${id}?fetch=random&type=plan_a`,
+        `${process.env.NEXT_PUBLIC_API_URL}/_pins/dealer/${id}?fetch=all&type=plan_a`,
         {
           method: 'GET',
           headers: {
@@ -265,7 +265,7 @@ export default function TransferPinPage() {
     <div className="@container">
       <div className="grid grid-cols-1 gap-6 3xl:gap-8">
         <WidgetCard
-          title="Form Transfer PIN"
+          title={<span className="text-[#c69731]">Form Transfer PIN</span>}
           titleClassName="text-gray-700 font-bold text-2xl sm:text-2xl font-inter mb-5"
         >
           <div>

@@ -16,7 +16,7 @@ import cn from '@core/utils/class-names';
 import { PhoneNumber } from '@core/ui/phone-input';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { Pin, PinResponse } from '@/types';
+import { BankStatusResponse, PaymentOption, Pin, PinResponse } from '@/types';
 import { PostingInput, postingSchema } from '@/validators/posting-schema';
 import Swal from 'sweetalert2';
 
@@ -62,6 +62,9 @@ function Formnya({
   const [dataPin, setDataPin] = useState<Pin[]>([]);
   const [selectedPin, setSelectedPin] = useState<string>('');
   const [dataSPin, setDataSPin] = useState<Pin>();
+  const [dataMetodePembayaran, setDataMetodePembayaran] = useState<
+    PaymentOption[]
+  >([]);
   const position = watch('position'); // 'left' | 'right'
   const displayPosition =
     position === 'left' ? 'Kiri' : position === 'right' ? 'Kanan' : '';
@@ -96,11 +99,45 @@ function Formnya({
     }
   };
 
+  const getDataBank = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/_services/list-bank`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-app-token': session?.accessToken ?? '',
+          },
+        }
+      );
+
+      if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
+      const data = (await res.json()) as BankStatusResponse;
+
+      if (data?.data) {
+        const options: OptionType[] = [];
+
+        // VA methods
+        if (Array.isArray(data.data)) {
+          data.data.forEach((item) => {
+            options.push({
+              value: item.bank_code,
+              label: item.name.toUpperCase(),
+            });
+          });
+        }
+
+        setDataMetodePembayaran(options);
+      }
+    } catch (err) {
+      console.error('Failed to fetch payment methods:', err);
+    }
+  };
+
   // State for dropdown data
   const [dataProvinsi, setDataProvinsi] = useState<OptionType[]>([]);
   const [dataKabupaten, setDataKabupaten] = useState<OptionType[]>([]);
-  const [dataKecamatan, setDataKecamatan] = useState<OptionType[]>([]);
-  const [dataKelurahan, setDataKelurahan] = useState<OptionType[]>([]);
 
   const pasangan = [
     {
@@ -128,6 +165,7 @@ function Formnya({
     fetchProvinsi();
     if (!session?.user?.id) return;
     getDataPin(session.user.id);
+    getDataBank();
   }, []);
 
   // Fetch kabupaten based on selected provinsi
@@ -143,8 +181,6 @@ function Formnya({
       setValue('kabupaten', '');
       setValue('kecamatan', '');
       setValue('kelurahan', '');
-      setDataKecamatan([]);
-      setDataKelurahan([]);
     };
     fetchKabupaten();
   }, [selectedProvinsi]);
@@ -158,8 +194,12 @@ function Formnya({
 
   return (
     <>
-      <div className={cn('grid grid-cols-2 gap-3 @lg:gap-4 @2xl:gap-5')}>
-        <Title as="h3" className="col-span-full font-semibold">
+      <div
+        className={cn(
+          'grid grid-cols-1 gap-3 @lg:gap-4 @2xl:gap-5 lg:grid-cols-2'
+        )}
+      >
+        <Title as="h3" className="col-span-full font-semibold text-[#c69731]">
           Form {type?.toLocaleUpperCase()}
         </Title>
 
@@ -173,10 +213,10 @@ function Formnya({
           name="pin_code"
           render={({ field: { onChange, value } }) => (
             <Select
-              label="PIN Kosong"
+              label="PIN"
               dropdownClassName="!z-10 h-fit"
               inPortal={false}
-              placeholder="Pilih PIN Kosong"
+              placeholder="Pilih PIN"
               options={pin}
               onChange={(selectedId) => {
                 // Find the selected pin object
@@ -207,7 +247,7 @@ function Formnya({
           render={({ field, fieldState: { error } }) => (
             <Input
               label="ID Yang Terbentuk"
-              placeholder="ID"
+              placeholder="(Otomatis by system)"
               {...field}
               error={error?.message as any}
               disabled
@@ -266,7 +306,7 @@ function Formnya({
         />
         <Input
           label="NIK"
-          placeholder="NIK"
+          placeholder="(Nomor Induk Kependudukan)"
           {...register(`nik`)}
           // @ts-ignore
           error={errors?.nik?.message as any}
@@ -395,17 +435,35 @@ function Formnya({
           Informasi Rekening
         </Title>
 
-        <Input
-          label="Bank"
-          placeholder="Nama Bank"
-          {...register(`bank_name`)}
-          // @ts-ignore
-          error={errors?.bank_name?.message as any}
-          disabled={type === 'clone'}
+        <Controller
+          control={control}
+          name="bank_name"
+          render={({ field: { onChange, value } }) => (
+            <Select
+              label="Bank"
+              dropdownClassName="!z-10 h-fit"
+              inPortal={false}
+              placeholder="Pilih Bank"
+              options={dataMetodePembayaran}
+              onChange={(selectedValue) => {
+                // 🔹 Update form field value
+                onChange(selectedValue);
+              }}
+              value={value}
+              searchable={true}
+              getOptionValue={(option) => option.value}
+              displayValue={(selected) =>
+                dataMetodePembayaran.find((k) => k.value === selected)?.label ??
+                ''
+              }
+              error={errors?.bank_name?.message as string | undefined}
+              disabled={type === 'clone'}
+            />
+          )}
         />
         <Input
-          label="No Rekening"
-          placeholder="No Rekening"
+          label="No. Rekening"
+          placeholder="No. Rekening"
           {...register(`bank_account_number`)}
           // @ts-ignore
           error={errors?.bank_account_number?.message as any}
@@ -435,8 +493,8 @@ function Formnya({
           disabled={type === 'clone'}
         />
         <Input
-          label="No NPWP"
-          placeholder="No NPWP"
+          label="No. NPWP"
+          placeholder="No. NPWP"
           {...register(`npwp_number`)}
           // @ts-ignore
           error={errors?.npwp_number?.message as any}

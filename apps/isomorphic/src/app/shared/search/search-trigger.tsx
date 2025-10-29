@@ -27,7 +27,7 @@ export default function SearchTrigger({
       {icon ? (
         icon
       ) : (
-        <PiMagnifyingGlassBold className="magnifying-glass me-2 h-[18px] w-[18px]" />
+        <PiMagnifyingGlassBold className="magnifying-glass me-2 h-[24px] w-[24px]" />
       )}
       <span
         className={cn(

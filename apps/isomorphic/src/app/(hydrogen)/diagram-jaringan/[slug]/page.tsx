@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function Page({ params }: any) {
   const pageHeader = {
-    title: `Diagram Jaringan: ${params.slug}`,
+    title: `Diagram Jaringan: ${params.slug.toLocaleUpperCase()}`,
     breadcrumb: [
       {
         href: routes.dashboard.index,
@@ -20,7 +20,7 @@ export default function Page({ params }: any) {
         href: routes.diagramJaringan.index,
       },
       {
-        name: params.slug,
+        name: params.slug.toLocaleUpperCase(),
       },
     ],
   };

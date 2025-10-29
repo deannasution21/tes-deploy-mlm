@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function CloningPage({ params }: any) {
   const pageHeader = {
-    title: `Cloning Upline: ${params.slug}`,
+    title: `Cloning Upline: ${params.slug.toLocaleUpperCase()}`,
     breadcrumb: [
       {
         href: routes.dashboard.index,
@@ -21,9 +21,6 @@ export default function CloningPage({ params }: any) {
       },
       {
         name: 'Cloning',
-      },
-      {
-        name: params.slug,
       },
     ],
   };

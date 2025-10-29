@@ -7,6 +7,7 @@ import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import userPlaceholder from '@public/assets/img/user-placeholder.png';
 
 export default function ProfileMenu({
   buttonClassName,
@@ -29,8 +30,8 @@ export default function ProfileMenu({
           )}
         >
           <Avatar
-            src="https://isomorphic-furyroad.s3.amazonaws.com/public/avatars/avatar-11.webp"
-            name="John Doe"
+            src={userPlaceholder.src}
+            name={session?.data?.user?.name ?? 'Pengguna'}
             className={cn('!h-9 w-9 sm:!h-10 sm:!w-10', avatarClassName)}
           />
           {!!username && (
@@ -102,15 +103,12 @@ function DropdownMenu({
   return (
     <div className="w-64 text-left rtl:text-right">
       <div className="flex items-center border-b border-gray-300 px-6 pb-5 pt-6">
-        <Avatar
-          src="https://isomorphic-furyroad.s3.amazonaws.com/public/avatars/avatar-11.webp"
-          name="Albert Flores"
-        />
+        <Avatar src={userPlaceholder.src} name={name ?? 'Pengguna'} />
         <div className="ms-3">
           <Title as="h6" className="font-semibold">
             {name ?? 'Pengguna'}
           </Title>
-          <Text className="text-gray-600">
+          <Text className="max-w-[150px] truncate text-gray-600">
             {email ?? 'email@pglobal.co.id'}
           </Text>
         </div>

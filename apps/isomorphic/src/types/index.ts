@@ -259,8 +259,58 @@ export interface NetworkNode {
   name: string | null;
   location: string | null;
   position: 'left' | 'right' | null;
+  point_left: number;
+  point_right: number;
   isPlaceholder: boolean;
   hasData: boolean;
   children?: NetworkNode[]; // recursive structure
   childrenCount?: number;
 }
+
+export interface PaymentMethodResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: PaymentData;
+}
+
+export interface PaymentData {
+  va: PaymentItem[];
+  qris: PaymentItem[];
+}
+
+export interface PaymentItem {
+  id: string;
+  payment_method: string; // e.g. "virtual_account", "wallet_account"
+  payment_channel: string; // e.g. "bca", "bni", "qris"
+  percentage_type: 'fix' | 'percentage';
+  fee: PaymentFee;
+}
+
+export interface PaymentFee {
+  value: number;
+  formatted: string; // e.g. "Rp 3.000,00" or "0.7%"
+}
+
+export interface PaymentOption {
+  value: string;
+  label: string;
+  fee?: number;
+}
+
+export interface BankStatusResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: BankData[];
+}
+
+export interface BankData {
+  bank_code: string;
+  name: string;
+  fee: number;
+  queue: number;
+  status: BankStatus;
+}
+
+export type BankStatus = 'OPERATIONAL' | 'DISTURBED' | 'HEAVILY_DISTURBED';

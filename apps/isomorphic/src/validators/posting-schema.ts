@@ -26,13 +26,16 @@ export const postingSchema = z
     nik: z
       .string()
       .min(1, { message: messages.kolomIsRequired })
-      .min(16, { message: 'NIK minimal 16 digit' }),
+      .regex(/^\d{16}$/, { message: 'NIK harus terdiri dari 16 digit angka' }),
     npwp_name: z.string().min(1, { message: messages.kolomIsRequired }),
     npwp_number: z
       .string()
       .min(1, { message: messages.kolomIsRequired })
-      .min(15, { message: 'NPWP minimal 15 digit' }),
-    npwp_address: z.string().min(1, { message: messages.kolomIsRequired }),
+      .regex(/^\d{15}$/, { message: 'NPWP harus terdiri dari 15 digit angka' }),
+    npwp_address: z
+      .string()
+      .min(1, { message: messages.kolomIsRequired })
+      .min(15, { message: 'Alamat NPWP minimal 10 huruf' }),
     heir_name: z.string().min(1, { message: messages.kolomIsRequired }),
     heir_relationship: z.string().min(1, { message: messages.kolomIsRequired }),
     password: validatePassword,

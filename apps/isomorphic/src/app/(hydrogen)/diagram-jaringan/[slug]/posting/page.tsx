@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function PostingPage({ params }: any) {
   const pageHeader = {
-    title: `Posting Upline: ${params.slug}`,
+    title: `Posting Upline: ${params.slug.toLocaleUpperCase()}`,
     breadcrumb: [
       {
         href: routes.dashboard.index,
@@ -21,9 +21,6 @@ export default function PostingPage({ params }: any) {
       },
       {
         name: 'Posting',
-      },
-      {
-        name: params.slug,
       },
     ],
   };

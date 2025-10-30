@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function Page({ params }: any) {
   const pageHeader = {
-    title: `Withdrawal Bonus: ${params.slug}`,
+    title: `Withdrawal Bonus: ${params.slug.toLocaleUpperCase()}`,
     breadcrumb: [
       {
         href: routes.dashboard.index,
@@ -20,7 +20,7 @@ export default function Page({ params }: any) {
         href: routes.withdrawalBonus.index,
       },
       {
-        name: params.slug,
+        name: 'Withdrawal',
       },
     ],
   };

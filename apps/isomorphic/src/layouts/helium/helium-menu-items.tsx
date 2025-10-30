@@ -621,18 +621,22 @@ export const menuItemsUser = [
     icon: <PiTreeStructure />,
     badge: '',
   },
-
   {
     name: 'History Bonus',
-    href: '#',
+    href: routes.bonus.history,
     icon: <ProjectWriteIcon />,
-    dropdownItems: [
-      {
-        name: 'History Bonus PIN A ',
-        href: routes.bonus.history,
-      },
-    ],
   },
+  // {
+  //   name: 'History Bonus',
+  //   href: '#',
+  //   icon: <ProjectWriteIcon />,
+  //   dropdownItems: [
+  //     {
+  //       name: 'History Bonus PIN A ',
+  //       href: routes.bonus.history,
+  //     },
+  //   ],
+  // },
   {
     name: 'Withdrawal Bonus',
     href: '#',

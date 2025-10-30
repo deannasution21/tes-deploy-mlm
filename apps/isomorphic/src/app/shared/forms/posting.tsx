@@ -16,25 +16,20 @@ import cn from '@core/utils/class-names';
 import { PhoneNumber } from '@core/ui/phone-input';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { BankStatusResponse, PaymentOption, Pin, PinResponse } from '@/types';
+import {
+  BankStatusResponse,
+  OptionType,
+  PaymentOption,
+  Pin,
+  PinResponse,
+  Province,
+  Regencies,
+  UserData,
+  UserDataResponse,
+} from '@/types';
 import { PostingInput, postingSchema } from '@/validators/posting-schema';
 import Swal from 'sweetalert2';
-
-interface OptionType {
-  value: string;
-  label: string;
-}
-
-interface Province {
-  id: string;
-  name: string;
-}
-
-interface Regencies {
-  id: string;
-  province_id: string;
-  name: string;
-}
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 function Formnya({
   session,
@@ -70,33 +65,27 @@ function Formnya({
     position === 'left' ? 'Kiri' : position === 'right' ? 'Kanan' : '';
 
   const getDataPin = async (id: string) => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/_pins/dealer/${id}?fetch=random&type=plan_a`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-app-token': session?.accessToken ?? '',
-          },
-        }
-      );
-
-      if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
-
-      const data = (await res.json()) as PinResponse;
-      setPin(
-        (data?.data?.pins ?? []).map((p: any) => ({
-          value: p.pin_code,
-          label: p.pin_code,
-        }))
-      );
-      setDataPin(data?.data?.pins ?? []);
-    } catch (error) {
-      console.error('Fetch data error:', error);
-    } finally {
-      setLoading(false);
-    }
+    fetchWithAuth<PinResponse>(
+      `/_pins/dealer/${id}?fetch=all&type=plan_a`,
+      { method: 'GET' },
+      session.accessToken
+    )
+      .then((data) => {
+        setPin(
+          (data?.data?.pins ?? []).map((p: any) => ({
+            value: p.pin_code,
+            label: p.pin_code,
+          }))
+        );
+        setDataPin(data?.data?.pins ?? []);
+      })
+      .catch((error) => {
+        console.error(error);
+        // Clear the data so UI can show "no data"
+        setPin([]);
+        setDataPin([]);
+      })
+      .finally(() => setLoading(false));
   };
 
   const getDataBank = async () => {
@@ -142,18 +131,17 @@ function Formnya({
   const pasangan = [
     {
       label: 'Suami',
-      value: 'suami',
+      value: 'Husband',
     },
     {
       label: 'Istri',
-      value: 'istri',
+      value: 'Wife',
     },
   ];
 
   // Watch selected values
   const selectedProvinsi = watch('province');
   const selectedKabupaten = watch('city');
-  const selectedKecamatan = watch('kecamatan');
 
   // Fetch provinsi list
   useEffect(() => {
@@ -179,10 +167,8 @@ function Formnya({
 
       // Reset dependent fields
       setValue('kabupaten', '');
-      setValue('kecamatan', '');
-      setValue('kelurahan', '');
     };
-    fetchKabupaten();
+    type === 'posting' && fetchKabupaten();
   }, [selectedProvinsi]);
 
   useEffect(() => {
@@ -214,7 +200,7 @@ function Formnya({
           render={({ field: { onChange, value } }) => (
             <Select
               label="PIN"
-              dropdownClassName="!z-10 h-fit"
+              dropdownClassName="!z-10 h-fit max-h-[250px]"
               inPortal={false}
               placeholder="Pilih PIN"
               options={pin}
@@ -278,6 +264,7 @@ function Formnya({
           {...register(`sponsor`)}
           // @ts-ignore
           error={errors?.sponsor?.message as any}
+          disabled
         />
 
         <Input
@@ -341,7 +328,7 @@ function Formnya({
           render={({ field: { onChange, value } }) => (
             <Select
               label="Pasangan"
-              dropdownClassName="!z-10 h-auto"
+              dropdownClassName="!z-10 h-fit"
               inPortal={false}
               placeholder="Pilih Pasangan"
               options={pasangan}
@@ -369,65 +356,86 @@ function Formnya({
           error={errors.confirm_password?.message as any}
         />
 
-        {/* Provinsi */}
-        <Controller
-          control={control}
-          name="province"
-          render={({ field: { onChange, value } }) => (
-            <Select
-              label="Provinsi"
-              dropdownClassName="!z-10 h-fit"
-              inPortal={false}
-              placeholder="Pilih Provinsi"
-              options={dataProvinsi}
-              onChange={(selectedId) => {
-                const selectedOption = dataProvinsi.find(
-                  (p) => p.value === selectedId
-                );
-                onChange(selectedId); // ✅ store ID (used for API chaining)
-                setSelectedProvinceName?.(selectedOption?.label ?? ''); // ✅ store name separately
-              }}
-              value={value}
-              searchable={true}
-              getOptionValue={(option) => option.value}
-              displayValue={(selected) =>
-                dataProvinsi.find((p) => p.value === selected)?.label ?? ''
-              }
-              error={errors?.province?.message as string | undefined}
-              disabled={type === 'clone'}
+        {type === 'posting' ? (
+          <>
+            {/* Provinsi */}
+            <Controller
+              control={control}
+              name="province"
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  label="Provinsi"
+                  dropdownClassName="!z-10 h-fit max-h-[250px]"
+                  inPortal={false}
+                  placeholder="Pilih Provinsi"
+                  options={dataProvinsi}
+                  onChange={(selectedId) => {
+                    const selectedOption = dataProvinsi.find(
+                      (p) => p.value === selectedId
+                    );
+                    onChange(selectedId); // ✅ store ID (used for API chaining)
+                    setSelectedProvinceName?.(selectedOption?.label ?? ''); // ✅ store name separately
+                  }}
+                  value={value}
+                  searchable={true}
+                  getOptionValue={(option) => option.value}
+                  displayValue={(selected) =>
+                    dataProvinsi.find((p) => p.value === selected)?.label ?? ''
+                  }
+                  error={errors?.province?.message as string | undefined}
+                />
+              )}
             />
-          )}
-        />
 
-        {/* Kabupaten */}
-        <Controller
-          control={control}
-          name="city"
-          render={({ field: { onChange, value } }) => (
-            <Select
-              label="Kota/Kabupaten"
-              dropdownClassName="!z-10 h-fit"
-              inPortal={false}
-              placeholder="Pilih Kabupaten"
-              options={dataKabupaten}
-              onChange={(selectedId) => {
-                const selectedOption = dataKabupaten.find(
-                  (p) => p.value === selectedId
-                );
-                onChange(selectedId); // ✅ store ID (used for API chaining)
-                setSelectedCityName?.(selectedOption?.label ?? ''); // ✅ store name separately
-              }}
-              value={value}
-              searchable={true}
-              getOptionValue={(option) => option.value}
-              displayValue={(selected) =>
-                dataKabupaten.find((k) => k.value === selected)?.label ?? ''
-              }
-              error={errors?.kabupaten?.message as string | undefined}
-              disabled={!selectedProvinsi}
+            {/* Kabupaten */}
+            <Controller
+              control={control}
+              name="city"
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  label="Kota/Kabupaten"
+                  dropdownClassName="!z-10 h-fit max-h-[250px]"
+                  inPortal={false}
+                  placeholder="Pilih Kabupaten"
+                  options={dataKabupaten}
+                  onChange={(selectedId) => {
+                    const selectedOption = dataKabupaten.find(
+                      (p) => p.value === selectedId
+                    );
+                    onChange(selectedId); // ✅ store ID (used for API chaining)
+                    setSelectedCityName?.(selectedOption?.label ?? ''); // ✅ store name separately
+                  }}
+                  value={value}
+                  searchable={true}
+                  getOptionValue={(option) => option.value}
+                  displayValue={(selected) =>
+                    dataKabupaten.find((k) => k.value === selected)?.label ?? ''
+                  }
+                  error={errors?.kabupaten?.message as string | undefined}
+                  disabled={!selectedProvinsi}
+                />
+              )}
             />
-          )}
-        />
+          </>
+        ) : (
+          <>
+            <Input
+              label="Provinsi"
+              placeholder="Provinsi"
+              {...register('province')}
+              value={selectedProvinsi} // 👈 show translated label
+              disabled
+            />
+
+            <Input
+              label="Kota/Kabupaten"
+              placeholder="Kota/Kabupaten"
+              {...register('city')}
+              value={selectedKabupaten} // 👈 show translated label
+              disabled
+            />
+          </>
+        )}
 
         <hr className="col-span-full my-5 border-muted" />
 
@@ -591,15 +599,18 @@ export default function Posting({
   type: string;
 }) {
   const { data: session } = useSession();
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
 
   const router = useRouter();
   const searchParams = useSearchParams();
   const position = searchParams.get('position');
+
+  const [dataUser, setDataUser] = useState<UserData | null>(null);
   const [selectedProvinceName, setSelectedProvinceName] = useState<string>('');
   const [selectedCityName, setSelectedCityName] = useState<string>('');
 
-  const methods = useForm({
+  // Posting form
+  const methodsPosting = useForm({
     defaultValues: {
       pin_code: '',
       mlm_user_id: '',
@@ -617,6 +628,35 @@ export default function Posting({
       bank_name: session?.user?.bankName,
       bank_account_name: session?.user?.bankOwner,
       bank_account_number: session?.user?.bankAccount,
+      nik: '',
+      npwp_name: '',
+      npwp_number: '',
+      npwp_address: '',
+      heir_name: '',
+      heir_relationship: '',
+    },
+    resolver: zodResolver(postingSchema),
+  });
+
+  // Cloning form
+  const methodsCloning = useForm({
+    defaultValues: {
+      pin_code: '',
+      mlm_user_id: '',
+      type_plan: '',
+      upline: upline,
+      sponsor: '',
+      position: position,
+      full_name: '',
+      password: '',
+      confirm_password: '',
+      email: '',
+      phone: '',
+      province: '',
+      city: '',
+      bank_name: '',
+      bank_account_name: '',
+      bank_account_number: '',
       nik: '',
       npwp_name: '',
       npwp_number: '',
@@ -714,35 +754,129 @@ export default function Posting({
     });
   };
 
-  return (
-    <FormProvider {...methods}>
-      <form
-        // @ts-ignore
-        onSubmit={methods.handleSubmit(onSubmit)}
-        className={cn(
-          'isomorphic-form flex flex-grow flex-col @container [&_label.block>span]:font-medium',
-          className
-        )}
-      >
-        <div className="items-start @5xl:grid @5xl:grid-cols-12 @5xl:gap-7 @6xl:grid-cols-10 @7xl:gap-10">
-          <div className="flex-grow @5xl:col-span-8 @5xl:pb-10 @6xl:col-span-7">
-            <div className="flex flex-col gap-4 @xs:gap-7 @5xl:gap-9">
-              <Formnya
-                session={session}
-                isLoading={isLoading}
-                setLoading={setLoading}
-                setSelectedProvinceName={setSelectedProvinceName}
-                setSelectedCityName={setSelectedCityName}
-                type={type}
-              />
-            </div>
-          </div>
+  // Fetch data for clone type
+  useEffect(() => {
+    if (!session?.accessToken) return;
+    if (type !== 'clone') return;
 
-          <div className="pb-7 pt-10 @container @5xl:col-span-4 @5xl:py-0 @6xl:col-span-3">
-            <Informasi isLoading={isLoading} type={type} />
-          </div>
-        </div>
-      </form>
-    </FormProvider>
+    setLoading(true);
+
+    fetchWithAuth<UserDataResponse>(
+      `/_users`,
+      { method: 'GET' },
+      session.accessToken
+    )
+      .then((data) => {
+        const userData = data.data?.attribute;
+        setDataUser(userData || null);
+
+        if (userData) {
+          // update form values dynamically
+          methodsCloning.reset({
+            ...methodsCloning.getValues(),
+            sponsor: userData.sponsor_id ?? '',
+            full_name: userData.nama ?? '',
+            email: session?.user?.email ?? '',
+            phone: userData.no_hp ?? '',
+            province: userData.province ?? '',
+            city: userData.city ?? '',
+            bank_name: userData.code_bank ?? '',
+            bank_account_name: userData.nama_pemilik_rekening ?? '',
+            bank_account_number: userData.no_rekening ?? '',
+            nik: userData.nik ?? '',
+            npwp_name: userData.npwp_name ?? '',
+            npwp_number: userData.npwp_number ?? '',
+            npwp_address: userData.npwp_address ?? '',
+            heir_name: userData.heir_name ?? '',
+            heir_relationship: userData.heir_relationship ?? '',
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('Fetch user error:', error);
+        setDataUser(null);
+      })
+      .finally(() => setLoading(false));
+  }, [session?.accessToken, type]);
+
+  // ---- UI rendering ----
+  if (isLoading) {
+    return (
+      <div className="py-20 text-center">
+        <p>Sedang memuat data...</p>
+      </div>
+    );
+  }
+
+  if (type === 'clone' && !dataUser) {
+    return (
+      <div className="py-20 text-center text-gray-500">
+        <p>Tidak ada data untuk pengguna ini.</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {type === 'clone' ? (
+        <FormProvider {...methodsCloning}>
+          <form
+            onSubmit={methodsCloning.handleSubmit(onSubmit)}
+            className={cn(
+              'isomorphic-form flex flex-grow flex-col @container [&_label.block>span]:font-medium',
+              className
+            )}
+          >
+            <div className="items-start @5xl:grid @5xl:grid-cols-12 @5xl:gap-7 @6xl:grid-cols-10 @7xl:gap-10">
+              <div className="flex-grow @5xl:col-span-8 @5xl:pb-10 @6xl:col-span-7">
+                <div className="flex flex-col gap-4 @xs:gap-7 @5xl:gap-9">
+                  <Formnya
+                    session={session}
+                    isLoading={isLoading}
+                    setLoading={setLoading}
+                    setSelectedProvinceName={setSelectedProvinceName}
+                    setSelectedCityName={setSelectedCityName}
+                    type={type}
+                  />
+                </div>
+              </div>
+
+              <div className="pb-7 pt-10 @container @5xl:col-span-4 @5xl:py-0 @6xl:col-span-3">
+                <Informasi isLoading={isLoading} type={type} />
+              </div>
+            </div>
+          </form>
+        </FormProvider>
+      ) : (
+        <FormProvider {...methodsPosting}>
+          <form
+            onSubmit={methodsPosting.handleSubmit(onSubmit)}
+            className={cn(
+              'isomorphic-form flex flex-grow flex-col @container [&_label.block>span]:font-medium',
+              className
+            )}
+          >
+            <div className="items-start @5xl:grid @5xl:grid-cols-12 @5xl:gap-7 @6xl:grid-cols-10 @7xl:gap-10">
+              <div className="flex-grow @5xl:col-span-8 @5xl:pb-10 @6xl:col-span-7">
+                <div className="flex flex-col gap-4 @xs:gap-7 @5xl:gap-9">
+                  <Formnya
+                    session={session}
+                    isLoading={isLoading}
+                    setLoading={setLoading}
+                    setSelectedProvinceName={setSelectedProvinceName}
+                    setSelectedCityName={setSelectedCityName}
+                    type={type}
+                  />
+                </div>
+              </div>
+
+              <div className="pb-7 pt-10 @container @5xl:col-span-4 @5xl:py-0 @6xl:col-span-3">
+                <Informasi isLoading={isLoading} type={type} />
+              </div>
+            </div>
+          </form>
+        </FormProvider>
+      )}
+    </>
   );
 }

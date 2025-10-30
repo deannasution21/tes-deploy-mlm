@@ -27,17 +27,38 @@ export const postingSchema = z
       .string()
       .min(1, { message: messages.kolomIsRequired })
       .regex(/^\d{16}$/, { message: 'NIK harus terdiri dari 16 digit angka' }),
-    npwp_name: z.string().min(1, { message: messages.kolomIsRequired }),
+    npwp_name: z
+      .string()
+      .transform((val) => (val === '' ? undefined : val))
+      .optional(),
     npwp_number: z
       .string()
-      .min(1, { message: messages.kolomIsRequired })
-      .regex(/^\d{15}$/, { message: 'NPWP harus terdiri dari 15 digit angka' }),
+      .transform((val) => (val === '' ? undefined : val))
+      .optional()
+      .refine((val) => !val || /^\d{15}$/.test(val), {
+        message: 'NPWP harus terdiri dari 15 digit angka',
+      }),
     npwp_address: z
       .string()
-      .min(1, { message: messages.kolomIsRequired })
-      .min(15, { message: 'Alamat NPWP minimal 10 huruf' }),
-    heir_name: z.string().min(1, { message: messages.kolomIsRequired }),
-    heir_relationship: z.string().min(1, { message: messages.kolomIsRequired }),
+      .transform((val) => (val === '' ? undefined : val))
+      .optional()
+      .refine((val) => !val || val.length >= 15, {
+        message: 'Alamat NPWP minimal 15 huruf',
+      }),
+    heir_name: z
+      .string()
+      .transform((val) => (val === '' ? undefined : val))
+      .optional()
+      .refine((val) => !val || val.length >= 1, {
+        message: messages.kolomIsRequired,
+      }),
+    heir_relationship: z
+      .string()
+      .transform((val) => (val === '' ? undefined : val))
+      .optional()
+      .refine((val) => !val || val.length >= 1, {
+        message: messages.kolomIsRequired,
+      }),
     password: validatePassword,
     confirm_password: validateConfirmPassword,
   })

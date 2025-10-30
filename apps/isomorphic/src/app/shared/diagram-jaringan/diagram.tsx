@@ -1,11 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Badge, Button, Text } from 'rizzui';
-import { signOut, useSession } from 'next-auth/react';
+import { Badge, Button } from 'rizzui';
+import { useSession } from 'next-auth/react';
 import { NetworkDiagramResponse, NetworkNode } from '@/types';
 import placeholderDiagram from '@public/assets/img/logo/logo-diagram-jaringan.jpeg';
-import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 import FiltersDiagramJaringan from './filters';
 import Link from 'next/link';
@@ -22,7 +21,7 @@ function Tree({ data, session }: TreeProps) {
   if (!data)
     return (
       <div className="py-6 text-center italic text-gray-400">
-        Loading tree...
+        Sedang memuat diagram...
       </div>
     );
 
@@ -192,8 +191,9 @@ export default function DiagramJaringanPage({
   bawaUsername?: string;
 }) {
   const { data: session } = useSession();
-  const [dataDiagramJaringan, setDataDiagramJaringan] = useState<NetworkNode>();
   const [isLoading, setLoading] = useState(true);
+
+  const [dataDiagramJaringan, setDataDiagramJaringan] = useState<NetworkNode>();
   const [username, setUsername] = useState(bawaUsername ?? '');
   const debouncedUsername = useDebounce(username, 600);
 

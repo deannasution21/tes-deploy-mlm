@@ -178,7 +178,7 @@ export interface UserDataResponse {
 export interface UserData {
   nama: string;
   username: string;
-  email: string;
+  email?: string; // made optional, since not always in response
   no_hp: string;
   nama_bank: string;
   no_rekening: string;
@@ -188,6 +188,24 @@ export interface UserData {
     code: number;
     name: string;
   };
+
+  // 🆕 optional new fields from API
+  parent_id?: string;
+  sponsor_id?: string;
+  level?: number;
+  point_left?: number;
+  point_right?: number;
+  bonus_pairing?: number;
+  province?: string;
+  city?: string;
+  nik?: string;
+  npwp_name?: string | null;
+  npwp_number?: string | null;
+  npwp_address?: string | null;
+  heir_name?: string | null;
+  heir_relationship?: string | null;
+  code_bank?: string;
+  created_at?: string;
 }
 
 export interface PinResponse {
@@ -330,4 +348,111 @@ export interface Regencies {
   id: string;
   province_id: string;
   name: string;
+}
+
+// Root response
+export interface TransactionResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: TransactionData;
+}
+
+export interface TransactionWDResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: TransactionWDData;
+}
+
+// Data object
+export interface TransactionData {
+  detail_users: DetailUser;
+  count: number;
+  summary: UserSummary[];
+}
+
+// Transaction data
+export interface TransactionWDData {
+  username: string;
+  name: string;
+  plan: string;
+  bank_account: BankAccount;
+  commission_report: CommissionReport;
+  commission_log: CommissionLog;
+  difference: Difference;
+  withdrawal: Withdrawal;
+  balance: Balance;
+}
+
+export interface BankAccount {
+  bank_name: string;
+  account_number: string;
+  account_name: string;
+}
+
+// User details (main user info)
+export interface DetailUser {
+  type: string;
+  username: string;
+  name: string;
+  bank_name: string;
+  account_number: string;
+  account_name: string;
+}
+
+// Summary per user
+export interface UserSummary {
+  username: string;
+  name: string;
+  plan: string;
+  commission_report: CommissionReport;
+  commission_log: CommissionLog;
+  difference: Difference;
+  withdrawal: Withdrawal;
+  balance: Balance;
+}
+
+// Commission report
+export interface CommissionReport {
+  pairing: AmountCurrency;
+  sponsor: AmountCurrency;
+  total: AmountCurrency;
+}
+
+// Commission log
+export interface CommissionLog {
+  pairing: AmountCountCurrency;
+  sponsor: AmountCountCurrency;
+  total: AmountCurrency;
+}
+
+// Difference
+export interface Difference {
+  pairing: AmountCurrency;
+  sponsor: AmountCurrency;
+  total: AmountCurrency;
+}
+
+// Withdrawal
+export interface Withdrawal {
+  amount: number;
+  count: number;
+  currency: string;
+}
+
+// Balance
+export interface Balance {
+  amount: number;
+  currency: string;
+}
+
+// Helper types
+export interface AmountCurrency {
+  amount: number;
+  currency: string;
+}
+
+export interface AmountCountCurrency extends AmountCurrency {
+  count: number;
 }

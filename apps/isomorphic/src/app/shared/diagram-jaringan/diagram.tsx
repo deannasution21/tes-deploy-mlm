@@ -2,26 +2,23 @@
 
 import { useEffect, useState } from 'react';
 import { Badge, Button, Text } from 'rizzui';
-import ProdukCard from '@core/components/cards/produk-card';
-import hasSearchedParams from '@core/utils/has-searched-params';
-// Note: using shuffle to simulate the filter effect
-import shuffle from 'lodash/shuffle';
-import { routes } from '@/config/routes';
 import { signOut, useSession } from 'next-auth/react';
 import { NetworkDiagramResponse, NetworkNode } from '@/types';
-import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
 import placeholderDiagram from '@public/assets/img/logo/logo-diagram-jaringan.jpeg';
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 import FiltersDiagramJaringan from './filters';
 import Link from 'next/link';
 import { PiArrowUpBold, PiCopyBold, PiUserPlusBold } from 'react-icons/pi';
+import { Session } from 'next-auth';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 type TreeProps = {
   data: NetworkNode;
+  session: Session | null;
 };
 
-function Tree({ data }: TreeProps) {
+function Tree({ data, session }: TreeProps) {
   if (!data)
     return (
       <div className="py-6 text-center italic text-gray-400">
@@ -160,16 +157,18 @@ function Tree({ data }: TreeProps) {
   return (
     <div className="w-full overflow-x-auto p-6">
       <div className="inline-block min-w-full">
-        <div className="flex flex-col justify-center text-center">
-          <div>
-            <Link href={`/diagram-jaringan/${data.user_id}`}>
-              <Button size="sm" color="primary" disabled={false}>
-                <PiArrowUpBold className="text-xl" />
-              </Button>
-            </Link>
+        {data.upline !== 'sistem' && data.upline !== session?.user?.id && (
+          <div className="flex flex-col justify-center text-center">
+            <div>
+              <Link href={`/diagram-jaringan/${data.upline}`}>
+                <Button size="sm" color="primary" disabled={false}>
+                  <PiArrowUpBold className="text-xl" />
+                </Button>
+              </Link>
+            </div>
+            <div className="mx-auto mt-1 h-4 w-1 bg-gray-300" />
           </div>
-          <div className="mx-auto mt-1 h-4 w-1 bg-gray-300" />
-        </div>
+        )}
         {data && renderNode(data, '0', data.user_id)}
       </div>
     </div>
@@ -201,67 +200,24 @@ export default function DiagramJaringanPage({
   useEffect(() => {
     if (!session?.accessToken) return;
 
-    const getDataDiagramJaringan = async (username?: string) => {
-      setLoading(true);
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/_network-diagrams/${username || ''}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-app-token': session.accessToken ?? '',
-            },
-          }
-        );
+    setLoading(true);
 
-        if (res.status === 401) {
-          toast.error(<Text as="b">Sesi berakhir. Silakan login ulang</Text>);
-          setTimeout(() => signOut(), 300);
-          return;
-        }
+    const username = debouncedUsername;
 
-        if (!res.ok) {
-          // Try to read the JSON error message from the response
-          const errorData: any = await res.json().catch(() => null);
-          const message =
-            errorData?.message || `HTTP error! status: ${res.status}`;
-
-          // Throw a custom error containing message
-          throw new Error(message);
-        }
-
-        const data = (await res.json()) as NetworkDiagramResponse;
+    fetchWithAuth<NetworkDiagramResponse>(
+      `/_network-diagrams/${username || ''}`,
+      { method: 'GET' },
+      session.accessToken
+    )
+      .then((data) => {
         setDataDiagramJaringan(data.data);
-      } catch (error: any) {
-        const message = error?.message || '';
-
-        if (
-          message.includes('Failed to fetch') ||
-          message.includes('NetworkError') ||
-          message.includes('Load failed') ||
-          error.name === 'TypeError'
-        ) {
-          toast.error(
-            <Text as="b">
-              Tidak ada koneksi internet atau server tidak dapat dijangkau
-            </Text>
-          );
-        } else {
-          toast.error(
-            <Text as="b">
-              Gagal: {message || 'Terjadi kesalahan tak terduga'}
-            </Text>
-          );
-        }
-
-        console.error('Fetch data error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getDataDiagramJaringan(debouncedUsername);
+      })
+      .catch((error) => {
+        console.error(error);
+        // Clear the data so UI can show "no data"
+        setDataDiagramJaringan(undefined);
+      })
+      .finally(() => setLoading(false));
   }, [session?.accessToken, debouncedUsername]);
 
   return (
@@ -271,8 +227,12 @@ export default function DiagramJaringanPage({
         <div className="py-20 text-center">
           <p>Sedang memuat diagram...</p>
         </div>
+      ) : dataDiagramJaringan ? (
+        <Tree data={dataDiagramJaringan} session={session} />
       ) : (
-        dataDiagramJaringan && <Tree data={dataDiagramJaringan} />
+        <div className="py-20 text-center text-gray-500">
+          <p>Tidak ada data diagram jaringan untuk pengguna ini.</p>
+        </div>
       )}
     </div>
   );

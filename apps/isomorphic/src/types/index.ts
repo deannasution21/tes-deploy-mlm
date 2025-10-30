@@ -261,6 +261,7 @@ export interface NetworkNode {
   position: 'left' | 'right' | null;
   point_left: number;
   point_right: number;
+  upline: string;
   isPlaceholder: boolean;
   hasData: boolean;
   children?: NetworkNode[]; // recursive structure
@@ -314,3 +315,19 @@ export interface BankData {
 }
 
 export type BankStatus = 'OPERATIONAL' | 'DISTURBED' | 'HEAVILY_DISTURBED';
+
+export interface OptionType {
+  value: string;
+  label: string;
+}
+
+export interface Province {
+  id: string;
+  name: string;
+}
+
+export interface Regencies {
+  id: string;
+  province_id: string;
+  name: string;
+}

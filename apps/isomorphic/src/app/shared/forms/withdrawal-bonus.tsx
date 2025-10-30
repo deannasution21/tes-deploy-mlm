@@ -259,7 +259,7 @@ export default function WithdrawalBonusForm(slug: any) {
                       </FormBlockWrapper>
                       <FormBlockWrapper
                         title={'Nominal Pencairan:'}
-                        className="hidden pt-7 @2xl:pt-9 @3xl:pt-11"
+                        className="pt-7 @2xl:pt-9 @3xl:pt-11"
                       >
                         <Input
                           label="Nominal Pencairan"

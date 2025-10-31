@@ -456,3 +456,44 @@ export interface AmountCurrency {
 export interface AmountCountCurrency extends AmountCurrency {
   count: number;
 }
+
+// types/Transaction.ts
+export interface HistoryBonusResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: HistoryBonusData;
+}
+
+export interface HistoryBonusData {
+  count: number;
+  bonus_sponsor: BonusCategory;
+  bonus_pairing: BonusCategory;
+  grand_total: GrandTotal;
+}
+
+export interface GrandTotal {
+  sponsor: AmountCurrency;
+  pairing: AmountCurrency;
+  total: AmountCurrency;
+}
+
+export interface BonusCategory {
+  count: number;
+  total: AmountCurrency;
+  items: BonusItem[];
+}
+
+export interface BonusItem {
+  username: string;
+  attribute: BonusAttribute;
+}
+
+export interface BonusAttribute {
+  plan: string;
+  created_at: string; // ISO or formatted date string
+  from: string;
+  total: AmountCurrency;
+  description: string;
+  type: 'bonus_sponsor' | 'bonus_pairing';
+}

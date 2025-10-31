@@ -24,8 +24,6 @@ const pageHeader = {
 };
 
 export default function Page() {
-  const pinKosong = 'K_b65685df-7ba4-448b-94c6-eddee77a50bc';
-
   return (
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />

@@ -107,7 +107,7 @@ function renderOptionDisplayValue(option: {
       return (
         <div className="flex items-center">
           <Badge color="warning" renderAsDot />
-          <Text className="ms-2 font-medium capitalize text-orange-dark">
+          <Text className="ms-2 font-semibold uppercase text-orange-dark">
             {option.label}
           </Text>
         </div>
@@ -117,7 +117,7 @@ function renderOptionDisplayValue(option: {
       return (
         <div className="flex items-center">
           <Badge color="success" renderAsDot />
-          <Text className="ms-2 font-medium capitalize text-green-dark">
+          <Text className="ms-2 font-semibold uppercase text-green-dark">
             {option.label}
           </Text>
         </div>
@@ -127,7 +127,7 @@ function renderOptionDisplayValue(option: {
       return (
         <div className="flex items-center">
           <Badge color="danger" renderAsDot />
-          <Text className="ms-2 font-medium capitalize text-red-600">
+          <Text className="ms-2 font-semibold uppercase text-red-600">
             {option.label}
           </Text>
         </div>
@@ -137,7 +137,7 @@ function renderOptionDisplayValue(option: {
       return (
         <div className="flex items-center">
           <Badge renderAsDot className="bg-gray-400" />
-          <Text className="ms-2 font-medium capitalize text-gray-600">
+          <Text className="ms-2 font-semibold uppercase text-gray-600">
             {option.label}
           </Text>
         </div>

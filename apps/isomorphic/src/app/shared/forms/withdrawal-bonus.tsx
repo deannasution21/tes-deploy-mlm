@@ -176,7 +176,7 @@ export default function WithdrawalBonusForm(slug: any) {
   }, [session?.accessToken]);
 
   if (isLoading)
-    return <p className="my-5 text-center">Sedang memuat data...</p>;
+    return <p className="py-20 text-center">Sedang memuat data...</p>;
 
   return (
     <div className="@container">
@@ -271,7 +271,7 @@ export default function WithdrawalBonusForm(slug: any) {
                       </FormBlockWrapper>
                     </div>
                   </div>
-                  <div className="-mb-8 flex items-center justify-end gap-4 border-t py-4 dark:bg-gray-50">
+                  <div className="-mb-4 flex items-center justify-end gap-4 border-t py-4 dark:bg-gray-50">
                     <Link href="/withdrawal-bonus">
                       <Button variant="outline" className="w-full @xl:w-auto">
                         Batal

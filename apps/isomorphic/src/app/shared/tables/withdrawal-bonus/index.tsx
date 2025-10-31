@@ -117,7 +117,7 @@ export default function WithdrawalBonusTable({
   }, [session?.accessToken]);
 
   if (isLoading)
-    return <p className="my-5 text-center">Sedang memuat data...</p>;
+    return <p className="py-20 text-center">Sedang memuat data...</p>;
 
   return (
     <>

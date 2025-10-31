@@ -346,7 +346,7 @@ export default function TransferPinPage() {
                       )}
                     </div>
                   </div>
-                  <div className="-mb-8 flex items-center justify-end gap-4 border-t py-4 dark:bg-gray-50">
+                  <div className="-mb-4 flex items-center justify-end gap-4 border-t py-4 dark:bg-gray-50">
                     {tujuan && (
                       <Button
                         variant="outline"

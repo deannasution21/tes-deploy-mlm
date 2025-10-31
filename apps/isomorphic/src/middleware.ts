@@ -13,6 +13,8 @@ export const config = {
     '/dashboard',
     '/dashboard/:path*',
     '/history-bonus',
+    '/bonus/',
+    '/bonus/:path*',
     '/produk',
     '/produk/:path*',
     '/profil',

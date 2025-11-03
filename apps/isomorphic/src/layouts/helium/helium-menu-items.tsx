@@ -622,6 +622,12 @@ export const menuItemsUser = [
     badge: '',
   },
   {
+    name: 'Pindah ID',
+    href: routes.pindahId.index,
+    icon: <PiUserGear />,
+    badge: '',
+  },
+  {
     name: 'History Bonus',
     href: routes.bonus.history,
     icon: <ProjectWriteIcon />,

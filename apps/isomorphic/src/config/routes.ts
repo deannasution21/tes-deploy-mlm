@@ -11,6 +11,9 @@ export const routes = {
     posting: (slug: string) => `/diagram-jaringan/${slug}/posting`,
     clone: (slug: string) => `/diagram-jaringan/${slug}/clone`,
   },
+  pindahId: {
+    index: '/pindah-id',
+  },
   bonus: {
     index: '/bonus',
     history: '/bonus/history',

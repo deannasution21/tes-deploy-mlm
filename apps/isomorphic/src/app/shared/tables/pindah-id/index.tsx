@@ -2,7 +2,7 @@
 
 import cn from '@core/utils/class-names';
 import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import {
   BankData,
   BankStatusResponse,
@@ -13,79 +13,153 @@ import BasicTableWidget from '@core/components/controlled-table/basic-table-widg
 import { Alert, Button, Text, Title } from 'rizzui';
 import Link from 'next/link';
 import ProjectWriteIcon from '@core/components/icons/project-write';
-import { PiGift } from 'react-icons/pi';
+import { PiGift, PiSignIn } from 'react-icons/pi';
 import { generateSlug } from '@core/utils/generate-slug';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { getBankNameByCode } from '@/utils/helper';
+import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import { routes } from '@/config/routes';
 
-export const getColumns = () => [
-  {
-    title: <span className="ml-6 block">No</span>,
-    dataIndex: 'index',
-    key: 'index',
-    width: 50,
-    render: (_: any, __: any, index: number) => (
-      <Text className="ml-6 text-gray-700">{index + 1}.</Text>
-    ),
-  },
-  {
-    title: 'Username',
-    dataIndex: 'username',
-    key: 'username',
-    width: 150,
-    render: (username: string) => (
-      <Text className="font-medium text-gray-700">{username}</Text>
-    ),
-  },
-  {
-    title: 'Bonus',
-    dataIndex: 'balance',
-    key: 'balance',
-    width: 150,
-    render: ({ currency }: { currency: string }) => (
-      <Text className="text-gray-700">{currency}</Text>
-    ),
-  },
-  {
-    title: 'Withdrawal',
-    dataIndex: 'username',
-    key: 'username',
-    width: 150,
-    render: (username: string, row: any) => (
-      <Link href={`withdrawal-bonus/${generateSlug(username)}/withdrawal`}>
-        <Button size="sm" disabled={row.balance.amount === 0}>
-          <PiGift className="mr-2 h-4 w-4" />
-          <span>Withdrawal</span>
-        </Button>
-      </Link>
-    ),
-  },
-  {
-    title: 'History',
-    dataIndex: 'username',
-    key: 'username',
-    width: 150,
-    render: (username: string) => (
-      <Link href={`withdrawal-bonus/${generateSlug(username)}/history`}>
-        <Button size="sm" variant="flat">
-          <ProjectWriteIcon className="mr-2 h-4 w-4" />
-          <span>History</span>
-        </Button>
-      </Link>
-    ),
-  },
-];
+// ✅ TypeScript Interfaces
+export interface UserBankResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: UserBankData;
+}
 
-export default function WithdrawalBonusTable({
-  className,
+export interface UserBankData {
+  detail_users: DetailUser;
+  count: number;
+  list_users: ListUser[];
+}
+
+export interface DetailUser {
+  username: string;
+  name: string;
+  bank_name: string;
+  account_number: string;
+  account_name: string;
+}
+
+export interface ListUser {
+  id: string;
+  attribute: UserAttribute;
+}
+
+export interface UserAttribute {
+  nama: string;
+  username: string;
+  email: string;
+  no_hp: string;
+  nama_bank: string;
+  no_rekening: string;
+  nama_pemilik_rekening: string;
+  role: string;
+  status: UserStatus;
+}
+
+export interface UserStatus {
+  code: number;
+  name: string;
+}
+
+const doLogin = ({
+  router,
+  username,
+  session,
+  setLoadingS,
 }: {
-  className?: string;
-}) {
+  router: any;
+  username: string;
+  session: any;
+  setLoadingS: (value: boolean) => void;
+}) => {
+  setLoadingS(true);
+
+  fetchWithAuth<UserBankResponse>(
+    `/_auth/sign-in-as-user`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        username: username,
+      }),
+    },
+    session.accessToken
+  )
+    .then(async (data) => {
+      const res = await signIn('credentials', {
+        redirect: false,
+        username: username,
+        via: 'pindah',
+        token: session?.accessToken,
+      });
+
+      if (res?.error) {
+        toast.error('Login gagal');
+        return;
+      }
+      setTimeout(() => {
+        toast.success(`Berhasil pindah ke ID: ${username}`);
+        router.push(routes.dashboard.index);
+      }, 300);
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+    .finally(() => setLoadingS(false));
+};
+
+export default function PindahIDTable({ className }: { className?: string }) {
   const { data: session } = useSession();
   const [isLoading, setLoading] = useState(true);
+  const [loadingS, setLoadingS] = useState(false);
 
-  const [dataUser, setDataUser] = useState<TransactionData | null>(null);
+  const [dataUser, setDataUser] = useState<UserBankData | null>(null);
   const [dataBank, setDataBank] = useState<BankData[]>([]);
+
+  const router = useRouter();
+
+  const getColumns = () => [
+    {
+      title: <span className="ml-6 block">No</span>,
+      dataIndex: 'index',
+      key: 'index',
+      width: 50,
+      render: (_: any, __: any, index: number) => (
+        <Text className="ml-6 text-gray-700">{index + 1}.</Text>
+      ),
+    },
+    {
+      title: 'Username',
+      dataIndex: 'id',
+      key: 'id',
+      width: 150,
+      render: (id: string) => (
+        <Text className="font-medium text-gray-700">{id}</Text>
+      ),
+    },
+    {
+      title: 'Login',
+      dataIndex: 'id',
+      key: 'id',
+      width: 150,
+      render: (id: string, row: any) => (
+        <Button
+          size="sm"
+          isLoading={loadingS}
+          disabled={loadingS}
+          onClick={() =>
+            doLogin({ router, username: id, session, setLoadingS })
+          }
+        >
+          <PiSignIn className="mr-2 h-4 w-4" />
+          <span>Login ID Ini</span>
+        </Button>
+      ),
+    },
+  ];
 
   useEffect(() => {
     if (!session?.accessToken) return;
@@ -93,8 +167,8 @@ export default function WithdrawalBonusTable({
     setLoading(true);
 
     Promise.all([
-      fetchWithAuth<TransactionResponse>(
-        `/_transactions/withdrawal-summary?type=plan_a`,
+      fetchWithAuth<UserBankResponse>(
+        `/_users/by-bank-account`,
         { method: 'GET' },
         session.accessToken
       ),
@@ -104,8 +178,8 @@ export default function WithdrawalBonusTable({
         session.accessToken
       ),
     ])
-      .then(([withdrawalData, bankData]) => {
-        setDataUser(withdrawalData?.data || null);
+      .then(([userData, bankData]) => {
+        setDataUser(userData?.data || null);
         setDataBank(bankData?.data || []);
       })
       .catch((error) => {
@@ -174,17 +248,17 @@ export default function WithdrawalBonusTable({
       </div>
 
       <BasicTableWidget
-        title="Daftar Akumulasi Bonus"
-        description="Dari ID dengan rekening yang sama"
+        title="Daftar ID Anda"
+        description="ID dengan rekening yang sama"
         className={cn(
           'pb-0 lg:pb-0 [&_.rc-table-row:last-child_td]:border-b-0'
         )}
-        data={dataUser?.summary ?? []}
+        data={dataUser?.list_users ?? []}
         getColumns={getColumns}
         noGutter
         enableSearch={false}
         scroll={{
-          x: 900,
+          x: 400,
         }}
       />
     </>

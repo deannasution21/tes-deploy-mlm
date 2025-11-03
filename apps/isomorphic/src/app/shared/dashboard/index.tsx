@@ -20,6 +20,9 @@ export default function Dashboard() {
             <>
               Selamat Datang di Dashboard, <br />{' '}
               {session?.data?.user?.name ?? 'Pengguna'}{' '}
+              <p className="inline-block text-primary">
+                (@{session?.data?.user?.id ?? '-'})
+              </p>{' '}
               <HandWaveIcon className="inline-flex h-8 w-8" />
             </>
           }

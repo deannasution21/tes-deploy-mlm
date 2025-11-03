@@ -1,21 +1,21 @@
 import PageHeader from '@/app/shared/page-header';
-import WithdrawalBonusTable from '@/app/shared/tables/withdrawal-bonus';
+import PindahIDTable from '@/app/shared/tables/pindah-id';
 import { routes } from '@/config/routes';
 import { metaObject } from '@/config/site.config';
 
 export const metadata = {
-  ...metaObject('Withdrawal Bonus'),
+  ...metaObject('Pindah ID'),
 };
 
 const pageHeader = {
-  title: 'Withdrawal Bonus',
+  title: 'Pindah ID',
   breadcrumb: [
     {
       href: routes.dashboard.index,
       name: 'Dashboard',
     },
     {
-      name: 'Withdrawal Bonus',
+      name: 'Pindah ID',
     },
   ],
 };
@@ -24,7 +24,7 @@ export default function Page() {
   return (
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
-      <WithdrawalBonusTable />
+      <PindahIDTable />
     </>
   );
 }

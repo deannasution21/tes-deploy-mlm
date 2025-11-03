@@ -29,6 +29,43 @@ interface ApiLoginResponse {
   token?: string;
 }
 
+interface PindahLoginResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: LoginAsData;
+  token?: string;
+}
+
+interface LoginAsData {
+  login_as: LoginAsInfo;
+  id: string;
+  attribute: {
+    nama: string;
+    username: string;
+    email: string;
+    no_hp: string;
+    nama_bank: string;
+    no_rekening: string;
+    nama_pemilik_rekening: string;
+    role: string;
+    status: {
+      code: number;
+      name: string;
+    };
+  };
+}
+
+interface LoginAsInfo {
+  by: string;
+  role: string;
+}
+
+interface UserStatus {
+  code: number;
+  name: string;
+}
+
 interface CustomToken extends JWT {
   accessToken?: string;
   user?: any;
@@ -136,29 +173,54 @@ export const authOptions: NextAuthOptions = {
         username: { label: 'Username', type: 'text' },
         password: { label: 'Password', type: 'password' },
         role: { label: 'Role', type: 'text' },
+        via: { label: 'Via', type: 'text' },
       },
       async authorize(
         credentials: Record<string, string> | undefined
       ): Promise<User | null> {
         if (!credentials) return null;
-        try {
-          const res = await fetch(`${env.NEXTAUTH_API_URL}/_auth/sign-in`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              username: credentials.username,
-              password: credentials.password,
-              type: credentials.role,
-            }),
-          });
 
-          const data = (await res.json()) as ApiLoginResponse;
+        const { username, password, role, via } = credentials;
+        let res: Response;
+        let data: ApiLoginResponse | PindahLoginResponse;
+
+        try {
+          if (via === 'loginPage') {
+            res = await fetch(`${env.NEXTAUTH_API_URL}/_auth/sign-in`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                username,
+                password,
+                type: role,
+              }),
+            });
+            data = (await res.json()) as ApiLoginResponse;
+          } else if (via === 'pindah') {
+            if (!credentials.token)
+              throw new Error('Missing session token for pindah login');
+
+            res = await fetch(`${env.NEXTAUTH_API_URL}/_auth/sign-in-as-user`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-app-token': credentials.token ?? '',
+              },
+              body: JSON.stringify({ username: credentials.username }),
+            });
+            data = (await res.json()) as PindahLoginResponse;
+          } else {
+            throw new Error('Unknown login method');
+          }
+
+          console.log(via);
+          console.log(data);
 
           // ✅ Validate response
           if (!res.ok || !data.success || !data.data?.attribute) {
             throw new Error(
-              data?.message ||
-                'Login gagal, periksa kembali email/password Anda.'
+              (data as any)?.message ||
+                'Login gagal, periksa kembali username/password Anda.'
             );
           }
 
@@ -173,7 +235,7 @@ export const authOptions: NextAuthOptions = {
             phone: userAttr.no_hp,
             role: userAttr.role,
             status: userAttr.status?.code,
-            token: data.token, // store JWT
+            token: (data as any).token, // store JWT
             bankName: userAttr.nama_bank,
             bankAccount: userAttr.no_rekening,
             bankOwner: userAttr.nama_pemilik_rekening,

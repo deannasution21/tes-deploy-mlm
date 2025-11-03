@@ -49,6 +49,7 @@ export default function SignInForm({ role }: { role: string }) {
       username: data.username,
       password: data.password,
       role: role,
+      via: 'loginPage',
     });
 
     if (res?.error) {

@@ -13,6 +13,7 @@ export const config = {
     '/dashboard',
     '/dashboard/:path*',
     '/history-bonus',
+    '/pindah-id/',
     '/bonus/',
     '/bonus/:path*',
     '/produk',

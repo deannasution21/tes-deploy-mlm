@@ -58,6 +58,7 @@ import {
   PiPhoneTransfer,
   PiArrowsHorizontal,
   PiGift,
+  PiLog,
 } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
@@ -662,6 +663,12 @@ export const menuItemsUser = [
     name: 'Transfer PIN',
     href: routes.transferPin.index,
     icon: <PiArrowsHorizontal />,
+  },
+  {
+    name: 'Daftar Stockist',
+    href: routes.stockist.daftar,
+    icon: <PiUserPlus />,
+    badge: '',
   },
   // {
   //   name: 'Posting',

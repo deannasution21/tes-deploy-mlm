@@ -75,6 +75,7 @@ function AccordionContent({
 }) {
   return (
     <Collapse
+      defaultOpen={true}
       header={({ open, toggle }) => (
         <div
           onClick={toggle}

@@ -39,25 +39,7 @@ export const getColumns = () => [
     ),
   },
   {
-    title: 'Total Bonus',
-    dataIndex: 'commission_log',
-    key: 'commission_log',
-    width: 150,
-    render: ({ total }: { total: AmountCurrency }) => (
-      <Text className="text-gray-700">{total.currency}</Text>
-    ),
-  },
-  {
-    title: 'Ditarik',
-    dataIndex: 'withdrawal',
-    key: 'withdrawal',
-    width: 150,
-    render: ({ currency }: { currency: string }) => (
-      <Text className="text-gray-700">{currency}</Text>
-    ),
-  },
-  {
-    title: 'Sisa Bonus',
+    title: 'Bonus (Sisa Bonus)',
     dataIndex: 'balance',
     key: 'balance',
     width: 150,

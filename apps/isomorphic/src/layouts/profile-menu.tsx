@@ -108,8 +108,8 @@ function DropdownMenu({
           <Title as="h6" className="font-semibold">
             {name ?? 'Pengguna'}
           </Title>
-          <Text className="max-w-[150px] truncate text-gray-600">
-            {email ?? 'email@pglobal.co.id'}
+          <Text className="max-w-[150px] truncate uppercase text-gray-600">
+            {role ?? 'Member'}
           </Text>
         </div>
       </div>

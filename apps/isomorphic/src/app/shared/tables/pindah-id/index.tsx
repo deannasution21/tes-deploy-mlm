@@ -3,18 +3,10 @@
 import cn from '@core/utils/class-names';
 import { useEffect, useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
-import {
-  BankData,
-  BankStatusResponse,
-  TransactionData,
-  TransactionResponse,
-} from '@/types';
+import { BankData, BankStatusResponse } from '@/types';
 import BasicTableWidget from '@core/components/controlled-table/basic-table-widget';
 import { Alert, Button, Text, Title } from 'rizzui';
-import Link from 'next/link';
-import ProjectWriteIcon from '@core/components/icons/project-write';
-import { PiGift, PiSignIn } from 'react-icons/pi';
-import { generateSlug } from '@core/utils/generate-slug';
+import { PiSignIn } from 'react-icons/pi';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { getBankNameByCode } from '@/utils/helper';
 import { toast } from 'react-hot-toast';
@@ -145,19 +137,30 @@ export default function PindahIDTable({ className }: { className?: string }) {
       dataIndex: 'id',
       key: 'id',
       width: 150,
-      render: (id: string, row: any) => (
-        <Button
-          size="sm"
-          isLoading={loadingS}
-          disabled={loadingS}
-          onClick={() =>
-            doLogin({ router, username: id, session, setLoadingS })
-          }
-        >
-          <PiSignIn className="mr-2 h-4 w-4" />
-          <span>Login ID Ini</span>
-        </Button>
-      ),
+      render: (id: string, row: any) => {
+        if (session?.user?.id === id) {
+          return (
+            <Button size="sm" disabled>
+              <PiSignIn className="mr-2 h-4 w-4" />
+              <span>Login ID Ini</span>
+            </Button>
+          );
+        } else {
+          return (
+            <Button
+              size="sm"
+              isLoading={loadingS}
+              disabled={loadingS}
+              onClick={() =>
+                doLogin({ router, username: id, session, setLoadingS })
+              }
+            >
+              <PiSignIn className="mr-2 h-4 w-4" />
+              <span>Login ID Ini</span>
+            </Button>
+          );
+        }
+      },
     },
   ];
 

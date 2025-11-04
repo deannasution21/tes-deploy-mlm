@@ -34,9 +34,9 @@ export const routes = {
     index: '/posting-pin',
     history: '/posting-pin/history',
   },
-  withdrawalPin: {
-    index: '/withdrawal-pin',
-    history: '/withdrawal-pin/history',
+  withdrawalGaji: {
+    index: '/withdrawal-gaji',
+    history: '/withdrawal-gaji/history',
   },
   withdrawalBonus: {
     index: '/withdrawal-bonus',

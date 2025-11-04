@@ -59,6 +59,7 @@ import {
   PiArrowsHorizontal,
   PiGift,
   PiLog,
+  PiLock,
 } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
@@ -608,7 +609,7 @@ export const menuItems = [
 export const menuItemsUser = [
   // label start
   {
-    name: 'Overview',
+    name: 'Menu',
   },
   // label end
   {
@@ -660,6 +661,21 @@ export const menuItemsUser = [
     ],
   },
   {
+    name: 'Withdrawal Gaji',
+    href: '#',
+    icon: <PiCurrencyCircleDollarDuotone />,
+    dropdownItems: [
+      {
+        name: 'Withdrawal Gaji',
+        href: routes.withdrawalGaji.index,
+      },
+      {
+        name: 'History Withdrawal Gaji',
+        href: routes.withdrawalGaji.history,
+      },
+    ],
+  },
+  {
     name: 'Transfer PIN',
     href: routes.transferPin.index,
     icon: <PiArrowsHorizontal />,
@@ -670,81 +686,33 @@ export const menuItemsUser = [
     icon: <PiUserPlus />,
     badge: '',
   },
-  // {
-  //   name: 'Posting',
-  //   href: '#',
-  //   icon: <PiUserPlus />,
-  //   dropdownItems: [
-  //     {
-  //       name: 'Posting ',
-  //       href: routes.postingPin.index,
-  //     },
-  //     {
-  //       name: 'History Posting ',
-  //       href: routes.postingPin.history,
-  //     },
-  //   ],
-  // },
+
   {
-    name: 'Withdrawal',
-    href: '#',
-    icon: <PiCurrencyCircleDollarDuotone />,
-    dropdownItems: [
-      {
-        name: 'Withdrawal PIN A ',
-        href: routes.withdrawalPin.index,
-      },
-      {
-        name: 'History Withdrawal PIN A ',
-        href: routes.withdrawalPin.history,
-      },
-    ],
+    name: 'Personal',
+  },
+  // label end
+  {
+    name: 'Profil Saya',
+    href: routes.profil.index,
+    icon: <PiUser />,
+  },
+  {
+    name: 'Ganti Password',
+    href: routes.profil.ubahPassword,
+    icon: <PiLock />,
   },
 ];
 
 export const menuItemsStockist = [
   // label start
   {
-    name: 'Overview',
+    name: 'Menu',
   },
   // label end
   {
     name: 'Dashboard',
     href: routes.dashboard.index,
     icon: <PiHouseLineDuotone />,
-  },
-  {
-    name: 'Diagram Jaringan',
-    href: routes.diagramJaringan.index,
-    icon: <PiTreeStructure />,
-    badge: '',
-  },
-
-  {
-    name: 'History Bonus',
-    href: '#',
-    icon: <ProjectWriteIcon />,
-    dropdownItems: [
-      {
-        name: 'History Bonus PIN A ',
-        href: routes.bonus.history,
-      },
-    ],
-  },
-  {
-    name: 'Withdrawal Bonus',
-    href: '#',
-    icon: <PiGift />,
-    dropdownItems: [
-      {
-        name: 'Withdrawal PIN A ',
-        href: routes.withdrawalPin.index,
-      },
-      {
-        name: 'History Withdrawal PIN A ',
-        href: routes.withdrawalPin.history,
-      },
-    ],
   },
   {
     name: 'Belanja Produk',
@@ -766,35 +734,20 @@ export const menuItemsStockist = [
     href: routes.transferPin.index,
     icon: <PiArrowsHorizontal />,
   },
-  // {
-  //   name: 'Posting',
-  //   href: '#',
-  //   icon: <PiUserPlus />,
-  //   dropdownItems: [
-  //     {
-  //       name: 'Posting ',
-  //       href: routes.postingPin.index,
-  //     },
-  //     {
-  //       name: 'History Posting ',
-  //       href: routes.postingPin.history,
-  //     },
-  //   ],
-  // },
+
   {
-    name: 'Withdrawal',
-    href: '#',
-    icon: <PiCurrencyCircleDollarDuotone />,
-    dropdownItems: [
-      {
-        name: 'Withdrawal PIN A ',
-        href: routes.withdrawalPin.index,
-      },
-      {
-        name: 'History Withdrawal PIN A ',
-        href: routes.withdrawalPin.history,
-      },
-    ],
+    name: 'Personal',
+  },
+  // label end
+  {
+    name: 'Profil Saya',
+    href: routes.profil.index,
+    icon: <PiUser />,
+  },
+  {
+    name: 'Ganti Password',
+    href: routes.profil.ubahPassword,
+    icon: <PiLock />,
   },
 ];
 

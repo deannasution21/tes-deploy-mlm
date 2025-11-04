@@ -3,7 +3,7 @@
 import { use, useEffect, useState } from 'react';
 import { SubmitHandler, Controller } from 'react-hook-form';
 import { Form } from '@core/ui/form';
-import { Text, Input, ActionIcon, Button, Password } from 'rizzui';
+import { Text, Input, ActionIcon, Button, Password, Alert } from 'rizzui';
 import { FormBlockWrapper } from '@/app/shared/invoice/form-utils';
 import { toast } from 'react-hot-toast';
 import WidgetCard from '@core/components/cards/widget-card';
@@ -284,18 +284,22 @@ export default function TransferPinPage() {
               {({ register, control, watch, formState: { errors } }) => (
                 <>
                   <div className="flex-grow pb-10">
-                    <div className="mb-7 flex items-center space-x-2 rounded-lg bg-green-500 px-4 py-3 text-white shadow-lg">
-                      <PiNotificationBold />
+                    <Alert variant="flat" color="success" className="mb-7">
+                      <Text className="font-semibold">Informasi</Text>
                       <ol className="list-disc ps-5">
                         <li>
-                          Anda memiliki <strong>{pin}</strong> PIN
+                          <Text className="break-normal">
+                            Anda memiliki <strong>{pin}</strong> PIN
+                          </Text>
                         </li>
                         <li>
-                          Maksimal <strong>2000</strong> PIN dalam sekali
-                          transfer
+                          <Text className="break-normal">
+                            Maksimal <strong>2000</strong> PIN dalam sekali
+                            transfer
+                          </Text>
                         </li>
                       </ol>
-                    </div>
+                    </Alert>
 
                     <div className="grid grid-cols-1 gap-8 divide-y divide-dashed divide-gray-200 @2xl:gap-10 @3xl:gap-12">
                       <FormBlockWrapper title={'Data Pengirim:'}>

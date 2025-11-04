@@ -4,12 +4,12 @@ import { routes } from '@/config/routes';
 import { metaObject } from '@/config/site.config';
 
 export const metadata = {
-  ...metaObject('History Bonus'),
+  ...metaObject('History Withdrawal Bonus'),
 };
 
 export default function Page({ params }: any) {
   const pageHeader = {
-    title: `History Bonus: ${params.slug}`,
+    title: `History WD Bonus: ${params.slug.toLocaleUpperCase()}`,
     breadcrumb: [
       {
         href: routes.dashboard.index,

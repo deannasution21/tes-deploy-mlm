@@ -9,14 +9,18 @@ export const metadata = {
 
 export default function Page() {
   const pageHeader = {
-    title: `History Withdrawal Bonus`,
+    title: `History WD Bonus`,
     breadcrumb: [
       {
         href: routes.dashboard.index,
         name: 'Dashboard',
       },
       {
-        name: 'History Withdrawal Bonus',
+        name: 'Withdrawal Bonus',
+        href: routes.withdrawalBonus.index,
+      },
+      {
+        name: 'History',
       },
     ],
   };

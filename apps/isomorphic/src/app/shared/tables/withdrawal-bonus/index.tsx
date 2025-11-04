@@ -66,14 +66,25 @@ export const getColumns = () => [
     dataIndex: 'username',
     key: 'username',
     width: 150,
-    render: (username: string) => (
-      <Link href={`withdrawal-bonus/${generateSlug(username)}/history`}>
-        <Button size="sm" variant="flat">
-          <ProjectWriteIcon className="mr-2 h-4 w-4" />
-          <span>History</span>
-        </Button>
-      </Link>
-    ),
+    render: (username: string, row: any) => {
+      if (row.withdrawal.count > 0) {
+        return (
+          <Link href={`withdrawal-bonus/${generateSlug(username)}/history`}>
+            <Button size="sm" variant="flat">
+              <ProjectWriteIcon className="mr-2 h-4 w-4" />
+              <span>History</span>
+            </Button>
+          </Link>
+        );
+      } else {
+        return (
+          <Button size="sm" variant="flat" disabled>
+            <ProjectWriteIcon className="mr-2 h-4 w-4" />
+            <span>History</span>
+          </Button>
+        );
+      }
+    },
   },
 ];
 

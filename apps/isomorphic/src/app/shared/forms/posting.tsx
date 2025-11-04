@@ -17,6 +17,7 @@ import { PhoneNumber } from '@core/ui/phone-input';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import {
+  BankData,
   BankStatusResponse,
   OptionType,
   PaymentOption,
@@ -32,18 +33,18 @@ import Swal from 'sweetalert2';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 function Formnya({
-  session,
-  isLoading,
-  setLoading,
   setSelectedProvinceName,
   setSelectedCityName,
+  dataBank,
+  dataPin,
+  dataPin2,
   type,
 }: {
-  session: any;
-  isLoading: boolean;
-  setLoading: (value: boolean) => void;
   setSelectedProvinceName?: (value: string) => void;
   setSelectedCityName?: (value: string) => void;
+  dataBank: OptionType[];
+  dataPin: OptionType[];
+  dataPin2: Pin[];
   type: string;
 }) {
   const {
@@ -53,76 +54,12 @@ function Formnya({
     setValue,
     formState: { errors },
   } = useFormContext();
-  const [pin, setPin] = useState<OptionType[]>([]);
-  const [dataPin, setDataPin] = useState<Pin[]>([]);
+
   const [selectedPin, setSelectedPin] = useState<string>('');
   const [dataSPin, setDataSPin] = useState<Pin>();
-  const [dataMetodePembayaran, setDataMetodePembayaran] = useState<
-    PaymentOption[]
-  >([]);
   const position = watch('position'); // 'left' | 'right'
   const displayPosition =
     position === 'left' ? 'Kiri' : position === 'right' ? 'Kanan' : '';
-
-  const getDataPin = async (id: string) => {
-    fetchWithAuth<PinResponse>(
-      `/_pins/dealer/${id}?fetch=all&type=plan_a`,
-      { method: 'GET' },
-      session.accessToken
-    )
-      .then((data) => {
-        setPin(
-          (data?.data?.pins ?? []).map((p: any) => ({
-            value: p.pin_code,
-            label: p.pin_code,
-          }))
-        );
-        setDataPin(data?.data?.pins ?? []);
-      })
-      .catch((error) => {
-        console.error(error);
-        // Clear the data so UI can show "no data"
-        setPin([]);
-        setDataPin([]);
-      })
-      .finally(() => setLoading(false));
-  };
-
-  const getDataBank = async () => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/_services/list-bank`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-app-token': session?.accessToken ?? '',
-          },
-        }
-      );
-
-      if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
-      const data = (await res.json()) as BankStatusResponse;
-
-      if (data?.data) {
-        const options: OptionType[] = [];
-
-        // VA methods
-        if (Array.isArray(data.data)) {
-          data.data.forEach((item) => {
-            options.push({
-              value: item.bank_code,
-              label: item.name.toUpperCase(),
-            });
-          });
-        }
-
-        setDataMetodePembayaran(options);
-      }
-    } catch (err) {
-      console.error('Failed to fetch payment methods:', err);
-    }
-  };
 
   // State for dropdown data
   const [dataProvinsi, setDataProvinsi] = useState<OptionType[]>([]);
@@ -151,9 +88,6 @@ function Formnya({
       setDataProvinsi(data.map((p: any) => ({ value: p.id, label: p.name })));
     };
     fetchProvinsi();
-    if (!session?.user?.id) return;
-    getDataPin(session.user.id);
-    getDataBank();
   }, []);
 
   // Fetch kabupaten based on selected provinsi
@@ -203,11 +137,13 @@ function Formnya({
               dropdownClassName="!z-10 h-fit max-h-[250px]"
               inPortal={false}
               placeholder="Pilih PIN"
-              options={pin}
+              options={dataPin}
               onChange={(selectedId) => {
                 // Find the selected pin object
-                const selectedOption = pin.find((p) => p.value === selectedId);
-                const selectedPinData = dataPin.find(
+                const selectedOption = dataPin.find(
+                  (p) => p.value === selectedId
+                );
+                const selectedPinData = dataPin2.find(
                   (p) => p.pin_code === selectedId
                 );
 
@@ -220,9 +156,9 @@ function Formnya({
               searchable={true}
               getOptionValue={(option) => option.value}
               displayValue={(selected) =>
-                pin.find((p) => p.value === selected)?.label ?? ''
+                dataPin.find((p) => p.value === selected)?.label ?? ''
               }
-              error={errors?.province?.message as string | undefined}
+              error={errors?.pin_code?.message as string | undefined}
             />
           )}
         />
@@ -452,7 +388,7 @@ function Formnya({
               dropdownClassName="!z-10 h-fit"
               inPortal={false}
               placeholder="Pilih Bank"
-              options={dataMetodePembayaran}
+              options={dataBank}
               onChange={(selectedValue) => {
                 // 🔹 Update form field value
                 onChange(selectedValue);
@@ -461,8 +397,7 @@ function Formnya({
               searchable={true}
               getOptionValue={(option) => option.value}
               displayValue={(selected) =>
-                dataMetodePembayaran.find((k) => k.value === selected)?.label ??
-                ''
+                dataBank.find((k) => k.value === selected)?.label ?? ''
               }
               error={errors?.bank_name?.message as string | undefined}
               disabled={type === 'clone'}
@@ -600,12 +535,16 @@ export default function Posting({
 }) {
   const { data: session } = useSession();
   const [isLoading, setLoading] = useState(true);
+  const [isLoadingS, setLoadingS] = useState(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
   const position = searchParams.get('position');
 
   const [dataUser, setDataUser] = useState<UserData | null>(null);
+  const [dataPin, setDataPin] = useState<OptionType[]>([]);
+  const [dataPin2, setDataPin2] = useState<Pin[]>([]);
+  const [dataBank, setDataBank] = useState<OptionType[]>([]);
   const [selectedProvinceName, setSelectedProvinceName] = useState<string>('');
   const [selectedCityName, setSelectedCityName] = useState<string>('');
 
@@ -625,9 +564,9 @@ export default function Posting({
       phone: session?.user?.phone ?? '',
       province: '',
       city: '',
-      bank_name: session?.user?.bankName ?? '',
-      bank_account_name: session?.user?.bankOwner ?? '',
-      bank_account_number: session?.user?.bankAccount ?? '',
+      bank_name: '',
+      bank_account_name: '',
+      bank_account_number: '',
       nik: '',
       npwp_name: '',
       npwp_number: '',
@@ -668,65 +607,43 @@ export default function Posting({
   });
 
   const doPosting = async (payload: any) => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/_network-diagrams`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-app-token': session?.accessToken ?? '',
-          },
-          body: JSON.stringify({
-            ...payload,
-            province: selectedProvinceName,
-            city: selectedCityName,
-          }),
-        }
-      );
+    if (!session?.accessToken) return;
 
-      // Handle non-OK responses gracefully
-      if (!res.ok) {
-        let errorMessage = `HTTP error! ${res.status}`;
+    setLoadingS(true);
 
-        try {
-          const errorData = (await res.json()) as {
-            message?: string;
-            error?: string;
-            [key: string]: any;
-          };
-
-          errorMessage = errorData.message || errorData.error || errorMessage;
-        } catch {
-          // fallback: no JSON body
-        }
-
-        throw new Error(errorMessage);
-      }
-
-      toast.success(
-        <Text as="b">
-          {type?.toLocaleUpperCase()} {payload?.mlm_user_id} Berhasil!
-        </Text>
-      );
-
-      setTimeout(() => {
-        router.push(`/diagram-jaringan/${upline}`);
-      }, 300);
-    } catch (error: any) {
-      console.error('Fetch data error:', error);
-      toast.error(
-        <Text as="b">
-          {type?.toLocaleUpperCase()} Gagal: {error.message}
-        </Text>
-      );
-    } finally {
-      setLoading(false);
-    }
+    fetchWithAuth<any>(
+      `/_network-diagrams`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          ...payload,
+          province: selectedProvinceName,
+          city: selectedCityName,
+        }),
+      },
+      session.accessToken
+    )
+      .then((data) => {
+        toast.success(
+          <Text as="b">
+            {type?.toLocaleUpperCase()} {payload?.mlm_user_id} Berhasil!
+          </Text>
+        );
+        setTimeout(() => {
+          router.push(`/diagram-jaringan/${upline}`);
+        }, 300);
+      })
+      .catch((error) => {
+        console.error(error);
+        // Clear the data so UI can show "no data"
+        toast.error(<Text as="b"> {type?.toLocaleUpperCase()} gagal</Text>);
+      })
+      .finally(() => setLoadingS(false));
   };
 
   const onSubmit: SubmitHandler<PostingInput> = (data) => {
-    setLoading(true);
+    setLoadingS(true);
+
     Swal.fire({
       title: 'Konfirmasi Posting',
       html: 'Harap pastikan data yang Anda masukkan benar. Jika sudah silakan <strong>LANJUTKAN</strong>',
@@ -749,7 +666,7 @@ export default function Posting({
         toast.success(
           <Text as="b">{type?.toLocaleUpperCase()} dibatalkan!</Text>
         );
-        setLoading(false);
+        setLoadingS(false);
       }
     });
   };
@@ -757,44 +674,92 @@ export default function Posting({
   // Fetch data for clone type
   useEffect(() => {
     if (!session?.accessToken) return;
-    if (type !== 'clone') return;
 
     setLoading(true);
 
-    fetchWithAuth<UserDataResponse>(
-      `/_users`,
-      { method: 'GET' },
-      session.accessToken
-    )
-      .then((data) => {
-        const userData = data.data?.attribute;
+    Promise.all([
+      fetchWithAuth<UserDataResponse>(
+        `/_users`,
+        { method: 'GET' },
+        session.accessToken
+      ),
+      fetchWithAuth<PinResponse>(
+        `/_pins/dealer/${session?.user?.id}?fetch=all&type=plan_a`,
+        { method: 'GET' },
+        session.accessToken
+      ),
+      fetchWithAuth<BankStatusResponse>(
+        `/_services/list-bank`,
+        { method: 'GET' },
+        session.accessToken
+      ),
+    ])
+      .then(([usersData, pinData, bankData]) => {
+        const userData = usersData?.data?.attribute;
         setDataUser(userData || null);
+        setDataPin(
+          (pinData?.data?.pins ?? []).map((p: any) => ({
+            value: p.pin_code,
+            label: p.pin_code,
+          }))
+        );
+        setDataPin2(pinData?.data?.pins ?? []);
+        setDataBank(
+          (bankData?.data ?? []).map((p: any) => ({
+            value: p.bank_code,
+            label: p.name.toUpperCase(),
+          }))
+        );
 
         if (userData) {
           // update form values dynamically
-          methodsCloning.reset({
-            ...methodsCloning.getValues(),
-            sponsor: userData.sponsor_id ?? '',
-            full_name: userData.nama ?? '',
-            email: session?.user?.email ?? '',
-            phone: userData.no_hp ?? '',
-            province: userData.province ?? '',
-            city: userData.city ?? '',
-            bank_name: userData.code_bank ?? '',
-            bank_account_name: userData.nama_pemilik_rekening ?? '',
-            bank_account_number: userData.no_rekening ?? '',
-            nik: userData.nik ?? '',
-            npwp_name: userData.npwp_name ?? '',
-            npwp_number: userData.npwp_number ?? '',
-            npwp_address: userData.npwp_address ?? '',
-            heir_name: userData.heir_name ?? '',
-            heir_relationship: userData.heir_relationship ?? '',
-          });
+          if (type === 'clone') {
+            methodsCloning.reset({
+              ...methodsCloning.getValues(),
+              sponsor: userData.sponsor_id ?? '',
+              full_name: userData.nama ?? '',
+              email: session?.user?.email ?? '',
+              phone: userData.no_hp ?? '',
+              province: userData.province ?? '',
+              city: userData.city ?? '',
+              bank_name: userData.code_bank ?? '',
+              bank_account_name: userData.nama_pemilik_rekening ?? '',
+              bank_account_number: userData.no_rekening ?? '',
+              nik: userData.nik ?? '',
+              npwp_name: userData.npwp_name ?? '',
+              npwp_number: userData.npwp_number ?? '',
+              npwp_address: userData.npwp_address ?? '',
+              heir_name: userData.heir_name ?? '',
+              heir_relationship: userData.heir_relationship ?? '',
+            });
+          } else if (type === 'posting') {
+            methodsPosting.reset({
+              ...methodsPosting.getValues(),
+              sponsor: userData.sponsor_id ?? '',
+              full_name: '',
+              email: '',
+              phone: '',
+              province: '',
+              city: '',
+              bank_name: '',
+              bank_account_name: '',
+              bank_account_number: '',
+              nik: '',
+              npwp_name: '',
+              npwp_number: '',
+              npwp_address: '',
+              heir_name: '',
+              heir_relationship: '',
+            });
+          }
         }
       })
       .catch((error) => {
-        console.error('Fetch user error:', error);
+        console.error(error);
         setDataUser(null);
+        setDataPin([]);
+        setDataPin2([]);
+        setDataBank([]);
       })
       .finally(() => setLoading(false));
   }, [session?.accessToken, type]);
@@ -831,18 +796,18 @@ export default function Posting({
               <div className="flex-grow @5xl:col-span-8 @5xl:pb-10 @6xl:col-span-7">
                 <div className="flex flex-col gap-4 @xs:gap-7 @5xl:gap-9">
                   <Formnya
-                    session={session}
-                    isLoading={isLoading}
-                    setLoading={setLoading}
                     setSelectedProvinceName={setSelectedProvinceName}
                     setSelectedCityName={setSelectedCityName}
+                    dataBank={dataBank}
+                    dataPin={dataPin}
+                    dataPin2={dataPin2}
                     type={type}
                   />
                 </div>
               </div>
 
               <div className="pb-7 pt-10 @container @5xl:col-span-4 @5xl:py-0 @6xl:col-span-3">
-                <Informasi isLoading={isLoading} type={type} />
+                <Informasi isLoading={isLoadingS} type={type} />
               </div>
             </div>
           </form>
@@ -860,18 +825,18 @@ export default function Posting({
               <div className="flex-grow @5xl:col-span-8 @5xl:pb-10 @6xl:col-span-7">
                 <div className="flex flex-col gap-4 @xs:gap-7 @5xl:gap-9">
                   <Formnya
-                    session={session}
-                    isLoading={isLoading}
-                    setLoading={setLoading}
                     setSelectedProvinceName={setSelectedProvinceName}
                     setSelectedCityName={setSelectedCityName}
+                    dataBank={dataBank}
+                    dataPin={dataPin}
+                    dataPin2={dataPin2}
                     type={type}
                   />
                 </div>
               </div>
 
               <div className="pb-7 pt-10 @container @5xl:col-span-4 @5xl:py-0 @6xl:col-span-3">
-                <Informasi isLoading={isLoading} type={type} />
+                <Informasi isLoading={isLoadingS} type={type} />
               </div>
             </div>
           </form>

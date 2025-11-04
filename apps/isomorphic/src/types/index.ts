@@ -206,6 +206,12 @@ export interface UserData {
   heir_relationship?: string | null;
   code_bank?: string;
   created_at?: string;
+
+  // stockist
+  stockist?: {
+    hasData: boolean;
+    isPending: boolean;
+  };
 }
 
 export interface PinResponse {

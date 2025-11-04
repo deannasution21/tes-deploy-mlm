@@ -5,7 +5,10 @@ import { validateConfirmPassword, validatePassword } from './common-rules';
 export const postingSchema = z
   .object({
     pin_code: z.string().min(1, { message: messages.kolomIsRequired }),
-    mlm_user_id: z.string().min(1, { message: messages.kolomIsRequired }),
+    mlm_user_id: z
+      .string()
+      .transform((val) => (val === '' ? undefined : val))
+      .optional(),
     type_plan: z.string().min(1, { message: messages.kolomIsRequired }),
     upline: z.string().min(1, { message: messages.kolomIsRequired }),
     sponsor: z.string().min(1, { message: messages.kolomIsRequired }),

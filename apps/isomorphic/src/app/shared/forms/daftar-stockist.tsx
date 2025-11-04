@@ -11,16 +11,23 @@ import {
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Input, Password, Select, Text, Textarea, Title } from 'rizzui';
+import {
+  Alert,
+  Button,
+  Input,
+  Password,
+  Select,
+  Text,
+  Textarea,
+  Title,
+} from 'rizzui';
 import cn from '@core/utils/class-names';
 import { PhoneNumber } from '@core/ui/phone-input';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { OptionType, UserData, UserDataResponse } from '@/types';
-import { PostingInput, postingSchema } from '@/validators/posting-schema';
+import { UserData, UserDataResponse } from '@/types';
 import Swal from 'sweetalert2';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
-import { routes } from '@/config/routes';
 import {
   DaftarStockistInput,
   daftarStockistSchema,
@@ -59,12 +66,6 @@ function Formnya({
     setValue,
     formState: { errors },
   } = useFormContext();
-
-  console.log(errors);
-
-  // State for dropdown data
-  const [dataProvinsi, setDataProvinsi] = useState<OptionType[]>([]);
-  const [dataKabupaten, setDataKabupaten] = useState<OptionType[]>([]);
 
   const typeStockist = [
     {
@@ -325,12 +326,13 @@ export default function DaftarStockist({ className }: { className?: string }) {
       session.accessToken
     )
       .then((data) => {
-        toast.success(<Text as="b">Pendaftaran Berhasil!</Text>);
+        toast.success(<Text as="b">Permohonan pendaftaran dikirim</Text>);
+        getDataUser();
       })
       .catch((error) => {
         console.error(error);
         // Clear the data so UI can show "no data"
-        toast.error(<Text as="b">Pendaftaran Gagal</Text>);
+        toast.error(<Text as="b">Permohonan pendaftaran gagal</Text>);
       })
       .finally(() => setLoadingS(false));
   };
@@ -356,14 +358,13 @@ export default function DaftarStockist({ className }: { className?: string }) {
       if (result.isConfirmed) {
         doRegister(data);
       } else {
-        toast.success(<Text as="b">Pendaftaran dibatalkan!</Text>);
+        toast.success(<Text as="b">Permohonan pendaftaran dibatalkan!</Text>);
         setLoadingS(false);
       }
     });
   };
 
-  // Fetch data for clone type
-  useEffect(() => {
+  const getDataUser = () => {
     if (!session?.accessToken) return;
 
     setLoading(true);
@@ -395,6 +396,11 @@ export default function DaftarStockist({ className }: { className?: string }) {
         setDataUser(null);
       })
       .finally(() => setLoading(false));
+  };
+
+  // Fetch data for clone type
+  useEffect(() => {
+    getDataUser();
   }, [session?.accessToken]);
 
   // ---- UI rendering ----
@@ -411,6 +417,19 @@ export default function DaftarStockist({ className }: { className?: string }) {
       <div className="py-20 text-center text-gray-500">
         <p>Tidak ada data untuk pengguna ini.</p>
       </div>
+    );
+  }
+
+  if (dataUser.stockist?.hasData) {
+    return (
+      <Alert variant="flat" color="success" className="mt-5">
+        <Text className="font-semibold">Informasi</Text>
+        <Text className="break-normal">
+          {dataUser.stockist.isPending
+            ? 'Pendaftaran Stockist Anda sedang menunggu persetujuan Admin. Silakan menunggu.'
+            : 'Selamat! Pendaftaran Stockist Anda telah berhasil disetujui.'}
+        </Text>
+      </Alert>
     );
   }
 

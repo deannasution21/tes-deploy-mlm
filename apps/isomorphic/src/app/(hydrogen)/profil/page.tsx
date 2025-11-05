@@ -1,25 +1,21 @@
-import UbahPasswordPage from '@/app/shared/forms/ubah-password';
+import ProfilSayaPage from '@/app/shared/forms/profil-saya';
 import PageHeader from '@/app/shared/page-header';
 import { routes } from '@/config/routes';
 import { metaObject } from '@/config/site.config';
 
 export const metadata = {
-  ...metaObject('Ubah Password'),
+  ...metaObject('Profil Saya'),
 };
 
 const pageHeader = {
-  title: 'Ubah Password',
+  title: 'Profil Saya',
   breadcrumb: [
     {
       href: routes.dashboard.index,
       name: 'Dashboard',
     },
     {
-      href: routes.profil.index,
       name: 'Profil Saya',
-    },
-    {
-      name: 'Ubah Password',
     },
   ],
 };
@@ -28,7 +24,7 @@ export default function Page() {
   return (
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
-      <UbahPasswordPage />
+      <ProfilSayaPage />
     </>
   );
 }

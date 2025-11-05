@@ -1,32 +1,30 @@
-import dynamic from 'next/dynamic';
+import PageHeader from '@/app/shared/page-header';
+import LihatPinTable from '@/app/shared/tables/lihat-pin';
 import { routes } from '@/config/routes';
 import { metaObject } from '@/config/site.config';
-import PageHeader from '@/app/shared/page-header';
-import ProductFeed from '@/app/shared/ecommerce/shop/product-feed';
+
+export const metadata = {
+  ...metaObject('Lihat PIN'),
+};
 
 const pageHeader = {
-  title: 'Belanja Produk',
+  title: 'Lihat PIN',
   breadcrumb: [
     {
       href: routes.dashboard.index,
       name: 'Dashboard',
     },
     {
-      name: 'Belanja Produk',
+      name: 'Lihat PIN',
     },
   ],
 };
 
-export const metadata = {
-  ...metaObject('Belanja Produk'),
-};
-
-export default function ShopPage() {
+export default function Page() {
   return (
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
-
-      <ProductFeed />
+      <LihatPinTable />
     </>
   );
 }

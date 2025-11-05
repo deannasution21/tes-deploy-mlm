@@ -60,6 +60,7 @@ import {
   PiGift,
   PiLog,
   PiLock,
+  PiTrophy,
 } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
@@ -676,6 +677,11 @@ export const menuItemsUser = [
     ],
   },
   {
+    name: 'Lihat PIN',
+    href: routes.lihatPin.index,
+    icon: <PiTrophy />,
+  },
+  {
     name: 'Transfer PIN',
     href: routes.transferPin.index,
     icon: <PiArrowsHorizontal />,
@@ -728,6 +734,11 @@ export const menuItemsStockist = [
         href: routes.produk.pesanan.index,
       },
     ],
+  },
+  {
+    name: 'Lihat PIN',
+    href: routes.lihatPin.index,
+    icon: <PiTrophy />,
   },
   {
     name: 'Transfer PIN',

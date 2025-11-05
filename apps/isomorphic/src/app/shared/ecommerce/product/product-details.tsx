@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { ProductDetailResponse, ProductItem } from '@/types';
 import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function ProductDetails() {
   const { data: session } = useSession();
@@ -19,37 +20,43 @@ export default function ProductDetails() {
   const productId = slug ? slug.split('-').pop() : undefined;
 
   const [product, setProduct] = useState<ProductItem | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getDataProduk = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/_products/${productId}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-app-token': session?.accessToken ?? '',
-            },
-          }
-        );
+    if (!session?.accessToken) return;
 
-        if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
+    setLoading(true);
 
-        const data = (await res.json()) as ProductDetailResponse;
-        setProduct(data.data);
-      } catch (error) {
-        console.error('Fetch data error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (session?.accessToken && productId) getDataProduk();
+    fetchWithAuth<ProductDetailResponse>(
+      `/_products/${productId}`,
+      { method: 'GET' },
+      session.accessToken
+    )
+      .then((data) => {
+        setProduct(data.data || null);
+      })
+      .catch((error) => {
+        console.error(error);
+        setProduct(null);
+      })
+      .finally(() => setLoading(false));
   }, [session?.accessToken, productId]);
 
-  if (!product) return <div>Produk tidak ditemukan.</div>;
+  if (isLoading) {
+    return (
+      <div className="py-20 text-center">
+        <p>Sedang memuat data...</p>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="py-20 text-center text-gray-500">
+        <p>Tidak ada data untuk produk ini.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="@container">

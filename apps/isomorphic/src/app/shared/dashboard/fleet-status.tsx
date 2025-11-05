@@ -1,11 +1,14 @@
 'use client';
 
-import { Title, Text } from 'rizzui';
+import { Title, Text, Button } from 'rizzui';
 import cn from '@core/utils/class-names';
 import pinImg from '@public/pin.png';
 import Image from 'next/image';
 import TagIcon from '@core/components/icons/tag';
 import TagIcon2 from '@core/components/icons/tag-2';
+import { useRouter } from 'next/navigation';
+import { routes } from '@/config/routes';
+import { PiTrophy } from 'react-icons/pi';
 
 const data = [
   { name: 'PIN General:', value: 20, color: '#3872FA' },
@@ -13,7 +16,15 @@ const data = [
   { name: 'PIN Promo:', value: 35, color: '#10b981' },
 ];
 
-export default function FleetStatus({ className }: { className?: string }) {
+export default function FleetStatus({
+  pins,
+  className,
+}: {
+  pins?: number;
+  className?: string;
+}) {
+  const router = useRouter();
+
   return (
     <div className={cn('flex flex-col gap-5 border-0 p-0 lg:p-0', className)}>
       <div className="grid items-start rounded-lg border border-muted p-5 @xl:grid-cols-2 lg:p-7">
@@ -56,7 +67,7 @@ export default function FleetStatus({ className }: { className?: string }) {
         </div>
 
         <div className="">
-          {data.map((item, index) => (
+          {/* {data.map((item, index) => (
             <div
               key={index}
               className="mb-4 flex items-center justify-between border-b border-muted pb-4 last:mb-0 last:border-0 last:pb-0"
@@ -72,28 +83,50 @@ export default function FleetStatus({ className }: { className?: string }) {
               </div>
               <Text as="span">{item.value}</Text>
             </div>
-          ))}
+          ))} */}
+          <div className="mb-4 flex items-center justify-between border-b border-muted pb-4 last:mb-0 last:border-0 last:pb-0">
+            <div className="flex items-center justify-start">
+              <span
+                className="me-2 h-2 w-2 rounded-full"
+                style={{ backgroundColor: data[1].color }}
+              />
+              <Title as="h5" className="text-sm font-semibold">
+                PLAN A
+              </Title>
+            </div>
+            <Text as="span">{pins ?? 0}</Text>
+          </div>
+          <div className="flex justify-end">
+            <Button
+              onClick={() => router.push(routes.transferPin.index)}
+              className=""
+            >
+              <PiTrophy className="me-1.5 size-4" /> Lihat PIN
+            </Button>
+          </div>
         </div>
       </div>
-      <div className="grid gap-5 rounded-lg border border-muted p-4 @2xl:grid-cols-2 @2xl:p-6">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-12 w-12 items-center justify-center">
-            {/* <HourGlassIcon className="h-8 w-8" /> */}
-            <TagIcon className="h-full w-full" />
+      <div className="hidden">
+        <div className="grid gap-5 rounded-lg border border-muted p-4 @2xl:grid-cols-2 @2xl:p-6">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-12 w-12 items-center justify-center">
+              {/* <HourGlassIcon className="h-8 w-8" /> */}
+              <TagIcon className="h-full w-full" />
+            </div>
+            <div>
+              <p className="text-base font-semibold text-gray-900">3 POIN</p>
+              <p>Total Poin Kiri</p>
+            </div>
           </div>
-          <div>
-            <p className="text-base font-semibold text-gray-900">3 POIN</p>
-            <p>Total Poin Kiri</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-12 w-12 items-center justify-center">
-            {/* <WeighingScale className="h-8 w-8" /> */}
-            <TagIcon2 className="h-full w-full" />
-          </div>
-          <div>
-            <p className="text-base font-semibold text-gray-900">7 POIN</p>
-            <p>Total Poin Kanan</p>
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-12 w-12 items-center justify-center">
+              {/* <WeighingScale className="h-8 w-8" /> */}
+              <TagIcon2 className="h-full w-full" />
+            </div>
+            <div>
+              <p className="text-base font-semibold text-gray-900">7 POIN</p>
+              <p>Total Poin Kanan</p>
+            </div>
           </div>
         </div>
       </div>

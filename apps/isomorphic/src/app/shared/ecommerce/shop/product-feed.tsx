@@ -10,13 +10,14 @@ import { routes } from '@/config/routes';
 import { useSession } from 'next-auth/react';
 import { ProductItem, ProductResponse } from '@/types';
 import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 let countPerPage = 12;
 
 export default function ProductFeed() {
   const { data: session } = useSession();
   const [dataProduct, setDataProduct] = useState<ProductItem[]>([]);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const [nextPage, setNextPage] = useState(countPerPage);
 
   function handleLoadMore() {
@@ -28,35 +29,34 @@ export default function ProductFeed() {
   }
 
   useEffect(() => {
-    const getDataProduk = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/_products`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-app-token': session?.accessToken ?? '',
-            },
-          }
-        );
+    if (!session?.accessToken) return;
 
-        if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
+    setLoading(true);
 
-        const data = (await res.json()) as ProductResponse;
-        console.log(data);
+    fetchWithAuth<ProductResponse>(
+      `/_products`,
+      { method: 'GET' },
+      session.accessToken
+    )
+      .then((data) => {
         setDataProduct(data.data);
-      } catch (error) {
-        console.error('Fetch data error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (session?.accessToken) getDataProduk();
+      })
+      .catch((error) => {
+        console.error(error);
+        setDataProduct([]);
+      })
+      .finally(() => setLoading(false));
   }, [session?.accessToken]);
 
   const filteredData = hasSearchedParams() ? shuffle(dataProduct) : dataProduct;
+
+  if (isLoading) {
+    return (
+      <div className="py-20 text-center">
+        <p>Sedang memuat data...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="@container">

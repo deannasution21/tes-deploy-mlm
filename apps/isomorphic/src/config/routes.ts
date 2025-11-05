@@ -18,6 +18,9 @@ export const routes = {
     index: '/bonus',
     history: '/bonus/history',
   },
+  lihatPin: {
+    index: '/lihat-pin',
+  },
   requestPin: {
     index: '/request-pin',
     history: '/history-request-pin',

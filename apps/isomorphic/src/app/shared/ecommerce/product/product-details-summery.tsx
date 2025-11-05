@@ -16,6 +16,7 @@ import {
 } from '@/validators/product-details.schema';
 import { generateCartProduct } from '@/store/quick-cart/generate-cart-product';
 import GetQuantity from './get-quantity';
+import BeliSekarangButton from './beli-sekarang-button';
 
 export default function ProductDetailsSummery({
   product,
@@ -91,7 +92,9 @@ export default function ProductDetailsSummery({
           <GetQuantity stock={product?.attribute?.stock ?? 0} />
 
           <div className="grid grid-cols-1 gap-4 pt-7 @md:grid-cols-2 @xl:gap-6">
+            <BeliSekarangButton />
             <Button
+              variant="outline"
               size="xl"
               type="submit"
               isLoading={isLoading}

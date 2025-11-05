@@ -234,7 +234,7 @@ export default function UbahPasswordPage() {
                 <Formnya
                   isLoading={isLoadingS}
                   router={router}
-                  role={session?.user?.role}
+                  role={session?.user?.role || 'member'}
                 />
               </form>
             </FormProvider>

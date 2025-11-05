@@ -315,7 +315,7 @@ export default function ProfilSayaPage() {
                   dataBank={dataBank}
                   isLoading={isLoadingS}
                   router={router}
-                  role={session?.user?.role}
+                  role={session?.user?.role || 'member'}
                 />
               </form>
             </FormProvider>

@@ -65,6 +65,7 @@ export const routes = {
   stockist: {
     index: '/stockist',
     daftar: '/stockist/daftar',
+    list: '/stockist/list',
   },
   eCommerce: {
     dashboard: '/ecommerce',

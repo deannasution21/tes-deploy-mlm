@@ -43,7 +43,7 @@ const getColumns = () => [
     key: 'attribute',
     width: 150,
     render: ({ plan }: { plan: string }) => (
-      <Text className="text-gray-700">{plan}</Text>
+      <Text className="text-gray-700">PLAN</Text>
     ),
   },
   {

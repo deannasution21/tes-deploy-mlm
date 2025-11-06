@@ -692,6 +692,12 @@ export const menuItemsUser = [
     icon: <PiUserPlus />,
     badge: '',
   },
+  {
+    name: 'List Stockist',
+    href: routes.stockist.list,
+    icon: <PiUsers />,
+    badge: '',
+  },
 
   {
     name: 'Personal',

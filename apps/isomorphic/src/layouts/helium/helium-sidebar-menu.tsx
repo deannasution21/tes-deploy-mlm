@@ -15,16 +15,20 @@ export function HeliumSidebarMenu() {
   const pathname = usePathname();
   const session = useSession();
   const role = session?.data?.user?.role || 'user';
-  const menuFInal =
+  const menuFinal =
     role === 'admin'
       ? menuItemsAdmin
       : role === 'stockist'
         ? menuItemsStockist
         : menuItemsUser;
 
+  if (menuFinal?.length === 0) {
+    return <div></div>;
+  }
+
   return (
     <div className="mt-4 pb-3 3xl:mt-6">
-      {menuFInal.map((item, index) => {
+      {menuFinal.map((item, index) => {
         const isActive = pathname === (item?.href as string);
         const pathnameExistInDropdowns: any = item?.dropdownItems?.filter(
           (dropdownItem) => dropdownItem.href === pathname

@@ -91,14 +91,14 @@ export default function FleetStatus({
                 style={{ backgroundColor: data[1].color }}
               />
               <Title as="h5" className="text-sm font-semibold">
-                PLAN A
+                PLAN
               </Title>
             </div>
             <Text as="span">{pins ?? 0}</Text>
           </div>
           <div className="flex justify-end">
             <Button
-              onClick={() => router.push(routes.transferPin.index)}
+              onClick={() => router.push(routes.lihatPin.index)}
               className=""
             >
               <PiTrophy className="me-1.5 size-4" /> Lihat PIN

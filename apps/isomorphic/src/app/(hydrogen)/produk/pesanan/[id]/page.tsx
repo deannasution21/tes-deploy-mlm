@@ -15,7 +15,7 @@ export default function OrderDetailsPage({ params }: any) {
         name: 'Belanja Produk',
       },
       {
-        href: routes.produk.pesanan,
+        href: routes.produk.pesanan.index,
         name: 'History',
       },
       {

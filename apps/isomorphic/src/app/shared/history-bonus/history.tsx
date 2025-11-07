@@ -117,12 +117,13 @@ function AccordionContent({
           // title="Table"
           // description=""
           className={cn(
-            '-mt-8 border-0 pb-0 lg:pb-0 [&_.rc-table-row:last-child_td]:border-b-0'
+            '-mt-8 border-0 [&_.rc-table-row:last-child_td]:border-b-0'
           )}
           data={data?.items ?? []}
           getColumns={getColumns}
           noGutter
-          enableSearch={false}
+          enablePagination={true}
+          enableSearch={true}
           scroll={{
             x: 900,
           }}

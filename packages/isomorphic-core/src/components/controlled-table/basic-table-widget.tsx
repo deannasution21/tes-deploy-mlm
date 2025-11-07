@@ -53,7 +53,7 @@ export default function BasicTableWidget({
   description,
   data = [],
   getColumns,
-  pageSize = 7,
+  pageSize = 15,
   setPageSize,
   enablePagination,
   variant = "modern",
@@ -63,7 +63,7 @@ export default function BasicTableWidget({
   sticky,
   scroll = { x: 1300 },
   className,
-  searchPlaceholder = "Search...",
+  searchPlaceholder = "Cari data disini...",
 }: BasicTableWidgetProps) {
   const onHeaderCellClick = (value: string) => ({
     onClick: () => {

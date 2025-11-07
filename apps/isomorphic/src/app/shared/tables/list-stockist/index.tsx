@@ -34,8 +34,10 @@ export default function ListStockistTable({
     )
       .then((data) => {
         const data_pins = data?.data?.pins || [];
-        setDataPins(data_pins);
-        setData(data_pins); // <--- ADD THIS LINE
+        // setDataPins(data_pins);
+        // setData(data_pins);
+        setDataPins([]);
+        setData([]);
       })
       .catch((error) => {
         console.error(error);

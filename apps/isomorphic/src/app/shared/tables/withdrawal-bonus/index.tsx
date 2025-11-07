@@ -188,13 +188,12 @@ export default function WithdrawalBonusTable({
       <BasicTableWidget
         title="Daftar Akumulasi Bonus"
         description="Dari ID dengan rekening yang sama"
-        className={cn(
-          'pb-0 lg:pb-0 [&_.rc-table-row:last-child_td]:border-b-0'
-        )}
+        className={cn('[&_.rc-table-row:last-child_td]:border-b-0')}
         data={dataUser?.summary ?? []}
         getColumns={getColumns}
         noGutter
-        enableSearch={false}
+        enablePagination={true}
+        enableSearch={true}
         scroll={{
           x: 900,
         }}

@@ -145,11 +145,12 @@ export default function HistoryWithdrawalBonusTable({
   return (
     <BasicTableWidget
       title="History Withdrawal Bonus"
-      className={cn('pb-0 lg:pb-0 [&_.rc-table-row:last-child_td]:border-b-0')}
+      className={cn('[&_.rc-table-row:last-child_td]:border-b-0')}
       data={dataHistory}
       getColumns={getColumns}
       noGutter
-      enableSearch={false}
+      enablePagination={true}
+      enableSearch={true}
       scroll={{
         x: 750,
       }}

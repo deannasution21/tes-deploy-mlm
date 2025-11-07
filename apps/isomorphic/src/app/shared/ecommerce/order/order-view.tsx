@@ -11,9 +11,6 @@ import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
-import Swal from 'sweetalert2';
-import { useRouter } from 'next/router';
-import { useCheckPaymentExpiry } from '@/utils/helper';
 
 export interface TransactionDetailResponse {
   code: number;
@@ -181,6 +178,8 @@ export default function OrderView() {
   const fetchInvoice = async () => {
     if (!session?.accessToken) return;
 
+    setLoading(true);
+
     fetchWithAuth<TransactionDetailResponse>(
       `/_transactions/${invoiceID}`,
       { method: 'GET' },
@@ -198,10 +197,10 @@ export default function OrderView() {
 
   useEffect(() => {
     setLoading(true);
-
     fetchInvoice();
   }, [session?.accessToken]);
 
+  // 🕒 Detect Expiry Time
   useEffect(() => {
     const expired_at = invoice?.attribute?.payment?.expired_at;
     if (!expired_at) return;
@@ -222,6 +221,18 @@ export default function OrderView() {
 
     return () => clearTimeout(timeout);
   }, [invoice?.attribute?.payment?.expired_at]);
+
+  // 🔁 Auto-Refresh Only When Status === 0 (Menunggu Pembayaran)
+  useEffect(() => {
+    if (invoice?.attribute?.status?.code !== '0') return;
+
+    // Refresh every 60 seconds (you can adjust)
+    const interval = setInterval(() => {
+      fetchInvoice();
+    }, 60000); // 1 minute
+
+    return () => clearInterval(interval);
+  }, [invoice?.attribute?.status?.code]);
 
   if (isLoading) {
     return (

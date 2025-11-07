@@ -253,13 +253,12 @@ export default function PindahIDTable({ className }: { className?: string }) {
       <BasicTableWidget
         title="Daftar ID Anda"
         description="ID dengan rekening yang sama"
-        className={cn(
-          'pb-0 lg:pb-0 [&_.rc-table-row:last-child_td]:border-b-0'
-        )}
+        className={cn('[&_.rc-table-row:last-child_td]:border-b-0')}
         data={dataUser?.list_users ?? []}
         getColumns={getColumns}
         noGutter
-        enableSearch={false}
+        enablePagination={true}
+        enableSearch={true}
         scroll={{
           x: 400,
         }}

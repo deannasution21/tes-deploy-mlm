@@ -534,10 +534,8 @@ export interface WithdrawalUserDetail {
   type: string; // e.g., "plan_a"
   username: string;
   name: string;
-  bank_name: string;
-  account_number: string;
-  account_name: string;
   point: Point;
+  bank_account: BankAccount;
 }
 
 export interface Point {

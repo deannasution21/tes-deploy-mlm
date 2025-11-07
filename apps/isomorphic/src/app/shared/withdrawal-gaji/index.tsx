@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Badge, Button, Text, Title } from 'rizzui';
 import { useSession } from 'next-auth/react';
 import {
+  AmountCurrency,
   NetworkNode,
   WithdrawalSummaryData,
   WithdrawalSummaryResponse,
@@ -13,15 +14,45 @@ import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import cn from '@core/utils/class-names';
 import Image from 'next/image';
 import pinImg from '@public/assets/img/golden-coin.png';
-import HistoryWithdrawalGajiTable from './history';
 import Link from 'next/link';
 import { routes } from '@/config/routes';
+import BasicTableWidget from '@core/components/controlled-table/basic-table-widget';
+
+const getColumns = () => [
+  {
+    title: <span className="ml-6 block">No</span>,
+    dataIndex: 'index',
+    key: 'index',
+    width: 50,
+    render: (_: any, __: any, index: number) => (
+      <Text className="ml-6 text-gray-700">{index + 1}.</Text>
+    ),
+  },
+  {
+    title: 'Username',
+    dataIndex: 'username',
+    key: 'username',
+    width: 150,
+    render: (username: string) => (
+      <Text className="font-medium text-gray-700">{username}</Text>
+    ),
+  },
+  {
+    title: 'Gaji',
+    dataIndex: 'balance',
+    key: 'balance',
+    width: 150,
+    render: (balance: AmountCurrency) => (
+      <Text className="text-gray-700">{balance.currency}</Text>
+    ),
+  },
+];
 
 function FleetStatus({
   data,
   className,
 }: {
-  data: WithdrawalUserDetail;
+  data?: WithdrawalUserDetail;
   className?: string;
 }) {
   return (
@@ -164,7 +195,19 @@ export default function WithdrawalGajiPage() {
             {/* Table second on small screens */}
             <div className="order-2 @4xl:col-span-2 @7xl:order-1 @7xl:col-span-8 @7xl:min-h-[412px]">
               <div className="rounded-lg border border-muted">
-                <HistoryWithdrawalGajiTable />
+                <BasicTableWidget
+                  title="Daftar Akumulasi Gaji"
+                  description="ID dengan rekening yang sama"
+                  className={cn('[&_.rc-table-row:last-child_td]:border-b-0')}
+                  data={dataGaji?.summary ?? []}
+                  getColumns={getColumns}
+                  noGutter
+                  enablePagination={true}
+                  enableSearch={true}
+                  scroll={{
+                    x: 400,
+                  }}
+                />
               </div>
             </div>
           </div>

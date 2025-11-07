@@ -1,87 +1,20 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Badge, Button, Collapse, Text, Title } from 'rizzui';
+import { Badge, Button, Text, Title } from 'rizzui';
 import { useSession } from 'next-auth/react';
 import {
-  AmountCurrency,
-  BonusCategory,
-  GrandTotal,
-  HistoryBonusData,
-  HistoryBonusResponse,
   NetworkNode,
+  WithdrawalSummaryData,
+  WithdrawalSummaryResponse,
 } from '@/types';
-import { PiCaretDownBold } from 'react-icons/pi';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
-import BasicTableWidget from '@core/components/controlled-table/basic-table-widget';
 import cn from '@core/utils/class-names';
 import Image from 'next/image';
 import pinImg from '@public/assets/img/golden-coin.png';
 import HistoryWithdrawalGajiTable from './history';
-
-export interface TransactionStatus {
-  code: number;
-  message: string;
-}
-
-export interface Withdrawal {
-  username: string;
-  receipt: string;
-  total_amount: number;
-  total_currency: string; // formatted currency string like "Rp 14.000,00"
-  bank_name: string;
-  bank_account_number: string;
-  bank_account_name: string;
-  plan: string;
-  status: TransactionStatus;
-}
-
-const getColumns = () => [
-  {
-    title: <span className="ml-6 block">No</span>,
-    dataIndex: 'index',
-    key: 'index',
-    width: 50,
-    render: (_: any, __: any, index: number) => (
-      <Text className="ml-6 text-gray-700">{index + 1}.</Text>
-    ),
-  },
-  {
-    title: 'Tanggal',
-    dataIndex: 'attribute',
-    key: 'attribute',
-    width: 150,
-    render: ({ created_at }: { created_at: string }) => (
-      <Text className="font-medium text-gray-700">{created_at}</Text>
-    ),
-  },
-  {
-    title: <p className="text-end">Total Transfer</p>,
-    dataIndex: 'attributes',
-    key: 'attributes',
-    width: 150,
-    render: ({ withdrawal }: { withdrawal: Withdrawal }) => (
-      <Text className="text-end text-gray-700">
-        {withdrawal.total_currency}
-      </Text>
-    ),
-  },
-  {
-    title: <p className="text-end">Status</p>,
-    dataIndex: 'attributes',
-    key: 'attributes',
-    width: 150,
-    render: ({ status }: { status: TransactionStatus }) => (
-      <div className="flex items-center justify-end gap-1.5">
-        <Badge
-          renderAsDot
-          color={status.code === 1 ? 'success' : 'secondary'}
-        />
-        {status.message}
-      </div>
-    ),
-  },
-];
+import Link from 'next/link';
+import { routes } from '@/config/routes';
 
 function FleetStatus({
   data,
@@ -160,23 +93,20 @@ function FleetStatus({
           </Text>
         </div>
         <div className="relative pb-3 pt-7">
-          <Button type="submit" disabled={true} className="w-full">
-            Withdraw Gaji
-          </Button>
+          <Link href={routes.withdrawalGaji.withdrawal}>
+            <Button className="w-full">Cairkan Gaji</Button>
+          </Link>
         </div>
       </div>
     </div>
   );
 }
 
-export default function WithdrawalGajiPage({
-  bawaUsername,
-}: {
-  bawaUsername?: string;
-}) {
+export default function WithdrawalGajiPage() {
   const { data: session } = useSession();
   const [isLoading, setLoading] = useState(true);
 
+  const [dataGaji, setDataGaji] = useState<WithdrawalSummaryData | null>(null);
   const [dataHistory, setDataHistory] = useState<any[]>([]);
 
   const dataDummy: NetworkNode = {
@@ -198,18 +128,18 @@ export default function WithdrawalGajiPage({
 
     setLoading(true);
 
-    fetchWithAuth<HistoryBonusResponse>(
-      `/_commissions`,
+    fetchWithAuth<WithdrawalSummaryResponse>(
+      `/_transactions/withdrawal-summary?type=plan_a&category=salary`,
       { method: 'GET' },
       session.accessToken
     )
       .then((data) => {
-        setDataHistory([]);
+        setDataGaji(data.data);
       })
       .catch((error) => {
         console.error(error);
         // Clear the data so UI can show "no data"
-        setDataHistory([]);
+        setDataGaji(null);
       })
       .finally(() => setLoading(false));
   }, [session?.accessToken]);

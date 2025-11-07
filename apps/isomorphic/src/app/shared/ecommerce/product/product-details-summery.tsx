@@ -17,14 +17,18 @@ import {
 import { generateCartProduct } from '@/store/quick-cart/generate-cart-product';
 import GetQuantity from './get-quantity';
 import BeliSekarangButton from './beli-sekarang-button';
+import { routes } from '@/config/routes';
+import { useRouter } from 'next/navigation';
 
 export default function ProductDetailsSummery({
   product,
 }: {
   product: ProductItem | null;
 }) {
-  const { addItemToCart } = useCart();
+  const router = useRouter();
+  const { addItemToCart, resetCart } = useCart();
   const [isLoading, setLoading] = useState(false);
+  const [isLoadingB, setLoadingB] = useState(false);
 
   const methods = useForm<ProductDetailsInput>({
     mode: 'onChange',
@@ -32,17 +36,31 @@ export default function ProductDetailsSummery({
     resolver: zodResolver(productDetailsSchema),
   });
 
-  const onSubmit: SubmitHandler<ProductDetailsInput> = (data) => {
-    if (product) {
-      const item = generateCartProduct({
-        ...product,
-        quantity: data.quantity,
-      });
+  const { handleSubmit, getValues } = methods;
 
+  const onSubmit = (data: ProductDetailsInput, via: 'cart' | 'checkout') => {
+    if (!product) return;
+
+    const item = generateCartProduct({
+      ...product,
+      quantity: data.quantity,
+    });
+
+    if (via === 'checkout') {
+      resetCart();
+      setLoadingB(true);
+      setTimeout(() => {
+        setLoadingB(false);
+        addItemToCart(item, data.quantity);
+        toast.success(
+          <Text as="b">Anda akan dialihkan ke halaman Checkout</Text>
+        );
+        setTimeout(() => router.push(routes.produk.checkout), 300);
+      }, 600);
+    } else {
       setLoading(true);
       setTimeout(() => {
         setLoading(false);
-        console.log('createOrder data ->', data);
         addItemToCart(item, data.quantity);
         toast.success(<Text as="b">Produk ditambahkan ke keranjang</Text>);
       }, 600);
@@ -61,7 +79,10 @@ export default function ProductDetailsSummery({
       </div>
 
       <FormProvider {...methods}>
-        <form className="pb-8 pt-5" onSubmit={methods.handleSubmit(onSubmit)}>
+        <form
+          className="pb-8 pt-5"
+          onSubmit={handleSubmit((data) => onSubmit(data, 'cart'))}
+        >
           <div className="mb-1.5 mt-2 flex items-end font-lexend text-base">
             {(() => {
               const price = product?.attribute?.price?.amount ?? 0;
@@ -92,7 +113,13 @@ export default function ProductDetailsSummery({
           <GetQuantity stock={product?.attribute?.stock ?? 0} />
 
           <div className="grid grid-cols-1 gap-4 pt-7 @md:grid-cols-2 @xl:gap-6">
-            <BeliSekarangButton />
+            {/* Bypass checkout */}
+            <BeliSekarangButton
+              onCheckout={() => onSubmit(getValues(), 'checkout')}
+              isLoading={isLoadingB}
+            />
+
+            {/* Add to cart (normal submit) */}
             <Button
               variant="outline"
               size="xl"

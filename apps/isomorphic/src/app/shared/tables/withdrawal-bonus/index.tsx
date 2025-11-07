@@ -106,7 +106,7 @@ export default function WithdrawalBonusTable({
 
     Promise.all([
       fetchWithAuth<TransactionResponse>(
-        `/_transactions/withdrawal-summary?type=plan_a`,
+        `/_transactions/withdrawal-summary?type=plan_a&category=bonus`,
         { method: 'GET' },
         session.accessToken
       ),

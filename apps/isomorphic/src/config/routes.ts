@@ -40,6 +40,7 @@ export const routes = {
   withdrawalGaji: {
     index: '/withdrawal-gaji',
     history: '/withdrawal-gaji/history',
+    withdrawal: '/withdrawal-gaji/withdrawal',
   },
   withdrawalBonus: {
     index: '/withdrawal-bonus',

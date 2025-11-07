@@ -1,31 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { Button } from 'rizzui';
-import cn from '@core/utils/class-names';
 
 export default function BeliSekarangButton({
+  onCheckout,
+  isLoading,
   className,
 }: {
+  onCheckout: () => void;
+  isLoading?: boolean;
   className?: string;
 }) {
-  const [favorite, setFavorite] = useState<boolean>(false);
-  const [addToWishlistLoader, setAddToWishlistLoader] =
-    useState<boolean>(false);
+  const { formState } = useFormContext(); // optional if you want to check validity
 
-  function addToWishlist() {
-    setAddToWishlistLoader(true);
-    setFavorite(!favorite);
-    setTimeout(() => {
-      setAddToWishlistLoader(false);
-    }, 1500);
-  }
   return (
     <Button
       size="xl"
-      onClick={addToWishlist}
-      // isLoading={addToWishlistLoader}
-      className={cn('h-12 text-sm lg:h-14 lg:text-base', className)}
+      className={className}
+      isLoading={isLoading}
+      onClick={onCheckout}
+      disabled={!formState.isValid && !formState.isSubmitted}
     >
       Beli Sekarang
     </Button>

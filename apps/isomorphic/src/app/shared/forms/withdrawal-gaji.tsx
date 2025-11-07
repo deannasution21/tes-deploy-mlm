@@ -8,12 +8,7 @@ import { FormBlockWrapper } from '@/app/shared/invoice/form-utils';
 import { toast } from 'react-hot-toast';
 import WidgetCard from '@core/components/cards/widget-card';
 import { signOut, useSession } from 'next-auth/react';
-import {
-  TransactionWDResponse,
-  TransactionWDData,
-  BankStatusResponse,
-  BankData,
-} from '@/types';
+import { BankStatusResponse, BankData } from '@/types';
 import Swal from 'sweetalert2';
 import {
   WithdrawalBonusInput,
@@ -71,14 +66,59 @@ export interface Status {
   message: string;
 }
 
-export default function WithdrawalBonusForm(slug: any) {
+export interface WithdrawalSummarySingleResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: WithdrawalSummaryData;
+}
+
+export interface WithdrawalSummaryData {
+  username: string;
+  name: string;
+  plan: string;
+  bank_account: BankAccount;
+  commission_report: CommissionSection;
+  withdrawal: WithdrawalSection;
+  balance: AmountCurrency;
+  commission_log: CommissionSection;
+  difference: CommissionSection;
+}
+
+export interface BankAccount {
+  bank_name: string;
+  account_number: string;
+  account_name: string;
+}
+
+export interface CommissionSection {
+  salary: AmountCurrencyWithCount;
+  total: AmountCurrency;
+}
+
+export interface WithdrawalSection {
+  amount: number;
+  count: number;
+  currency: string;
+}
+
+export interface AmountCurrency {
+  amount: number;
+  currency: string;
+}
+
+export interface AmountCurrencyWithCount extends AmountCurrency {
+  count?: number;
+}
+
+export default function WithdrawalGajiForm(slug: any) {
   const { data: session } = useSession();
   const router = useRouter();
   const [isLoading, setLoading] = useState(true);
   const [proses, setProses] = useState(false);
 
   const [reset, setReset] = useState({});
-  const [dataUser, setDataUser] = useState<TransactionWDData | null>(null);
+  const [dataGaji, setDataGaji] = useState<WithdrawalSummaryData | null>(null);
   const [dataBank, setDataBank] = useState<BankData[]>([]);
 
   const doWD = async (payload: any) => {
@@ -152,8 +192,8 @@ export default function WithdrawalBonusForm(slug: any) {
     setLoading(true);
 
     Promise.all([
-      fetchWithAuth<TransactionWDResponse>(
-        `/_transactions/withdrawal-data?type=plan_a&username=${session?.user?.id || ''}&category=bonus`,
+      fetchWithAuth<WithdrawalSummarySingleResponse>(
+        `/_transactions/withdrawal-data?type=plan_a&username=${session?.user?.id || ''}&category=salary`,
         { method: 'GET' },
         session.accessToken
       ),
@@ -164,12 +204,12 @@ export default function WithdrawalBonusForm(slug: any) {
       ),
     ])
       .then(([withdrawalData, bankData]) => {
-        setDataUser(withdrawalData?.data || null);
+        setDataGaji(withdrawalData?.data || null);
         setDataBank(bankData?.data || []);
       })
       .catch((error) => {
         console.error(error);
-        setDataUser(null);
+        setDataGaji(null);
         setDataBank([]);
       })
       .finally(() => setLoading(false));
@@ -182,7 +222,7 @@ export default function WithdrawalBonusForm(slug: any) {
     <div className="@container">
       <div className="grid grid-cols-1 gap-6 3xl:gap-8">
         <WidgetCard
-          title="Form Withdrawal Bonus"
+          title="Form Withdrawal Gaji"
           titleClassName="text-[#c69731] font-bold text-2xl sm:text-2xl font-inter mb-5"
         >
           <div>
@@ -207,13 +247,14 @@ export default function WithdrawalBonusForm(slug: any) {
                         <li>
                           <Text className="break-normal">
                             Anda memiliki total{' '}
-                            <strong>{dataUser?.balance?.currency}</strong> bonus
+                            <strong>{dataGaji?.balance?.currency}</strong> poin
                           </Text>
                         </li>
                         <li>
                           <Text className="break-normal">
-                            Minimal <strong>Rp 20.000,00</strong> dalam sekali
-                            pencairan
+                            Withdrawal Gaji dapat dlakukan jika poin Anda sudah
+                            mencapai <strong>25 poin</strong>, dan akan
+                            dicairkan menjadi <strong>Rp 1.500.000</strong>
                           </Text>
                         </li>
                       </ol>
@@ -228,8 +269,8 @@ export default function WithdrawalBonusForm(slug: any) {
                           inputClassName="bg-gray-200 text-gray-600"
                         />
                         <Input
-                          label="Jumlah Bonus"
-                          value={dataUser?.balance?.currency}
+                          label="Jumlah Gaji"
+                          value={dataGaji?.balance?.currency}
                           readOnly
                           disabled
                         />
@@ -238,7 +279,7 @@ export default function WithdrawalBonusForm(slug: any) {
                           value={
                             getBankNameByCode(
                               dataBank,
-                              dataUser?.bank_account?.bank_name ?? ''
+                              dataGaji?.bank_account?.bank_name ?? ''
                             ) ?? ''
                           }
                           readOnly
@@ -246,13 +287,13 @@ export default function WithdrawalBonusForm(slug: any) {
                         />
                         <Input
                           label="No. Rekening"
-                          value={dataUser?.bank_account?.account_number}
+                          value={dataGaji?.bank_account?.account_number}
                           readOnly
                           disabled
                         />
                         <Input
                           label="Atas Nama"
-                          value={dataUser?.bank_account?.account_name}
+                          value={dataGaji?.bank_account?.account_name}
                           readOnly
                           disabled
                         />
@@ -272,7 +313,7 @@ export default function WithdrawalBonusForm(slug: any) {
                     </div>
                   </div>
                   <div className="-mb-4 flex items-center justify-end gap-4 border-t py-4 dark:bg-gray-50">
-                    <Link href="/withdrawal-bonus">
+                    <Link href="/withdrawal-gaji">
                       <Button variant="outline" className="w-full @xl:w-auto">
                         Batal
                       </Button>

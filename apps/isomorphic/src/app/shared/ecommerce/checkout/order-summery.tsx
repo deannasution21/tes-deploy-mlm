@@ -89,6 +89,7 @@ export default function OrderSummery({
             <Button
               type="submit"
               isLoading={isLoading}
+              disabled={isLoading}
               className="mt-3 w-full text-base @md:h-12"
             >
               {params?.id ? 'Ubah Pesanan' : 'Buat Pesanan'}

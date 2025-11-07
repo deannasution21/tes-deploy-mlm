@@ -14,7 +14,7 @@ const columns = [
     title: <HeaderCell title="Produk" />,
     dataIndex: 'product',
     key: 'product',
-    width: 250,
+    width: 150,
     render: (_: any, row: CartItem) => (
       <div className="flex items-center">
         <div className="relative aspect-square w-12 overflow-hidden rounded-lg">
@@ -38,7 +38,7 @@ const columns = [
     title: <HeaderCell title="Harga" align="right" />,
     dataIndex: 'price',
     key: 'price',
-    width: 200,
+    width: 150,
     render: (price: string) => (
       <Text className="text-end text-sm">{toCurrency(price)}</Text>
     ),
@@ -47,7 +47,7 @@ const columns = [
     title: <HeaderCell title="Jumlah" align="center" />,
     dataIndex: 'quantity',
     key: 'quantity',
-    width: 150,
+    width: 100,
     render: (quantity: number) => (
       <Text className="text-center text-sm font-semibold">{quantity}</Text>
     ),
@@ -57,7 +57,7 @@ const columns = [
     title: <HeaderCell title="Total Harga" align="right" />,
     dataIndex: 'price',
     key: 'price',
-    width: 200,
+    width: 150,
     render: (price: number, row: CartItem) => (
       <Text className="text-end text-sm">
         {toCurrency(price * row.quantity)}
@@ -77,7 +77,7 @@ export default function OrderViewProducts({ data }: { data: any }) {
       className="text-sm"
       variant="minimal"
       rowKey={(record) => record.id}
-      scroll={{ x: 800 }}
+      scroll={{ x: 550 }}
     />
   );
 }

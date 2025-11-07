@@ -1,25 +1,19 @@
 'use client';
 
 import Image from 'next/image';
-import { useAtomValue } from 'jotai';
-import isEmpty from 'lodash/isEmpty';
-import { PiCheckBold } from 'react-icons/pi';
-import {
-  billingAddressAtom,
-  orderNoteAtom,
-  shippingAddressAtom,
-} from '@/store/checkout';
+import { PiCheckBold, PiXBold } from 'react-icons/pi';
 import OrderViewProducts from '@/app/shared/ecommerce/order/order-products/order-view-products';
-import { useCart } from '@/store/quick-cart/cart.context';
-import { Title, Text } from 'rizzui';
+import { Title, Text, Alert } from 'rizzui';
 import cn from '@core/utils/class-names';
-import { toCurrency } from '@core/utils/to-currency';
 import { formatDate } from '@core/utils/format-date';
-import usePrice from '@core/hooks/use-price';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { toast } from 'react-hot-toast';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/router';
+import { useCheckPaymentExpiry } from '@/utils/helper';
 
 export interface TransactionDetailResponse {
   code: number;
@@ -110,16 +104,6 @@ export interface TransactionStatus {
   message: string;
 }
 
-const orderStatus = [
-  { id: '', label: 'Pesanan Dibuat' },
-  { id: '0', label: 'Menunggu Pembayaran' },
-  { id: '1', label: 'Pembayaran Selesai' },
-  { id: '2', label: 'Produk Dikirimkan' },
-  { id: '3', label: 'Pesanan Selesai' },
-];
-
-const currentOrderStatus = 2;
-
 function WidgetCard({
   title,
   className,
@@ -180,93 +164,120 @@ export default function OrderView() {
   const params = useParams();
   const invoiceID = params?.id as string;
 
-  const [invoice, setInvoice] = useState<TransactionDetailResponse | null>(
-    null
-  );
-  const [loading, setLoading] = useState(true);
+  const [invoice, setInvoice] = useState<TransactionData | null>(null);
+  const [isLoading, setLoading] = useState(true);
+
+  const orderStatus = [
+    { id: 0, label: 'Pesanan Dibuat' },
+    { id: 1, label: 'Menunggu Pembayaran' },
+    { id: -2, label: 'Pembayaran Expired' },
+    { id: 2, label: 'Pembayaran Selesai' },
+    { id: 3, label: 'Produk Dikirimkan' },
+    { id: 4, label: 'Pesanan Selesai' },
+  ];
+
+  const currentStatus = Number(invoice?.attribute?.status?.code ?? 0);
+
+  const fetchInvoice = async () => {
+    if (!session?.accessToken) return;
+
+    fetchWithAuth<TransactionDetailResponse>(
+      `/_transactions/${invoiceID}`,
+      { method: 'GET' },
+      session.accessToken
+    )
+      .then((data) => {
+        setInvoice(data.data); // <--- ADD THIS LINE
+      })
+      .catch((error) => {
+        console.error(error);
+        setInvoice(null);
+      })
+      .finally(() => setLoading(false));
+  };
 
   useEffect(() => {
-    const getDataInvoice = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/_transactions/${invoiceID}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-app-token': session?.accessToken ?? '',
-            },
-          }
-        );
+    setLoading(true);
 
-        if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
+    fetchInvoice();
+  }, [session?.accessToken]);
 
-        const data = (await res.json()) as TransactionDetailResponse;
-        setInvoice(data);
-      } catch (error) {
-        console.error('Fetch data error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  useEffect(() => {
+    const expired_at = invoice?.attribute?.payment?.expired_at;
+    if (!expired_at) return;
 
-    if (session?.accessToken && invoiceID) getDataInvoice();
-  }, [session?.accessToken, invoiceID]);
+    const expiryTime = new Date(expired_at.replace(' ', 'T'));
+    if (isNaN(expiryTime.getTime())) return;
 
-  if (!invoice) return <div>Invoice tidak ditemukan.</div>;
+    const now = new Date();
 
-  // const { items, total, totalItems } = useCart();
-  // const { price: subtotal } = usePrice(
-  //   items && {
-  //     amount: total,
-  //   }
-  // );
-  // const { price: totalPrice } = usePrice({
-  //   amount: total,
-  // });
+    if (now >= expiryTime) {
+      fetchInvoice();
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      fetchInvoice();
+    }, expiryTime.getTime() - now.getTime());
+
+    return () => clearTimeout(timeout);
+  }, [invoice?.attribute?.payment?.expired_at]);
+
+  if (isLoading) {
+    return (
+      <div className="py-20 text-center">
+        <p>Sedang memuat data...</p>
+      </div>
+    );
+  }
+
+  if (!invoice) {
+    return (
+      <Alert variant="flat" color="success" className="mt-5">
+        <Text className="font-semibold">Invoice tidak ditemukan</Text>
+        <Text className="break-normal">
+          Invoice bisa jadi salah atau sudah kadaluarsa
+        </Text>
+      </Alert>
+    );
+  }
 
   return (
     <div className="@container">
-      <div className="flex flex-wrap justify-center border-b border-t border-gray-300 py-4 font-medium text-gray-700 @5xl:justify-start">
-        <span className="my-2 border-r border-muted px-5 py-0.5 first:ps-0 last:border-r-0">
+      <div className="flex flex-wrap justify-center gap-3 border-b border-t border-gray-300 py-4 font-medium text-gray-700 @5xl:justify-between">
+        <span className="@5xl:my-2">
           {/* October 22, 2022 at 10:30 pm */}
           {formatDate(
-            new Date(invoice?.data?.attribute?.waktu),
+            new Date(invoice?.attribute?.waktu),
             'MMMM D, YYYY'
-          )}{' '}
-          at {formatDate(new Date(invoice?.data?.attribute?.waktu), 'h:mm A')}
+          )} at {formatDate(new Date(invoice?.attribute?.waktu), 'h:mm A')}
         </span>
-        <span className="my-2 border-r border-muted px-5 py-0.5 first:ps-0 last:border-r-0">
-          {invoice?.data?.attribute?.form_data?.products?.length ?? 0} Produk
-        </span>
-        <span className="my-2 border-r border-muted px-5 py-0.5 first:ps-0 last:border-r-0">
-          Total{' '}
-          {invoice?.data?.attribute?.bill_payment?.total?.nominal_rp ?? 'Rp 0'}
-        </span>
-        <span className="my-2 ms-5 rounded-3xl border-r border-muted bg-green-lighter px-2.5 py-1 text-xs text-green-dark first:ps-0 last:border-r-0">
-          {invoice?.data?.attribute?.status?.message}
+        <span
+          className={`rounded-3xl px-2.5 py-1 text-xs uppercase ${currentStatus === -2 ? 'bg-red-lighter text-red-dark' : currentStatus === 0 ? 'bg-green-lighter text-green-dark' : 'bg-primary-lighter text-primary-dark'} @5xl:my-2`}
+        >
+          {invoice?.attribute?.status?.message}
         </span>
       </div>
       <div className="items-start pt-10 @5xl:grid @5xl:grid-cols-12 @5xl:gap-7 @6xl:grid-cols-10 @7xl:gap-10">
         <div className="space-y-7 @5xl:col-span-8 @5xl:space-y-10 @6xl:col-span-7">
           <div className="pb-5">
             <OrderViewProducts
-              data={invoice?.data?.attribute?.form_data?.products ?? []}
+              data={invoice?.attribute?.form_data?.products ?? []}
             />
             <div className="border-t border-muted pt-7 @5xl:mt-3">
               <div className="ms-auto max-w-lg space-y-6">
                 <div className="flex justify-between font-medium">
                   Subtotal{' '}
                   <span>
-                    {invoice?.data?.attribute?.bill_payment?.sub_total
-                      ?.nominal_rp ?? 'Rp 0'}
+                    {invoice?.attribute?.bill_payment?.sub_total?.nominal_rp ??
+                      'Rp 0'}
                   </span>
                 </div>
                 <div className="flex justify-between font-medium">
                   Biaya Admin{' '}
                   <span>
                     {' '}
-                    {invoice?.data?.attribute?.bill_payment?.fee?.nominal_rp ??
+                    {invoice?.attribute?.bill_payment?.fee?.nominal_rp ??
                       'Rp 0'}
                   </span>
                 </div>
@@ -276,15 +287,15 @@ export default function OrderView() {
                 <div className="flex justify-between border-t border-muted pt-5 text-base font-semibold">
                   Total{' '}
                   <span>
-                    {invoice?.data?.attribute?.bill_payment?.total
-                      ?.nominal_rp ?? 'Rp 0'}
+                    {invoice?.attribute?.bill_payment?.total?.nominal_rp ??
+                      'Rp 0'}
                   </span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="">
+          <div>
             <Title
               as="h3"
               className="mb-3.5 text-base font-semibold @5xl:mb-5 @7xl:text-lg"
@@ -293,19 +304,31 @@ export default function OrderView() {
             </Title>
 
             <div className="space-y-4">
-              <span className="my-2 py-0.5 font-medium text-red-500">
-                Bayar Sebelum: {/* October 22, 2022 at 10:30 pm */}
-                {formatDate(
-                  new Date(invoice?.data?.attribute?.payment?.expired_at),
-                  'MMMM D, YYYY'
-                )}{' '}
-                at{' '}
-                {formatDate(
-                  new Date(invoice?.data?.attribute?.payment?.expired_at),
-                  'h:mm A'
+              {currentStatus === 0 ? (
+                <span className="my-2 py-0.5 font-medium text-red-500">
+                  Bayar Sebelum: {/* October 22, 2022 at 10:30 pm */}
+                  {formatDate(
+                    new Date(invoice?.attribute?.payment?.expired_at),
+                    'MMMM D, YYYY'
+                  )}{' '}
+                  at{' '}
+                  {formatDate(
+                    new Date(invoice?.attribute?.payment?.expired_at),
+                    'h:mm A'
+                  )}
+                </span>
+              ) : currentStatus === -2 ? (
+                <span className="my-2 py-0.5 font-medium text-red-500">
+                  Pembayaran Expired
+                </span>
+              ) : (
+                ''
+              )}
+              <div className="relative flex items-center justify-between rounded-lg border border-gray-100 px-5 py-5 font-medium shadow-sm transition-shadow @5xl:px-7">
+                {currentStatus === -2 && (
+                  <div className="absolute left-0 h-full w-full bg-gray-300/50"></div>
                 )}
-              </span>
-              <div className="flex items-center justify-between rounded-lg border border-gray-100 px-5 py-5 font-medium shadow-sm transition-shadow @5xl:px-7">
+
                 <div className="flex w-full items-center">
                   <div className="shrink-0">
                     <Image
@@ -320,22 +343,18 @@ export default function OrderView() {
                   </div>
                   <div className="flex flex-col ps-4">
                     <Text as="span" className="font-lexend text-gray-700">
-                      {invoice?.data?.attribute?.payment?.payment_method ?? '-'}{' '}
+                      {invoice?.attribute?.payment?.payment_method ?? '-'}{' '}
                       {' | '}
-                      {invoice?.data?.attribute?.payment?.payment_channel ??
-                        '-'}
+                      {invoice?.attribute?.payment?.payment_channel ?? '-'}
                     </Text>
                     <div className="flex flex-col gap-2 md:flex-row">
                       <span className="pt-1 text-[14px] font-normal text-gray-500">
-                        {invoice?.data?.attribute?.payment?.payment_number ??
-                          '-'}
-                        - AN.{' '}
-                        {invoice?.data?.attribute?.payment?.payment_name ?? '-'}
+                        {invoice?.attribute?.payment?.payment_number ?? '-'}-
+                        AN. {invoice?.attribute?.payment?.payment_name ?? '-'}
                       </span>
                       <CopyButton
                         text={
-                          invoice?.data?.attribute?.payment?.payment_number ??
-                          '-'
+                          invoice?.attribute?.payment?.payment_number ?? '-'
                         }
                       />
                     </div>
@@ -351,30 +370,54 @@ export default function OrderView() {
             childrenWrapperClass="py-5 @5xl:py-8 flex"
           >
             <div className="ms-2 w-full space-y-7 border-s-2 border-gray-100">
-              {orderStatus.map((item) => (
-                <div
-                  key={item.id}
-                  className={cn(
-                    "relative ps-6 text-sm font-medium before:absolute before:-start-[9px] before:top-px before:h-5 before:w-5 before:-translate-x-px before:rounded-full before:bg-gray-100 before:content-[''] after:absolute after:-start-px after:top-5 after:h-10 after:w-0.5 after:content-[''] last:after:hidden",
-                    invoice?.data?.attribute?.status?.code > item.id
-                      ? 'before:bg-primary after:bg-primary'
-                      : 'after:hidden',
-                    invoice?.data?.attribute?.status?.code === item.id &&
-                      'before:bg-primary'
-                  )}
-                >
-                  {invoice?.data?.attribute?.status?.code >= item.id ? (
-                    <span className="absolute -start-1.5 top-1 text-white">
-                      <PiCheckBold className="h-auto w-3" />
-                    </span>
-                  ) : null}
+              {orderStatus.map((item, index) => {
+                const isExpired = item.id === -2;
+                const isCompleted =
+                  currentStatus === -2
+                    ? item.id >= 0 && item.id < 1 // only first steps before expired
+                    : currentStatus > item.id;
+                const isActive = currentStatus === item.id;
 
-                  {item.label}
-                </div>
-              ))}
+                return (
+                  <div
+                    key={item.id}
+                    className={cn(
+                      'relative ps-6 text-sm font-medium before:absolute before:-start-[9px] before:top-px before:h-5 before:w-5 before:-translate-x-px before:rounded-full before:content-[""] after:absolute after:-start-px after:top-5 after:h-10 after:w-0.5 after:content-[""] last:after:hidden',
+                      isExpired
+                        ? 'text-red-600 before:bg-red-500'
+                        : isCompleted || isActive
+                          ? 'text-gray-900 before:bg-primary'
+                          : 'text-gray-500 before:bg-gray-200',
+                      isCompleted && 'after:bg-primary',
+                      isExpired && 'after:hidden'
+                    )}
+                  >
+                    {/* Icon */}
+                    {isCompleted && !isExpired && (
+                      <span className="absolute -start-1.5 top-1 text-white">
+                        <PiCheckBold className="h-auto w-3" />
+                      </span>
+                    )}
+
+                    {/* Expired icon */}
+                    {isExpired && currentStatus === -2 && (
+                      <span className="absolute -start-1.5 top-1 text-white">
+                        <PiXBold className="h-auto w-3 text-white" />
+                      </span>
+                    )}
+
+                    {item.label}
+                    {isExpired && currentStatus === -2 && (
+                      <p className="mt-1 text-xs text-gray-500">
+                        Pembayaran telah melebihi batas waktu. Silakan lakukan
+                        pesanan baru.
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </WidgetCard>
-
           <WidgetCard
             title="Informasi Pembeli"
             childrenWrapperClass="py-5 @5xl:py-8 flex"
@@ -384,17 +427,17 @@ export default function OrderView() {
                 as="h3"
                 className="mb-2.5 text-base font-semibold @7xl:text-lg"
               >
-                {invoice?.data?.attribute?.form_data?.customer_name ?? '-'}
+                {invoice?.attribute?.form_data?.customer_name ?? '-'} (
+                {'@' + (invoice?.attribute?.form_data?.username ?? '-')})
               </Title>
-              <Text as="p" className="mb-2 break-all last:mb-0">
-                {'@' + (invoice?.data?.attribute?.form_data?.username ?? '-')}
+              <Text as="p" className="mb-2 break-all uppercase last:mb-0">
+                {session?.user?.role}
               </Text>
               <Text as="p" className="mb-2 last:mb-0">
-                {invoice?.data?.attribute?.form_data?.customer_phone ?? '-'}
+                {invoice?.attribute?.form_data?.customer_phone ?? '-'}
               </Text>
             </div>
           </WidgetCard>
-
           <WidgetCard
             title="Alamat Pengiriman"
             childrenWrapperClass="@5xl:py-6 py-5"
@@ -403,13 +446,16 @@ export default function OrderView() {
               as="h3"
               className="mb-2.5 text-base font-semibold @7xl:text-lg"
             >
-              {invoice?.data?.attribute?.form_data?.shipping_method ?? '-'}
+              {invoice?.attribute?.form_data?.shipping_method ?? '-'}
             </Title>
-            <Text as="p" className="mb-2 leading-loose last:mb-0">
-              {invoice?.data?.attribute?.form_data?.shipping_address ?? '-'},{' '}
-              {invoice?.data?.attribute?.form_data?.province ?? '-'},{' '}
-              {invoice?.data?.attribute?.form_data?.city ?? '-'}
-            </Text>
+            {invoice?.attribute?.form_data?.shipping_method ===
+              'PENGIRIMAN BIASA' && (
+              <Text as="p" className="mb-2 leading-loose last:mb-0">
+                {invoice?.attribute?.form_data?.shipping_address ?? '-'},{' '}
+                {invoice?.attribute?.form_data?.province ?? '-'},{' '}
+                {invoice?.attribute?.form_data?.city ?? '-'}
+              </Text>
+            )}
           </WidgetCard>
         </div>
       </div>

@@ -356,6 +356,18 @@ export interface Regencies {
   name: string;
 }
 
+export interface Districs {
+  id: string;
+  regency_id: string;
+  name: string;
+}
+
+export interface Villages {
+  id: string;
+  district_id: string;
+  name: string;
+}
+
 // Root response
 export interface TransactionResponse {
   code: number;
@@ -502,4 +514,49 @@ export interface BonusAttribute {
   total: AmountCurrency;
   description: string;
   type: 'bonus_sponsor' | 'bonus_pairing';
+}
+
+export interface WithdrawalSummaryResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: WithdrawalSummaryData;
+  token: string;
+}
+
+export interface WithdrawalSummaryData {
+  detail_users: WithdrawalUserDetail;
+  count: number;
+  summary: WithdrawalSummaryItem[];
+}
+
+export interface WithdrawalUserDetail {
+  type: string; // e.g., "plan_a"
+  username: string;
+  name: string;
+  bank_name: string;
+  account_number: string;
+  account_name: string;
+}
+
+export interface WithdrawalSummaryItem {
+  username: string;
+  name: string;
+  plan: string;
+  commission_report: CommissionSection;
+  withdrawal: WithdrawalSection;
+  balance: AmountCurrency;
+  commission_log: CommissionSection;
+  difference: CommissionSection;
+}
+
+export interface CommissionSection {
+  salary: WithdrawalSection;
+  total: AmountCurrency;
+}
+
+export interface WithdrawalSection {
+  amount: number;
+  count: number;
+  currency: string;
 }

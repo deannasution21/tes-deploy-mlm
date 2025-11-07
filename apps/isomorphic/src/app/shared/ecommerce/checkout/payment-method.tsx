@@ -151,7 +151,7 @@ export default function PaymentMethod({
           render={({ field: { onChange, value } }) => (
             <Select
               label="Pilih Metode Pembayaran"
-              dropdownClassName="!z-10"
+              dropdownClassName="!z-10 h-fit"
               inPortal={false}
               placeholder="Pilih Metode Pembayaran"
               options={dataMetodePembayaran}

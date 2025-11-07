@@ -29,12 +29,22 @@ const allStatus = {
   refunded: statusColors.default,
   SUCCESS: statusColors.success,
   FAILED: statusColors.danger,
+  "0": statusColors.warning,
+  "1": statusColors.success,
+  "-2": statusColors.danger,
 };
 
 export type StatusTypes = keyof typeof allStatus;
 
 export function getStatusBadge(status: string) {
-  const statusLower = status.toLowerCase() as StatusTypes;
+  const statusLower =
+    status === "0"
+      ? "pending"
+      : status === "-2"
+        ? "overdue"
+        : status === "1"
+          ? "online"
+          : (status.toLowerCase() as StatusTypes);
   if (statusLower in allStatus) {
     return (
       <Flex align="center" gap="2" className="w-auto">
@@ -42,7 +52,13 @@ export function getStatusBadge(status: string) {
         <Text
           className={cn("font-medium capitalize", allStatus[statusLower][0])}
         >
-          {replaceUnderscoreDash(statusLower)}
+          {status === "0"
+            ? "Menunggu Pembayaran"
+            : status === "1"
+              ? "Pembayaran Berhasil"
+              : status === "-2"
+                ? "Transaksi Dibatalkan/Expired"
+                : replaceUnderscoreDash(statusLower)}
         </Text>
       </Flex>
     );

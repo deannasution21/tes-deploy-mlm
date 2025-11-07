@@ -11,9 +11,10 @@ import { useTanStackTable } from '@core/components/table/custom/use-TanStack-Tab
 import TablePagination from '@core/components/table/pagination';
 import { OrdersDataType } from '@/app/shared/ecommerce/dashboard/recent-order';
 import Filters from './filters';
-import { TableVariantProps } from 'rizzui';
+import { Alert, TableVariantProps, Text } from 'rizzui';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export interface TransactionResponse {
   code: number;
@@ -89,32 +90,25 @@ export default function OrderTable({
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    const getDataPesanan = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/_transactions/history-transaction/${session?.user?.id}?type=payment`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-app-token': session?.accessToken ?? '',
-            },
-          }
-        );
+    if (!session?.accessToken) return;
 
-        if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
+    setLoading(true);
 
-        const data = (await res.json()) as TransactionResponse;
+    fetchWithAuth<TransactionResponse>(
+      `/_transactions/history-transaction/${session?.user?.id}?type=payment`,
+      { method: 'GET' },
+      session.accessToken
+    )
+      .then((data) => {
         setDataPesanan(data?.data?.transactions);
-        setData(data?.data?.transactions); // <--- ADD THIS LINE
-      } catch (error) {
-        console.error('Fetch data error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (session?.accessToken) getDataPesanan();
+        setData(data?.data?.transactions);
+      })
+      .catch((error) => {
+        console.error(error);
+        setDataPesanan([]);
+        setData([]);
+      })
+      .finally(() => setLoading(false));
   }, [session?.accessToken]);
 
   const { table, setData } = useTanStackTable<Transaction>({
@@ -127,17 +121,27 @@ export default function OrderTable({
           pageSize: 10,
         },
       },
-      meta: {
-        // handleDeleteRow: (row) => {
-        //   setData((prev) => prev.filter((r) => r.ref_id !== row.ref_id));
-        // },
-      },
       enableColumnResizing: false,
     },
   });
 
+  if (isLoading) {
+    return (
+      <div className="py-20 text-center">
+        <p>Sedang memuat data...</p>
+      </div>
+    );
+  }
+
   return (
     <div className={className}>
+      <Alert variant="flat" color="success" className="mb-7">
+        <Text className="font-semibold">Informasi</Text>
+        <Text className="break-normal">
+          Klik pada kode <strong>INVOICE</strong> untuk menampilkan detail
+          Pesanan
+        </Text>
+      </Alert>
       {!hideFilters && <Filters table={table} />}
       <Table
         table={table}
@@ -145,9 +149,6 @@ export default function OrderTable({
         classNames={{
           container: 'border border-muted rounded-md border-t-0',
           rowClassName: 'last:border-0',
-        }}
-        components={{
-          expandedComponent: CustomExpandedComponent,
         }}
       />
       {!hidePagination && <TablePagination table={table} className="py-4" />}

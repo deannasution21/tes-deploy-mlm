@@ -131,7 +131,10 @@ export default function AddressInfo({
 
   return (
     <div
-      className={cn('grid grid-cols-2 gap-3 @lg:gap-4 @2xl:gap-5', className)}
+      className={cn(
+        'grid grid-cols-1 gap-3 @lg:gap-4 @2xl:gap-5 xl:grid-cols-2',
+        className
+      )}
     >
       {title && (
         <Title as="h3" className="col-span-full font-semibold">
@@ -167,7 +170,7 @@ export default function AddressInfo({
         render={({ field: { onChange, value } }) => (
           <Select
             label="Provinsi"
-            dropdownClassName="!z-10"
+            dropdownClassName="!z-10 h-fit"
             inPortal={false}
             placeholder="Pilih Provinsi"
             options={dataProvinsi}
@@ -196,7 +199,7 @@ export default function AddressInfo({
         render={({ field: { onChange, value } }) => (
           <Select
             label="Kota/Kabupaten"
-            dropdownClassName="!z-10"
+            dropdownClassName="!z-10 h-fit"
             inPortal={false}
             placeholder="Pilih Kabupaten"
             options={dataKabupaten}
@@ -226,7 +229,7 @@ export default function AddressInfo({
         render={({ field: { onChange, value } }) => (
           <Select
             label="Kecamatan"
-            dropdownClassName="!z-10"
+            dropdownClassName="!z-10 h-fit"
             inPortal={false}
             placeholder="Pilih Kecamatan"
             options={dataKecamatan}
@@ -250,7 +253,7 @@ export default function AddressInfo({
         render={({ field: { onChange, value } }) => (
           <Select
             label="Kelurahan"
-            dropdownClassName="!z-10"
+            dropdownClassName="!z-10 h-fit"
             inPortal={false}
             placeholder="Pilih Kelurahan"
             options={dataKelurahan}
@@ -266,6 +269,14 @@ export default function AddressInfo({
           />
         )}
       />
+      <style>
+        {`
+    textarea:-webkit-autofill {
+      border-color: inherit !important;
+    }
+  `}
+      </style>
+
       <Textarea
         label="Alamat"
         placeholder="Alamat"

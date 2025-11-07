@@ -537,6 +537,16 @@ export interface WithdrawalUserDetail {
   bank_name: string;
   account_number: string;
   account_name: string;
+  point: Point;
+}
+
+export interface Point {
+  point_left: number;
+  point_right: number;
+  bonus_pairing: number;
+  bonus_flushed: number;
+  total_point: number;
+  bonus_salary: number;
 }
 
 export interface WithdrawalSummaryItem {

@@ -69,7 +69,7 @@ export default function LihatPinTable({ className }: { className?: string }) {
       <div className="grid grid-cols-1 gap-6 3xl:gap-8">
         <WidgetCard
           className={cn('p-0 lg:p-0', className)}
-          title="History Transfer Pin"
+          title="Daftar PIN"
           titleClassName="w-[19ch]"
           actionClassName="w-full ps-0 items-center"
           headerClassName="mb-6 items-start flex-col @[57rem]:flex-row @[57rem]:items-center px-5 pt-5 lg:pt-7 lg:px-7"

@@ -7,6 +7,7 @@ import {
   NetworkNode,
   WithdrawalSummaryData,
   WithdrawalSummaryResponse,
+  WithdrawalUserDetail,
 } from '@/types';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import cn from '@core/utils/class-names';
@@ -20,7 +21,7 @@ function FleetStatus({
   data,
   className,
 }: {
-  data: NetworkNode;
+  data: WithdrawalUserDetail;
   className?: string;
 }) {
   return (
@@ -45,7 +46,7 @@ function FleetStatus({
         </div>
         <div className="mb-2 text-center">
           <Title as="h4" className="text-primary">
-            Admin
+            {data?.name}
           </Title>
         </div>
         <div className="mb-5 flex justify-center gap-2">
@@ -60,7 +61,7 @@ function FleetStatus({
                 Poin Kiri:
               </Title>
               <Text as="span" className="text-lg">
-                {0}
+                {data?.point?.point_left ?? 0}
               </Text>
             </div>
           </Badge>
@@ -75,7 +76,7 @@ function FleetStatus({
                 Poin Kanan:
               </Title>
               <Text as="span" className="text-lg">
-                {0}
+                {data?.point?.point_right ?? 0}
               </Text>
             </div>
           </Badge>
@@ -83,7 +84,9 @@ function FleetStatus({
         <div className="relative border-b border-gray-300 pb-7 text-center">
           <Title as="h6" className="mb-3 text-center">
             Total Poin Anda:{' '}
-            <strong className="text-xl text-primary">7 Poin</strong>
+            <strong className="text-xl text-primary">
+              {data?.point?.total_point ?? 0} Poin
+            </strong>
           </Title>
           <Text as="p" className="text-stone-500">
             Withdrawal Gaji dapat dlakukan jika poin Anda sudah mencapai{' '}
@@ -154,7 +157,7 @@ export default function WithdrawalGajiPage() {
           <div className="grid grid-cols-1 gap-6 @4xl:grid-cols-2 @7xl:grid-cols-12 3xl:gap-8">
             {/* FleetStatus first on small screens */}
             <FleetStatus
-              data={dataDummy}
+              data={dataGaji?.detail_users}
               className="order-1 @7xl:order-2 @7xl:col-span-4 @7xl:col-start-9 @7xl:row-start-1 @7xl:row-end-3 @7xl:h-full"
             />
 

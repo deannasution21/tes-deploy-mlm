@@ -77,12 +77,22 @@ export interface WithdrawalSummaryData {
   username: string;
   name: string;
   plan: string;
+  point: Point;
   bank_account: BankAccount;
   commission_report: CommissionSection;
   withdrawal: WithdrawalSection;
   balance: AmountCurrency;
   commission_log: CommissionSection;
   difference: CommissionSection;
+}
+
+export interface Point {
+  point_left: number;
+  point_right: number;
+  bonus_pairing: number;
+  bonus_flushed: number;
+  total_point: number;
+  bonus_salary: number;
 }
 
 export interface BankAccount {
@@ -246,8 +256,17 @@ export default function WithdrawalGajiForm(slug: any) {
                       <ol className="list-disc ps-5">
                         <li>
                           <Text className="break-normal">
+                            Anda memiliki{' '}
+                            <strong>{dataGaji?.point?.point_left}</strong> poin
+                            kiri dan{' '}
+                            <strong>{dataGaji?.point?.point_right}</strong> poin
+                            kanan
+                          </Text>
+                        </li>
+                        <li>
+                          <Text className="break-normal">
                             Anda memiliki total{' '}
-                            <strong>{dataGaji?.balance?.currency}</strong> poin
+                            <strong>{dataGaji?.point?.total_point}</strong> poin
                           </Text>
                         </li>
                         <li>
@@ -308,6 +327,7 @@ export default function WithdrawalGajiForm(slug: any) {
                           prefix={'Rp'}
                           type="number"
                           error={errors?.amount?.message as string}
+                          disabled
                         />
                       </FormBlockWrapper>
                     </div>
@@ -320,8 +340,9 @@ export default function WithdrawalGajiForm(slug: any) {
                     </Link>
                     <Button
                       type="submit"
-                      isLoading={proses}
-                      disabled={proses}
+                      // isLoading={proses}
+                      // disabled={proses}
+                      disabled={true}
                       className="w-full @xl:w-auto"
                     >
                       Cairkan Sekarang

@@ -94,6 +94,7 @@ export default function WithdrawalBonusForm(slug: any) {
         body: JSON.stringify({
           username: payload?.username,
           amount: payload?.amount,
+          category: 'bonus',
           type: 'withdrawal',
           type_plan: 'plan_a',
         }),

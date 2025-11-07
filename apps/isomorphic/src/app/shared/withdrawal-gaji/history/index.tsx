@@ -111,7 +111,7 @@ export default function HistoryWithdrawalGajiTable({
     setLoading(true);
 
     fetchWithAuth<TransactionsResponse>(
-      `/_transactions/history-transaction/${session?.user?.id}?type=withdrawal`,
+      `/_transactions/history-transaction/${session?.user?.id}?type=withdrawal_salary`,
       { method: 'GET' },
       session.accessToken
     )

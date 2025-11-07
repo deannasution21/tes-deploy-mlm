@@ -124,7 +124,7 @@ export default function HistoryWithdrawalBonusTable({
     setLoading(true);
 
     fetchWithAuth<TransactionsResponse>(
-      `/_transactions/history-transaction/${slug ?? session?.user?.id}?type=withdrawal`,
+      `/_transactions/history-transaction/${slug ?? session?.user?.id}?type=withdrawal_bonus`,
       { method: 'GET' },
       session.accessToken
     )

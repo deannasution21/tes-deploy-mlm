@@ -1,19 +1,21 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
-import { usePathname } from 'next/navigation';
-import { Title, Collapse } from 'rizzui';
+import { usePathname, useRouter } from 'next/navigation';
+import { Title, Collapse, Text } from 'rizzui';
 import cn from '@core/utils/class-names';
-import { PiCaretDownBold } from 'react-icons/pi';
+import { PiCaretDownBold, PiSignOut } from 'react-icons/pi';
 import {
   menuItemsAdmin,
   menuItemsUser,
   menuItemsStockist,
   menuItemsStockistAdminPin,
 } from '@/layouts/helium/helium-menu-items';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
+import { toast } from 'react-hot-toast';
 
 export function HeliumSidebarMenu() {
   const pathname = usePathname();
+  const router = useRouter();
   const session = useSession();
   const role = session?.data?.user?.role || 'user';
   const username = session?.data?.user?.id;
@@ -26,12 +28,18 @@ export function HeliumSidebarMenu() {
           ? menuItemsStockist
           : menuItemsUser;
 
+  const handleLogout = async () => {
+    await signOut({ redirect: false }); // disable default redirect
+    toast.success(<Text as="b">Anda telah keluar</Text>);
+    router.push(role === 'admin' ? '/signin-admin-ipg-2025' : '/signin');
+  };
+
   if (menuFinal?.length === 0) {
     return <div></div>;
   }
 
   return (
-    <div className="mt-4 pb-3 3xl:mt-6">
+    <div className="mb-20 mt-4 pb-3 3xl:mt-6">
       {menuFinal.map((item, index) => {
         const isActive = pathname === (item?.href as string);
         const pathnameExistInDropdowns: any = item?.dropdownItems?.filter(
@@ -156,6 +164,33 @@ export function HeliumSidebarMenu() {
           </Fragment>
         );
       })}
+      <Title
+        as="h6"
+        className={cn(
+          'mb-2 mt-6 truncate px-6 text-xs font-normal uppercase tracking-widest text-gray-500 dark:text-gray-500 2xl:px-8 3xl:mt-7'
+        )}
+      ></Title>
+      <Link
+        href="#"
+        onClick={(e) => {
+          e.preventDefault(); // prevent page reload
+          handleLogout();
+        }}
+        className={cn(
+          'group relative mx-3 my-0.5 flex items-center justify-between rounded-md px-3 py-2 font-medium capitalize text-gray-300/70 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-500 dark:hover:text-gray-700 lg:my-1 2xl:mx-5 2xl:my-2'
+        )}
+      >
+        <div className="flex items-center truncate">
+          <span
+            className={cn(
+              'me-2 inline-flex h-5 w-5 items-center justify-center rounded-md text-gray-300/70 transition-colors duration-200 group-hover:text-gray-500 dark:text-gray-500 [&>svg]:h-[20px] [&>svg]:w-[20px]'
+            )}
+          >
+            <PiSignOut />
+          </span>
+          <span className="truncate">Keluar</span>
+        </div>
+      </Link>
     </div>
   );
 }

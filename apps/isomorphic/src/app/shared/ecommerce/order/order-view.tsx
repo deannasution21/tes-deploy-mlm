@@ -167,10 +167,9 @@ export default function OrderView() {
   const orderStatus = [
     { id: 0, label: 'Pesanan Dibuat' },
     { id: 1, label: 'Menunggu Pembayaran' },
-    { id: 2, label: 'Pembayaran Expired' },
-    { id: 3, label: 'Pembayaran Selesai' },
-    { id: 4, label: 'Produk Dikirimkan' },
-    { id: 5, label: 'Pesanan Selesai' },
+    { id: 2, label: 'Pembayaran Dibatalkan' },
+    { id: 3, label: 'Pembayaran Berhasil' },
+    { id: 4, label: 'Pesanan Selesai' },
   ];
 
   const rawStatus = Number(invoice?.attribute?.status?.code ?? 0);
@@ -296,6 +295,11 @@ export default function OrderView() {
             <OrderViewProducts
               data={invoice?.attribute?.form_data?.products ?? []}
             />
+            <div className="mb-3">
+              <small className="italic text-green-700 xl:hidden">
+                *Geser table ke samping untuk melihat keseluruhan data
+              </small>
+            </div>
             <div className="border-t border-muted pt-7 @5xl:mt-3">
               <div className="ms-auto max-w-lg space-y-6">
                 <div className="flex justify-between font-medium">
@@ -443,8 +447,8 @@ export default function OrderView() {
                     {item.label}
                     {isExpired && currentStatus === 2 && (
                       <p className="mt-1 text-xs text-gray-500">
-                        Pembayaran telah melebihi batas waktu. Silakan lakukan
-                        pesanan baru.
+                        Pembayaran telah melebihi batas waktu atau sudah tidak
+                        valid. Silakan lakukan pesanan baru.
                       </p>
                     )}
                   </div>

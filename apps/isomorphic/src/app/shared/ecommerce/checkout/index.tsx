@@ -483,7 +483,7 @@ export default function CheckoutPageWrapper({
 
   const [dataUser, setDataUser] = useState<UserData | null>(null);
   const [dataPayment, setDataPayment] = useState<PaymentOption[]>([]);
-  const { items } = useCart();
+  const { items, resetCart } = useCart();
   const [fee, setFee] = useState(0);
   const [selectedProvinceName, setSelectedProvinceName] = useState<string>('');
   const [selectedCityName, setSelectedCityName] = useState<string>('');
@@ -543,6 +543,7 @@ export default function CheckoutPageWrapper({
     )
       .then((data) => {
         toast.success(<Text as="b">Pesanan berhasil dibuat</Text>);
+        resetCart();
         const invoiceID = data?.data?.id;
         setTimeout(() => {
           router.push(routes.produk.pesanan.detail(invoiceID));

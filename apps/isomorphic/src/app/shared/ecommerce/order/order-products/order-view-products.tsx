@@ -35,6 +35,15 @@ const columns = [
     ),
   },
   {
+    title: <HeaderCell title="PIN Generate" align="right" />,
+    dataIndex: 'total_pin',
+    key: 'total_pin',
+    width: 150,
+    render: (total_pin: number) => (
+      <Text className="text-end text-sm">{total_pin}</Text>
+    ),
+  },
+  {
     title: <HeaderCell title="Harga" align="right" />,
     dataIndex: 'price',
     key: 'price',
@@ -77,7 +86,7 @@ export default function OrderViewProducts({ data }: { data: any }) {
       className="text-sm"
       variant="minimal"
       rowKey={(record) => record.id}
-      scroll={{ x: 550 }}
+      scroll={{ x: 700 }}
     />
   );
 }

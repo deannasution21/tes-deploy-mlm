@@ -121,7 +121,7 @@ export default function ProductDetailsSummery({
 
             {/* Add to cart (normal submit) */}
             <Button
-              variant="outline"
+              variant="flat"
               size="xl"
               type="submit"
               isLoading={isLoading}

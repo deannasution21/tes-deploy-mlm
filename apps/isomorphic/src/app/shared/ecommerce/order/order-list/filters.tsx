@@ -25,7 +25,7 @@ const statusOptions = [
   },
   {
     value: '-2',
-    label: 'Pembayaran Dibatalkan',
+    label: 'Transaksi Dibatalkan',
   },
 ];
 

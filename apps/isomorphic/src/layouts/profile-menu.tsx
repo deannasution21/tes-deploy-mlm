@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import userPlaceholder from '@public/assets/img/user-placeholder.png';
+import { toast } from 'react-hot-toast';
 
 export default function ProfileMenu({
   buttonClassName,
@@ -97,6 +98,7 @@ function DropdownMenu({
 
   const handleLogout = async () => {
     await signOut({ redirect: false }); // disable default redirect
+    toast.success(<Text as="b">Anda telah keluar</Text>);
     router.push(role === 'admin' ? '/signin-admin-ipg-2025' : '/signin');
   };
 

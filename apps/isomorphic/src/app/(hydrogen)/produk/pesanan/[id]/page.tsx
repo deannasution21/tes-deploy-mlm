@@ -11,12 +11,8 @@ export default function OrderDetailsPage({ params }: any) {
         name: 'Dashboard',
       },
       {
-        href: routes.produk.index,
-        name: 'Pembelian Produk',
-      },
-      {
         href: routes.produk.pesanan.index,
-        name: 'History',
+        name: 'History Pembelian',
       },
       {
         name: 'Invoice',

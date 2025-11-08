@@ -16,18 +16,19 @@ export default function LihatPinTable({ className }: { className?: string }) {
   const { data: session } = useSession();
   const [dataPins, setDataPins] = useState<Pin[]>([]);
   const [isLoading, setLoading] = useState(false);
-  const [type, setType] = useState<string>('received');
+  const [type, setType] = useState<string>('all');
 
   useEffect(() => {
     if (!session?.accessToken) return;
 
     setLoading(true);
 
-    fetchWithAuth<PinResponse>(
-      `/_pins/dealer/${session.user?.id}?fetch=all&type=plan_a`,
-      { method: 'GET' },
-      session.accessToken
-    )
+    const url =
+      type === 'all'
+        ? `/_pins/dealer/${session.user?.id}?fetch=all&type=plan_a`
+        : `/_pins/dealer/${session.user?.id}?fetch=all&type=plan_a&status=${type}`;
+
+    fetchWithAuth<PinResponse>(url, { method: 'GET' }, session.accessToken)
       .then((data) => {
         const data_pins = data?.data?.pins || [];
         setDataPins(data_pins);
@@ -39,7 +40,7 @@ export default function LihatPinTable({ className }: { className?: string }) {
         setData([]);
       })
       .finally(() => setLoading(false));
-  }, [session?.accessToken]);
+  }, [session?.accessToken, type]);
 
   const { table, setData } = useTanStackTable<Pin>({
     tableData: dataPins,

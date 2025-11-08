@@ -115,6 +115,7 @@ export default function SignInForm({ role }: { role: string }) {
               inputClassName="text-[#f6e27f] placeholder-[#d4af37]/70 text-sm"
               {...register('password')}
               error={errors.password?.message}
+              autoComplete="off"
             />
             <Button
               className="w-full bg-gradient-to-b from-[#bb8928] to-[#9e6810] text-2xl font-bold text-black shadow-[0_0_10px_#d4af37] transition hover:opacity-90"

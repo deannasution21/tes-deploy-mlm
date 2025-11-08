@@ -25,11 +25,12 @@ export interface TransactionData {
 }
 
 export interface Transaction {
-  ref_id: string;
+  username: string;
   attributes: TransactionAttributes;
 }
 
 export interface TransactionAttributes {
+  ref_id: string;
   created_at: string;
   paid_at: string | null;
   buyer: BuyerInfo;
@@ -91,8 +92,13 @@ export default function OrderTable({
 
     setLoading(true);
 
+    const url =
+      session?.user?.id === 'adminpin2025'
+        ? `/_transactions/history-transaction?type=payment`
+        : `/_transactions/history-transaction/${session?.user?.id}?type=payment`;
+
     fetchWithAuth<TransactionResponse>(
-      `/_transactions/history-transaction/${session?.user?.id}?type=payment`,
+      url,
       { method: 'GET' },
       session.accessToken
     )
@@ -110,7 +116,7 @@ export default function OrderTable({
 
   const { table, setData } = useTanStackTable<Transaction>({
     tableData: dataPesanan,
-    columnConfig: ordersColumnsNew(),
+    columnConfig: ordersColumnsNew(session?.user?.id as string),
     options: {
       initialState: {
         pagination: {

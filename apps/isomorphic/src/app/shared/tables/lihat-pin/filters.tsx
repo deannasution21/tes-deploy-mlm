@@ -3,27 +3,22 @@
 import { Badge, Button, Flex, Input, Text } from 'rizzui';
 import { type Table as ReactTableType } from '@tanstack/react-table';
 import StatusField from '@core/components/controlled-table/status-field';
-import {
-  PiArrowsHorizontal,
-  PiMagnifyingGlassBold,
-  PiTrashDuotone,
-} from 'react-icons/pi';
+import { PiMagnifyingGlassBold, PiTrashDuotone } from 'react-icons/pi';
 import { transactionTypes } from '@/data/transaction-history';
-import { routes } from '@/config/routes';
 import { useRouter } from 'next/navigation';
-
-const transactionTypesOptions = Object.entries(transactionTypes).map(
-  ([value, label]) => ({ label, value })
-);
 
 const statusOptions = [
   {
-    value: 'received',
-    label: 'Diterima',
+    value: 'all',
+    label: 'Semua Status',
   },
   {
-    value: 'send',
-    label: 'Dikirim',
+    value: 'used',
+    label: 'Sudah Digunakan',
+  },
+  {
+    value: 'active',
+    label: 'Belum Digunakan',
   },
 ];
 
@@ -48,7 +43,7 @@ export default function Filters<TData extends Record<string, any>>({
       direction="col"
       className="mt-6 @3xl:flex-row @[62rem]:mt-0"
     >
-      {/* <Flex align="center" className="order-2 @3xl:order-1 @3xl:max-w-[180px]">
+      <Flex align="center" className="order-2 @3xl:order-1 @3xl:max-w-[250px]">
         <StatusField
           className="w-full"
           options={statusOptions}
@@ -64,14 +59,7 @@ export default function Filters<TData extends Record<string, any>>({
             )
           }
         />
-      </Flex> */}
-
-      <Button
-        onClick={() => router.push(routes.transferPin.index)}
-        className="h-9 w-full @3xl:w-36"
-      >
-        <PiArrowsHorizontal className="me-1.5 size-4" /> Transfer PIN
-      </Button>
+      </Flex>
 
       {isFiltered ? (
         <Button
@@ -108,32 +96,32 @@ function renderOptionDisplayValue(option: {
   const valueStr = String(option.value).toLowerCase();
 
   switch (valueStr) {
-    case 'received':
+    case 'all':
       return (
         <div className="flex items-center">
           <Badge color="warning" renderAsDot />
           <Text className="ms-2 font-semibold uppercase text-orange-dark">
-            {option.label}
+            Semua Status
           </Text>
         </div>
       );
 
-    case 'send':
+    case 'active':
       return (
         <div className="flex items-center">
           <Badge color="success" renderAsDot />
           <Text className="ms-2 font-semibold uppercase text-green-dark">
-            {option.label}
+            Belum Digunakan
           </Text>
         </div>
       );
 
-    case 'canceled':
+    case 'used':
       return (
         <div className="flex items-center">
           <Badge color="danger" renderAsDot />
           <Text className="ms-2 font-semibold uppercase text-red-600">
-            {option.label}
+            Sudah Digunakan
           </Text>
         </div>
       );

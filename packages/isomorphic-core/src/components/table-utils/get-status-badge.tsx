@@ -59,7 +59,11 @@ export function getStatusBadge(status: string) {
               ? "Pembayaran Berhasil"
               : status === "-2"
                 ? "Transaksi Dibatalkan/Expired"
-                : replaceUnderscoreDash(statusLower)}
+                : status === "used"
+                  ? "Sudah Digunakan"
+                  : status === "active"
+                    ? "Belum Digunakan"
+                    : replaceUnderscoreDash(statusLower)}
         </Text>
       </Flex>
     );

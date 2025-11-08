@@ -90,7 +90,7 @@ export const ordersColumns = (expanded: boolean = true) => {
   return expanded ? [expandedOrdersColumns, ...columns] : columns;
 };
 
-export const ordersColumnsNew = (expanded: boolean = true) => {
+export const ordersColumnsNew = (username: string) => {
   const columns = [
     // columnHelperNew.display({
     //   id: 'id',
@@ -110,14 +110,19 @@ export const ordersColumnsNew = (expanded: boolean = true) => {
       id: 'attributes.ref_id',
       size: 150,
       header: 'Invoice',
-      cell: ({ row }) => (
-        <Link
-          href={routes.produk.pesanan.detail(row.original.attributes.ref_id)}
-          className="font-medium text-primary"
-        >
-          <u>{row.original.attributes.ref_id}</u>
-        </Link>
-      ),
+      cell: ({ row }) => {
+        const url =
+          username === 'adminpin2025'
+            ? routes.produk.pesananStockist.detail(
+                row.original.attributes.ref_id
+              )
+            : routes.produk.pesanan.detail(row.original.attributes.ref_id);
+        return (
+          <Link href={url} className="font-medium text-primary">
+            <u>{row.original.attributes.ref_id}</u>
+          </Link>
+        );
+      },
     }),
     columnHelperNew.accessor('attributes.buyer.customer_name', {
       id: 'customer',
@@ -129,7 +134,10 @@ export const ordersColumnsNew = (expanded: boolean = true) => {
           <Text className="text-gray-700">
             {row.original.attributes.buyer.customer_name}
           </Text>
-          <Text className="text-gray-700">
+          <Text className="text-xs text-gray-500">
+            @{row.original.attributes.buyer.customer_id}
+          </Text>
+          <Text className="text-xs text-gray-500">
             {row.original.attributes.buyer.customer_phone}
           </Text>
         </>

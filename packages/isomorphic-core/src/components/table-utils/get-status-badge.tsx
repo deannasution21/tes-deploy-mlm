@@ -22,6 +22,7 @@ const allStatus = {
   rejected: statusColors.danger,
   active: statusColors.success,
   deactivated: statusColors.danger,
+  used: statusColors.danger,
   on_going: statusColors.warning,
   at_risk: statusColors.danger,
   delayed: statusColors.default,
@@ -39,7 +40,7 @@ export type StatusTypes = keyof typeof allStatus;
 export function getStatusBadge(status: string) {
   const statusLower =
     status === "0"
-      ? "pending"
+      ? "offline"
       : status === "-2"
         ? "overdue"
         : status === "1"

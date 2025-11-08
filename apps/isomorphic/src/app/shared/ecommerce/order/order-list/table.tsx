@@ -1,20 +1,16 @@
 'use client';
 
-import {
-  ordersColumns,
-  ordersColumnsNew,
-} from '@/app/shared/ecommerce/order/order-list/columns';
-import { orderData } from '@/data/order-data';
+import { ordersColumnsNew } from '@/app/shared/ecommerce/order/order-list/columns';
 import Table from '@core/components/table';
-import { CustomExpandedComponent } from '@core/components/table/custom/expanded-row';
 import { useTanStackTable } from '@core/components/table/custom/use-TanStack-Table';
 import TablePagination from '@core/components/table/pagination';
-import { OrdersDataType } from '@/app/shared/ecommerce/dashboard/recent-order';
 import Filters from './filters';
 import { Alert, TableVariantProps, Text } from 'rizzui';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
+import WidgetCard from '@core/components/cards/widget-card';
+import cn from '@core/utils/class-names';
 
 export interface TransactionResponse {
   code: number;
@@ -77,7 +73,7 @@ export interface StatusInfo {
 export default function OrderTable({
   className,
   variant = 'modern',
-  hideFilters = true,
+  hideFilters = false,
   hidePagination = false,
 }: {
   className?: string;
@@ -88,6 +84,7 @@ export default function OrderTable({
   const { data: session } = useSession();
   const [dataPesanan, setDataPesanan] = useState<Transaction[]>([]);
   const [isLoading, setLoading] = useState(false);
+  const [type, setType] = useState<string>('all');
 
   useEffect(() => {
     if (!session?.accessToken) return;
@@ -121,6 +118,7 @@ export default function OrderTable({
           pageSize: 10,
         },
       },
+      meta: {},
       enableColumnResizing: false,
     },
   });
@@ -134,24 +132,29 @@ export default function OrderTable({
   }
 
   return (
-    <div className={className}>
-      <Alert variant="flat" color="success" className="mb-7">
-        <Text className="font-semibold">Informasi</Text>
-        <Text className="break-normal">
-          Klik pada kode <strong>INVOICE</strong> untuk menampilkan detail
-          Pesanan
-        </Text>
-      </Alert>
-      {!hideFilters && <Filters table={table} />}
-      <Table
-        table={table}
-        variant={variant}
-        classNames={{
-          container: 'border border-muted rounded-md border-t-0',
-          rowClassName: 'last:border-0',
-        }}
-      />
-      {!hidePagination && <TablePagination table={table} className="py-4" />}
+    <div className="@container">
+      <div className="grid grid-cols-1 gap-6 3xl:gap-8">
+        <WidgetCard
+          className={cn('p-0 lg:p-0', className)}
+          title="History Pembelian"
+          titleClassName="w-[19ch]"
+          actionClassName="w-full ps-0 items-center weee"
+          headerClassName="mb-6 items-start flex-col @[57rem]:flex-row @[57rem]:items-center px-5 pt-5 lg:pt-7 lg:px-7"
+          action={<Filters table={table} type={type} setType={setType} />}
+        >
+          <div className="px-5 lg:px-7">
+            <Alert variant="flat" color="success" className="mb-7">
+              <Text className="font-semibold">Informasi</Text>
+              <Text className="break-normal">
+                Klik pada kode <strong>INVOICE</strong> untuk menampilkan detail
+                Pesanan
+              </Text>
+            </Alert>
+          </div>
+          <Table table={table} variant="modern" />
+          <TablePagination table={table} className="p-4" />
+        </WidgetCard>
+      </div>
     </div>
   );
 }

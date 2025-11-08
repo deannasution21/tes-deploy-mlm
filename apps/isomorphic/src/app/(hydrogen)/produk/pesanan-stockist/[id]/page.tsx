@@ -1,15 +1,10 @@
 import { routes } from '@/config/routes';
 import PageHeader from '@/app/shared/page-header';
-import ProductDetails from '@/app/shared/ecommerce/product/product-details';
-import { metaObject } from '@/config/site.config';
+import OrderView from '@/app/shared/ecommerce/order/order-view';
 
-export const metadata = {
-  ...metaObject('Pembelian Produk'),
-};
-
-export default function ProductDetailsPage({ params }: any) {
+export default function OrderDetailsPage({ params }: any) {
   const pageHeader = {
-    title: 'Pembelian Produk',
+    title: `Invoice #${params.id}`,
     breadcrumb: [
       {
         href: routes.dashboard.index,
@@ -20,14 +15,18 @@ export default function ProductDetailsPage({ params }: any) {
         name: 'Pembelian Produk',
       },
       {
-        name: params.slug,
+        href: routes.produk.pesananStockist.index,
+        name: 'History Pembelian Stockist',
+      },
+      {
+        name: 'Invoice',
       },
     ],
   };
   return (
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
-      <ProductDetails />
+      <OrderView />
     </>
   );
 }

@@ -121,7 +121,7 @@ function FleetStatus({
           </Title>
           <Text as="p" className="text-stone-500">
             Withdrawal Gaji dapat dlakukan jika poin Anda sudah mencapai{' '}
-            <strong className="text-primary">25 poin</strong>, dan akan
+            <strong className="text-primary">30 poin</strong>, dan akan
             dicairkan menjadi{' '}
             <strong className="text-primary">Rp 1.500.000</strong>
           </Text>

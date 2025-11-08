@@ -92,12 +92,12 @@ export default function ProductDetailsSummery({
                   <div className="-mb-0.5 text-2xl font-semibold text-gray-900 lg:text-3xl">
                     {toCurrency(price)}
                   </div>
-                  <del className="ps-1.5 font-medium text-gray-500">
+                  {/* <del className="ps-1.5 font-medium text-gray-500">
                     {toCurrency(oldPrice)}
                   </del>
                   <div className="ps-1.5 text-red">
                     ({calculatePercentage(price, oldPrice)}% DISKON)
-                  </div>
+                  </div> */}
                 </>
               );
             })()}

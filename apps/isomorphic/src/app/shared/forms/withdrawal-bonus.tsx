@@ -268,7 +268,6 @@ export default function WithdrawalBonusForm(slug: any) {
                           prefix={'Rp'}
                           type="number"
                           error={errors?.amount?.message as string}
-                          disabled
                         />
                       </FormBlockWrapper>
                     </div>
@@ -281,9 +280,8 @@ export default function WithdrawalBonusForm(slug: any) {
                     </Link>
                     <Button
                       type="submit"
-                      // isLoading={proses}
-                      // disabled={proses}
-                      disabled={true}
+                      isLoading={proses}
+                      disabled={proses}
                       className="w-full @xl:w-auto"
                     >
                       Cairkan Sekarang

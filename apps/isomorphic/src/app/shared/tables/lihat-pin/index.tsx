@@ -48,7 +48,7 @@ export default function LihatPinTable({ className }: { className?: string }) {
       initialState: {
         pagination: {
           pageIndex: 0,
-          pageSize: 7,
+          pageSize: 15,
         },
       },
       meta: {},

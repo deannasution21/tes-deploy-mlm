@@ -58,6 +58,10 @@ export const routes = {
       index: '/produk/pesanan',
       detail: (id: string) => `/produk/pesanan/${id}`,
     },
+    pesananStockist: {
+      index: '/produk/pesanan-stockist',
+      detail: (id: string) => `/produk/pesanan-stockist/${id}`,
+    },
   },
   kelolaProduk: {
     index: '/produk/kelola',

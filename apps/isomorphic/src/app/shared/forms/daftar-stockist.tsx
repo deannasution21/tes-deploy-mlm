@@ -116,7 +116,7 @@ function Formnya({
           <small className="leading-none text-red-600">
             *Harus di Rahasiakan dan Jangan Sama Dengan Username Membership
             Anda, Hindari Penggunaan User ID Stockist yang Di Awali dengan Huruf
-            "SSI" karena akan di tolak atau di hapus oleh management.
+            "IPG" karena akan di tolak atau di hapus oleh management.
           </small>
         </div>
 
@@ -333,8 +333,8 @@ export default function DaftarStockist({ className }: { className?: string }) {
         console.error(error);
         // Clear the data so UI can show "no data"
         toast.error(<Text as="b">Permohonan pendaftaran gagal</Text>);
-      })
-      .finally(() => setLoadingS(false));
+        setLoadingS(false);
+      });
   };
 
   const onSubmit: SubmitHandler<DaftarStockistInput> = (data) => {

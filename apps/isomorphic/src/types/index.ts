@@ -414,9 +414,10 @@ export interface DetailUser {
   type: string;
   username: string;
   name: string;
-  bank_name: string;
-  account_number: string;
-  account_name: string;
+  // bank_name: string;
+  // account_number: string;
+  // account_name: string;
+  bank_account: BankAccount;
 }
 
 // Summary per user

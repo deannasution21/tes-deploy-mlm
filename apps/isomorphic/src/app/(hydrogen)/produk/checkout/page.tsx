@@ -16,7 +16,7 @@ const pageHeader = {
     },
     {
       href: routes.produk.index,
-      name: 'Belanja Produk',
+      name: 'Pembelian Produk',
     },
     {
       name: 'Checkout',

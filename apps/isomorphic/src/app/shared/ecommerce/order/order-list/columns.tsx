@@ -106,16 +106,16 @@ export const ordersColumnsNew = (expanded: boolean = true) => {
         <DateCell date={new Date(row.original.attributes.created_at)} />
       ),
     }),
-    columnHelperNew.accessor('ref_id', {
-      id: 'ref_id',
+    columnHelperNew.accessor('attributes.ref_id', {
+      id: 'attributes.ref_id',
       size: 150,
       header: 'Invoice',
       cell: ({ row }) => (
         <Link
-          href={routes.produk.pesanan.detail(row.original.ref_id)}
+          href={routes.produk.pesanan.detail(row.original.attributes.ref_id)}
           className="font-medium text-primary"
         >
-          <u>{row.original.ref_id}</u>
+          <u>{row.original.attributes.ref_id}</u>
         </Link>
       ),
     }),

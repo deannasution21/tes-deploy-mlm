@@ -507,26 +507,37 @@ export default function CheckoutPageWrapper({
       quantity: item.quantity,
     }));
 
+    const body =
+      payload?.shipping_method === 'pickup'
+        ? JSON.stringify({
+            username: session?.user?.id,
+            customer_name: payload?.customer_name,
+            customer_phone: payload?.customer_phone,
+            shipping_method: 'AMBIL DI KANTOR',
+            products: products,
+            note: '',
+            payment_method: payload?.payment_method,
+            type: 'payment',
+          })
+        : JSON.stringify({
+            username: session?.user?.id,
+            customer_name: payload?.customer_name,
+            customer_phone: payload?.customer_phone,
+            shipping_method: 'PENGIRIMAN BIASA',
+            shipping_address: payload?.shipping_address,
+            province: selectedProvinceName,
+            city: selectedCityName,
+            products: products,
+            note: '',
+            payment_method: payload?.payment_method,
+            type: 'payment',
+          });
+
     fetchWithAuth<PaymentTransactionResponse>(
       `/_transactions`,
       {
         method: 'POST',
-        body: JSON.stringify({
-          username: session?.user?.id,
-          customer_name: payload?.customer_name,
-          customer_phone: payload?.customer_phone,
-          shipping_method:
-            payload?.shipping_method === 'pickup'
-              ? 'AMBIL DI KANTOR'
-              : 'PENGIRIMAN BIASA',
-          shipping_address: payload?.shipping_address,
-          province: selectedProvinceName,
-          city: selectedCityName,
-          products: products,
-          note: '',
-          payment_method: payload?.payment_method,
-          type: 'payment',
-        }),
+        body: body,
       },
       session.accessToken
     )

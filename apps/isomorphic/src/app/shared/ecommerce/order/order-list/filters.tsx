@@ -1,222 +1,152 @@
 'use client';
 
-import DateFiled from '@core/components/controlled-table/date-field';
-import PriceField from '@core/components/controlled-table/price-field';
-import StatusField from '@core/components/controlled-table/status-field';
-import { FilterDrawerView } from '@core/components/controlled-table/table-filter';
-import ToggleColumns from '@core/components/table-utils/toggle-columns';
-import { getDateRangeStateValues } from '@core/utils/get-formatted-date';
-import { type Table as ReactTableType } from '@tanstack/react-table';
-import { useState } from 'react';
-import {
-  PiFunnel,
-  PiMagnifyingGlassBold,
-  PiTrash,
-  PiTrashDuotone,
-} from 'react-icons/pi';
 import { Badge, Button, Flex, Input, Text } from 'rizzui';
+import { type Table as ReactTableType } from '@tanstack/react-table';
+import StatusField from '@core/components/controlled-table/status-field';
+import { PiMagnifyingGlassBold, PiTrashDuotone } from 'react-icons/pi';
+import { transactionTypes } from '@/data/transaction-history';
+
+const transactionTypesOptions = Object.entries(transactionTypes).map(
+  ([value, label]) => ({ label, value })
+);
 
 const statusOptions = [
   {
-    value: 'completed',
-    label: 'Completed',
+    value: 'all',
+    label: 'Semua Status',
   },
   {
-    value: 'pending',
-    label: 'Pending',
+    value: '0',
+    label: 'Menunggu Pembayaran',
   },
   {
-    value: 'cancelled',
-    label: 'Cancelled',
+    value: '1',
+    label: 'Pembayaran Berhasil',
   },
   {
-    value: 'refunded',
-    label: 'Refunded',
+    value: '-2',
+    label: 'Pembayaran Dibatalkan',
   },
 ];
 
 interface TableToolbarProps<T extends Record<string, any>> {
   table: ReactTableType<T>;
+  type: string;
+  setType: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function Filters<TData extends Record<string, any>>({
   table,
+  type,
+  setType,
 }: TableToolbarProps<TData>) {
-  const [openDrawer, setOpenDrawer] = useState(false);
-  const isMultipleSelected = table.getSelectedRowModel().rows.length > 1;
-
-  const {
-    options: { meta },
-  } = table;
-
-  return (
-    <Flex align="center" justify="between" className="mb-4">
-      <Input
-        type="search"
-        placeholder="Cari transaksi disini..."
-        value={table.getState().globalFilter ?? ''}
-        onClear={() => table.setGlobalFilter('')}
-        onChange={(e) => table.setGlobalFilter(e.target.value)}
-        inputClassName="h-9"
-        clearable={true}
-        prefix={<PiMagnifyingGlassBold className="size-4" />}
-      />
-
-      <FilterDrawerView
-        isOpen={openDrawer}
-        drawerTitle="Filter Transaksi"
-        setOpenDrawer={setOpenDrawer}
-      >
-        <div className="grid grid-cols-1 gap-6">
-          <FilterElements table={table} />
-        </div>
-      </FilterDrawerView>
-
-      <Flex align="center" gap="3" className="w-auto">
-        {isMultipleSelected ? (
-          <Button
-            color="danger"
-            variant="outline"
-            className="h-[34px] gap-2 text-sm"
-            onClick={() =>
-              meta?.handleMultipleDelete &&
-              meta.handleMultipleDelete(
-                table.getSelectedRowModel().rows.map((r) => r.original.id)
-              )
-            }
-          >
-            <PiTrash size={18} />
-            Delete
-          </Button>
-        ) : null}
-
-        <Button
-          variant={'outline'}
-          onClick={() => setOpenDrawer(!openDrawer)}
-          className="h-9 pe-3 ps-2.5"
-        >
-          <PiFunnel className="me-1.5 size-[18px]" strokeWidth={1.7} />
-          Filters
-        </Button>
-
-        {/* <ToggleColumns table={table} /> */}
-      </Flex>
-    </Flex>
-  );
-}
-
-function FilterElements<T extends Record<string, any>>({
-  table,
-}: TableToolbarProps<T>) {
-  const priceFieldValue = (table.getColumn('amount')?.getFilterValue() ?? [
-    '',
-    '',
-  ]) as string[];
-  const createdDate =
-    table.getColumn('createdAt')?.getFilterValue() ?? ([null, null] as any);
-  const dueDate =
-    table.getColumn('updatedAt')?.getFilterValue() ?? ([null, null] as any);
   const isFiltered =
     table.getState().globalFilter || table.getState().columnFilters.length > 0;
-  return (
-    <>
-      <PriceField
-        value={priceFieldValue}
-        onChange={(v) => table.getColumn('amount')?.setFilterValue(v)}
-        label="Total Transaksi"
-      />
-      <DateFiled
-        selectsRange
-        dateFormat={'dd-MMM-yyyy'}
-        className="w-full"
-        placeholderText="Select created date"
-        endDate={getDateRangeStateValues(createdDate[1])!}
-        selected={getDateRangeStateValues(createdDate[0])}
-        startDate={getDateRangeStateValues(createdDate[0])!}
-        onChange={(date) => table.getColumn('createdAt')?.setFilterValue(date)}
-        inputProps={{
-          label: 'Tanggal',
-        }}
-      />
-      <DateFiled
-        selectsRange
-        dateFormat={'dd-MMM-yyyy'}
-        className="w-full"
-        placeholderText="Select modified date"
-        endDate={getDateRangeStateValues(dueDate[1])!}
-        selected={getDateRangeStateValues(dueDate[0])}
-        startDate={getDateRangeStateValues(dueDate[0])!}
-        onChange={(date) => table.getColumn('updatedAt')?.setFilterValue(date)}
-        inputProps={{
-          label: 'Modified Date',
-        }}
-      />
-      <StatusField
-        options={statusOptions}
-        value={table.getColumn('status')?.getFilterValue() ?? []}
-        onChange={(e) => table.getColumn('status')?.setFilterValue(e)}
-        getOptionValue={(option: { value: any }) => option.value}
-        getOptionDisplayValue={(option: { value: any }) =>
-          renderOptionDisplayValue(option.value as string)
-        }
-        displayValue={(selected: string) => renderOptionDisplayValue(selected)}
-        dropdownClassName="!z-20 h-auto"
-        className={'w-auto'}
-        label="Status"
-      />
 
-      {isFiltered && (
+  return (
+    <Flex
+      align="center"
+      direction="col"
+      className="mt-6 @3xl:flex-row @[62rem]:mt-0"
+    >
+      <Flex align="center" className="order-2 @3xl:order-1 @3xl:max-w-[250px]">
+        {/* <StatusField
+          className="w-full"
+          placeholder="Select type"
+          options={transactionTypesOptions}
+          dropdownClassName="!z-10 h-auto"
+          getOptionValue={(option) => option.label}
+          value={table.getColumn('type')?.getFilterValue() ?? ''}
+          onChange={(e) => table.getColumn('type')?.setFilterValue(e)}
+        /> */}
+        <StatusField
+          className="w-full"
+          options={statusOptions}
+          dropdownClassName="!z-10 h-auto"
+          getOptionValue={(option) => option.value}
+          value={type}
+          onChange={(value: string) => setType(value)}
+          getOptionDisplayValue={(option) => renderOptionDisplayValue(option)}
+          displayValue={(selected: string) =>
+            renderOptionDisplayValue(
+              statusOptions.find((opt) => opt.value === selected) ??
+                statusOptions[0]
+            )
+          }
+        />
+      </Flex>
+
+      {isFiltered ? (
         <Button
-          size="sm"
+          variant="flat"
           onClick={() => {
             table.resetGlobalFilter();
             table.resetColumnFilters();
           }}
-          variant="flat"
-          className="h-9 bg-gray-200/70"
+          className="order-3 h-9 w-full bg-gray-200/70 @3xl:order-2 @3xl:w-24"
         >
-          <PiTrashDuotone className="me-1.5 h-[17px] w-[17px]" /> Clear
+          <PiTrashDuotone className="me-1.5 size-4" /> Clear
         </Button>
-      )}
-    </>
+      ) : null}
+
+      <Input
+        type="search"
+        clearable={true}
+        inputClassName="h-[36px]"
+        placeholder="Cari data pembelian..."
+        onClear={() => table.setGlobalFilter('')}
+        value={table.getState().globalFilter ?? ''}
+        prefix={<PiMagnifyingGlassBold className="size-4" />}
+        onChange={(e) => table.setGlobalFilter(e.target.value)}
+        className="w-full @3xl:order-3 @3xl:ms-auto @3xl:max-w-72"
+      />
+    </Flex>
   );
 }
 
-function renderOptionDisplayValue(value: string) {
-  switch (value.toLowerCase()) {
-    case 'pending':
+function renderOptionDisplayValue(option: {
+  label: string;
+  value: string | number;
+}) {
+  const valueStr = String(option.value).toLowerCase();
+
+  switch (valueStr) {
+    case 'all':
       return (
         <div className="flex items-center">
           <Badge color="warning" renderAsDot />
-          <Text className="ms-2 font-medium capitalize text-orange-dark">
-            {value}
+          <Text className="ms-2 font-semibold uppercase text-orange-dark">
+            {option.label}
           </Text>
         </div>
       );
-    case 'completed':
+
+    case '1':
       return (
         <div className="flex items-center">
           <Badge color="success" renderAsDot />
-          <Text className="ms-2 font-medium capitalize text-green-dark">
-            {value}
+          <Text className="ms-2 font-semibold uppercase text-green-dark">
+            {option.label}
           </Text>
         </div>
       );
-    case 'cancelled':
+
+    case '-2':
       return (
         <div className="flex items-center">
           <Badge color="danger" renderAsDot />
-          <Text className="ms-2 font-medium capitalize text-red-dark">
-            {value}
+          <Text className="ms-2 font-semibold uppercase text-red-600">
+            {option.label}
           </Text>
         </div>
       );
+
     default:
       return (
         <div className="flex items-center">
           <Badge renderAsDot className="bg-gray-400" />
-          <Text className="ms-2 font-medium capitalize text-gray-600">
-            {value}
+          <Text className="ms-2 font-semibold uppercase text-gray-600">
+            {option.label}
           </Text>
         </div>
       );

@@ -38,7 +38,7 @@ export const dataPinsColumns = [
   }),
   columnHelper.accessor('dealer_id', {
     id: 'dealer_id',
-    header: 'Nama',
+    header: 'Pemilik',
     size: 180,
     cell: (info) => (
       <Text className="whitespace-nowrap">{info.getValue()}</Text>
@@ -48,6 +48,9 @@ export const dataPinsColumns = [
     id: 'status',
     size: 100,
     header: 'Status',
-    cell: (info) => getStatusBadge(info.getValue()),
+    cell: (info) => {
+      const status = info.getValue();
+      return getStatusBadge(status);
+    },
   }),
 ];

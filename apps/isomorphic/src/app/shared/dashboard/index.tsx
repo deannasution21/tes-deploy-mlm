@@ -78,11 +78,13 @@ export default function Dashboard() {
           contentClassName="@2xl:max-w-[calc(100%-340px)]"
           className="border border-muted bg-gray-0 pb-8 @4xl:col-span-2 @7xl:col-span-8 @7xl:min-h-[412px] dark:bg-gray-100/30 lg:pb-9"
         >
-          <Link href={routes.produk.index} className="inline-flex">
-            <Button as="span" className="h-[38px] shadow md:h-10">
-              <PiShoppingCart className="me-1 h-4 w-4" /> Beli Produk
-            </Button>
-          </Link>
+          {session?.user?.role === 'stockist' && (
+            <Link href={routes.produk.index} className="inline-flex">
+              <Button as="span" className="h-[38px] shadow md:h-10">
+                <PiShoppingCart className="me-1 h-4 w-4" /> Beli Produk
+              </Button>
+            </Link>
+          )}
         </WelcomeBanner>
 
         <FleetStatus

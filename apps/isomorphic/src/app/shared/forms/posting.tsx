@@ -443,6 +443,13 @@ function Formnya({
           error={errors?.npwp_number?.message as any}
           disabled={type === 'clone'}
         />
+        <style>
+          {`
+    textarea:-webkit-autofill {
+      border-color: inherit !important;
+    }
+  `}
+        </style>
         <Textarea
           label="Alamat NPWP"
           placeholder="Alamat NPWP"
@@ -611,15 +618,17 @@ export default function Posting({
 
     setLoadingS(true);
 
+    const body = {
+      ...payload,
+      province: type === 'posting' ? selectedProvinceName : payload.province,
+      city: type === 'posting' ? selectedCityName : payload.city,
+    };
+
     fetchWithAuth<any>(
       `/_network-diagrams`,
       {
         method: 'POST',
-        body: JSON.stringify({
-          ...payload,
-          province: selectedProvinceName,
-          city: selectedCityName,
-        }),
+        body: JSON.stringify(body),
       },
       session.accessToken
     )
@@ -637,15 +646,15 @@ export default function Posting({
         console.error(error);
         // Clear the data so UI can show "no data"
         toast.error(<Text as="b"> {type?.toLocaleUpperCase()} gagal</Text>);
-      })
-      .finally(() => setLoadingS(false));
+        setLoadingS(false);
+      });
   };
 
   const onSubmit: SubmitHandler<PostingInput> = (data) => {
     setLoadingS(true);
 
     Swal.fire({
-      title: 'Konfirmasi Posting',
+      title: `Konfirmasi ${type?.toLocaleUpperCase()}`,
       html: 'Harap pastikan data yang Anda masukkan benar. Jika sudah silakan <strong>LANJUTKAN</strong>',
       icon: 'info',
       showCancelButton: true,
@@ -684,7 +693,7 @@ export default function Posting({
         session.accessToken
       ),
       fetchWithAuth<PinResponse>(
-        `/_pins/dealer/${session?.user?.id}?fetch=all&type=plan_a`,
+        `/_pins/dealer/${session?.user?.id}?fetch=all&type=plan_a&status=active`,
         { method: 'GET' },
         session.accessToken
       ),
@@ -716,7 +725,7 @@ export default function Posting({
           if (type === 'clone') {
             methodsCloning.reset({
               ...methodsCloning.getValues(),
-              sponsor: userData.sponsor_id ?? '',
+              sponsor: userData.username ?? '',
               full_name: userData.nama ?? '',
               email: session?.user?.email ?? '',
               phone: userData.no_hp ?? '',
@@ -735,7 +744,7 @@ export default function Posting({
           } else if (type === 'posting') {
             methodsPosting.reset({
               ...methodsPosting.getValues(),
-              sponsor: userData.sponsor_id ?? '',
+              sponsor: userData.username ?? '',
               full_name: '',
               email: '',
               phone: '',
@@ -786,6 +795,7 @@ export default function Posting({
       {type === 'clone' ? (
         <FormProvider {...methodsCloning}>
           <form
+            autoComplete="off"
             onSubmit={methodsCloning.handleSubmit(onSubmit)}
             className={cn(
               'isomorphic-form flex flex-grow flex-col @container [&_label.block>span]:font-medium',
@@ -815,6 +825,7 @@ export default function Posting({
       ) : (
         <FormProvider {...methodsPosting}>
           <form
+            autoComplete="off"
             onSubmit={methodsPosting.handleSubmit(onSubmit)}
             className={cn(
               'isomorphic-form flex flex-grow flex-col @container [&_label.block>span]:font-medium',

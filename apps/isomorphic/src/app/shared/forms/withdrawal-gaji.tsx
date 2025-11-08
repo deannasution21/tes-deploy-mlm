@@ -272,7 +272,7 @@ export default function WithdrawalGajiForm(slug: any) {
                         <li>
                           <Text className="break-normal">
                             Withdrawal Gaji dapat dlakukan jika poin Anda sudah
-                            mencapai <strong>25 poin</strong>, dan akan
+                            mencapai <strong>30 poin</strong>, dan akan
                             dicairkan menjadi <strong>Rp 1.500.000</strong>
                           </Text>
                         </li>

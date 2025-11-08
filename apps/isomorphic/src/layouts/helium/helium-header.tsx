@@ -50,7 +50,7 @@ export default function Header() {
             />
           </div>
         </Link>
-        <SearchWidget />
+        {/* <SearchWidget /> */}
       </div>
       <HeaderMenuRight />
     </header>

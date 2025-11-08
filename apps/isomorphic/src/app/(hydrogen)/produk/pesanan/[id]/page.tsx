@@ -12,7 +12,7 @@ export default function OrderDetailsPage({ params }: any) {
       },
       {
         href: routes.produk.index,
-        name: 'Belanja Produk',
+        name: 'Pembelian Produk',
       },
       {
         href: routes.produk.pesanan.index,

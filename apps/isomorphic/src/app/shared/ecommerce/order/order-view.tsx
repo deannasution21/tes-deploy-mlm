@@ -167,13 +167,34 @@ export default function OrderView() {
   const orderStatus = [
     { id: 0, label: 'Pesanan Dibuat' },
     { id: 1, label: 'Menunggu Pembayaran' },
-    { id: -2, label: 'Pembayaran Expired' },
-    { id: 2, label: 'Pembayaran Selesai' },
-    { id: 3, label: 'Produk Dikirimkan' },
-    { id: 4, label: 'Pesanan Selesai' },
+    { id: 2, label: 'Pembayaran Expired' },
+    { id: 3, label: 'Pembayaran Selesai' },
+    { id: 4, label: 'Produk Dikirimkan' },
+    { id: 5, label: 'Pesanan Selesai' },
   ];
 
-  const currentStatus = Number(invoice?.attribute?.status?.code ?? 0);
+  const rawStatus = Number(invoice?.attribute?.status?.code ?? 0);
+
+  // Map backend → UI step
+  const currentStatus =
+    rawStatus === 0
+      ? 1 // menunggu pembayaran
+      : rawStatus === 1
+        ? 3 // pembayaran selesai
+        : rawStatus === -2
+          ? 2 // expired
+          : 0; // fallback
+
+  // ✅ Hide expired if status is 3, or hide selesai if expired
+  const filteredStatuses = orderStatus.filter((step) => {
+    // Hide "Pembayaran Expired" unless it's the actual current status (2)
+    if (step.id === 2 && currentStatus !== 2) return false;
+
+    // Hide "Pembayaran Selesai" when expired
+    if (step.id === 3 && currentStatus === 2) return false;
+
+    return true;
+  });
 
   const fetchInvoice = async () => {
     if (!session?.accessToken) return;
@@ -264,7 +285,7 @@ export default function OrderView() {
           )} at {formatDate(new Date(invoice?.attribute?.waktu), 'h:mm A')}
         </span>
         <span
-          className={`rounded-3xl px-2.5 py-1 text-xs uppercase ${currentStatus === -2 ? 'bg-red-lighter text-red-dark' : currentStatus === 0 ? 'bg-green-lighter text-green-dark' : 'bg-primary-lighter text-primary-dark'} @5xl:my-2`}
+          className={`rounded-3xl px-2.5 py-1 text-xs uppercase ${currentStatus === 2 ? 'bg-red-lighter text-red-dark' : currentStatus === 0 ? 'bg-green-lighter text-green-dark' : 'bg-primary-lighter text-primary-dark'} @5xl:my-2`}
         >
           {invoice?.attribute?.status?.message}
         </span>
@@ -328,7 +349,7 @@ export default function OrderView() {
                     'h:mm A'
                   )}
                 </span>
-              ) : currentStatus === -2 ? (
+              ) : currentStatus === 2 ? (
                 <span className="my-2 py-0.5 font-medium text-red-500">
                   Pembayaran Expired
                 </span>
@@ -336,7 +357,7 @@ export default function OrderView() {
                 ''
               )}
               <div className="relative flex items-center justify-between rounded-lg border border-gray-100 px-5 py-5 font-medium shadow-sm transition-shadow @5xl:px-7">
-                {currentStatus === -2 && (
+                {currentStatus === 2 && (
                   <div className="absolute left-0 h-full w-full bg-gray-300/50"></div>
                 )}
 
@@ -381,13 +402,13 @@ export default function OrderView() {
             childrenWrapperClass="py-5 @5xl:py-8 flex"
           >
             <div className="ms-2 w-full space-y-7 border-s-2 border-gray-100">
-              {orderStatus.map((item, index) => {
-                const isExpired = item.id === -2;
-                const isCompleted =
-                  currentStatus === -2
-                    ? item.id >= 0 && item.id < 1 // only first steps before expired
-                    : currentStatus > item.id;
+              {filteredStatuses.map((item, index) => {
+                const isExpired = item.id === 2;
+                const isCompleted = item.id <= currentStatus;
                 const isActive = currentStatus === item.id;
+
+                const nextIsExpired =
+                  filteredStatuses[index + 1]?.id === 2 && currentStatus === 2;
 
                 return (
                   <div
@@ -399,11 +420,13 @@ export default function OrderView() {
                         : isCompleted || isActive
                           ? 'text-gray-900 before:bg-primary'
                           : 'text-gray-500 before:bg-gray-200',
-                      isCompleted && 'after:bg-primary',
+                      nextIsExpired
+                        ? 'after:bg-red-500'
+                        : isCompleted && 'after:bg-primary',
                       isExpired && 'after:hidden'
                     )}
                   >
-                    {/* Icon */}
+                    {/* Completed icon */}
                     {isCompleted && !isExpired && (
                       <span className="absolute -start-1.5 top-1 text-white">
                         <PiCheckBold className="h-auto w-3" />
@@ -411,14 +434,14 @@ export default function OrderView() {
                     )}
 
                     {/* Expired icon */}
-                    {isExpired && currentStatus === -2 && (
+                    {isExpired && currentStatus === 2 && (
                       <span className="absolute -start-1.5 top-1 text-white">
                         <PiXBold className="h-auto w-3 text-white" />
                       </span>
                     )}
 
                     {item.label}
-                    {isExpired && currentStatus === -2 && (
+                    {isExpired && currentStatus === 2 && (
                       <p className="mt-1 text-xs text-gray-500">
                         Pembayaran telah melebihi batas waktu. Silakan lakukan
                         pesanan baru.

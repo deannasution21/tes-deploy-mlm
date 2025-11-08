@@ -65,6 +65,7 @@ import {
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
 import AffiliateIcon from '@core/components/icons/affiliate';
+import { useSession } from 'next-auth/react';
 
 // Note: do not add href in the label object, it is rendering as label
 export const menuItems = [
@@ -727,17 +728,70 @@ export const menuItemsStockist = [
     icon: <PiHouseLineDuotone />,
   },
   {
-    name: 'Belanja Produk',
+    name: 'Pembelian Produk',
     href: '#',
     icon: <PiShoppingCart />,
     dropdownItems: [
       {
-        name: 'Belanja Produk',
+        name: 'Pembelian Produk',
         href: routes.produk.index,
       },
       {
-        name: 'History Belanja Produk',
+        name: 'History Pembelian Produk',
         href: routes.produk.pesanan.index,
+      },
+    ],
+  },
+  {
+    name: 'Lihat PIN',
+    href: routes.lihatPin.index,
+    icon: <PiTrophy />,
+  },
+  {
+    name: 'Transfer PIN',
+    href: routes.transferPin.index,
+    icon: <PiArrowsHorizontal />,
+  },
+
+  {
+    name: 'Personal',
+  },
+  // label end
+  {
+    name: 'Profil Saya',
+    href: routes.profil.index,
+    icon: <PiUser />,
+  },
+  {
+    name: 'Ganti Password',
+    href: routes.profil.ubahPassword,
+    icon: <PiLock />,
+  },
+];
+
+export const menuItemsStockistAdminPin = [
+  // label start
+  {
+    name: 'Menu',
+  },
+  // label end
+  {
+    name: 'Dashboard',
+    href: routes.dashboard.index,
+    icon: <PiHouseLineDuotone />,
+  },
+  {
+    name: 'Pembelian Produk',
+    href: '#',
+    icon: <PiShoppingCart />,
+    dropdownItems: [
+      {
+        name: 'Pembelian Produk',
+        href: routes.produk.index,
+      },
+      {
+        name: 'History Pembelian Stockist',
+        href: routes.produk.pesananStockist.index,
       },
     ],
   },

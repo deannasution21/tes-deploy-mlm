@@ -8,6 +8,7 @@ import {
   menuItemsAdmin,
   menuItemsUser,
   menuItemsStockist,
+  menuItemsStockistAdminPin,
 } from '@/layouts/helium/helium-menu-items';
 import { useSession } from 'next-auth/react';
 
@@ -15,12 +16,15 @@ export function HeliumSidebarMenu() {
   const pathname = usePathname();
   const session = useSession();
   const role = session?.data?.user?.role || 'user';
+  const username = session?.data?.user?.id;
   const menuFinal =
     role === 'admin'
       ? menuItemsAdmin
-      : role === 'stockist'
-        ? menuItemsStockist
-        : menuItemsUser;
+      : role === 'stockist' && username === 'adminpin2025'
+        ? menuItemsStockistAdminPin
+        : role === 'stockist' && username !== 'adminpin2025'
+          ? menuItemsStockist
+          : menuItemsUser;
 
   if (menuFinal?.length === 0) {
     return <div></div>;

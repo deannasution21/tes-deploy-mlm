@@ -152,10 +152,10 @@ export default function WithdrawalBonusTable({
               <span className="min-w-28 font-semibold text-gray-900">Bank</span>
               <span className="font-semibold text-gray-900">:</span>
               <span className="uppercase">
-                {dataUser?.detail_users?.bank_name
+                {dataUser?.detail_users?.bank_account?.bank_name
                   ? getBankNameByCode(
                       dataBank,
-                      dataUser?.detail_users?.bank_name
+                      dataUser?.detail_users?.bank_account?.bank_name
                     )
                   : '-'}
               </span>
@@ -165,14 +165,16 @@ export default function WithdrawalBonusTable({
                 No. Rekening
               </span>
               <span className="font-semibold text-gray-900">:</span>
-              <span>{dataUser?.detail_users?.account_number}</span>
+              <span>
+                {dataUser?.detail_users?.bank_account?.account_number}
+              </span>
             </li>
             <li className="flex items-center gap-1">
               <span className="min-w-28 font-semibold text-gray-900">
                 Atas Nama
               </span>
               <span className="font-semibold text-gray-900">:</span>
-              <span>{dataUser?.detail_users?.account_name}</span>
+              <span>{dataUser?.detail_users?.bank_account?.account_name}</span>
             </li>
           </ul>
           <Alert variant="flat" color="success" className="mt-5">

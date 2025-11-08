@@ -47,12 +47,12 @@ export default function ProdukCard({
               className="h-full w-full object-cover"
             />
           </div>
-          <Text
+          {/* <Text
             as="span"
             className="absolute start-5 top-5 rounded-lg bg-white px-2.5 py-1.5 text-xs font-semibold dark:bg-gray-200 dark:text-gray-700"
           >
             {calculatePercentage(price, oldPrice)}% Discount
-          </Text>
+          </Text> */}
         </div>
 
         <div className="pt-3">
@@ -68,11 +68,11 @@ export default function ProdukCard({
           </Text>
           <div className="mt-2 flex items-center font-semibold text-gray-900">
             {toCurrency(Number(price))}
-            {stock && (
+            {/* {stock && (
               <del className="ps-1.5 text-[13px] font-normal text-gray-500">
                 {toCurrency(Number(oldPrice))}
               </del>
-            )}
+            )} */}
           </div>
         </div>
       </Link>

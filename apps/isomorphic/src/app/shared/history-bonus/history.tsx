@@ -38,15 +38,6 @@ const getColumns = () => [
     ),
   },
   {
-    title: 'Type PIN',
-    dataIndex: 'attribute',
-    key: 'attribute',
-    width: 150,
-    render: ({ plan }: { plan: string }) => (
-      <Text className="text-gray-700">PLAN</Text>
-    ),
-  },
-  {
     title: 'Dari',
     dataIndex: 'attribute',
     key: 'attribute',
@@ -125,7 +116,7 @@ function AccordionContent({
           enablePagination={true}
           enableSearch={true}
           scroll={{
-            x: 900,
+            x: 500,
           }}
         />
       </div>
@@ -194,7 +185,7 @@ function FleetStatus({
                 Sponsor
               </Title>
             </div>
-            <Text as="span">{data?.sponsor?.currency}</Text>
+            <Text as="span">{data?.sponsor?.currency ?? 'Rp 0.00'}</Text>
           </div>
           <div className="mb-4 flex items-center justify-between border-b border-muted pb-4 last:mb-0 last:border-0 last:pb-0">
             <div className="flex items-center justify-start">
@@ -202,7 +193,7 @@ function FleetStatus({
                 Pasangan
               </Title>
             </div>
-            <Text as="span">{data?.pairing?.currency}</Text>
+            <Text as="span">{data?.pairing?.currency ?? 'Rp 0.00'}</Text>
           </div>
           <div className="flex items-center justify-between border-b border-muted pb-4 last:mb-0 last:border-0 last:pb-0">
             <div className="flex items-center justify-start">
@@ -211,7 +202,7 @@ function FleetStatus({
               </Title>
             </div>
             <Title as="h5" className="text-primary">
-              {data?.total?.currency}
+              {data?.total?.currency ?? 'Rp 0.00'}
             </Title>
           </div>
         </div>

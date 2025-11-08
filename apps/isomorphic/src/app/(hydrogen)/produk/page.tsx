@@ -5,20 +5,20 @@ import PageHeader from '@/app/shared/page-header';
 import ProductFeed from '@/app/shared/ecommerce/shop/product-feed';
 
 const pageHeader = {
-  title: 'Belanja Produk',
+  title: 'Pembelian Produk',
   breadcrumb: [
     {
       href: routes.dashboard.index,
       name: 'Dashboard',
     },
     {
-      name: 'Belanja Produk',
+      name: 'Pembelian Produk',
     },
   ],
 };
 
 export const metadata = {
-  ...metaObject('Belanja Produk'),
+  ...metaObject('Pembelian Produk'),
 };
 
 export default function ShopPage() {

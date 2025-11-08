@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function OrdersPage() {
   const pageHeader = {
-    title: 'History Pembelian Produk',
+    title: 'History Pembelian Stockist',
     breadcrumb: [
       {
         href: routes.dashboard.index,

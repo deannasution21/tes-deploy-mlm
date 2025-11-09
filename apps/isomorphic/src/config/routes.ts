@@ -1,4 +1,7 @@
 export const routes = {
+  unauthorized: {
+    index: '/unauthorized',
+  },
   dashboard: {
     index: '/dashboard',
   },

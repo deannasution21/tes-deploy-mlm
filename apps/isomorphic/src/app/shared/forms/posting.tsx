@@ -200,7 +200,6 @@ function Formnya({
           {...register(`sponsor`)}
           // @ts-ignore
           error={errors?.sponsor?.message as any}
-          disabled
         />
 
         <Input

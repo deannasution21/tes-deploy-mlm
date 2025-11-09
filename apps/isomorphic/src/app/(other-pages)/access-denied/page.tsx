@@ -25,21 +25,19 @@ export default function AccessDeniedPage() {
           as="h1"
           className="text-2xl font-bold leading-normal text-gray-1000 lg:text-3xl"
         >
-          Access Denied
+          Akses Ditolak
         </Title>
         <p className="mt-3 text-sm leading-loose text-gray-500 lg:mt-6 lg:text-base lg:leading-loose">
-          You do not have permission to access this page.
-          <br className="hidden xs:inline-block" />
-          Please contact your site administrator to request access.
+          Maaf, akun Anda tidak memiliki akses pada halaman ini
         </p>
-        <Link href={'/'}>
+        <Link href={'/dashboard'}>
           <Button
             size="xl"
             as="span"
             className="mt-8 h-12 px-4 xl:h-14 xl:px-6"
           >
             <PiHouseLineBold className="mr-1.5 text-lg" />
-            Back to home
+            Kembali ke Dashboard
           </Button>
         </Link>
       </div>

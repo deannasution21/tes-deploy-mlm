@@ -1,14 +1,32 @@
+import { withAuth } from 'next-auth/middleware';
+import { NextResponse } from 'next/server';
 import { pagesOptions } from '@/app/api/auth/[...nextauth]/pages-options';
-import withAuth from 'next-auth/middleware';
+import { routes } from './config/routes';
 
-export default withAuth({
-  pages: {
-    ...pagesOptions,
+export default withAuth(
+  function middleware(req) {
+    const { pathname } = req.nextUrl;
+    const role = req.nextauth.token?.user?.role; // access the user's role from token
+
+    // Example restriction: "member" CANNOT access "/produk" routes
+    if (role === 'member' && pathname.startsWith('/produk')) {
+      // redirect them somewhere safe
+      const url = req.nextUrl.clone();
+      url.pathname = routes.unauthorized.index;
+      return NextResponse.redirect(url);
+    }
+
+    // Otherwise, allow access
+    return NextResponse.next();
   },
-});
+  {
+    pages: {
+      ...pagesOptions,
+    },
+  }
+);
 
 export const config = {
-  // restricted routes
   matcher: [
     '/dashboard',
     '/dashboard/:path*',

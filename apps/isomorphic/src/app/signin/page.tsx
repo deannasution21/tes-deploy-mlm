@@ -11,7 +11,7 @@ export const metadata = {
 
 export default function SignIn() {
   return (
-    <AuthWrapperFour title={<>LOGIN MEMBER/STOCKIST</>} isSignIn role="user">
+    <AuthWrapperFour title={<>LOGIN AREA</>} isSignIn role="user">
       <SignInForm role="user" />
     </AuthWrapperFour>
   );

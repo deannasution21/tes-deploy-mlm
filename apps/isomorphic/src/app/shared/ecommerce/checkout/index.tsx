@@ -252,6 +252,7 @@ function Formnya({
           {...register(`customer_name`)}
           // @ts-ignore
           error={errors?.customer_name?.message as any}
+          autoComplete="off"
         />
         <Controller
           name="customer_phone"

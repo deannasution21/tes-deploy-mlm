@@ -3,6 +3,8 @@ import { Button, Title, Text } from 'rizzui';
 import logoImg from '@public/assets/img/logo/logo-ipg3.jpeg';
 import { routes } from '@/config/routes';
 import Link from 'next/link';
+// import logoImg from '@public/assets/img/logo/logo-ipg3-trans.png';
+import apliImg from '@public/assets/img/logo/logo-apli2.png';
 
 export default function WelcomePage() {
   return (
@@ -51,13 +53,21 @@ export default function WelcomePage() {
   }
 `}</style>
 
-          <Image
+          {/* <Image
             src={logoImg}
             alt="coming-soon"
             className="animate-pin-float aspect-[632/630] max-w-[256px] rounded-xl sm:max-w-xs lg:max-w-lg 2xl:max-w-xl 3xl:max-w-[632px]"
-          />
-          <div className="mx-auto h-20 w-32 bg-gray-1000/50 blur-[57px] [transform:rotateX(80deg)]"></div>
-          <div className="absolute bottom-10 left-3 mx-auto h-20 w-32 bg-gray-1000/50 blur-[57px] [transform:rotateX(80deg)] lg:left-7"></div>
+          /> */}
+          <div className="animate-pin-float flex items-center justify-center gap-5">
+            <div className="mb-7 inline-block lg:mb-9">
+              <Image src={logoImg} alt="IPG" height={250} />
+            </div>
+            <div className="mb-7 inline-block lg:mb-9">
+              <Image src={apliImg} alt="IPG" height={200} />
+            </div>
+          </div>
+          {/* <div className="mx-auto h-20 w-32 bg-gray-1000/50 blur-[57px] [transform:rotateX(80deg)]"></div>
+          <div className="absolute bottom-10 left-3 mx-auto h-20 w-32 bg-gray-1000/50 blur-[57px] [transform:rotateX(80deg)] lg:left-7"></div> */}
         </div>
       </div>
     </div>

@@ -12,6 +12,7 @@ import OrSeparation from '@/app/shared/auth-layout/or-separation';
 import { siteConfig } from '@/config/site.config';
 import { BsFacebook } from 'react-icons/bs';
 import logoImg from '@public/assets/img/logo/logo-ipg3-trans.png';
+import apliImg from '@public/assets/img/logo/logo-apli2.png';
 import bgDark from '@public/assets/img/bg-dark.jpeg';
 
 export default function AuthWrapperFour({
@@ -44,9 +45,14 @@ export default function AuthWrapperFour({
           )}
         >
           <div className="flex flex-col items-center">
-            <Link href={'/'} className="mb-7 inline-block lg:mb-9">
-              <Image src={logoImg} alt={siteConfig.title} height={250} />
-            </Link>
+            <div className="flex items-center justify-center gap-3">
+              <Link href={'/'} className="mb-7 inline-block lg:mb-9">
+                <Image src={logoImg} alt={siteConfig.title} height={250} />
+              </Link>
+              <div className="mb-7 inline-block lg:mb-9">
+                <Image src={apliImg} alt={siteConfig.title} height={200} />
+              </div>
+            </div>
             <Title
               as="h2"
               className="mb-7 text-center text-[24px] font-bold leading-snug text-[#c69731] md:text-3xl md:!leading-normal lg:mb-10 lg:text-4xl"

@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import SearchWidget from '@/app/shared/search/search';
 import ProfileMenu from '@/layouts/profile-menu';
 import SettingsButton from '@/layouts/settings-button';
 import HamburgerButton from '@/layouts/hamburger-button';
@@ -50,7 +49,6 @@ export default function Header() {
             />
           </div>
         </Link>
-        {/* <SearchWidget /> */}
       </div>
       <HeaderMenuRight />
     </header>

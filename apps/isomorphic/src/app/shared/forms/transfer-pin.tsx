@@ -3,7 +3,15 @@
 import { use, useEffect, useState } from 'react';
 import { SubmitHandler, Controller } from 'react-hook-form';
 import { Form } from '@core/ui/form';
-import { Text, Input, ActionIcon, Button, Password, Alert } from 'rizzui';
+import {
+  Text,
+  Input,
+  ActionIcon,
+  Button,
+  Password,
+  Alert,
+  Select,
+} from 'rizzui';
 import { FormBlockWrapper } from '@/app/shared/invoice/form-utils';
 import { toast } from 'react-hot-toast';
 import WidgetCard from '@core/components/cards/widget-card';
@@ -107,6 +115,17 @@ export default function TransferPinPage() {
 
   const [tujuan, setTujuan] = useState<UserData | null>(null);
   const [pin, setPin] = useState<number>(0);
+
+  const tipePin = [
+    {
+      label: 'PIN Normal',
+      value: 'plan_a',
+    },
+    {
+      label: 'PIN Free',
+      value: 'free',
+    },
+  ];
 
   const getDataPin = async () => {
     if (!session?.accessToken) return;
@@ -217,7 +236,7 @@ export default function TransferPinPage() {
               from: session?.user?.id,
               to: data.to,
               amount: data.amount,
-              type_pin: 'plan_a',
+              type_pin: data.type_pin,
               note: '',
               token: data.token,
             });
@@ -250,7 +269,6 @@ export default function TransferPinPage() {
             <Form<TransferPinInput>
               key={pin}
               validationSchema={transferPinSchema}
-              resetValues={resetValues}
               onSubmit={onSubmit}
               useFormProps={{
                 defaultValues: {
@@ -299,6 +317,27 @@ export default function TransferPinPage() {
                               onChange={(val) => onChange(val)}
                               max={pin > 2000 ? 2000 : pin}
                               error={errors?.amount?.message}
+                            />
+                          )}
+                        />
+                        <Controller
+                          name="type_pin"
+                          control={control}
+                          render={({ field: { onChange, value } }) => (
+                            <Select
+                              label="Tipe PIN"
+                              dropdownClassName="!z-10 h-fit"
+                              inPortal={false}
+                              placeholder="Pilih Tipe PIN"
+                              options={tipePin}
+                              onChange={onChange}
+                              value={value}
+                              getOptionValue={(option) => option.value}
+                              displayValue={(selected) =>
+                                tipePin?.find((con) => con.value === selected)
+                                  ?.label ?? ''
+                              }
+                              error={errors?.type_pin?.message}
                             />
                           )}
                         />

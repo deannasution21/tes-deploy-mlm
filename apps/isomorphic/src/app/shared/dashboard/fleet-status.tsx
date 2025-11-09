@@ -9,6 +9,7 @@ import TagIcon2 from '@core/components/icons/tag-2';
 import { useRouter } from 'next/navigation';
 import { routes } from '@/config/routes';
 import { PiTrophy } from 'react-icons/pi';
+import Link from 'next/link';
 
 const data = [
   { name: 'PIN General:', value: 20, color: '#3872FA' },
@@ -27,24 +28,14 @@ export default function FleetStatus({
 
   return (
     <div className={cn('flex flex-col gap-5 border-0 p-0 lg:p-0', className)}>
-      <div className="grid items-start rounded-lg border border-muted p-5 @xl:grid-cols-2 lg:p-7">
+      <div className="rounded-lg border border-muted p-5 lg:p-7">
         <Title
           as="h3"
-          className="col-span-full mb-8 text-base font-semibold sm:text-lg"
+          className="col-span-full mb-8 text-center text-base font-semibold sm:text-lg"
         >
           Informasi PIN Anda
         </Title>
-        <div className="mx-auto h-44 w-44">
-          <div className="animate-pin-tilt relative mx-auto aspect-square">
-            <Image
-              src={pinImg}
-              alt=""
-              fill
-              priority
-              className="object-contain"
-            />
-          </div>
-
+        <div className="mx-auto mb-5 h-40 w-40">
           <style>{`
             @keyframes pinTilt {
               0%,
@@ -64,46 +55,31 @@ export default function FleetStatus({
               transform-style: preserve-3d;
             }
           `}</style>
+          <div className="animate-pin-tilt relative mx-auto aspect-square">
+            <Image
+              src={pinImg}
+              alt=""
+              fill
+              priority
+              className="object-contain"
+            />
+          </div>
         </div>
-
-        <div className="">
-          {/* {data.map((item, index) => (
-            <div
-              key={index}
-              className="mb-4 flex items-center justify-between border-b border-muted pb-4 last:mb-0 last:border-0 last:pb-0"
-            >
-              <div className="flex items-center justify-start">
-                <span
-                  className="me-2 h-2 w-2 rounded-full"
-                  style={{ backgroundColor: item.color }}
-                />
-                <Title as="h5" className="text-sm font-semibold">
-                  {item.name}
-                </Title>
-              </div>
-              <Text as="span">{item.value}</Text>
-            </div>
-          ))} */}
-          <div className="mb-4 flex items-center justify-between border-b border-muted pb-4 last:mb-0 last:border-0 last:pb-0">
-            <div className="flex items-center justify-start">
-              <span
-                className="me-2 h-2 w-2 rounded-full"
-                style={{ backgroundColor: data[1].color }}
-              />
-              <Title as="h5" className="text-sm font-semibold">
-                PLAN
-              </Title>
-            </div>
-            <Text as="span">{pins ?? 0}</Text>
-          </div>
-          <div className="flex justify-end">
-            <Button
-              onClick={() => router.push(routes.lihatPin.index)}
-              className=""
-            >
-              <PiTrophy className="me-1.5 size-4" /> Lihat PIN
-            </Button>
-          </div>
+        <div className="mb-2 text-center">
+          <Title as="h4" className="text-primary">
+            PLAN
+          </Title>
+        </div>
+        <div className="relative border-b border-gray-300 pb-7 text-center">
+          <Title as="h6" className="mb-3 text-center">
+            Total PIN Anda:{' '}
+            <strong className="text-xl text-primary">{pins ?? 0} PIN</strong>
+          </Title>
+        </div>
+        <div className="relative pb-3 pt-7">
+          <Link href={routes.lihatPin.index}>
+            <Button className="w-full">Lihat PIN</Button>
+          </Link>
         </div>
       </div>
       <div className="hidden">

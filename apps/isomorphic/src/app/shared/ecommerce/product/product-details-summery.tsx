@@ -105,6 +105,9 @@ export default function ProductDetailsSummery({
           <div className="font-medium text-green-dark">
             Tersedia: {product?.attribute?.stock}
           </div>
+          <div className="font-medium text-green-dark">
+            PIN Generate: {product?.attribute?.stock_pin}/Qty
+          </div>
 
           <Title as="h6" className="mb-3.5 mt-6 font-inter text-sm font-medium">
             Masukkan Jumlah
@@ -117,6 +120,7 @@ export default function ProductDetailsSummery({
             <BeliSekarangButton
               onCheckout={() => onSubmit(getValues(), 'checkout')}
               isLoading={isLoadingB}
+              disabled={product?.attribute?.stock === 0 ? true : isLoadingB}
             />
 
             {/* Add to cart (normal submit) */}
@@ -125,6 +129,7 @@ export default function ProductDetailsSummery({
               size="xl"
               type="submit"
               isLoading={isLoading}
+              disabled={product?.attribute?.stock === 0 ? true : isLoading}
               className="h-12 text-sm lg:h-14 lg:text-base"
             >
               <PiShoppingCartSimple className="me-2 h-5 w-5 lg:h-[22px] lg:w-[22px]" />{' '}

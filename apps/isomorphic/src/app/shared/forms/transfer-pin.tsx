@@ -21,55 +21,42 @@ import {
 } from '@/types';
 import Swal from 'sweetalert2';
 import HistoryTransferPinTable from '../tables/history-transfer-pin';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 function QuantityInput({
   name,
   error,
   onChange,
-  defaultValue,
+  value,
   max,
 }: {
   name?: string;
   error?: string;
   onChange?: (value: number) => void;
-  defaultValue?: number;
-  max: number; // user's available PINs
+  value?: number; // ✅ controlled by parent (from RHF)
+  max: number;
 }) {
-  const [value, setValue] = useState(defaultValue ?? 1);
-
-  // cap the max amount to 2000
   const finalMax = Math.min(max, 2000);
 
   function handleIncrement() {
-    let newValue = value + 1;
-    if (newValue > finalMax) newValue = finalMax;
-    setValue(newValue);
+    if (value === undefined) return;
+    const newValue = Math.min(value + 1, finalMax);
     onChange?.(newValue);
   }
 
   function handleDecrement() {
-    let newValue = value > 1 ? value - 1 : 1;
-    setValue(newValue);
+    if (value === undefined) return;
+    const newValue = Math.max(value - 1, 1);
     onChange?.(newValue);
   }
 
   function handleOnChange(inputValue: number) {
-    // sanitize manual typing
     let newValue = Number(inputValue);
     if (isNaN(newValue)) newValue = 1;
     if (newValue < 1) newValue = 1;
     if (newValue > finalMax) newValue = finalMax;
-    setValue(newValue);
     onChange?.(newValue);
   }
-
-  useEffect(() => {
-    const initial = defaultValue ?? 1;
-    const bounded = Math.min(initial, finalMax);
-    setValue(bounded);
-    onChange?.(bounded);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [finalMax]);
 
   return (
     <Input
@@ -78,7 +65,7 @@ function QuantityInput({
       min={1}
       max={finalMax}
       name={name}
-      value={value}
+      value={value ?? 1} // ✅ controlled by prop
       placeholder="1"
       disabled={finalMax === 0}
       onChange={(e) => handleOnChange(Number(e.target.value))}
@@ -89,7 +76,7 @@ function QuantityInput({
             size="sm"
             variant="outline"
             className="scale-90 shadow-sm"
-            disabled={finalMax === 0 || value <= 1}
+            disabled={finalMax === 0 || (value ?? 1) <= 1}
             onClick={handleDecrement}
           >
             <PiMinusBold className="h-3.5 w-3.5" strokeWidth={2} />
@@ -99,7 +86,7 @@ function QuantityInput({
             size="sm"
             variant="outline"
             className="scale-90 shadow-sm"
-            disabled={finalMax === 0 || value >= finalMax}
+            disabled={finalMax === 0 || (value ?? 1) >= finalMax}
             onClick={handleIncrement}
           >
             <PiPlusBold className="h-3.5 w-3.5" strokeWidth={2} />
@@ -114,93 +101,95 @@ function QuantityInput({
 
 export default function TransferPinPage() {
   const { data: session } = useSession();
-  const [reset, setReset] = useState({});
-  const [isLoading, setLoading] = useState(false);
+  const [resetValues, setResetValues] = useState({});
+  const [isLoading, setLoading] = useState(true);
+  const [isLoadingS, setLoadingS] = useState(false);
+
   const [tujuan, setTujuan] = useState<UserData | null>(null);
   const [pin, setPin] = useState<number>(0);
 
-  const getDataPin = async (id: string) => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/_pins/dealer/${id}?fetch=all&type=plan_a`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-app-token': session?.accessToken ?? '',
-          },
-        }
-      );
+  const getDataPin = async () => {
+    if (!session?.accessToken) return;
 
-      if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
+    setLoading(true);
 
-      const data = (await res.json()) as PinResponse;
-      setPin(data?.data?.count);
-      setLoading(false);
-    } catch (error) {
-      console.error('Fetch data error:', error);
-    } finally {
-      setLoading(false);
-    }
+    const id = session?.user?.id;
+
+    fetchWithAuth<PinResponse>(
+      `/_pins/dealer/${id}?fetch=all&type=plan_a&status=active`,
+      { method: 'GET' },
+      session.accessToken
+    )
+      .then((data) => {
+        setPin(data?.data?.count || 0);
+      })
+      .catch((error) => {
+        console.error(error);
+        setPin(0);
+      })
+      .finally(() => setLoading(false));
   };
 
   const getDataTo = async (id: string) => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/_users/${id}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-app-token': session?.accessToken ?? '',
-          },
-        }
-      );
+    if (!session?.accessToken) return;
 
-      if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
+    setLoadingS(true);
 
-      toast.success(<Text as="b">Data {id} Ditemukan</Text>);
-      const data = (await res.json()) as UserDataResponse;
-      setTujuan(data?.data?.attribute ?? null);
-      setLoading(false);
-    } catch (error) {
-      toast.error(<Text as="b">Data {id} Tidak Ditemukan</Text>);
-      console.error('Fetch data error:', error);
-    } finally {
-      setLoading(false);
-    }
+    fetchWithAuth<UserDataResponse>(
+      `/_users/${id}`,
+      { method: 'GET' },
+      session.accessToken
+    )
+      .then((data) => {
+        toast.success(<Text as="b">Data {id} Ditemukan</Text>);
+        setTujuan(data?.data?.attribute ?? null);
+      })
+      .catch((error) => {
+        toast.error(<Text as="b">Data {id} Tidak Ditemukan</Text>);
+        console.error(error);
+        setTujuan(null);
+      })
+      .finally(() => setLoadingS(false));
   };
 
   const doTransfer = async (payload: any) => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/_pins/transfer`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-app-token': session?.accessToken ?? '',
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+    if (!session?.accessToken) return;
 
-      if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
+    setLoadingS(true);
 
-      toast.success(<Text as="b">Transfer Berhasil!</Text>);
-      getDataPin(session?.user?.id as string);
-      rollbackTransfer();
-      setLoading(false);
-    } catch (error) {
-      toast.error(<Text as="b">Transfer Gagal!</Text>);
-      console.error('Fetch data error:', error);
-    } finally {
-      setLoading(false);
-    }
+    fetchWithAuth<any>(
+      `/_pins/transfer`,
+      { method: 'POST', body: JSON.stringify(payload) },
+      session.accessToken
+    )
+      .then((data) => {
+        toast.success(<Text as="b">Transfer Berhasil!</Text>);
+        setTimeout(() => {
+          getDataPin();
+          rollbackTransfer();
+        }, 300);
+      })
+      .catch((error) => {
+        toast.error(<Text as="b">Transfer Gagal</Text>);
+        console.error(error);
+      })
+      .finally(() => setLoadingS(false));
+  };
+
+  const rollbackTransfer = () => {
+    setResetValues({
+      to: null,
+      amount: pin > 0 ? 1 : 0,
+      token: null,
+      role: null,
+      nama: null,
+    });
+    setTujuan(null);
   };
 
   const onSubmit: SubmitHandler<TransferPinInput> = (data) => {
-    setLoading(true);
+    setLoadingS(true);
+
     if (!tujuan) {
       getDataTo(data.to);
     } else {
@@ -235,31 +224,20 @@ export default function TransferPinPage() {
           }
         } else {
           toast.success(<Text as="b">Transfer dibatalkan!</Text>);
-          setLoading(false);
+          setLoadingS(false);
         }
       });
     }
-    // setTimeout(() => {
-    //   setLoading(false);
-    // }, 600);
-  };
-
-  const rollbackTransfer = () => {
-    setReset({
-      to: null,
-      amount: pin,
-      token: null,
-      role: null,
-      nama: null,
-    });
-    setTujuan(null);
   };
 
   useEffect(() => {
-    if (session?.user?.id) {
-      getDataPin(session.user.id);
-    }
+    if (!session?.accessToken) return;
+
+    getDataPin();
   }, [session?.accessToken]);
+
+  if (isLoading)
+    return <p className="py-20 text-center">Sedang memuat data...</p>;
 
   return (
     <div className="@container">
@@ -272,7 +250,7 @@ export default function TransferPinPage() {
             <Form<TransferPinInput>
               key={pin}
               validationSchema={transferPinSchema}
-              resetValues={reset}
+              resetValues={resetValues}
               onSubmit={onSubmit}
               useFormProps={{
                 defaultValues: {
@@ -281,7 +259,7 @@ export default function TransferPinPage() {
               }}
               className="flex flex-grow flex-col @container [&_label]:font-medium"
             >
-              {({ register, control, watch, formState: { errors } }) => (
+              {({ register, control, watch, reset, formState: { errors } }) => (
                 <>
                   <div className="flex-grow pb-10">
                     <Alert variant="flat" color="success" className="mb-7">
@@ -289,7 +267,8 @@ export default function TransferPinPage() {
                       <ol className="list-disc ps-5">
                         <li>
                           <Text className="break-normal">
-                            Anda memiliki <strong>{pin}</strong> PIN
+                            Anda memiliki <strong>{pin}</strong> PIN yang dapat
+                            digunakan
                           </Text>
                         </li>
                         <li>
@@ -308,20 +287,22 @@ export default function TransferPinPage() {
                           placeholder="Ketikkan username"
                           {...register('to')}
                           error={errors.to?.message}
+                          autoComplete="off"
                         />
                         <Controller
-                          name={`amount`}
+                          name="amount"
                           control={control}
                           render={({ field: { name, onChange, value } }) => (
                             <QuantityInput
                               name={name}
-                              onChange={(value) => onChange(value)}
-                              defaultValue={value}
-                              max={pin}
+                              value={value} // ✅ controlled
+                              onChange={(val) => onChange(val)}
+                              max={pin > 2000 ? 2000 : pin}
                               error={errors?.amount?.message}
                             />
                           )}
                         />
+
                         <Password
                           label="Password Anda"
                           placeholder="Ketikkan password"
@@ -362,8 +343,8 @@ export default function TransferPinPage() {
                     )}
                     <Button
                       type="submit"
-                      isLoading={isLoading}
-                      disabled={pin === 0 ? true : isLoading}
+                      isLoading={isLoadingS}
+                      disabled={pin === 0 ? true : isLoadingS}
                       className="w-full @xl:w-auto"
                     >
                       {tujuan ? 'Transfer Sekarang' : 'Transfer'}

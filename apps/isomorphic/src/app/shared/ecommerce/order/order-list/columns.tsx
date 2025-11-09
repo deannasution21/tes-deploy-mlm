@@ -173,6 +173,16 @@ export const ordersColumnsNew = (username: string) => {
         </Text>
       ),
     }),
+    columnHelperNew.accessor('attributes.totals.sub_total_currency', {
+      id: 'pin',
+      size: 150,
+      header: 'PIN Generate',
+      cell: ({ row }) => (
+        <Text className="text-gray-700">
+          {row.original.attributes.totals.total_pin}
+        </Text>
+      ),
+    }),
     columnHelperNew.accessor('attributes.status.message', {
       id: 'status',
       size: 150,

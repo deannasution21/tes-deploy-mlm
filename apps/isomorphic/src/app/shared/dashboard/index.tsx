@@ -25,7 +25,7 @@ export default function Dashboard() {
     setLoading(true);
 
     fetchWithAuth<PinResponse>(
-      `/_pins/dealer/${session.user?.id}?fetch=all&type=plan_a`,
+      `/_pins/dealer/${session.user?.id}?fetch=all&type=plan_a&status=active`,
       { method: 'GET' },
       session.accessToken
     )
@@ -55,7 +55,7 @@ export default function Dashboard() {
             <>
               Selamat Datang di Dashboard, <br />{' '}
               {session?.user?.name ?? 'Pengguna'}{' '}
-              <p className="inline-block text-primary">
+              <p className="inline-block uppercase text-primary">
                 (@{session?.user?.id ?? '-'})
               </p>{' '}
               <HandWaveIcon className="inline-flex h-8 w-8" />

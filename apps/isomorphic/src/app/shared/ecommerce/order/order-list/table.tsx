@@ -6,7 +6,7 @@ import { useTanStackTable } from '@core/components/table/custom/use-TanStack-Tab
 import TablePagination from '@core/components/table/pagination';
 import Filters from './filters';
 import { Alert, TableVariantProps, Text } from 'rizzui';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import WidgetCard from '@core/components/cards/widget-card';
@@ -103,8 +103,8 @@ export default function OrderTable({
       session.accessToken
     )
       .then((data) => {
-        setDataPesanan(data?.data?.transactions);
-        setData(data?.data?.transactions);
+        setDataPesanan(data?.data?.transactions ?? []);
+        setData(data?.data?.transactions ?? []);
       })
       .catch((error) => {
         console.error(error);
@@ -114,8 +114,17 @@ export default function OrderTable({
       .finally(() => setLoading(false));
   }, [session?.accessToken]);
 
+  // 🧠 Filter orders by `type`
+  const filteredPesanan = useMemo(() => {
+    if (type === 'all') return dataPesanan;
+    return dataPesanan.filter(
+      (item) => String(item.attributes?.status?.code) === type
+    );
+  }, [dataPesanan, type]);
+
+  // 🧩 Table initialization
   const { table, setData } = useTanStackTable<Transaction>({
-    tableData: dataPesanan,
+    tableData: filteredPesanan,
     columnConfig: ordersColumnsNew(session?.user?.id as string),
     options: {
       initialState: {
@@ -128,6 +137,11 @@ export default function OrderTable({
       enableColumnResizing: false,
     },
   });
+
+  // ✅ Sync table when filter changes
+  useEffect(() => {
+    setData(filteredPesanan);
+  }, [filteredPesanan, setData]);
 
   if (isLoading) {
     return (

@@ -1,13 +1,13 @@
-import type { Schema } from 'zod';
-import { useEffect } from 'react';
+import type { Schema } from "zod";
+import { useEffect } from "react";
 import {
   useForm,
   SubmitHandler,
   UseFormReturn,
   UseFormProps,
   FieldValues,
-} from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+} from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type ServerErrors<T> = {
   [Property in keyof T]: string;

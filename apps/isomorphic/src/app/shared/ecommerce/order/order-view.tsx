@@ -312,9 +312,10 @@ export default function OrderView() {
                 <div className="flex justify-between font-medium">
                   Biaya Admin{' '}
                   <span>
-                    {' '}
+                    {/* {' '}
                     {invoice?.attribute?.bill_payment?.fee?.nominal_rp ??
-                      'Rp 0'}
+                      'Rp 0'} */}
+                    FREE
                   </span>
                 </div>
                 <div className="flex justify-between font-medium">

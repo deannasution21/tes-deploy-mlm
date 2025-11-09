@@ -39,7 +39,7 @@ export default function ProductFeed() {
       session.accessToken
     )
       .then((data) => {
-        setDataProduct(data.data);
+        setDataProduct(data.data.products);
       })
       .catch((error) => {
         console.error(error);

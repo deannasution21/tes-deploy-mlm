@@ -129,7 +129,10 @@ export interface ProductResponse {
   code: number;
   success: boolean;
   message: string;
-  data: ProductItem[];
+  data: {
+    hasPurchasedPrd0004: boolean;
+    products: ProductItem[];
+  };
 }
 
 export interface ProductDetailResponse {
@@ -494,6 +497,7 @@ export interface HistoryBonusData {
 export interface GrandTotal {
   sponsor: AmountCurrency;
   pairing: AmountCurrency;
+  salary: AmountCurrency;
   total: AmountCurrency;
 }
 

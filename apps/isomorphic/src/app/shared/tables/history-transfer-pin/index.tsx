@@ -3,7 +3,6 @@
 import Table from '@core/components/table';
 import { transactionHistoryColumns } from './columns';
 import WidgetCard from '@core/components/cards/widget-card';
-import { transactionHistory } from '@/data/transaction-history';
 import { useTanStackTable } from '@core/components/table/custom/use-TanStack-Table';
 import TablePagination from '@core/components/table/pagination';
 import cn from '@core/utils/class-names';
@@ -11,6 +10,7 @@ import Filters from './filters';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { HistoryTransferPinItem, HistoryTransferPinResponse } from '@/types';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function HistoryTransferPinTable({
   className,
@@ -19,36 +19,31 @@ export default function HistoryTransferPinTable({
 }) {
   const { data: session } = useSession();
   const [dataHistory, setDataHistory] = useState<HistoryTransferPinItem[]>([]);
-  const [isLoading, setLoading] = useState(false);
-  const [type, setType] = useState<string>('received');
+  const [isLoading, setLoading] = useState(true);
+  const [type, setType] = useState<string>('send');
 
   useEffect(() => {
-    const getDataHistory = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/_pins/history-pin/${session?.user?.id}?type=${type}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-app-token': session?.accessToken ?? '',
-            },
-          }
-        );
+    if (!session?.accessToken) return;
 
-        if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
+    setLoading(true);
 
-        const data = (await res.json()) as HistoryTransferPinResponse;
+    const id = session?.user?.id;
+
+    fetchWithAuth<HistoryTransferPinResponse>(
+      `/_pins/history-pin/${id}?type=${type}`,
+      { method: 'GET' },
+      session.accessToken
+    )
+      .then((data) => {
         setDataHistory(data?.data?.histories);
-        setData(data?.data?.histories); // <--- ADD THIS LINE
-      } catch (error) {
-        console.error('Fetch data error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (session?.accessToken) getDataHistory();
+        setData(data?.data?.histories);
+      })
+      .catch((error) => {
+        console.error(error);
+        setDataHistory([]);
+        setData([]);
+      })
+      .finally(() => setLoading(false));
   }, [session?.accessToken, type]);
 
   const { table, setData } = useTanStackTable<HistoryTransferPinItem>({
@@ -58,13 +53,14 @@ export default function HistoryTransferPinTable({
       initialState: {
         pagination: {
           pageIndex: 0,
-          pageSize: 7,
+          pageSize: 10,
         },
       },
       meta: {},
       enableColumnResizing: false,
     },
   });
+
   return (
     <WidgetCard
       className={cn('p-0 lg:p-0', className)}

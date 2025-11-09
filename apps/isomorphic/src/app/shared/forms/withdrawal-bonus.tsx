@@ -135,8 +135,8 @@ export default function WithdrawalBonusForm(slug: any) {
       .then((result: any) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-          if (data.amount < 20000) {
-            toast.error(<Text>Min Rp 20.000,00 dalam sekali pencairan</Text>);
+          if (data.amount < 50000) {
+            toast.error(<Text>Min Rp 50.000,00 dalam sekali pencairan</Text>);
           } else {
             doWD(data);
           }
@@ -213,7 +213,7 @@ export default function WithdrawalBonusForm(slug: any) {
                         </li>
                         <li>
                           <Text className="break-normal">
-                            Minimal <strong>Rp 20.000,00</strong> dalam sekali
+                            Minimal <strong>Rp 50.000,00</strong> dalam sekali
                             pencairan
                           </Text>
                         </li>

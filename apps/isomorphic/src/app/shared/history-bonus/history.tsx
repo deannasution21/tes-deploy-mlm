@@ -17,6 +17,7 @@ import cn from '@core/utils/class-names';
 import FiltersHistoryBonus from './filters';
 import Image from 'next/image';
 import pinImg from '@public/assets/img/golden-gift.png';
+import { toCurrency } from '@core/utils/to-currency';
 
 const getColumns = () => [
   {
@@ -202,7 +203,9 @@ function FleetStatus({
               </Title>
             </div>
             <Title as="h5" className="text-primary">
-              {data?.total?.currency ?? 'Rp 0.00'}
+              {toCurrency(
+                (data?.total?.amount ?? 0) - (data?.salary?.amount ?? 0)
+              )}
             </Title>
           </div>
         </div>

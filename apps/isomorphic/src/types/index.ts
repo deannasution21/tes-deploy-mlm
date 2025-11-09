@@ -573,3 +573,9 @@ export interface WithdrawalSection {
   count: number;
   currency: string;
 }
+
+export interface CekSponsorResponse {
+  code: number;
+  message: string;
+  success: boolean;
+}

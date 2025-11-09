@@ -19,6 +19,7 @@ import { useSession } from 'next-auth/react';
 import {
   BankData,
   BankStatusResponse,
+  CekSponsorResponse,
   OptionType,
   PaymentOption,
   Pin,
@@ -39,6 +40,7 @@ function Formnya({
   dataPin,
   dataPin2,
   type,
+  session,
 }: {
   setSelectedProvinceName?: (value: string) => void;
   setSelectedCityName?: (value: string) => void;
@@ -46,12 +48,14 @@ function Formnya({
   dataPin: OptionType[];
   dataPin2: Pin[];
   type: string;
+  session: any;
 }) {
   const {
     control,
     register,
     watch,
     setValue,
+    getValues,
     formState: { errors },
   } = useFormContext();
 
@@ -65,6 +69,10 @@ function Formnya({
   const [dataProvinsi, setDataProvinsi] = useState<OptionType[]>([]);
   const [dataKabupaten, setDataKabupaten] = useState<OptionType[]>([]);
 
+  // Watch selected values
+  const selectedProvinsi = watch('province');
+  const selectedKabupaten = watch('city');
+
   const pasangan = [
     {
       label: 'Suami',
@@ -76,9 +84,41 @@ function Formnya({
     },
   ];
 
-  // Watch selected values
-  const selectedProvinsi = watch('province');
-  const selectedKabupaten = watch('city');
+  const [checking, setChecking] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
+
+  const handleCheckSponsor = async () => {
+    if (!session?.accessToken) return;
+
+    const sponsor = getValues('sponsor')?.trim();
+    if (!sponsor) {
+      setFeedback('Mohon isi sponsor terlebih dahulu');
+      return;
+    }
+
+    setChecking(true);
+    setFeedback(null);
+
+    fetchWithAuth<CekSponsorResponse>(
+      `/_network-diagrams/check-sponsor/${sponsor}`,
+      {
+        method: 'GET',
+      },
+      session.accessToken
+    )
+      .then((data) => {
+        if (data?.success) {
+          setFeedback('✅ Sponsor valid');
+        } else {
+          setFeedback('❌ Sponsor tidak ditemukan');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        // Clear the data so UI can show "no data"
+      })
+      .finally(() => setChecking(false));
+  };
 
   // Fetch provinsi list
   useEffect(() => {
@@ -194,13 +234,37 @@ function Formnya({
           disabled
         />
 
-        <Input
-          label="Sponsor"
-          placeholder="Sponsor"
-          {...register(`sponsor`)}
-          // @ts-ignore
-          error={errors?.sponsor?.message as any}
-        />
+        <div className="space-y-1">
+          <div className="flex items-end gap-2">
+            <Input
+              label="Sponsor"
+              placeholder="Sponsor"
+              {...register('sponsor')}
+              // @ts-ignore
+              error={errors?.sponsor?.message as any}
+              className="flex-1"
+            />
+            <Button
+              type="button"
+              onClick={handleCheckSponsor}
+              isLoading={checking}
+              disabled={checking}
+              className="shrink-0"
+            >
+              Cek
+            </Button>
+          </div>
+
+          {feedback && (
+            <p
+              className={`text-sm ${
+                feedback.includes('valid') ? 'text-green-600' : 'text-red-600'
+              }`}
+            >
+              {feedback}
+            </p>
+          )}
+        </div>
 
         <Input
           label="Email"
@@ -250,8 +314,8 @@ function Formnya({
           )}
         />
         <Input
-          label="Nama Suami/Istri"
-          placeholder="Nama Suami/Istri"
+          label="Nama Ahli Waris"
+          placeholder="Nama Ahli Waris"
           {...register(`heir_name`)}
           // @ts-ignore
           error={errors?.heir_name?.message as any}
@@ -262,10 +326,10 @@ function Formnya({
           control={control}
           render={({ field: { onChange, value } }) => (
             <Select
-              label="Pasangan"
+              label="Status Ahli Waris"
               dropdownClassName="!z-10 h-fit"
               inPortal={false}
-              placeholder="Pilih Pasangan"
+              placeholder="Pilih Status Ahli Waris"
               options={pasangan}
               onChange={onChange}
               value={value}
@@ -811,6 +875,7 @@ export default function Posting({
                     dataPin={dataPin}
                     dataPin2={dataPin2}
                     type={type}
+                    session={session}
                   />
                 </div>
               </div>
@@ -841,6 +906,7 @@ export default function Posting({
                     dataPin={dataPin}
                     dataPin2={dataPin2}
                     type={type}
+                    session={session}
                   />
                 </div>
               </div>

@@ -28,7 +28,7 @@ export default function AccessDeniedPage() {
           Akses Ditolak
         </Title>
         <p className="mt-3 text-sm leading-loose text-gray-500 lg:mt-6 lg:text-base lg:leading-loose">
-          Maaf, akun Anda tidak memiliki akses pada halaman ini
+          Maaf, Anda tidak memiliki akses pada halaman ini
         </p>
         <Link href={'/dashboard'}>
           <Button

@@ -104,7 +104,7 @@ export default function WithdrawalBonusForm(slug: any) {
       .then((data) => {
         toast.success(<Text>Withdrawal Bonus Berhasil!</Text>);
         setTimeout(() => {
-          router.push(routes.withdrawalBonus.index);
+          router.push(routes.withdrawalBonus.history);
         }, 300);
       })
       .catch((error) => {

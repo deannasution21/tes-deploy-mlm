@@ -127,9 +127,15 @@ function FleetStatus({
           </Text>
         </div>
         <div className="relative pb-3 pt-7">
-          <Link href={routes.withdrawalGaji.withdrawal}>
-            <Button className="w-full">Cairkan Gaji</Button>
-          </Link>
+          {(data?.point?.total_point ?? 0) < 30 ? (
+            <Button className="w-full" disabled>
+              Cairkan Gaji
+            </Button>
+          ) : (
+            <Link href={routes.withdrawalGaji.withdrawal}>
+              <Button className="w-full">Cairkan Gaji</Button>
+            </Link>
+          )}
         </div>
       </div>
     </div>

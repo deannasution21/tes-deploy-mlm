@@ -10,16 +10,16 @@ import WidgetCard from '@core/components/cards/widget-card';
 import { signOut, useSession } from 'next-auth/react';
 import { BankStatusResponse, BankData } from '@/types';
 import Swal from 'sweetalert2';
-import {
-  WithdrawalBonusInput,
-  withdrawalBonusSchema,
-} from '@/validators/withdrawal-bonus-schema';
 import Link from 'next/link';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { getBankNameByCode } from '@/utils/helper';
 import { handleSessionExpired } from '@/utils/sessionHandler';
 import { useRouter } from 'next/navigation';
 import { routes } from '@/config/routes';
+import {
+  WithdrawalGajiInput,
+  withdrawalGajiSchema,
+} from '@/validators/withdrawal-gaji-schema';
 
 // Root transaction structure
 export interface Transaction {
@@ -66,6 +66,10 @@ export interface Status {
   message: string;
 }
 
+// ===============================================
+// Withdrawal Summary Interfaces
+// ===============================================
+
 export interface WithdrawalSummarySingleResponse {
   code: number;
   success: boolean;
@@ -82,9 +86,23 @@ export interface WithdrawalSummaryData {
   commission_report: CommissionSection;
   withdrawal: WithdrawalSection;
   balance: AmountCurrency;
+
+  // ✅ newly added fields
+  can_withdrawal_salary: CanWithdrawalSalary;
+  detail_salary_withdrawal: DetailSalaryWithdrawal;
+
+  salary_config: {
+    config_amount: number;
+    currency: string;
+  };
+
   commission_log: CommissionSection;
   difference: CommissionSection;
 }
+
+// -----------------------------------------------
+// Supporting Sub-Interfaces
+// -----------------------------------------------
 
 export interface Point {
   point_left: number;
@@ -121,6 +139,19 @@ export interface AmountCurrencyWithCount extends AmountCurrency {
   count?: number;
 }
 
+// ✅ new interfaces
+export interface CanWithdrawalSalary {
+  can_withdrawal: boolean;
+  remaining_count: number;
+}
+
+export interface DetailSalaryWithdrawal {
+  total_point: number;
+  points_used: number;
+  remaining_points: number;
+  salary_balance: AmountCurrency;
+}
+
 export default function WithdrawalGajiForm(slug: any) {
   const { data: session } = useSession();
   const router = useRouter();
@@ -130,6 +161,7 @@ export default function WithdrawalGajiForm(slug: any) {
   const [reset, setReset] = useState({});
   const [dataGaji, setDataGaji] = useState<WithdrawalSummaryData | null>(null);
   const [dataBank, setDataBank] = useState<BankData[]>([]);
+  const defaultAmount = Number(dataGaji?.salary_config?.config_amount ?? 0);
 
   const doWD = async (payload: any) => {
     if (!session?.accessToken) {
@@ -137,13 +169,15 @@ export default function WithdrawalGajiForm(slug: any) {
       return;
     }
 
+    setProses(true);
+
     fetchWithAuth<Transaction>(
       `/_transactions`,
       {
         method: 'POST',
         body: JSON.stringify({
           username: payload?.username,
-          amount: payload?.amount,
+          category: 'salary',
           type: 'withdrawal',
           type_plan: 'plan_a',
         }),
@@ -151,19 +185,19 @@ export default function WithdrawalGajiForm(slug: any) {
       session.accessToken
     )
       .then((data) => {
-        toast.success(<Text>Withdrawal Bonus Berhasil!</Text>);
+        toast.success(<Text>Withdrawal Gaji Berhasil!</Text>);
         setTimeout(() => {
-          router.push(routes.withdrawalBonus.index);
+          router.push(routes.withdrawalGaji.history);
         }, 300);
       })
       .catch((error) => {
         console.error(error);
-        toast.error(<Text>Withdrawal Bonus Gagal!</Text>);
-      })
-      .finally(() => setLoading(false));
+        toast.error(<Text>Withdrawal Gaji Gagal!</Text>);
+        setProses(false);
+      });
   };
 
-  const onSubmit: SubmitHandler<WithdrawalBonusInput> = (data) => {
+  const onSubmit: SubmitHandler<WithdrawalGajiInput> = (data) => {
     setProses(true);
 
     Swal.fire({
@@ -180,20 +214,20 @@ export default function WithdrawalGajiForm(slug: any) {
           'bg-gray-300 hover:bg-gray-400 text-black font-semibold px-4 py-2 rounded',
       },
       buttonsStyling: false, // 👈 important! disable default styling
-    })
-      .then((result: any) => {
-        /* Read more about isConfirmed, isDenied below */
-        if (result.isConfirmed) {
-          if (data.amount < 20000) {
-            toast.error(<Text>Min Rp 20.000,00 dalam sekali pencairan</Text>);
-          } else {
-            doWD(data);
-          }
-        } else {
-          toast.success(<Text>Pencairan dibatalkan!</Text>);
-        }
-      })
-      .finally(() => setProses(false));
+    }).then((result: any) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        // if (data.amount < 50000) {
+        //   toast.error(<Text>Min Rp 50.000,00 dalam sekali pencairan</Text>);
+        //   setProses(false);
+        // } else {
+        // }
+        doWD(data);
+      } else {
+        toast.success(<Text>Pencairan dibatalkan!</Text>);
+        setProses(false);
+      }
+    });
   };
 
   useEffect(() => {
@@ -236,14 +270,14 @@ export default function WithdrawalGajiForm(slug: any) {
           titleClassName="text-[#c69731] font-bold text-2xl sm:text-2xl font-inter mb-5"
         >
           <div>
-            <Form<WithdrawalBonusInput>
-              validationSchema={withdrawalBonusSchema}
+            <Form<WithdrawalGajiInput>
+              key={defaultAmount}
+              validationSchema={withdrawalGajiSchema}
               resetValues={reset}
               onSubmit={onSubmit}
               useFormProps={{
                 defaultValues: {
                   username: session?.user?.id || '',
-                  amount: 0,
                 },
               }}
               className="flex flex-grow flex-col @container [&_label]:font-medium"
@@ -271,9 +305,18 @@ export default function WithdrawalGajiForm(slug: any) {
                         </li>
                         <li>
                           <Text className="break-normal">
-                            Withdrawal Gaji dapat dlakukan jika poin Anda sudah
+                            Withdrawal Gaji dapat dilakukan jika poin Anda sudah
                             mencapai <strong>30 poin</strong>, dan akan
                             dicairkan menjadi <strong>Rp 1.500.000</strong>
+                          </Text>
+                        </li>
+                        <li>
+                          <Text className="break-normal font-semibold uppercase text-primary">
+                            Anda dapat melakukan Withdrawal Gaji sebanyak{' '}
+                            <strong>
+                              {dataGaji?.can_withdrawal_salary?.remaining_count}
+                            </strong>
+                            X
                           </Text>
                         </li>
                       </ol>
@@ -288,7 +331,7 @@ export default function WithdrawalGajiForm(slug: any) {
                           inputClassName="bg-gray-200 text-gray-600"
                         />
                         <Input
-                          label="Jumlah Gaji"
+                          label="Total Gaji"
                           value={dataGaji?.balance?.currency}
                           readOnly
                           disabled
@@ -323,11 +366,9 @@ export default function WithdrawalGajiForm(slug: any) {
                       >
                         <Input
                           label="Nominal Pencairan"
-                          {...register('amount')}
-                          prefix={'Rp'}
-                          type="number"
-                          error={errors?.amount?.message as string}
+                          prefix="Rp"
                           disabled
+                          value={defaultAmount}
                         />
                       </FormBlockWrapper>
                     </div>
@@ -340,9 +381,11 @@ export default function WithdrawalGajiForm(slug: any) {
                     </Link>
                     <Button
                       type="submit"
-                      // isLoading={proses}
-                      // disabled={proses}
-                      disabled={true}
+                      isLoading={proses}
+                      disabled={
+                        !dataGaji?.can_withdrawal_salary?.can_withdrawal ||
+                        proses
+                      }
                       className="w-full @xl:w-auto"
                     >
                       Cairkan Sekarang

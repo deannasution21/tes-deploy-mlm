@@ -61,8 +61,8 @@ const getColumns = () => [
   },
   {
     title: 'Tanggal',
-    dataIndex: 'attribute',
-    key: 'attribute',
+    dataIndex: 'attributes',
+    key: 'attributes',
     width: 150,
     render: ({ created_at }: { created_at: string }) => (
       <Text className="font-medium text-gray-700">{created_at}</Text>
@@ -116,8 +116,7 @@ export default function HistoryWithdrawalGajiTable({
       session.accessToken
     )
       .then((data) => {
-        // setDataHistory(data.data.transactions || []);
-        setDataHistory([]);
+        setDataHistory(data.data.transactions || []);
       })
       .catch((error) => {
         console.error(error);
@@ -140,7 +139,7 @@ export default function HistoryWithdrawalGajiTable({
       enablePagination={true}
       enableSearch={true}
       scroll={{
-        x: 750,
+        x: 450,
       }}
     />
   );

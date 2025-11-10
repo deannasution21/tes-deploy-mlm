@@ -1,92 +1,17 @@
 'use client';
 
-import cn from '@core/utils/class-names';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import {
-  AmountCurrency,
   BankData,
   BankStatusResponse,
   TransactionData,
   TransactionResponse,
 } from '@/types';
-import BasicTableWidget from '@core/components/controlled-table/basic-table-widget';
-import { Alert, Button, Text, Title } from 'rizzui';
-import Link from 'next/link';
-import ProjectWriteIcon from '@core/components/icons/project-write';
-import { PiGift } from 'react-icons/pi';
-import { generateSlug } from '@core/utils/generate-slug';
+import { Alert, Text } from 'rizzui';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { getBankNameByCode } from '@/utils/helper';
-
-export const getColumns = () => [
-  {
-    title: <span className="ml-6 block">No</span>,
-    dataIndex: 'index',
-    key: 'index',
-    width: 50,
-    render: (_: any, __: any, index: number) => (
-      <Text className="ml-6 text-gray-700">{index + 1}.</Text>
-    ),
-  },
-  {
-    title: 'Username',
-    dataIndex: 'username',
-    key: 'username',
-    width: 150,
-    render: (username: string) => (
-      <Text className="font-medium text-gray-700">{username}</Text>
-    ),
-  },
-  {
-    title: 'Bonus (Sisa Bonus)',
-    dataIndex: 'balance',
-    key: 'balance',
-    width: 150,
-    render: ({ currency }: { currency: string }) => (
-      <Text className="text-gray-700">{currency}</Text>
-    ),
-  },
-  {
-    title: 'Withdrawal',
-    dataIndex: 'username',
-    key: 'username',
-    width: 150,
-    render: (username: string, row: any) => (
-      <Link href={`withdrawal-bonus/${generateSlug(username)}/withdrawal`}>
-        <Button size="sm" disabled={row.balance.amount === 0}>
-          <PiGift className="mr-2 h-4 w-4" />
-          <span>Withdrawal</span>
-        </Button>
-      </Link>
-    ),
-  },
-  {
-    title: 'History',
-    dataIndex: 'username',
-    key: 'username',
-    width: 150,
-    render: (username: string, row: any) => {
-      if (row.withdrawal.count > 0) {
-        return (
-          <Link href={`withdrawal-bonus/${generateSlug(username)}/history`}>
-            <Button size="sm" variant="flat">
-              <ProjectWriteIcon className="mr-2 h-4 w-4" />
-              <span>History</span>
-            </Button>
-          </Link>
-        );
-      } else {
-        return (
-          <Button size="sm" variant="flat" disabled>
-            <ProjectWriteIcon className="mr-2 h-4 w-4" />
-            <span>History</span>
-          </Button>
-        );
-      }
-    },
-  },
-];
+import WDBonusTable from '../wd-bonus';
 
 export default function WithdrawalBonusTable({
   className,
@@ -132,8 +57,8 @@ export default function WithdrawalBonusTable({
     return <p className="py-20 text-center">Sedang memuat data...</p>;
 
   return (
-    <>
-      <div className="mb-6 grid gap-6 @2xl:grid-cols-2 @3xl:mb-10 @3xl:gap-10">
+    <div className="@container">
+      <div className="grid grid-cols-1 gap-6 3xl:gap-8">
         <div className="rounded-lg border border-gray-300 p-5 @3xl:p-7">
           <ul className="grid gap-3">
             <li className="flex items-center gap-1">
@@ -185,21 +110,8 @@ export default function WithdrawalBonusTable({
             </Text>
           </Alert>
         </div>
+        <WDBonusTable datanya={dataUser?.summary ?? []} />
       </div>
-
-      <BasicTableWidget
-        title="Daftar Akumulasi Bonus"
-        description="Dari ID dengan rekening yang sama"
-        className={cn('[&_.rc-table-row:last-child_td]:border-b-0')}
-        data={dataUser?.summary ?? []}
-        getColumns={getColumns}
-        noGutter
-        enablePagination={true}
-        enableSearch={true}
-        scroll={{
-          x: 900,
-        }}
-      />
-    </>
+    </div>
   );
 }

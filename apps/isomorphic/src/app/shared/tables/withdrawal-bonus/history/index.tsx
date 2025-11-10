@@ -1,12 +1,9 @@
 'use client';
 
-import cn from '@core/utils/class-names';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { HistoryTransferPinItem, HistoryTransferPinResponse } from '@/types';
-import BasicTableWidget from '@core/components/controlled-table/basic-table-widget';
-import { Badge, Button, Text, Title } from 'rizzui';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
+import HistoryWDBonusTable from '../../history-wd-bonus';
 
 export interface TransactionsResponse {
   code: number;
@@ -49,64 +46,6 @@ export interface Withdrawal {
   status: TransactionStatus;
 }
 
-export const getColumns = () => [
-  {
-    title: <span className="ml-6 block">Tanggal</span>,
-    dataIndex: 'attributes',
-    key: 'attributes',
-    width: 150,
-    render: ({ created_at }: { created_at: string }) => (
-      <Text className="ml-6 font-medium text-gray-700">{created_at}</Text>
-    ),
-  },
-  {
-    title: <p className="text-end">Jumlah</p>,
-    dataIndex: 'attributes',
-    key: 'attributes',
-    width: 150,
-    render: ({ withdrawal }: { withdrawal: Withdrawal }) => (
-      <Text className="text-end text-gray-700">
-        {withdrawal.total_currency}
-      </Text>
-    ),
-  },
-  {
-    title: <p className="text-end">Biaya Bank</p>,
-    dataIndex: 'attributes',
-    key: 'attributes',
-    width: 150,
-    render: ({ withdrawal }: { withdrawal: Withdrawal }) => (
-      <Text className="text-end text-gray-700">Rp 0</Text>
-    ),
-  },
-  {
-    title: <p className="text-end">Total Transfer</p>,
-    dataIndex: 'attributes',
-    key: 'attributes',
-    width: 150,
-    render: ({ withdrawal }: { withdrawal: Withdrawal }) => (
-      <Text className="text-end text-gray-700">
-        {withdrawal.total_currency}
-      </Text>
-    ),
-  },
-  {
-    title: <p className="text-end">Status</p>,
-    dataIndex: 'attributes',
-    key: 'attributes',
-    width: 150,
-    render: ({ status }: { status: TransactionStatus }) => (
-      <div className="flex items-center justify-end gap-1.5">
-        <Badge
-          renderAsDot
-          color={status.code === 1 ? 'success' : 'secondary'}
-        />
-        {status.message}
-      </div>
-    ),
-  },
-];
-
 export default function HistoryWithdrawalBonusTable({
   className,
   slug,
@@ -143,17 +82,10 @@ export default function HistoryWithdrawalBonusTable({
     return <p className="py-20 text-center">Sedang memuat data...</p>;
 
   return (
-    <BasicTableWidget
-      title="History Withdrawal Bonus"
-      className={cn('[&_.rc-table-row:last-child_td]:border-b-0')}
-      data={dataHistory}
-      getColumns={getColumns}
-      noGutter
-      enablePagination={true}
-      enableSearch={true}
-      scroll={{
-        x: 750,
-      }}
-    />
+    <div className="@container">
+      <div className="grid grid-cols-1 gap-6 3xl:gap-8">
+        <HistoryWDBonusTable datanya={dataHistory ?? []} />;
+      </div>
+    </div>
   );
 }

@@ -69,7 +69,7 @@ export default function FleetStatus({
               key={plan}
               className="flex items-center justify-between border-b border-gray-300 py-3"
             >
-              <Title as="h5" className="text-primary">
+              <Title as="h5" className="uppercase text-primary">
                 {plan === 'plan_a' ? 'PLAN' : plan}
               </Title>
               <Title as="h4" className="text-end text-primary">

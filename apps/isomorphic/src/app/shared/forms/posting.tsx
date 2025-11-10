@@ -86,6 +86,10 @@ function Formnya({
       label: 'Anak',
       value: 'Children',
     },
+    {
+      label: 'Saudara',
+      value: 'Brother',
+    },
   ];
 
   const [checking, setChecking] = useState(false);
@@ -760,7 +764,7 @@ export default function Posting({
         session.accessToken
       ),
       fetchWithAuth<PinResponse>(
-        `/_pins/dealer/${session?.user?.id}?fetch=all&type=plan_a&status=active`,
+        `/_pins/dealer/${session?.user?.id}?fetch=all&status=active`,
         { method: 'GET' },
         session.accessToken
       ),

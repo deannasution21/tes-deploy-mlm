@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import {
   AmountCurrency,
   BonusCategory,
+  BonusItem,
   GrandTotal,
   HistoryBonusData,
   HistoryBonusResponse,
@@ -18,6 +19,7 @@ import FiltersHistoryBonus from './filters';
 import Image from 'next/image';
 import pinImg from '@public/assets/img/golden-gift.png';
 import { toCurrency } from '@core/utils/to-currency';
+import HistoryBonusTable from '../tables/history-bonus';
 
 const getColumns = () => [
   {
@@ -58,13 +60,7 @@ const getColumns = () => [
   },
 ];
 
-function AccordionContent({
-  data,
-  type,
-}: {
-  data: BonusCategory;
-  type: string;
-}) {
+function AccordionContent({ data, type }: { data: BonusItem[]; type: string }) {
   return (
     <Collapse
       defaultOpen={true}
@@ -105,21 +101,7 @@ function AccordionContent({
     >
       {/* Body */}
       <div className="bg-gray-50 text-gray-500 dark:bg-gray-100">
-        <BasicTableWidget
-          // title="Table"
-          // description=""
-          className={cn(
-            '-mt-8 border-0 [&_.rc-table-row:last-child_td]:border-b-0'
-          )}
-          data={data?.items ?? []}
-          getColumns={getColumns}
-          noGutter
-          enablePagination={true}
-          enableSearch={true}
-          scroll={{
-            x: 500,
-          }}
-        />
+        <HistoryBonusTable datanya={data ?? []} />
       </div>
     </Collapse>
   );
@@ -129,7 +111,7 @@ function PerBonus({ data, type }: { data: BonusCategory; type: string }) {
   return (
     <>
       <div key={type} className="rounded-lg border border-muted">
-        <AccordionContent data={data} type={type} />
+        <AccordionContent data={data?.items} type={type} />
 
         {/* Footer */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-dashed border-muted p-5 md:flex-nowrap">
@@ -167,7 +149,7 @@ function FleetStatus({
         >
           Total Komisi Anda
         </Title>
-        <div className="mx-auto h-40 w-40">
+        <div className="mx-auto mb-5 h-40 w-40">
           <div className="relative mx-auto aspect-square">
             <Image
               src={pinImg}

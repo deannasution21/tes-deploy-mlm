@@ -636,17 +636,6 @@ export const menuItemsUser = [
     href: routes.bonus.history,
     icon: <ProjectWriteIcon />,
   },
-  // {
-  //   name: 'History Bonus',
-  //   href: '#',
-  //   icon: <ProjectWriteIcon />,
-  //   dropdownItems: [
-  //     {
-  //       name: 'History Bonus PIN A ',
-  //       href: routes.bonus.history,
-  //     },
-  //   ],
-  // },
   {
     name: 'Withdrawal Bonus',
     href: '#',
@@ -657,7 +646,7 @@ export const menuItemsUser = [
         href: routes.withdrawalBonus.index,
       },
       {
-        name: 'History Withdrawal Bonus',
+        name: 'History WD Bonus',
         href: routes.withdrawalBonus.history,
       },
     ],
@@ -672,7 +661,7 @@ export const menuItemsUser = [
         href: routes.withdrawalGaji.index,
       },
       {
-        name: 'History Withdrawal Gaji',
+        name: 'History WD Gaji',
         href: routes.withdrawalGaji.history,
       },
     ],

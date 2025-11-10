@@ -55,6 +55,7 @@ export interface TransactionPayment {
 export interface BillPayment {
   sub_total: PaymentAmount;
   fee: PaymentAmount;
+  discount: PaymentAmount;
   total: PaymentAmount;
 }
 
@@ -306,6 +307,13 @@ export default function OrderView() {
                   Subtotal{' '}
                   <span>
                     {invoice?.attribute?.bill_payment?.sub_total?.nominal_rp ??
+                      'Rp 0'}
+                  </span>
+                </div>
+                <div className="flex justify-between font-medium">
+                  Diskon{' '}
+                  <span>
+                    {invoice?.attribute?.bill_payment?.discount?.nominal_rp ??
                       'Rp 0'}
                   </span>
                 </div>

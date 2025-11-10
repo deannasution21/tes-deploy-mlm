@@ -541,6 +541,8 @@ export interface WithdrawalUserDetail {
   name: string;
   point: Point;
   bank_account: BankAccount;
+  can_withdrawal_salary: CanWithdrawalSalary;
+  detail_salary_withdrawal: DetailSalaryWithdrawal;
 }
 
 export interface Point {
@@ -563,6 +565,20 @@ export interface WithdrawalSummaryItem {
   difference: CommissionSection;
 }
 
+// Can-withdrawal status
+export interface CanWithdrawalSalary {
+  can_withdrawal: boolean;
+  remaining_count: number;
+}
+
+// Salary withdrawal details
+export interface DetailSalaryWithdrawal {
+  total_point: number;
+  points_used: number;
+  remaining_points: number;
+  salary_balance: AmountCurrency;
+}
+
 export interface CommissionSection {
   salary: WithdrawalSection;
   total: AmountCurrency;
@@ -578,4 +594,16 @@ export interface CekSponsorResponse {
   code: number;
   message: string;
   success: boolean;
+}
+
+export interface DealerSummaryResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: DealerSummaryData;
+}
+
+export interface DealerSummaryData {
+  count: number;
+  summary: Record<string, number>;
 }

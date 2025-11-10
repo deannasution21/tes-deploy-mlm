@@ -6,10 +6,10 @@ import pinImg from '@public/pin.png';
 import Image from 'next/image';
 import TagIcon from '@core/components/icons/tag';
 import TagIcon2 from '@core/components/icons/tag-2';
-import { useRouter } from 'next/navigation';
 import { routes } from '@/config/routes';
-import { PiTrophy } from 'react-icons/pi';
 import Link from 'next/link';
+import { DealerSummaryData } from '@/types';
+import { PiArrowsHorizontal, PiTrophy } from 'react-icons/pi';
 
 const data = [
   { name: 'PIN General:', value: 20, color: '#3872FA' },
@@ -21,11 +21,9 @@ export default function FleetStatus({
   pins,
   className,
 }: {
-  pins?: number;
+  pins: DealerSummaryData;
   className?: string;
 }) {
-  const router = useRouter();
-
   return (
     <div className={cn('flex flex-col gap-5 border-0 p-0 lg:p-0', className)}>
       <div className="rounded-lg border border-muted p-5 lg:p-7">
@@ -65,20 +63,41 @@ export default function FleetStatus({
             />
           </div>
         </div>
-        <div className="mb-2 text-center">
-          <Title as="h4" className="text-primary">
-            PLAN
-          </Title>
+        <div className="mx-auto mb-2 max-w-xs text-center">
+          {Object.entries(pins.summary).map(([plan, count]) => (
+            <div
+              key={plan}
+              className="flex items-center justify-between border-b border-gray-300 py-3"
+            >
+              <Title as="h5" className="text-primary">
+                {plan === 'plan_a' ? 'PLAN' : plan}
+              </Title>
+              <Title as="h4" className="text-end text-primary">
+                {count ?? 0} PIN
+              </Title>
+            </div>
+          ))}
+          <div className="mb-3 flex items-center justify-between py-3">
+            <Title as="h5" className="text-black">
+              Total PIN Anda
+            </Title>
+            <Title as="h4" className="text-end text-xl text-primary">
+              {pins.count ?? 0} PIN
+            </Title>
+          </div>
         </div>
-        <div className="relative border-b border-gray-300 pb-7 text-center">
-          <Title as="h6" className="mb-3 text-center">
-            Total PIN Anda:{' '}
-            <strong className="text-xl text-primary">{pins ?? 0} PIN</strong>
-          </Title>
-        </div>
-        <div className="relative pb-3 pt-7">
-          <Link href={routes.lihatPin.index}>
-            <Button className="w-full">Lihat PIN</Button>
+        <div className="relative grid grid-cols-2 gap-3 border-t border-gray-300 pb-3 pt-5">
+          <Link href={routes.lihatPin.index} className="w-auto">
+            <Button className="w-full">
+              <PiTrophy className="me-1.5 h-[17px] w-[17px]" />
+              Lihat PIN
+            </Button>
+          </Link>
+          <Link href={routes.transferPin.index} className="w-auto">
+            <Button variant="outline" className="w-full">
+              <PiArrowsHorizontal className="me-1.5 h-[17px] w-[17px]" />
+              Transfer PIN
+            </Button>
           </Link>
         </div>
       </div>

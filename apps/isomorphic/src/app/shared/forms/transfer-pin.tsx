@@ -26,6 +26,8 @@ import {
   UserDataResponse,
   PinResponse,
   TransferPinResponse,
+  DealerSummaryResponse,
+  DealerSummaryData,
 } from '@/types';
 import Swal from 'sweetalert2';
 import HistoryTransferPinTable from '../tables/history-transfer-pin';
@@ -37,34 +39,39 @@ function QuantityInput({
   onChange,
   value,
   max,
+  disabled,
 }: {
   name?: string;
   error?: string;
   onChange?: (value: number) => void;
   value?: number; // ✅ controlled by parent (from RHF)
   max: number;
+  disabled?: boolean;
 }) {
   const finalMax = Math.min(max, 2000);
 
   function handleIncrement() {
-    if (value === undefined) return;
+    if (disabled || value === undefined) return;
     const newValue = Math.min(value + 1, finalMax);
     onChange?.(newValue);
   }
 
   function handleDecrement() {
-    if (value === undefined) return;
+    if (disabled || value === undefined) return;
     const newValue = Math.max(value - 1, 1);
     onChange?.(newValue);
   }
 
   function handleOnChange(inputValue: number) {
+    if (disabled) return;
     let newValue = Number(inputValue);
     if (isNaN(newValue)) newValue = 1;
     if (newValue < 1) newValue = 1;
     if (newValue > finalMax) newValue = finalMax;
     onChange?.(newValue);
   }
+
+  const isDisabled = disabled || finalMax === 0;
 
   return (
     <Input
@@ -75,7 +82,7 @@ function QuantityInput({
       name={name}
       value={value ?? 1} // ✅ controlled by prop
       placeholder="1"
-      disabled={finalMax === 0}
+      disabled={isDisabled}
       onChange={(e) => handleOnChange(Number(e.target.value))}
       suffix={
         <>
@@ -84,7 +91,7 @@ function QuantityInput({
             size="sm"
             variant="outline"
             className="scale-90 shadow-sm"
-            disabled={finalMax === 0 || (value ?? 1) <= 1}
+            disabled={isDisabled || (value ?? 1) <= 1}
             onClick={handleDecrement}
           >
             <PiMinusBold className="h-3.5 w-3.5" strokeWidth={2} />
@@ -94,7 +101,7 @@ function QuantityInput({
             size="sm"
             variant="outline"
             className="scale-90 shadow-sm"
-            disabled={finalMax === 0 || (value ?? 1) >= finalMax}
+            disabled={isDisabled || (value ?? 1) >= finalMax}
             onClick={handleIncrement}
           >
             <PiPlusBold className="h-3.5 w-3.5" strokeWidth={2} />
@@ -109,23 +116,21 @@ function QuantityInput({
 
 export default function TransferPinPage() {
   const { data: session } = useSession();
-  const [resetValues, setResetValues] = useState({});
+  const [resetValues, setResetValues] = useState({
+    to: '',
+    amount: 0,
+    token: '',
+    role: '',
+    nama: '',
+  });
   const [isLoading, setLoading] = useState(true);
   const [isLoadingS, setLoadingS] = useState(false);
 
   const [tujuan, setTujuan] = useState<UserData | null>(null);
-  const [pin, setPin] = useState<number>(0);
-
-  const tipePin = [
-    {
-      label: 'PIN Normal',
-      value: 'plan_a',
-    },
-    {
-      label: 'PIN Free',
-      value: 'free',
-    },
-  ];
+  const [dataPin, setDataPin] = useState<DealerSummaryData | null>(null);
+  const [tipePin, setTipePin] = useState<{ label: string; value: string }[]>(
+    []
+  );
 
   const getDataPin = async () => {
     if (!session?.accessToken) return;
@@ -134,17 +139,27 @@ export default function TransferPinPage() {
 
     const id = session?.user?.id;
 
-    fetchWithAuth<PinResponse>(
-      `/_pins/dealer/${id}?fetch=all&type=plan_a&status=active`,
+    fetchWithAuth<DealerSummaryResponse>(
+      `/_pins/dealer/${session.user?.id}?fetch=summary&status=active`,
       { method: 'GET' },
       session.accessToken
     )
       .then((data) => {
-        setPin(data?.data?.count || 0);
+        setDataPin(data?.data);
+
+        // dynamically build select options
+        const options = Object.entries(data?.data.summary)
+          .filter(([_, count]) => count > 0) // optional: only include those with >0
+          .map(([key]) => ({
+            label: key === 'plan_a' ? 'PIN Normal' : 'PIN Free',
+            value: key,
+          }));
+
+        setTipePin(options);
       })
       .catch((error) => {
         console.error(error);
-        setPin(0);
+        setDataPin(null);
       })
       .finally(() => setLoading(false));
   };
@@ -197,11 +212,11 @@ export default function TransferPinPage() {
 
   const rollbackTransfer = () => {
     setResetValues({
-      to: null,
-      amount: pin > 0 ? 1 : 0,
-      token: null,
-      role: null,
-      nama: null,
+      to: '',
+      amount: 0,
+      token: '',
+      role: '',
+      nama: '',
     });
     setTujuan(null);
   };
@@ -267,130 +282,168 @@ export default function TransferPinPage() {
         >
           <div>
             <Form<TransferPinInput>
-              key={pin}
               validationSchema={transferPinSchema}
               onSubmit={onSubmit}
+              resetValues={resetValues}
               useFormProps={{
                 defaultValues: {
-                  amount: pin > 0 ? 1 : 0,
+                  amount: 0,
                 },
               }}
               className="flex flex-grow flex-col @container [&_label]:font-medium"
             >
-              {({ register, control, watch, reset, formState: { errors } }) => (
-                <>
-                  <div className="flex-grow pb-10">
-                    <Alert variant="flat" color="success" className="mb-7">
-                      <Text className="font-semibold">Informasi</Text>
-                      <ol className="list-disc ps-5">
-                        <li>
-                          <Text className="break-normal">
-                            Anda memiliki <strong>{pin}</strong> PIN yang dapat
-                            digunakan
-                          </Text>
-                        </li>
-                        <li>
-                          <Text className="break-normal">
-                            Maksimal <strong>2000</strong> PIN dalam sekali
-                            transfer
-                          </Text>
-                        </li>
-                      </ol>
-                    </Alert>
+              {({
+                register,
+                control,
+                watch,
+                setValue,
+                reset,
+                formState: { errors },
+              }) => {
+                const selectedType = watch('type_pin');
+                const currentPinMax = selectedType
+                  ? (dataPin?.summary?.[selectedType] ?? 0)
+                  : 0;
+                const isDisabled = !selectedType || currentPinMax === 0;
 
-                    <div className="grid grid-cols-1 gap-8 divide-y divide-dashed divide-gray-200 @2xl:gap-10 @3xl:gap-12">
-                      <FormBlockWrapper title={'Data Pengirim:'}>
-                        <Input
-                          label="Username Member Tujuan"
-                          placeholder="Ketikkan username"
-                          {...register('to')}
-                          error={errors.to?.message}
-                          autoComplete="off"
-                        />
-                        <Controller
-                          name="amount"
-                          control={control}
-                          render={({ field: { name, onChange, value } }) => (
-                            <QuantityInput
-                              name={name}
-                              value={value} // ✅ controlled
-                              onChange={(val) => onChange(val)}
-                              max={pin > 2000 ? 2000 : pin}
-                              error={errors?.amount?.message}
-                            />
-                          )}
-                        />
-                        <Controller
-                          name="type_pin"
-                          control={control}
-                          render={({ field: { onChange, value } }) => (
-                            <Select
-                              label="Tipe PIN"
-                              dropdownClassName="!z-10 h-fit"
-                              inPortal={false}
-                              placeholder="Pilih Tipe PIN"
-                              options={tipePin}
-                              onChange={onChange}
-                              value={value}
-                              getOptionValue={(option) => option.value}
-                              displayValue={(selected) =>
-                                tipePin?.find((con) => con.value === selected)
-                                  ?.label ?? ''
-                              }
-                              error={errors?.type_pin?.message}
-                            />
-                          )}
-                        />
+                return (
+                  <>
+                    <div className="flex-grow pb-10">
+                      <Alert variant="flat" color="success" className="mb-7">
+                        <Text className="font-semibold">Informasi</Text>
+                        <ol className="list-disc ps-5">
+                          <li>
+                            <Text className="break-normal">
+                              Anda memiliki total{' '}
+                              <strong>{dataPin?.count}</strong> PIN yang dapat
+                              digunakan
+                            </Text>
+                          </li>
+                          {dataPin &&
+                            Object.entries(dataPin.summary).map(
+                              ([plan, count]) => (
+                                <li>
+                                  <Text className="break-normal">
+                                    Anda memiliki{' '}
+                                    <strong className="uppercase">
+                                      {count} PIN{' '}
+                                      {plan === 'plan_a' ? 'PLAN' : plan}
+                                    </strong>
+                                  </Text>
+                                </li>
+                              )
+                            )}
+                          <li>
+                            <Text className="break-normal">
+                              Maksimal <strong>2000</strong> PIN dalam sekali
+                              transfer
+                            </Text>
+                          </li>
+                        </ol>
+                      </Alert>
 
-                        <Password
-                          label="Password Anda"
-                          placeholder="Ketikkan password"
-                          {...register('token')}
-                          error={errors.token?.message}
-                        />
-                      </FormBlockWrapper>
-                      {tujuan && (
-                        <FormBlockWrapper
-                          title={'Data Penerima:'}
-                          className="hidden pt-7 @2xl:pt-9 @3xl:pt-11"
-                        >
+                      <div className="grid grid-cols-1 gap-8 divide-y divide-dashed divide-gray-200 @2xl:gap-10 @3xl:gap-12">
+                        <FormBlockWrapper title={'Data Pengirim:'}>
                           <Input
-                            label="Jenis Member"
-                            name="role"
-                            value={tujuan?.role}
-                            disabled
+                            label="Username Member Tujuan"
+                            placeholder="Ketikkan username"
+                            {...register('to')}
+                            error={errors.to?.message}
+                            autoComplete="off"
                           />
-                          <Input
-                            label="Nama"
-                            name="nama"
-                            value={tujuan?.nama}
-                            disabled
+                          <Controller
+                            name="type_pin"
+                            control={control}
+                            render={({ field: { onChange, value } }) => (
+                              <Select
+                                label="Tipe PIN"
+                                dropdownClassName="!z-10 h-fit"
+                                inPortal={false}
+                                placeholder="Pilih Tipe PIN"
+                                options={tipePin}
+                                onChange={(val) => {
+                                  onChange(val);
+                                  setValue('amount', 0);
+                                }}
+                                value={value}
+                                getOptionValue={(option) => option.value}
+                                displayValue={(selected) =>
+                                  tipePin?.find((con) => con.value === selected)
+                                    ?.label ?? ''
+                                }
+                                error={
+                                  errors?.type_pin?.message as
+                                    | string
+                                    | undefined
+                                }
+                              />
+                            )}
+                          />
+                          <Controller
+                            name="amount"
+                            control={control}
+                            render={({ field: { name, onChange, value } }) => (
+                              <QuantityInput
+                                name={name}
+                                value={value}
+                                onChange={onChange}
+                                max={currentPinMax}
+                                disabled={isDisabled}
+                                error={errors?.amount?.message}
+                              />
+                            )}
+                          />
+
+                          <Password
+                            label="Password Anda"
+                            placeholder="Ketikkan password"
+                            {...register('token')}
+                            error={errors.token?.message}
                           />
                         </FormBlockWrapper>
-                      )}
+                        {tujuan && (
+                          <FormBlockWrapper
+                            title={'Data Penerima:'}
+                            className="hidden pt-7 @2xl:pt-9 @3xl:pt-11"
+                          >
+                            <Input
+                              label="Jenis Member"
+                              name="role"
+                              value={tujuan?.role}
+                              disabled
+                            />
+                            <Input
+                              label="Nama"
+                              name="nama"
+                              value={tujuan?.nama}
+                              disabled
+                            />
+                          </FormBlockWrapper>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <div className="-mb-4 flex items-center justify-end gap-4 border-t py-4 dark:bg-gray-50">
-                    {tujuan && (
+                    <div className="-mb-4 flex items-center justify-end gap-4 border-t py-4 dark:bg-gray-50">
+                      {tujuan && (
+                        <Button
+                          variant="outline"
+                          className="w-full @xl:w-auto"
+                          onClick={rollbackTransfer}
+                        >
+                          Batal
+                        </Button>
+                      )}
                       <Button
-                        variant="outline"
+                        type="submit"
+                        isLoading={isLoadingS}
+                        disabled={dataPin?.count === 0 ? true : isLoadingS}
                         className="w-full @xl:w-auto"
-                        onClick={rollbackTransfer}
                       >
-                        Batal
+                        {tujuan ? 'Transfer Sekarang' : 'Transfer'}
                       </Button>
-                    )}
-                    <Button
-                      type="submit"
-                      isLoading={isLoadingS}
-                      disabled={pin === 0 ? true : isLoadingS}
-                      className="w-full @xl:w-auto"
-                    >
-                      {tujuan ? 'Transfer Sekarang' : 'Transfer'}
-                    </Button>
-                  </div>
-                </>
-              )}
+                    </div>
+                  </>
+                );
+              }}
             </Form>
           </div>
         </WidgetCard>

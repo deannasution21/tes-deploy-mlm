@@ -10,13 +10,13 @@ import HandWaveIcon from '@core/components/icons/hand-wave';
 import FleetStatus from './fleet-status';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { Pin, PinResponse } from '@/types';
+import { DealerSummaryData, DealerSummaryResponse } from '@/types';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function Dashboard() {
   const { data: session } = useSession();
 
-  const [dataPins, setDataPins] = useState<number>(0);
+  const [dataPins, setDataPins] = useState<DealerSummaryData | null>(null);
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -24,17 +24,17 @@ export default function Dashboard() {
 
     setLoading(true);
 
-    fetchWithAuth<PinResponse>(
-      `/_pins/dealer/${session.user?.id}?fetch=all&type=plan_a&status=active`,
+    fetchWithAuth<DealerSummaryResponse>(
+      `/_pins/dealer/${session.user?.id}?fetch=summary&status=active`,
       { method: 'GET' },
       session.accessToken
     )
       .then((data) => {
-        setDataPins(data.data.count);
+        setDataPins(data.data);
       })
       .catch((error) => {
         console.error(error);
-        setDataPins(0);
+        setDataPins(null);
       })
       .finally(() => setLoading(false));
   }, [session?.accessToken]);
@@ -87,10 +87,12 @@ export default function Dashboard() {
           )}
         </WelcomeBanner>
 
-        <FleetStatus
-          pins={dataPins}
-          className="h-[464px] @sm:h-[520px] @7xl:col-span-4 @7xl:col-start-9 @7xl:row-start-1 @7xl:row-end-3 @7xl:h-full"
-        />
+        {dataPins && (
+          <FleetStatus
+            pins={dataPins}
+            className="h-[464px] @sm:h-[520px] @7xl:col-span-4 @7xl:col-start-9 @7xl:row-start-1 @7xl:row-end-3 @7xl:h-full"
+          />
+        )}
       </div>
     </div>
   );

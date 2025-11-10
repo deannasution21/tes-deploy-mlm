@@ -116,7 +116,13 @@ function FleetStatus({
           <Title as="h6" className="mb-3 text-center">
             Total Poin Anda:{' '}
             <strong className="text-xl text-primary">
-              {data?.point?.total_point ?? 0} Poin
+              {data?.detail_salary_withdrawal.remaining_points ?? 0} Poin
+            </strong>
+          </Title>
+          <Title as="h6" className="mb-3 text-center">
+            Poin Hangus Anda:{' '}
+            <strong className="text-xl text-primary">
+              {data?.point.bonus_flushed ?? 0} Poin
             </strong>
           </Title>
           <Text as="p" className="text-stone-500">
@@ -127,7 +133,7 @@ function FleetStatus({
           </Text>
         </div>
         <div className="relative pb-3 pt-7">
-          {(data?.point?.total_point ?? 0) < 30 ? (
+          {!data?.can_withdrawal_salary.can_withdrawal ? (
             <Button className="w-full" disabled>
               Cairkan Gaji
             </Button>

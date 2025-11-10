@@ -55,6 +55,15 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/signin',
+        permanent: false, // change to true if you want a 308 permanent redirect
+      },
+    ];
+  },
 };
 
 export default nextConfig;

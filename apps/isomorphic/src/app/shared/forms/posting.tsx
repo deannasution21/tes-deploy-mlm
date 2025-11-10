@@ -82,6 +82,10 @@ function Formnya({
       label: 'Istri',
       value: 'Wife',
     },
+    {
+      label: 'Anak',
+      value: 'Children',
+    },
   ];
 
   const [checking, setChecking] = useState(false);

@@ -120,7 +120,6 @@ function Formnya({
                       dataBank.find((k) => k.value === selected)?.label ?? ''
                     }
                     error={errors?.nama_bank?.message as string | undefined}
-                    disabled
                   />
                 )}
               />
@@ -130,7 +129,6 @@ function Formnya({
                 {...register(`no_rekening`)}
                 // @ts-ignore
                 error={errors?.no_rekening?.message as any}
-                disabled
               />
               <Input
                 label="Atas Nama"
@@ -138,7 +136,6 @@ function Formnya({
                 {...register(`nama_pemilik_rekening`)}
                 // @ts-ignore
                 error={errors?.nama_pemilik_rekening?.message as any}
-                disabled
               />
             </FormBlockWrapper>
           )}
@@ -154,9 +151,8 @@ function Formnya({
         </Button>
         <Button
           type="submit"
-          // isLoading={isLoading}
-          // disabled={isLoading}
-          disabled
+          isLoading={isLoading}
+          disabled={isLoading}
           className="w-full @xl:w-auto"
         >
           Ubah Data

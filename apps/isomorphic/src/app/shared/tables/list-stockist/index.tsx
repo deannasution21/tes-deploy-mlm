@@ -9,7 +9,7 @@ import cn from '@core/utils/class-names';
 import Filters from './filters';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { Pin, PinResponse } from '@/types';
+import { StockistListDetail, StockistListDetailResponse } from '@/types';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function ListStockistTable({
@@ -18,8 +18,9 @@ export default function ListStockistTable({
   className?: string;
 }) {
   const { data: session } = useSession();
-  const [dataPins, setDataPins] = useState<Pin[]>([]);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
+
+  const [dataStockist, setDataStockist] = useState<StockistListDetail[]>([]);
   const [type, setType] = useState<string>('received');
 
   useEffect(() => {
@@ -27,34 +28,32 @@ export default function ListStockistTable({
 
     setLoading(true);
 
-    fetchWithAuth<PinResponse>(
-      `/_pins/dealer/${session.user?.id}?fetch=all&type=plan_a`,
+    fetchWithAuth<StockistListDetailResponse>(
+      `/_users/stockist?fetch=active`,
       { method: 'GET' },
       session.accessToken
     )
       .then((data) => {
-        const data_pins = data?.data?.pins || [];
-        // setDataPins(data_pins);
-        // setData(data_pins);
-        setDataPins([]);
-        setData([]);
+        const datanya = data?.data?.detail || [];
+        setDataStockist(datanya);
+        setData(datanya);
       })
       .catch((error) => {
         console.error(error);
-        setDataPins([]);
+        setDataStockist([]);
         setData([]);
       })
       .finally(() => setLoading(false));
   }, [session?.accessToken]);
 
-  const { table, setData } = useTanStackTable<Pin>({
-    tableData: dataPins,
+  const { table, setData } = useTanStackTable<StockistListDetail>({
+    tableData: dataStockist,
     columnConfig: listStockistColumns,
     options: {
       initialState: {
         pagination: {
           pageIndex: 0,
-          pageSize: 7,
+          pageSize: 10,
         },
       },
       meta: {},

@@ -51,7 +51,7 @@ export const config = {
     '/diagram-jaringan',
     '/diagram-jaringan/:path*',
     '/stockist',
-    '/stockist/:path',
+    '/stockist/:path*',
     '/invoice/:path*',
   ],
 };

@@ -73,6 +73,7 @@ export interface Status {
 
 export default function WithdrawalBonusForm(slug: any) {
   const { data: session } = useSession();
+  const usernamenya = slug?.slug ?? null;
   const router = useRouter();
   const [isLoading, setLoading] = useState(true);
   const [proses, setProses] = useState(false);
@@ -154,7 +155,7 @@ export default function WithdrawalBonusForm(slug: any) {
 
     Promise.all([
       fetchWithAuth<TransactionWDResponse>(
-        `/_transactions/withdrawal-data?type=plan_a&username=${session?.user?.id || ''}&category=bonus`,
+        `/_transactions/withdrawal-data?type=plan_a&username=${usernamenya}&category=bonus`,
         { method: 'GET' },
         session.accessToken
       ),
@@ -193,7 +194,7 @@ export default function WithdrawalBonusForm(slug: any) {
               onSubmit={onSubmit}
               useFormProps={{
                 defaultValues: {
-                  username: session?.user?.id || '',
+                  username: usernamenya,
                   amount: 0,
                 },
               }}

@@ -607,3 +607,35 @@ export interface DealerSummaryData {
   count: number;
   summary: Record<string, number>;
 }
+
+export interface StockistListDetailResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: StockistListDetailData;
+}
+
+export interface StockistListDetailData {
+  count: number;
+  detail: StockistListDetail[];
+}
+
+export interface StockistListDetail {
+  username: string;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  province: string;
+  city: string;
+  status: StockistStatus;
+  is_first_buy_100: boolean;
+  is_active: boolean;
+  is_deleted: boolean;
+  role: string;
+  created_at: string; // "08-11-2025 02:12"
+}
+
+export interface StockistStatus {
+  code: number;
+  description: string;
+}

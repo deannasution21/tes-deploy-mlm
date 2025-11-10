@@ -3,15 +3,9 @@
 import { getStatusBadge } from '@core/components/table-utils/get-status-badge';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Text } from 'rizzui';
-import { Pin } from '@/types';
+import { StockistListDetail } from '@/types';
 
-const statusColorClassName = {
-  Complete: 'text-green-dark before:bg-green-dark',
-  Pending: 'before:bg-orange text-orange-dark',
-  Canceled: 'text-red-dark before:bg-red-dark',
-};
-
-const columnHelper = createColumnHelper<Pin>();
+const columnHelper = createColumnHelper<StockistListDetail>();
 
 export const listStockistColumns = [
   {
@@ -20,28 +14,33 @@ export const listStockistColumns = [
     size: 60,
     cell: ({ row }: { row: any }) => row.index + 1 + '.',
   },
-  columnHelper.accessor('dealer_id', {
-    id: 'dealer_id',
+  columnHelper.accessor('username', {
+    id: 'username',
     header: 'Nama',
     size: 180,
-    cell: (info) => (
-      <Text className="whitespace-nowrap font-medium">{info.getValue()}</Text>
+    cell: ({ row }) => (
+      <>
+        <Text className="text-gray-700">{row.original.full_name}</Text>
+        <Text className="text-xs text-gray-500">@{row.original.username}</Text>
+      </>
     ),
   }),
-  columnHelper.accessor('mlm_user_id', {
-    id: 'mlm_user_id',
+  columnHelper.accessor('province', {
+    id: 'alamat',
     header: 'Alamat',
     size: 180,
-    cell: (info) => (
+    cell: ({ row }) => (
       <Text className="whitespace-nowrap">
-        Jl. Berdikari Gg Kemakmuran No. 07
+        {row.original.city}, {row.original.province}
       </Text>
     ),
   }),
-  columnHelper.accessor('dealer_id', {
-    id: 'dealer_id',
+  columnHelper.accessor('phone_number', {
+    id: 'phone_number',
     header: 'No. HP',
     size: 180,
-    cell: (info) => <Text className="whitespace-nowrap">081-234-567-89</Text>,
+    cell: (info) => (
+      <Text className="whitespace-nowrap">{info.getValue()}</Text>
+    ),
   }),
 ];

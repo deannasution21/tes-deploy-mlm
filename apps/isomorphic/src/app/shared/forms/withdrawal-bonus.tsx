@@ -113,7 +113,7 @@ export default function WithdrawalBonusForm(slug: any) {
       .catch((error) => {
         console.error(error);
         toast.error(<Text>Withdrawal Bonus Gagal!</Text>);
-        setLoading(false);
+        setProses(false);
       });
   };
 

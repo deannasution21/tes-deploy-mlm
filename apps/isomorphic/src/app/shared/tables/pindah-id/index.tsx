@@ -12,6 +12,7 @@ import { getBankNameByCode } from '@/utils/helper';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { routes } from '@/config/routes';
+import { createPortal } from 'react-dom';
 
 // ✅ TypeScript Interfaces
 export interface UserBankResponse {
@@ -62,13 +63,16 @@ const doLogin = ({
   username,
   session,
   setLoadingS,
+  setIsLoggingOut,
 }: {
   router: any;
   username: string;
   session: any;
   setLoadingS: (value: boolean) => void;
+  setIsLoggingOut: (value: boolean) => void;
 }) => {
   setLoadingS(true);
+  setIsLoggingOut(true);
 
   fetchWithAuth<UserBankResponse>(
     `/_auth/sign-in-as-user`,
@@ -99,6 +103,7 @@ const doLogin = ({
     })
     .catch((error) => {
       console.error(error);
+      setIsLoggingOut(false);
     })
     .finally(() => setLoadingS(false));
 };
@@ -107,6 +112,7 @@ export default function PindahIDTable({ className }: { className?: string }) {
   const { data: session } = useSession();
   const [isLoading, setLoading] = useState(true);
   const [loadingS, setLoadingS] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const [dataUser, setDataUser] = useState<UserBankData | null>(null);
   const [dataBank, setDataBank] = useState<BankData[]>([]);
@@ -152,7 +158,13 @@ export default function PindahIDTable({ className }: { className?: string }) {
               isLoading={loadingS}
               disabled={loadingS}
               onClick={() =>
-                doLogin({ router, username: id, session, setLoadingS })
+                doLogin({
+                  router,
+                  username: id,
+                  session,
+                  setLoadingS,
+                  setIsLoggingOut,
+                })
               }
             >
               <PiSignIn className="mr-2 h-4 w-4" />
@@ -198,6 +210,15 @@ export default function PindahIDTable({ className }: { className?: string }) {
 
   return (
     <>
+      {isLoggingOut &&
+        createPortal(
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80">
+            <div className="rounded-lg bg-white p-4 text-center shadow-lg">
+              <p className="font-medium text-gray-700">Berpindah akun...</p>
+            </div>
+          </div>,
+          document.body
+        )}
       <div className="mb-6 grid gap-6 @2xl:grid-cols-2 @3xl:mb-10 @3xl:gap-10">
         <div className="rounded-lg border border-gray-300 p-5 @3xl:p-7">
           <ul className="grid gap-3">

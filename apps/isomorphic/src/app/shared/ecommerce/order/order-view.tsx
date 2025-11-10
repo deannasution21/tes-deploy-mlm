@@ -323,10 +323,17 @@ export default function OrderView() {
                 </div>
                 <div className="flex justify-between border-t border-muted pt-5 text-base font-semibold">
                   Total{' '}
-                  <span>
-                    {invoice?.attribute?.bill_payment?.total?.nominal_rp ??
-                      'Rp 0'}
-                  </span>
+                  <div className="flex gap-2">
+                    <span className="text-2xl text-primary">
+                      {invoice?.attribute?.bill_payment?.total?.nominal_rp ??
+                        'Rp 0'}
+                    </span>
+                    <CopyButton
+                      text={
+                        invoice?.attribute?.bill_payment?.total.nominal ?? 0
+                      }
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -378,17 +385,19 @@ export default function OrderView() {
                       className="object-contain"
                     />
                   </div>
-                  <div className="flex flex-col ps-4">
+                  <div className="flex flex-col gap-2 ps-4">
                     <Text as="span" className="font-lexend text-gray-700">
                       {invoice?.attribute?.payment?.payment_method ?? '-'}{' '}
                       {' | '}
                       {invoice?.attribute?.payment?.payment_channel ?? '-'}
                     </Text>
-                    <div className="flex flex-col gap-2 md:flex-row">
-                      <span className="pt-1 text-[14px] font-normal text-gray-500">
-                        {invoice?.attribute?.payment?.payment_number ?? '-'}-
+                    <div className="flex flex-col gap-1">
+                      <Text className="text-2xl text-green-700">
+                        {invoice?.attribute?.payment?.payment_number ?? '-'}
+                      </Text>
+                      <Text className="text-gray-500">
                         AN. {invoice?.attribute?.payment?.payment_name ?? '-'}
-                      </span>
+                      </Text>
                       <CopyButton
                         text={
                           invoice?.attribute?.payment?.payment_number ?? '-'

@@ -48,9 +48,26 @@ const columns = [
     dataIndex: 'price',
     key: 'price',
     width: 150,
-    render: (price: string) => (
-      <Text className="text-end text-sm">{toCurrency(price)}</Text>
-    ),
+    render: (price: number, row: any) => {
+      const discount = row.discount_per_unit;
+      // if (discount > 0) {
+      //   return (
+      //     <>
+      //       <Text className="text-danger text-end text-xs">
+      //         {toCurrency(price)}
+      //       </Text>
+      //       <Text className="text-end text-sm">
+      //         {toCurrency(price - discount)}
+      //       </Text>
+      //     </>
+      //   );
+      // }
+      return (
+        <>
+          <Text className="text-end text-sm">{toCurrency(price)}</Text>
+        </>
+      );
+    },
   },
   {
     title: <HeaderCell title="Jumlah" align="center" />,
@@ -64,13 +81,11 @@ const columns = [
 
   {
     title: <HeaderCell title="Total Harga" align="right" />,
-    dataIndex: 'price',
-    key: 'price',
+    dataIndex: 'sub_total',
+    key: 'sub_total',
     width: 150,
-    render: (price: number, row: CartItem) => (
-      <Text className="text-end text-sm">
-        {toCurrency(price * row.quantity)}
-      </Text>
+    render: (sub_total: number, row: CartItem) => (
+      <Text className="text-end text-sm">{toCurrency(sub_total)}</Text>
     ),
   },
 ];

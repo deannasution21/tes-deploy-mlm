@@ -88,6 +88,8 @@ export default function WithdrawalBonusForm(slug: any) {
       return;
     }
 
+    setProses(true);
+
     fetchWithAuth<Transaction>(
       `/_transactions`,
       {
@@ -111,8 +113,8 @@ export default function WithdrawalBonusForm(slug: any) {
       .catch((error) => {
         console.error(error);
         toast.error(<Text>Withdrawal Bonus Gagal!</Text>);
-      })
-      .finally(() => setLoading(false));
+        setLoading(false);
+      });
   };
 
   const onSubmit: SubmitHandler<WithdrawalBonusInput> = (data) => {
@@ -132,20 +134,19 @@ export default function WithdrawalBonusForm(slug: any) {
           'bg-gray-300 hover:bg-gray-400 text-black font-semibold px-4 py-2 rounded',
       },
       buttonsStyling: false, // 👈 important! disable default styling
-    })
-      .then((result: any) => {
-        /* Read more about isConfirmed, isDenied below */
-        if (result.isConfirmed) {
-          if (data.amount < 50000) {
-            toast.error(<Text>Min Rp 50.000,00 dalam sekali pencairan</Text>);
-          } else {
-            doWD(data);
-          }
+    }).then((result: any) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        if (data.amount < 50000) {
+          toast.error(<Text>Min Rp 50.000,00 dalam sekali pencairan</Text>);
         } else {
-          toast.success(<Text>Pencairan dibatalkan!</Text>);
+          doWD(data);
         }
-      })
-      .finally(() => setProses(false));
+      } else {
+        toast.success(<Text>Pencairan dibatalkan!</Text>);
+        setProses(false);
+      }
+    });
   };
 
   useEffect(() => {

@@ -191,13 +191,23 @@ export default function TransferPinPage() {
 
     setLoadingS(true);
 
+    const pin =
+      payload?.type_pin === 'plan_a'
+        ? 'PLAN'
+        : payload?.type_pin?.toUpperCase();
+
     fetchWithAuth<any>(
       `/_pins/transfer`,
       { method: 'POST', body: JSON.stringify(payload) },
       session.accessToken
     )
       .then((data) => {
-        toast.success(<Text as="b">Transfer Berhasil!</Text>);
+        toast.success(
+          <Text as="b">
+            Selamat anda telah mengirim PIN {pin} sebanyak{' '}
+            {payload?.amount ?? 0} buah, ke ID {payload?.to}!
+          </Text>
+        );
         setTimeout(() => {
           getDataPin();
           rollbackTransfer();

@@ -29,6 +29,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
+      translate="no"
       dir="ltr"
       // required this one for next-themes, remove it if you are not using next-theme
       suppressHydrationWarning

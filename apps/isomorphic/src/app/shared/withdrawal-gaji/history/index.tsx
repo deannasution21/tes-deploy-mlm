@@ -1,12 +1,9 @@
 'use client';
 
-import cn from '@core/utils/class-names';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { HistoryTransferPinItem, HistoryTransferPinResponse } from '@/types';
-import BasicTableWidget from '@core/components/controlled-table/basic-table-widget';
-import { Badge, Button, Text, Title } from 'rizzui';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
+import HistoryWDGajiTable from '../../tables/history-wd-gaji';
 
 export interface TransactionsResponse {
   code: number;
@@ -49,54 +46,7 @@ export interface Withdrawal {
   status: TransactionStatus;
 }
 
-const getColumns = () => [
-  {
-    title: <span className="ml-6 block">No</span>,
-    dataIndex: 'index',
-    key: 'index',
-    width: 50,
-    render: (_: any, __: any, index: number) => (
-      <Text className="ml-6 text-gray-700">{index + 1}.</Text>
-    ),
-  },
-  {
-    title: 'Tanggal',
-    dataIndex: 'attributes',
-    key: 'attributes',
-    width: 150,
-    render: ({ created_at }: { created_at: string }) => (
-      <Text className="font-medium text-gray-700">{created_at}</Text>
-    ),
-  },
-  {
-    title: <p className="text-end">Total Transfer</p>,
-    dataIndex: 'attributes',
-    key: 'attributes',
-    width: 150,
-    render: ({ withdrawal }: { withdrawal: Withdrawal }) => (
-      <Text className="text-end text-gray-700">
-        {withdrawal.total_currency}
-      </Text>
-    ),
-  },
-  {
-    title: <p className="text-end">Status</p>,
-    dataIndex: 'attributes',
-    key: 'attributes',
-    width: 150,
-    render: ({ status }: { status: TransactionStatus }) => (
-      <div className="flex items-center justify-end gap-1.5">
-        <Badge
-          renderAsDot
-          color={status.code === 1 ? 'success' : 'secondary'}
-        />
-        {status.message}
-      </div>
-    ),
-  },
-];
-
-export default function HistoryWithdrawalGajiTable({
+export default function HistoryWithdrawalGajiPage({
   className,
 }: {
   className?: string;
@@ -130,17 +80,10 @@ export default function HistoryWithdrawalGajiTable({
     return <p className="py-20 text-center">Sedang memuat data...</p>;
 
   return (
-    <BasicTableWidget
-      title="History Withdrawal Gaji"
-      className={cn('[&_.rc-table-row:last-child_td]:border-b-0')}
-      data={dataHistory}
-      getColumns={getColumns}
-      noGutter
-      enablePagination={true}
-      enableSearch={true}
-      scroll={{
-        x: 450,
-      }}
-    />
+    <div className="@container">
+      <div className="grid grid-cols-1 gap-6 3xl:gap-8">
+        <HistoryWDGajiTable datanya={dataHistory} />
+      </div>
+    </div>
   );
 }

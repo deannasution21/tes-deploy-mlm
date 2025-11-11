@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import { Badge, Button, Text, Title } from 'rizzui';
 import { useSession } from 'next-auth/react';
 import {
-  AmountCurrency,
-  NetworkNode,
   WithdrawalSummaryData,
   WithdrawalSummaryResponse,
   WithdrawalUserDetail,
@@ -16,37 +14,7 @@ import Image from 'next/image';
 import pinImg from '@public/assets/img/golden-coin.png';
 import Link from 'next/link';
 import { routes } from '@/config/routes';
-import BasicTableWidget from '@core/components/controlled-table/basic-table-widget';
-
-const getColumns = () => [
-  {
-    title: <span className="ml-6 block">No</span>,
-    dataIndex: 'index',
-    key: 'index',
-    width: 50,
-    render: (_: any, __: any, index: number) => (
-      <Text className="ml-6 text-gray-700">{index + 1}.</Text>
-    ),
-  },
-  {
-    title: 'Username',
-    dataIndex: 'username',
-    key: 'username',
-    width: 150,
-    render: (username: string) => (
-      <Text className="font-medium text-gray-700">{username}</Text>
-    ),
-  },
-  {
-    title: 'Gaji',
-    dataIndex: 'balance',
-    key: 'balance',
-    width: 150,
-    render: (balance: AmountCurrency) => (
-      <Text className="text-gray-700">{balance.currency}</Text>
-    ),
-  },
-];
+import WithdrawalGajiTable from '../tables/withdrawal-gaji';
 
 function FleetStatus({
   data,
@@ -155,20 +123,6 @@ export default function WithdrawalGajiPage() {
   const [dataGaji, setDataGaji] = useState<WithdrawalSummaryData | null>(null);
   const [dataHistory, setDataHistory] = useState<any[]>([]);
 
-  const dataDummy: NetworkNode = {
-    user_id: 'admin',
-    name: 'Admin',
-    location: 'Bandung',
-    position: 'left',
-    point_left: 33,
-    point_right: 33,
-    upline: 'sistem',
-    isPlaceholder: false,
-    hasData: true,
-    children: [],
-    childrenCount: 2,
-  };
-
   useEffect(() => {
     if (!session?.accessToken) return;
 
@@ -207,19 +161,7 @@ export default function WithdrawalGajiPage() {
             {/* Table second on small screens */}
             <div className="order-2 @4xl:col-span-2 @7xl:order-1 @7xl:col-span-8 @7xl:min-h-[412px]">
               <div className="rounded-lg border border-muted">
-                <BasicTableWidget
-                  title="Daftar Akumulasi Gaji"
-                  description="ID dengan rekening yang sama"
-                  className={cn('[&_.rc-table-row:last-child_td]:border-b-0')}
-                  data={dataGaji?.summary ?? []}
-                  getColumns={getColumns}
-                  noGutter
-                  enablePagination={true}
-                  enableSearch={true}
-                  scroll={{
-                    x: 400,
-                  }}
-                />
+                <WithdrawalGajiTable datanya={dataGaji?.summary ?? []} />
               </div>
             </div>
           </div>

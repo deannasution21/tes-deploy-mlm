@@ -22,7 +22,7 @@ export const WDBonusColumns = [
     header: 'Username',
     size: 180,
     cell: (info) => (
-      <Text className="whitespace-nowrap">{info.getValue()}</Text>
+      <Text className="whitespace-nowrap uppercase">{info.getValue()}</Text>
     ),
   }),
   columnHelper.accessor('balance.currency', {

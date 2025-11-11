@@ -25,7 +25,7 @@ export const historyBonusColumns = [
     header: 'Dari',
     size: 180,
     cell: (info) => (
-      <Text className="whitespace-nowrap">{info.getValue()}</Text>
+      <Text className="whitespace-nowrap uppercase">{info.getValue()}</Text>
     ),
   }),
   columnHelper.accessor('attribute.total.currency', {

@@ -4,7 +4,7 @@ import cn from '@core/utils/class-names';
 import { useEffect, useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { BankData, BankStatusResponse } from '@/types';
-import BasicTableWidget from '@core/components/controlled-table/basic-table-widget';
+import Table from '@core/components/table';
 import { Alert, Button, Text, Title } from 'rizzui';
 import { PiSignIn } from 'react-icons/pi';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
@@ -13,6 +13,11 @@ import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { routes } from '@/config/routes';
 import { createPortal } from 'react-dom';
+import WidgetCard from '@core/components/cards/widget-card';
+import Filters from '../tables/pindah-id/filters';
+import { useTanStackTable } from '@core/components/table/custom/use-TanStack-Table';
+import { createColumnHelper } from '@tanstack/react-table';
+import TablePagination from '@core/components/table/pagination';
 
 // ✅ TypeScript Interfaces
 export interface UserBankResponse {
@@ -108,42 +113,43 @@ const doLogin = ({
     .finally(() => setLoadingS(false));
 };
 
-export default function PindahIDTable({ className }: { className?: string }) {
+export default function PindahIDPage({ className }: { className?: string }) {
   const { data: session } = useSession();
+  const router = useRouter();
+
   const [isLoading, setLoading] = useState(true);
   const [loadingS, setLoadingS] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const [dataUser, setDataUser] = useState<UserBankData | null>(null);
+  const [dataIDs, setDataIDs] = useState<ListUser[]>([]);
   const [dataBank, setDataBank] = useState<BankData[]>([]);
 
-  const router = useRouter();
+  const columnHelper = createColumnHelper<ListUser>();
 
-  const getColumns = () => [
+  const PindahIDColumns = [
     {
-      title: <span className="ml-6 block">No</span>,
-      dataIndex: 'index',
-      key: 'index',
-      width: 50,
-      render: (_: any, __: any, index: number) => (
-        <Text className="ml-6 text-gray-700">{index + 1}.</Text>
-      ),
+      id: 'no',
+      header: '#',
+      size: 60,
+      cell: ({ row }: { row: any }) => row.index + 1 + '.',
     },
-    {
-      title: 'Username',
-      dataIndex: 'id',
-      key: 'id',
-      width: 150,
-      render: (id: string) => (
-        <Text className="font-medium text-gray-700">{id}</Text>
+    columnHelper.accessor('id', {
+      id: 'id',
+      header: 'Username',
+      size: 180,
+      cell: (info) => (
+        <Text className="whitespace-nowrap font-medium uppercase">
+          {info.getValue()}
+        </Text>
       ),
-    },
-    {
-      title: 'Login',
-      dataIndex: 'id',
-      key: 'id',
-      width: 150,
-      render: (id: string, row: any) => {
+    }),
+    columnHelper.accessor('id', {
+      id: 'login',
+      header: 'Login',
+      size: 180,
+      cell: (info) => {
+        const id = info.getValue();
         if (session?.user?.id === id) {
           return (
             <Button size="sm" disabled>
@@ -173,7 +179,7 @@ export default function PindahIDTable({ className }: { className?: string }) {
           );
         }
       },
-    },
+    }),
   ];
 
   useEffect(() => {
@@ -195,15 +201,34 @@ export default function PindahIDTable({ className }: { className?: string }) {
     ])
       .then(([userData, bankData]) => {
         setDataUser(userData?.data || null);
+        setDataIDs(userData?.data?.list_users || []);
+        setData(userData?.data?.list_users || []);
         setDataBank(bankData?.data || []);
       })
       .catch((error) => {
         console.error(error);
         setDataUser(null);
+        setDataIDs([]);
+        setData([]);
         setDataBank([]);
       })
       .finally(() => setLoading(false));
   }, [session?.accessToken]);
+
+  const { table, setData } = useTanStackTable<ListUser>({
+    tableData: dataIDs,
+    columnConfig: PindahIDColumns,
+    options: {
+      initialState: {
+        pagination: {
+          pageIndex: 0,
+          pageSize: 10,
+        },
+      },
+      meta: {},
+      enableColumnResizing: false,
+    },
+  });
 
   if (isLoading)
     return <p className="py-20 text-center">Sedang memuat data...</p>;
@@ -219,71 +244,79 @@ export default function PindahIDTable({ className }: { className?: string }) {
           </div>,
           document.body
         )}
-      <div className="mb-6 grid gap-6 @2xl:grid-cols-2 @3xl:mb-10 @3xl:gap-10">
-        <div className="rounded-lg border border-gray-300 p-5 @3xl:p-7">
-          <ul className="grid gap-3">
-            <li className="flex items-center gap-1">
-              <span className="min-w-28 font-semibold text-gray-900">
-                User ID
-              </span>
-              <span className="font-semibold text-gray-900">:</span>
-              <span>{dataUser?.detail_users?.username}</span>
-            </li>
-            <li className="flex items-center gap-1">
-              <span className="min-w-28 font-semibold text-gray-900">Nama</span>
-              <span className="font-semibold text-gray-900">:</span>
-              <span>{dataUser?.detail_users?.name}</span>
-            </li>
-            <li className="flex items-center gap-1">
-              <span className="min-w-28 font-semibold text-gray-900">Bank</span>
-              <span className="font-semibold text-gray-900">:</span>
-              <span className="uppercase">
-                {dataUser?.detail_users?.bank_name
-                  ? getBankNameByCode(
-                      dataBank,
-                      dataUser?.detail_users?.bank_name
-                    )
-                  : '-'}
-              </span>
-            </li>
-            <li className="flex items-center gap-1">
-              <span className="min-w-28 font-semibold text-gray-900">
-                No. Rekening
-              </span>
-              <span className="font-semibold text-gray-900">:</span>
-              <span>{dataUser?.detail_users?.account_number}</span>
-            </li>
-            <li className="flex items-center gap-1">
-              <span className="min-w-28 font-semibold text-gray-900">
-                Atas Nama
-              </span>
-              <span className="font-semibold text-gray-900">:</span>
-              <span>{dataUser?.detail_users?.account_name}</span>
-            </li>
-          </ul>
-          <Alert variant="flat" color="success" className="mt-5">
-            <Text className="font-semibold">Informasi</Text>
-            <Text className="break-normal">
-              Anda memiliki total <strong>{dataUser?.count ?? 0} ID</strong>{' '}
-              dengan rekening yang sama
-            </Text>
-          </Alert>
+
+      <div className="@container">
+        <div className="grid grid-cols-1 gap-6 3xl:gap-8">
+          <div className="rounded-lg border border-gray-300 p-5 @3xl:p-7">
+            <ul className="grid gap-3">
+              <li className="flex items-center gap-1">
+                <span className="min-w-28 font-semibold text-gray-900">
+                  User ID
+                </span>
+                <span className="font-semibold text-gray-900">:</span>
+                <span className="uppercase">
+                  {dataUser?.detail_users?.username}
+                </span>
+              </li>
+              <li className="flex items-center gap-1">
+                <span className="min-w-28 font-semibold text-gray-900">
+                  Nama
+                </span>
+                <span className="font-semibold text-gray-900">:</span>
+                <span>{dataUser?.detail_users?.name}</span>
+              </li>
+              <li className="flex items-center gap-1">
+                <span className="min-w-28 font-semibold text-gray-900">
+                  Bank
+                </span>
+                <span className="font-semibold text-gray-900">:</span>
+                <span className="uppercase">
+                  {dataUser?.detail_users?.bank_name
+                    ? getBankNameByCode(
+                        dataBank,
+                        dataUser?.detail_users?.bank_name
+                      )
+                    : '-'}
+                </span>
+              </li>
+              <li className="flex items-center gap-1">
+                <span className="min-w-28 font-semibold text-gray-900">
+                  No. Rekening
+                </span>
+                <span className="font-semibold text-gray-900">:</span>
+                <span>{dataUser?.detail_users?.account_number}</span>
+              </li>
+              <li className="flex items-center gap-1">
+                <span className="min-w-28 font-semibold text-gray-900">
+                  Atas Nama
+                </span>
+                <span className="font-semibold text-gray-900">:</span>
+                <span>{dataUser?.detail_users?.account_name}</span>
+              </li>
+            </ul>
+            <Alert variant="flat" color="success" className="mt-5">
+              <Text className="font-semibold">Informasi</Text>
+              <Text className="break-normal">
+                Anda memiliki total <strong>{dataUser?.count ?? 0} ID</strong>{' '}
+                dengan rekening yang sama
+              </Text>
+            </Alert>
+          </div>
+
+          <WidgetCard
+            title="Daftar ID Anda"
+            description="ID dengan rekening yang sama"
+            className={cn('p-0 lg:p-0', className)}
+            titleClassName="w-[19ch]"
+            actionClassName="w-full ps-0 items-center"
+            headerClassName="mb-6 items-start flex-col @[57rem]:flex-row @[57rem]:items-center px-5 pt-5 lg:pt-7 lg:px-7"
+            action={<Filters table={table} />}
+          >
+            <Table table={table} variant="modern" />
+            <TablePagination table={table} className="p-4" />
+          </WidgetCard>
         </div>
       </div>
-
-      <BasicTableWidget
-        title="Daftar ID Anda"
-        description="ID dengan rekening yang sama"
-        className={cn('[&_.rc-table-row:last-child_td]:border-b-0')}
-        data={dataUser?.list_users ?? []}
-        getColumns={getColumns}
-        noGutter
-        enablePagination={true}
-        enableSearch={true}
-        scroll={{
-          x: 400,
-        }}
-      />
     </>
   );
 }

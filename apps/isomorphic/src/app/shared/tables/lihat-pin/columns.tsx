@@ -33,7 +33,7 @@ export const dataPinsColumns = [
     header: 'Username',
     size: 180,
     cell: (info) => (
-      <Text className="whitespace-nowrap">{info.getValue()}</Text>
+      <Text className="whitespace-nowrap uppercase">{info.getValue()}</Text>
     ),
   }),
   columnHelper.accessor('dealer_id', {

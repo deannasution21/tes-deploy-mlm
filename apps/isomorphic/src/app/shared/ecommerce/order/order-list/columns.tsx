@@ -147,10 +147,12 @@ export const ordersColumnsNew = (username: string) => {
               <PiPrinter className="mr-2 h-4 w-4" />
               <span>Cetak Invoice</span>
             </Button>
-            <Button size="sm" variant="flat">
-              <PiTruck className="mr-2 h-4 w-4" />
-              <span>Ubah Status</span>
-            </Button>
+            {(username === 'adminstock' || username === 'admin_stock') && (
+              <Button size="sm" variant="flat">
+                <PiTruck className="mr-2 h-4 w-4" />
+                <span>Ubah Status</span>
+              </Button>
+            )}
           </div>
         );
       },

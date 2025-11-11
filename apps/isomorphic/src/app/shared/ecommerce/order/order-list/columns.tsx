@@ -4,9 +4,10 @@ import { routes } from '@/config/routes';
 import { getStatusBadge } from '@core/components/table-utils/get-status-badge';
 import DateCell from '@core/ui/date-cell';
 import { createColumnHelper } from '@tanstack/react-table';
-import { ActionIcon, Text } from 'rizzui';
+import { ActionIcon, Button, Text } from 'rizzui';
 import { Transaction } from './table';
 import Link from 'next/link';
+import { PiPrinter, PiTruck } from 'react-icons/pi';
 
 const columnHelperNew = createColumnHelper<Transaction>();
 
@@ -45,7 +46,7 @@ export const ordersColumnsNew = (username: string) => {
       },
     }),
     columnHelperNew.accessor('attributes.buyer.customer_name', {
-      id: 'customer',
+      id: 'customer_name',
       size: 150,
       header: 'Nama',
       enableSorting: false,
@@ -57,8 +58,31 @@ export const ordersColumnsNew = (username: string) => {
           <Text className="text-xs text-gray-500">
             @{row.original.attributes.buyer.customer_id}
           </Text>
-          <Text className="text-xs text-gray-500">
-            {row.original.attributes.buyer.customer_phone}
+        </>
+      ),
+    }),
+    columnHelperNew.accessor('attributes.buyer.customer_phone', {
+      id: 'customer_phone',
+      size: 150,
+      header: 'No. HP',
+      enableSorting: false,
+      cell: (info) => (
+        <>
+          <Text className="text-gray-700">{info.getValue()}</Text>
+        </>
+      ),
+    }),
+    columnHelperNew.accessor('attributes.buyer.shipping_address', {
+      id: 'shipping_address',
+      size: 150,
+      header: 'Alamat',
+      enableSorting: false,
+      cell: ({ row }) => (
+        <>
+          <Text className="text-gray-700">
+            {row.original.attributes.buyer.shipping_address},{' '}
+            {row.original.attributes.buyer.shipping_city},{' '}
+            {row.original.attributes.buyer.shipping_province}
           </Text>
         </>
       ),
@@ -110,6 +134,26 @@ export const ordersColumnsNew = (username: string) => {
       enableSorting: false,
       cell: ({ row }) =>
         getStatusBadge(row.original.attributes.status.code.toString()),
+    }),
+    columnHelperNew.accessor('attributes.status.code', {
+      id: 'aksi',
+      size: 150,
+      header: 'Aksi',
+      enableSorting: false,
+      cell: ({ row }) => {
+        return (
+          <div className="flex flex-col gap-2">
+            <Button size="sm">
+              <PiPrinter className="mr-2 h-4 w-4" />
+              <span>Cetak Invoice</span>
+            </Button>
+            <Button size="sm" variant="flat">
+              <PiTruck className="mr-2 h-4 w-4" />
+              <span>Ubah Status</span>
+            </Button>
+          </div>
+        );
+      },
     }),
     // columnHelperNew.display({
     //   id: 'action',

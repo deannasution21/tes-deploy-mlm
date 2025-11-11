@@ -116,9 +116,9 @@ function Formnya({
     )
       .then((data) => {
         if (data?.success) {
-          setFeedback('✅ Sponsor valid');
+          setFeedback(`✅ ${data?.message ?? 'Sponsor valid'}`);
         } else {
-          setFeedback('❌ Sponsor tidak ditemukan');
+          setFeedback(`❌ ${data?.message ?? 'Sponsor tidak ditemukan'}`);
         }
       })
       .catch((error) => {
@@ -266,7 +266,7 @@ function Formnya({
           {feedback && (
             <p
               className={`text-sm ${
-                feedback.includes('valid') ? 'text-green-600' : 'text-red-600'
+                feedback.includes('Valid') ? 'text-green-600' : 'text-red-600'
               }`}
             >
               {feedback}

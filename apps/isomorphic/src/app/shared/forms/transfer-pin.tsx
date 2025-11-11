@@ -3,29 +3,19 @@
 import { use, useEffect, useState } from 'react';
 import { SubmitHandler, Controller } from 'react-hook-form';
 import { Form } from '@core/ui/form';
-import {
-  Text,
-  Input,
-  ActionIcon,
-  Button,
-  Password,
-  Alert,
-  Select,
-} from 'rizzui';
+import { Text, Input, ActionIcon, Button, Alert, Select } from 'rizzui';
 import { FormBlockWrapper } from '@/app/shared/invoice/form-utils';
 import { toast } from 'react-hot-toast';
 import WidgetCard from '@core/components/cards/widget-card';
-import { PiMinusBold, PiNotificationBold, PiPlusBold } from 'react-icons/pi';
+import { PiMinusBold, PiPlusBold } from 'react-icons/pi';
 import {
-  TransferPinInput,
-  transferPinSchema,
+  TransferPinStockistInput,
+  transferPinStockistSchema,
 } from '@/validators/transfer-pin-schema';
 import { useSession } from 'next-auth/react';
 import {
   UserData,
   UserDataResponse,
-  PinResponse,
-  TransferPinResponse,
   DealerSummaryResponse,
   DealerSummaryData,
 } from '@/types';
@@ -119,7 +109,6 @@ export default function TransferPinPage() {
   const [resetValues, setResetValues] = useState({
     to: '',
     amount: 0,
-    token: '',
     role: '',
     nama: '',
   });
@@ -203,18 +192,32 @@ export default function TransferPinPage() {
     )
       .then((data) => {
         toast.success(
-          <Text as="b">
-            Selamat anda telah mengirim PIN {pin} sebanyak{' '}
-            {payload?.amount ?? 0} buah, ke ID {payload?.to}!
-          </Text>
+          <div>
+            <Text as="b">
+              Selamat anda telah mengirim PIN {pin} sebanyak{' '}
+              {payload?.amount ?? 0} buah, ke ID {payload?.to}!
+            </Text>
+            <div className="mt-2 flex justify-end">
+              <Button
+                size="sm"
+                onClick={() => {
+                  toast.dismiss();
+                  getDataPin();
+                  rollbackTransfer();
+                }} // manually close
+              >
+                Tutup
+              </Button>
+            </div>
+          </div>,
+          {
+            duration: Infinity, // 👈 will not auto-close
+            id: 'pin-toast', // optional unique id to avoid duplicates
+          }
         );
-        setTimeout(() => {
-          getDataPin();
-          rollbackTransfer();
-        }, 300);
       })
       .catch((error) => {
-        toast.error(<Text as="b">Transfer Gagal</Text>);
+        toast.error(<Text as="b">Transfer PIN Gagal</Text>);
         console.error(error);
       })
       .finally(() => setLoadingS(false));
@@ -224,14 +227,13 @@ export default function TransferPinPage() {
     setResetValues({
       to: '',
       amount: 0,
-      token: '',
       role: '',
       nama: '',
     });
     setTujuan(null);
   };
 
-  const onSubmit: SubmitHandler<TransferPinInput> = (data) => {
+  const onSubmit: SubmitHandler<TransferPinStockistInput> = (data) => {
     setLoadingS(true);
 
     if (!tujuan) {
@@ -263,7 +265,6 @@ export default function TransferPinPage() {
               amount: data.amount,
               type_pin: data.type_pin,
               note: '',
-              token: data.token,
             });
           }
         } else {
@@ -291,8 +292,8 @@ export default function TransferPinPage() {
           titleClassName="text-gray-700 font-bold text-2xl sm:text-2xl font-inter mb-5"
         >
           <div>
-            <Form<TransferPinInput>
-              validationSchema={transferPinSchema}
+            <Form<TransferPinStockistInput>
+              validationSchema={transferPinStockistSchema}
               onSubmit={onSubmit}
               resetValues={resetValues}
               useFormProps={{
@@ -404,12 +405,12 @@ export default function TransferPinPage() {
                             )}
                           />
 
-                          <Password
+                          {/* <Password
                             label="Password Anda"
                             placeholder="Ketikkan password"
                             {...register('token')}
                             error={errors.token?.message}
-                          />
+                          /> */}
                         </FormBlockWrapper>
                         {tujuan && (
                           <FormBlockWrapper

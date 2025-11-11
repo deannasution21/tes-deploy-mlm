@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useCart } from '@/store/quick-cart/cart.context';
 import FloatingCartButton from '@/app/shared/floating-cart-button';
@@ -26,6 +26,12 @@ export default function CartDrawer() {
   ];
 
   const isPathIncluded = includedPaths.some((path) => pathname === path);
+
+  useEffect(() => {
+    if (pathname === routes.produk.checkout) {
+      setOpenDrawer(false);
+    }
+  }, [pathname]);
 
   const {
     totalItems,

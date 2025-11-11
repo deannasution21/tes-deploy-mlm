@@ -439,7 +439,7 @@ function Formnya({
             render={({ field: { onChange, value } }) => (
               <Select
                 label="Pilih Metode Pembayaran"
-                dropdownClassName="z-10 bg-white h-fit max-h-[250px]"
+                dropdownClassName="z-[9999] bg-white h-fit max-h-[250px]"
                 inPortal={false}
                 placeholder="Pilih Metode Pembayaran"
                 options={dataPayment}

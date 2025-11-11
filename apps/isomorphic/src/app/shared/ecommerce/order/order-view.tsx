@@ -336,11 +336,13 @@ export default function OrderView() {
                       {invoice?.attribute?.bill_payment?.total?.nominal_rp ??
                         'Rp 0'}
                     </span>
-                    <CopyButton
-                      text={
-                        invoice?.attribute?.bill_payment?.total.nominal ?? 0
-                      }
-                    />
+                    {currentStatus === 1 && (
+                      <CopyButton
+                        text={
+                          invoice?.attribute?.bill_payment?.total.nominal ?? 0
+                        }
+                      />
+                    )}
                   </div>
                 </div>
               </div>
@@ -369,15 +371,15 @@ export default function OrderView() {
                     'h:mm A'
                   )}
                 </span>
-              ) : currentStatus === 2 ? (
-                <span className="my-2 py-0.5 font-medium text-red-500">
-                  Pembayaran Expired
-                </span>
               ) : (
-                ''
+                <span
+                  className={`rounded-3xl px-2.5 py-1 text-xs uppercase ${currentStatus === 2 ? 'bg-red-lighter text-red-dark' : 'bg-primary-lighter text-primary-dark'} @5xl:my-2`}
+                >
+                  {invoice?.attribute?.status?.message}
+                </span>
               )}
               <div className="relative flex items-center justify-between rounded-lg border border-gray-100 px-5 py-5 font-medium shadow-sm transition-shadow @5xl:px-7">
-                {currentStatus === 2 && (
+                {(currentStatus === 2 || currentStatus === 3) && (
                   <div className="absolute left-0 h-full w-full bg-gray-300/50"></div>
                 )}
 
@@ -406,11 +408,13 @@ export default function OrderView() {
                       <Text className="text-gray-500">
                         AN. {invoice?.attribute?.payment?.payment_name ?? '-'}
                       </Text>
-                      <CopyButton
-                        text={
-                          invoice?.attribute?.payment?.payment_number ?? '-'
-                        }
-                      />
+                      {currentStatus === 1 && (
+                        <CopyButton
+                          text={
+                            invoice?.attribute?.payment?.payment_number ?? '-'
+                          }
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -428,9 +432,13 @@ export default function OrderView() {
                 const isExpired = item.id === 2;
                 const isCompleted = item.id <= currentStatus;
                 const isActive = currentStatus === item.id;
+                const nextIsCompleted =
+                  item.id > currentStatus && currentStatus === 3;
 
                 const nextIsExpired =
                   filteredStatuses[index + 1]?.id === 2 && currentStatus === 2;
+
+                console.log(`${item.label}: ${nextIsCompleted}`);
 
                 return (
                   <div
@@ -439,7 +447,7 @@ export default function OrderView() {
                       'relative ps-6 text-sm font-medium before:absolute before:-start-[9px] before:top-px before:h-5 before:w-5 before:-translate-x-px before:rounded-full before:content-[""] after:absolute after:-start-px after:top-5 after:h-10 after:w-0.5 after:content-[""] last:after:hidden',
                       isExpired
                         ? 'text-red-600 before:bg-red-500'
-                        : isCompleted || isActive
+                        : isCompleted || isActive || nextIsCompleted
                           ? 'text-gray-900 before:bg-primary'
                           : 'text-gray-500 before:bg-gray-200',
                       nextIsExpired
@@ -449,19 +457,17 @@ export default function OrderView() {
                     )}
                   >
                     {/* Completed icon */}
-                    {isCompleted && !isExpired && (
+                    {((isCompleted && !isExpired) || nextIsCompleted) && (
                       <span className="absolute -start-1.5 top-1 text-white">
                         <PiCheckBold className="h-auto w-3" />
                       </span>
                     )}
-
                     {/* Expired icon */}
                     {isExpired && currentStatus === 2 && (
                       <span className="absolute -start-1.5 top-1 text-white">
                         <PiXBold className="h-auto w-3 text-white" />
                       </span>
                     )}
-
                     {item.label}
                     {isExpired && currentStatus === 2 && (
                       <p className="mt-1 text-xs text-gray-500">

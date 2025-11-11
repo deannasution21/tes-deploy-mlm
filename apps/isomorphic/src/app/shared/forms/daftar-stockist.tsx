@@ -217,6 +217,22 @@ function Formnya({
           value={selectedKabupaten} // 👈 show translated label
           disabled
         />
+
+        <style>
+          {`
+    textarea:-webkit-autofill {
+      border-color: inherit !important;
+    }
+  `}
+        </style>
+        <Textarea
+          label="Alamat"
+          placeholder="Alamat"
+          {...register('address')}
+          error={errors.address?.message as string}
+          textareaClassName="h-20"
+          autoComplete="off"
+        />
       </div>
     </>
   );
@@ -311,6 +327,7 @@ export default function DaftarStockist({ className }: { className?: string }) {
       phone: '',
       province: '',
       city: '',
+      address: '',
     },
     resolver: zodResolver(daftarStockistSchema),
   });
@@ -326,7 +343,9 @@ export default function DaftarStockist({ className }: { className?: string }) {
       session.accessToken
     )
       .then((data) => {
-        toast.success(<Text as="b">Permohonan pendaftaran dikirim</Text>);
+        toast.success(
+          <Text as="b">Permohonan pendaftaran berhasil dikirim</Text>
+        );
         getDataUser();
       })
       .catch((error) => {
@@ -388,6 +407,7 @@ export default function DaftarStockist({ className }: { className?: string }) {
             phone: userData.no_hp ?? '',
             province: userData.province ?? '',
             city: userData.city ?? '',
+            address: '',
           });
         }
       })
@@ -441,6 +461,7 @@ export default function DaftarStockist({ className }: { className?: string }) {
           'isomorphic-form flex flex-grow flex-col @container [&_label.block>span]:font-medium',
           className
         )}
+        autoComplete="off"
       >
         <div className="items-start @5xl:grid @5xl:grid-cols-12 @5xl:gap-7 @6xl:grid-cols-10 @7xl:gap-10">
           <div className="flex-grow @5xl:col-span-8 @5xl:pb-10 @6xl:col-span-7">

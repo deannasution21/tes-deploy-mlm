@@ -14,6 +14,7 @@ export const daftarStockistSchema = z
       .email({ message: 'Format email tidak valid' }),
     phone: z.string().min(1, { message: messages.kolomIsRequired }),
     province: z.string().min(1, { message: messages.kolomIsRequired }),
+    address: z.string().min(1, { message: messages.kolomIsRequired }),
     city: z.string().min(1, { message: messages.kolomIsRequired }),
     password: validatePassword,
     confirm_password: validateConfirmPassword,

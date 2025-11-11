@@ -504,7 +504,7 @@ export default function CheckoutPageWrapper({
 
     // ✅ Transform items → products payload
     const products = items.map((item) => ({
-      id: item.id,
+      id: item.id?.toLowerCase(),
       quantity: item.quantity,
     }));
 

@@ -438,8 +438,6 @@ export default function OrderView() {
                 const nextIsExpired =
                   filteredStatuses[index + 1]?.id === 2 && currentStatus === 2;
 
-                console.log(`${item.label}: ${nextIsCompleted}`);
-
                 return (
                   <div
                     key={item.id}
@@ -489,8 +487,11 @@ export default function OrderView() {
                 as="h3"
                 className="mb-2.5 text-base font-semibold @7xl:text-lg"
               >
-                {invoice?.attribute?.form_data?.customer_name ?? '-'} (
-                {'@' + (invoice?.attribute?.form_data?.username ?? '-')})
+                {invoice?.attribute?.form_data?.customer_name ?? '-'}
+                <span className="uppercase">
+                  {' '}
+                  ({'@' + (invoice?.attribute?.form_data?.username ?? '-')})
+                </span>
               </Title>
               <Text as="p" className="mb-2 break-all uppercase last:mb-0">
                 {session?.user?.role}

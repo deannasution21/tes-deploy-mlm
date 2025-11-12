@@ -71,7 +71,8 @@ export default function OrderSummery({
           <div className="mb-4 flex items-center justify-between last:mb-0">
             Biaya Admin
             <Text as="span" className="font-medium text-gray-900">
-              {fee !== 0 ? toCurrency(fee ?? 0) : 'FREE'}
+              {/* {fee !== 0 ? toCurrency(fee ?? 0) : 'FREE'} */}
+              FREE
             </Text>
           </div>
           <div className="mb-4 flex items-center justify-between last:mb-0">
@@ -84,6 +85,12 @@ export default function OrderSummery({
             Total
             <Text>{totalPrice}</Text>
           </div>
+
+          <Text className="text-sm text-green-600 xl:text-base">
+            **Diskon (jika ada) akan terlihat di halaman{' '}
+            <strong>INVOICE</strong> setelah Anda menekan tombol{' '}
+            <strong>BUAT PESANAN</strong> dibawah ini.
+          </Text>
 
           {items.length ? (
             <Button

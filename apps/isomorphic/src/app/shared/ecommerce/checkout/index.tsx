@@ -546,9 +546,7 @@ export default function CheckoutPageWrapper({
         toast.success(<Text as="b">Pesanan berhasil dibuat</Text>);
         resetCart();
         const invoiceID = data?.data?.id;
-        setTimeout(() => {
-          router.push(routes.produk.pesanan.detail(invoiceID));
-        }, 300);
+        router.push(routes.produk.pesanan.detail(invoiceID));
       })
       .catch((error) => {
         console.error(error);

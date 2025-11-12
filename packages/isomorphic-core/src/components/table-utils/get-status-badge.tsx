@@ -33,6 +33,7 @@ const allStatus = {
   "0": statusColors.warning,
   "1": statusColors.success,
   "-2": statusColors.danger,
+  "2": statusColors.success,
 };
 
 export type StatusTypes = keyof typeof allStatus;
@@ -59,11 +60,13 @@ export function getStatusBadge(status: string) {
               ? "Pembayaran Berhasil"
               : status === "-2"
                 ? "Transaksi Dibatalkan/Expired"
-                : status === "used"
-                  ? "Sudah Digunakan"
-                  : status === "active"
-                    ? "Belum Digunakan"
-                    : replaceUnderscoreDash(statusLower)}
+                : status === "2"
+                  ? "Transaksi Telah Diproses dan Dikirim"
+                  : status === "used"
+                    ? "Sudah Digunakan"
+                    : status === "active"
+                      ? "Belum Digunakan"
+                      : replaceUnderscoreDash(statusLower)}
         </Text>
       </Flex>
     );

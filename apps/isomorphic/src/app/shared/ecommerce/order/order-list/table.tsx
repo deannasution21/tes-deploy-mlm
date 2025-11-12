@@ -11,16 +11,24 @@ import {
   Button,
   Input,
   Modal,
+  Select,
   TableVariantProps,
   Text,
   Title,
 } from 'rizzui';
+import { Form } from '@core/ui/form';
 import { useEffect, useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import WidgetCard from '@core/components/cards/widget-card';
 import cn from '@core/utils/class-names';
 import { PiX } from 'react-icons/pi';
+import { Controller, SubmitHandler } from 'react-hook-form';
+import {
+  UbahStatusPesananInput,
+  ubahStatusPesananSchema,
+} from '@/validators/ubah-status-pesanan-schema';
+import { toast } from 'react-hot-toast';
 
 export interface TransactionResponse {
   code: number;
@@ -94,11 +102,30 @@ export default function OrderTable({
 }) {
   const { data: session } = useSession();
   const [dataPesanan, setDataPesanan] = useState<Transaction[]>([]);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
+  const [isLoadingS, setLoadingS] = useState(false);
   const [type, setType] = useState<string>('all');
 
   const [modalState, setModalState] = useState({
     isOpen: false,
+  });
+
+  const statusPesanan = [
+    {
+      label: 'Pesanan Disetujui',
+      value: 'approved',
+    },
+  ];
+
+  const [valuesModal, setValuesModal] = useState({
+    ref_id: '',
+    username: '',
+    status: '',
+  });
+  const [resetValues, setResetValues] = useState({
+    ref_id: '',
+    username: '',
+    status: '',
   });
 
   useEffect(() => {
@@ -139,7 +166,11 @@ export default function OrderTable({
   // 🧩 Table initialization
   const { table, setData } = useTanStackTable<Transaction>({
     tableData: filteredPesanan,
-    columnConfig: ordersColumnsNew(session?.user?.id as string, setModalState),
+    columnConfig: ordersColumnsNew(
+      session?.user?.id as string,
+      setModalState,
+      setValuesModal
+    ),
     options: {
       initialState: {
         pagination: {
@@ -156,6 +187,27 @@ export default function OrderTable({
   useEffect(() => {
     setData(filteredPesanan);
   }, [filteredPesanan, setData]);
+
+  const onSubmit: SubmitHandler<UbahStatusPesananInput> = (data) => {
+    if (!session?.accessToken) return;
+
+    setLoadingS(true);
+
+    fetchWithAuth<any>(
+      `/_transactions/change-transaction-status`,
+      { method: 'PUT', body: JSON.stringify(data) },
+      session.accessToken
+    )
+      .then((data) => {
+        toast.error(<Text as="b">Ubah Status Pesanan Berhasil</Text>);
+        setModalState({ isOpen: false });
+      })
+      .catch((error) => {
+        toast.error(<Text as="b">Ubah Status Pesanan Gagal</Text>);
+        console.error(error);
+      })
+      .finally(() => setLoadingS(false));
+  };
 
   if (isLoading) {
     return (
@@ -191,41 +243,113 @@ export default function OrderTable({
           </WidgetCard>
         </div>
       </div>
-      <Modal
-        isOpen={modalState.isOpen}
-        size="sm"
-        onClose={() =>
-          setModalState((prevState) => ({ ...prevState, isOpen: false }))
-        }
-      >
-        <div className="m-auto px-7 pb-8 pt-6">
-          <div className="mb-7 flex items-center justify-between">
-            <Title as="h3">Ubah Status</Title>
-            <ActionIcon
-              size="sm"
-              variant="text"
-              onClick={() =>
-                setModalState((prevState) => ({ ...prevState, isOpen: false }))
-              }
+      {session?.user?.id === 'adminpin2026' && (
+        <Modal
+          isOpen={modalState.isOpen}
+          size="sm"
+          onClose={() =>
+            setModalState((prevState) => ({ ...prevState, isOpen: false }))
+          }
+        >
+          <div className="m-auto px-7 pb-8 pt-6">
+            <div className="mb-7 flex items-center justify-between">
+              <Title as="h3">Ubah Status Pesanan</Title>
+              <ActionIcon
+                size="sm"
+                variant="text"
+                onClick={() =>
+                  setModalState((prevState) => ({
+                    ...prevState,
+                    isOpen: false,
+                  }))
+                }
+              >
+                <PiX className="h-auto w-6" strokeWidth={1.8} />
+              </ActionIcon>
+            </div>
+            <Form<UbahStatusPesananInput>
+              validationSchema={ubahStatusPesananSchema}
+              onSubmit={onSubmit}
+              resetValues={{
+                ref_id: valuesModal.ref_id,
+                status: valuesModal.status, // convert number to string
+              }}
+              useFormProps={{
+                defaultValues: {
+                  ref_id: valuesModal.ref_id,
+                  status: valuesModal.status,
+                },
+              }}
+              className="flex flex-col gap-x-5 gap-y-6 [&_label>span]:font-medium"
             >
-              <PiX className="h-auto w-6" strokeWidth={1.8} />
-            </ActionIcon>
+              {({
+                register,
+                control,
+                watch,
+                setValue,
+                reset,
+                formState: { errors },
+              }) => {
+                return (
+                  <>
+                    <Input
+                      label="Username Pembeli"
+                      value={valuesModal.username} // 👈 directly use value from state
+                      inputClassName="[&_input]:uppercase"
+                      disabled
+                    />
+                    <Input
+                      label="Invoice ID"
+                      {...register('ref_id')}
+                      disabled
+                    />
+
+                    <Controller
+                      name="status"
+                      control={control}
+                      render={({ field: { onChange, value } }) => (
+                        <Select
+                          label="Status Pesanan"
+                          placeholder="Pilih Status Pesanan"
+                          options={statusPesanan}
+                          onChange={onChange}
+                          value={value}
+                          getOptionValue={(o) => o.value}
+                          displayValue={(v) =>
+                            statusPesanan.find((s) => s.value === v)?.label ??
+                            ''
+                          }
+                          error={errors.status?.message}
+                        />
+                      )}
+                    />
+
+                    <div className="mt-2 flex justify-end gap-2">
+                      <Button
+                        variant="outline"
+                        disabled={isLoadingS}
+                        onClick={() => {
+                          reset(resetValues); // clear form
+                          setModalState({ isOpen: false });
+                        }}
+                      >
+                        Batal
+                      </Button>
+                      <Button
+                        type="submit"
+                        isLoading={isLoadingS}
+                        disabled={isLoadingS}
+                      >
+                        Ubah Status
+                      </Button>
+                    </div>
+                  </>
+                );
+              }}
+            </Form>
           </div>
-          <div className="grid grid-cols-2 gap-x-5 gap-y-6 [&_label>span]:font-medium">
-            <Input label="First Name *" inputClassName="border-2" size="lg" />
-            <Button
-              type="submit"
-              size="lg"
-              className="col-span-2 mt-2"
-              onClick={() =>
-                setModalState((prevState) => ({ ...prevState, isOpen: false }))
-              }
-            >
-              Create an Account
-            </Button>
-          </div>
-        </div>
-      </Modal>
+        </Modal>
+      )}
     </>
   );
 }

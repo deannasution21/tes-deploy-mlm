@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { routes } from '@/config/routes';
 import { Button, Text } from 'rizzui';
 import WelcomeBanner from '@core/components/banners/welcome';
-import { PiShoppingCart } from 'react-icons/pi';
+import { PiNotepad, PiShoppingCart } from 'react-icons/pi';
 import welcomeImg from '@public/shop-illustration.png';
 import HandWaveIcon from '@core/components/icons/hand-wave';
 import FleetStatus from './fleet-status';
@@ -79,11 +79,29 @@ export default function Dashboard() {
           className="border border-muted bg-gray-0 pb-8 @4xl:col-span-2 @7xl:col-span-8 @7xl:min-h-[412px] dark:bg-gray-100/30 lg:pb-9"
         >
           {session?.user?.role === 'stockist' && (
-            <Link href={routes.produk.index} className="inline-flex">
-              <Button as="span" className="h-[38px] shadow md:h-10">
-                <PiShoppingCart className="me-1 h-4 w-4" /> Beli Produk
-              </Button>
-            </Link>
+            <div className="flex gap-2">
+              <Link href={routes.produk.index} className="inline-flex">
+                <Button as="span" className="h-[38px] shadow md:h-10">
+                  <PiShoppingCart className="me-1 h-4 w-4" /> Beli Produk
+                </Button>
+              </Link>
+              {(session?.user?.id === 'adminstock' ||
+                session?.user?.id === 'admin_stock' ||
+                session?.user?.id === 'adminpin2026') && (
+                <Link
+                  href={routes.produk.pesananStockist.index}
+                  className="inline-flex"
+                >
+                  <Button
+                    as="span"
+                    className="h-[38px] bg-blue-400 shadow hover:bg-blue-500 md:h-10"
+                  >
+                    <PiNotepad className="me-1 h-4 w-4" /> History Pembelian
+                    Stockist
+                  </Button>
+                </Link>
+              )}
+            </div>
           )}
         </WelcomeBanner>
 

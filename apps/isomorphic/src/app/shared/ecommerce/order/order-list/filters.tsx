@@ -27,6 +27,10 @@ const statusOptions = [
     value: '-2',
     label: 'Transaksi Dibatalkan',
   },
+  {
+    value: '2',
+    label: 'Transaksi Telah Diproses dan Dikirim',
+  },
 ];
 
 interface TableToolbarProps<T extends Record<string, any>> {
@@ -136,6 +140,16 @@ function renderOptionDisplayValue(option: {
         <div className="flex items-center">
           <Badge color="danger" renderAsDot />
           <Text className="ms-2 font-semibold uppercase text-red-600">
+            {option.label}
+          </Text>
+        </div>
+      );
+
+    case '2':
+      return (
+        <div className="flex items-center">
+          <Badge color="success" renderAsDot />
+          <Text className="ms-2 font-semibold uppercase text-green-600">
             {option.label}
           </Text>
         </div>

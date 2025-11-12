@@ -13,7 +13,14 @@ const columnHelperNew = createColumnHelper<Transaction>();
 
 export const ordersColumnsNew = (
   username: string,
-  setModalState: React.Dispatch<React.SetStateAction<{ isOpen: boolean }>>
+  setModalState: React.Dispatch<React.SetStateAction<{ isOpen: boolean }>>,
+  setValuesModal: React.Dispatch<
+    React.SetStateAction<{
+      ref_id: string;
+      username: string;
+      status: string;
+    }>
+  >
 ) => {
   const columns = [
     // columnHelperNew.display({
@@ -150,22 +157,31 @@ export const ordersColumnsNew = (
               <PiPrinter className="mr-2 h-4 w-4" />
               <span>Cetak Invoice</span>
             </Button>
-            {(username === 'adminstock' ||
-              username === 'admin_stock' ||
-              username === 'adminpin2025') && (
-              <Button
-                size="sm"
-                variant="flat"
-                onClick={() =>
-                  setModalState((prevState) => ({
-                    ...prevState,
-                    isOpen: true,
-                  }))
-                }
-              >
-                <PiTruck className="mr-2 h-4 w-4" />
-                <span>Ubah Status</span>
-              </Button>
+            {row.original.attributes.status.code !== 2 && (
+              <>
+                {(username === 'adminstock' ||
+                  username === 'admin_stock' ||
+                  username === 'adminpin2026') && (
+                  <Button
+                    size="sm"
+                    variant="flat"
+                    onClick={() => {
+                      setValuesModal(() => ({
+                        ref_id: row.original.attributes.ref_id,
+                        username: row.original.attributes.buyer.customer_id,
+                        status: '',
+                      }));
+                      setModalState((prevState) => ({
+                        ...prevState,
+                        isOpen: true,
+                      }));
+                    }}
+                  >
+                    <PiTruck className="mr-2 h-4 w-4" />
+                    <span>Ubah Status</span>
+                  </Button>
+                )}
+              </>
             )}
           </div>
         );

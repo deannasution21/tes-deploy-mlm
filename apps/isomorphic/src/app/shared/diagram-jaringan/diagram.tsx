@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { PiArrowUpBold, PiCopyBold, PiUserPlusBold } from 'react-icons/pi';
 import { Session } from 'next-auth';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
 type TreeProps = {
   data: NetworkNode;
@@ -154,22 +155,49 @@ function Tree({ data, session }: TreeProps) {
   };
 
   return (
-    <div className="w-full overflow-x-auto p-6">
-      <div className="inline-block min-w-full">
-        {data.upline !== 'sistem' && data.upline !== session?.user?.id && (
-          <div className="flex flex-col justify-center text-center">
-            <div>
-              <Link href={`/diagram-jaringan/${data.upline}`}>
-                <Button size="sm" color="primary" disabled={false}>
-                  <PiArrowUpBold className="text-xl" />
-                </Button>
-              </Link>
+    <div className="relative flex h-screen w-full items-center justify-center bg-gray-100">
+      <TransformWrapper
+        initialScale={1} // <-- changed from defaultScale
+        minScale={0.5}
+        maxScale={2}
+        centerOnInit={true} // center content initially
+        wheel={{ step: 0.1 }} // only step is needed, wheel zoom is enabled by default
+        pinch={{ step: 5 }} // pinch zoom step
+      >
+        {({ zoomIn, zoomOut, resetTransform }) => (
+          <>
+            <div className="controls absolute right-4 top-4 flex gap-2">
+              <Button size="sm" variant="flat" onClick={() => zoomIn()}>
+                Zoom In
+              </Button>
+              <Button size="sm" variant="flat" onClick={() => zoomOut()}>
+                Zoom Out
+              </Button>
+              <Button size="sm" variant="flat" onClick={() => resetTransform()}>
+                Reset
+              </Button>
             </div>
-            <div className="mx-auto mt-1 h-4 w-1 bg-gray-300" />
-          </div>
+            <TransformComponent>
+              <div id="mlm-diagram">
+                {data.upline !== 'sistem' &&
+                  data.upline !== session?.user?.id && (
+                    <div className="flex flex-col justify-center text-center">
+                      <div>
+                        <Link href={`/diagram-jaringan/${data.upline}`}>
+                          <Button size="sm" color="primary" disabled={false}>
+                            <PiArrowUpBold className="text-xl" />
+                          </Button>
+                        </Link>
+                      </div>
+                      <div className="mx-auto mt-1 h-4 w-1 bg-gray-300" />
+                    </div>
+                  )}
+                {data && renderNode(data, '0', data.user_id)}
+              </div>
+            </TransformComponent>
+          </>
         )}
-        {data && renderNode(data, '0', data.user_id)}
-      </div>
+      </TransformWrapper>
     </div>
   );
 }

@@ -18,7 +18,7 @@ export const historyBonusColumns = [
     id: 'created_at',
     header: 'Tanggal',
     size: 180,
-    cell: (info) => <DateCell date={new Date(info.getValue())} />,
+    cell: (info) => <DateCell date={info.getValue()} />,
   }),
   columnHelper.accessor('attribute.from', {
     id: 'from',

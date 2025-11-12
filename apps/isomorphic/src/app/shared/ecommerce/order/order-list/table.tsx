@@ -5,12 +5,22 @@ import Table from '@core/components/table';
 import { useTanStackTable } from '@core/components/table/custom/use-TanStack-Table';
 import TablePagination from '@core/components/table/pagination';
 import Filters from './filters';
-import { Alert, TableVariantProps, Text } from 'rizzui';
+import {
+  ActionIcon,
+  Alert,
+  Button,
+  Input,
+  Modal,
+  TableVariantProps,
+  Text,
+  Title,
+} from 'rizzui';
 import { useEffect, useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import WidgetCard from '@core/components/cards/widget-card';
 import cn from '@core/utils/class-names';
+import { PiX } from 'react-icons/pi';
 
 export interface TransactionResponse {
   code: number;
@@ -87,13 +97,17 @@ export default function OrderTable({
   const [isLoading, setLoading] = useState(false);
   const [type, setType] = useState<string>('all');
 
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+  });
+
   useEffect(() => {
     if (!session?.accessToken) return;
 
     setLoading(true);
 
     const url =
-      session?.user?.id === 'adminpin2025'
+      session?.user?.id === 'adminpin2026'
         ? `/_transactions/history-transaction?type=payment`
         : `/_transactions/history-transaction/${session?.user?.id}?type=payment`;
 
@@ -125,7 +139,7 @@ export default function OrderTable({
   // 🧩 Table initialization
   const { table, setData } = useTanStackTable<Transaction>({
     tableData: filteredPesanan,
-    columnConfig: ordersColumnsNew(session?.user?.id as string),
+    columnConfig: ordersColumnsNew(session?.user?.id as string, setModalState),
     options: {
       initialState: {
         pagination: {
@@ -152,29 +166,66 @@ export default function OrderTable({
   }
 
   return (
-    <div className="@container">
-      <div className="grid grid-cols-1 gap-6 3xl:gap-8">
-        <WidgetCard
-          className={cn('p-0 lg:p-0', className)}
-          title="History Pembelian"
-          titleClassName="w-[19ch]"
-          actionClassName="w-full ps-0 items-center weee"
-          headerClassName="mb-6 items-start flex-col @[57rem]:flex-row @[57rem]:items-center px-5 pt-5 lg:pt-7 lg:px-7"
-          action={<Filters table={table} type={type} setType={setType} />}
-        >
-          <div className="px-5 lg:px-7">
-            <Alert variant="flat" color="success" className="mb-7">
-              <Text className="font-semibold">Informasi</Text>
-              <Text className="break-normal">
-                Klik pada kode <strong>INVOICE</strong> untuk menampilkan detail
-                Pesanan
-              </Text>
-            </Alert>
-          </div>
-          <Table table={table} variant="modern" />
-          <TablePagination table={table} className="p-4" />
-        </WidgetCard>
+    <>
+      <div className="@container">
+        <div className="grid grid-cols-1 gap-6 3xl:gap-8">
+          <WidgetCard
+            className={cn('p-0 lg:p-0', className)}
+            title="History Pembelian"
+            titleClassName="w-[19ch]"
+            actionClassName="w-full ps-0 items-center weee"
+            headerClassName="mb-6 items-start flex-col @[57rem]:flex-row @[57rem]:items-center px-5 pt-5 lg:pt-7 lg:px-7"
+            action={<Filters table={table} type={type} setType={setType} />}
+          >
+            <div className="px-5 lg:px-7">
+              <Alert variant="flat" color="success" className="mb-7">
+                <Text className="font-semibold">Informasi</Text>
+                <Text className="break-normal">
+                  Klik pada kode <strong>INVOICE</strong> untuk menampilkan
+                  detail Pesanan
+                </Text>
+              </Alert>
+            </div>
+            <Table table={table} variant="modern" />
+            <TablePagination table={table} className="p-4" />
+          </WidgetCard>
+        </div>
       </div>
-    </div>
+      <Modal
+        isOpen={modalState.isOpen}
+        size="sm"
+        onClose={() =>
+          setModalState((prevState) => ({ ...prevState, isOpen: false }))
+        }
+      >
+        <div className="m-auto px-7 pb-8 pt-6">
+          <div className="mb-7 flex items-center justify-between">
+            <Title as="h3">Ubah Status</Title>
+            <ActionIcon
+              size="sm"
+              variant="text"
+              onClick={() =>
+                setModalState((prevState) => ({ ...prevState, isOpen: false }))
+              }
+            >
+              <PiX className="h-auto w-6" strokeWidth={1.8} />
+            </ActionIcon>
+          </div>
+          <div className="grid grid-cols-2 gap-x-5 gap-y-6 [&_label>span]:font-medium">
+            <Input label="First Name *" inputClassName="border-2" size="lg" />
+            <Button
+              type="submit"
+              size="lg"
+              className="col-span-2 mt-2"
+              onClick={() =>
+                setModalState((prevState) => ({ ...prevState, isOpen: false }))
+              }
+            >
+              Create an Account
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 }

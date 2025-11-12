@@ -11,7 +11,10 @@ import { PiPrinter, PiTruck } from 'react-icons/pi';
 
 const columnHelperNew = createColumnHelper<Transaction>();
 
-export const ordersColumnsNew = (username: string) => {
+export const ordersColumnsNew = (
+  username: string,
+  setModalState: React.Dispatch<React.SetStateAction<{ isOpen: boolean }>>
+) => {
   const columns = [
     // columnHelperNew.display({
     //   id: 'id',
@@ -147,8 +150,19 @@ export const ordersColumnsNew = (username: string) => {
               <PiPrinter className="mr-2 h-4 w-4" />
               <span>Cetak Invoice</span>
             </Button>
-            {(username === 'adminstock' || username === 'admin_stock') && (
-              <Button size="sm" variant="flat">
+            {(username === 'adminstock' ||
+              username === 'admin_stock' ||
+              username === 'adminpin2025') && (
+              <Button
+                size="sm"
+                variant="flat"
+                onClick={() =>
+                  setModalState((prevState) => ({
+                    ...prevState,
+                    isOpen: true,
+                  }))
+                }
+              >
                 <PiTruck className="mr-2 h-4 w-4" />
                 <span>Ubah Status</span>
               </Button>

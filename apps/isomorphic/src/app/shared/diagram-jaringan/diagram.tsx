@@ -155,16 +155,18 @@ function Tree({ data, session }: TreeProps) {
   };
 
   return (
-    <div className="relative flex h-screen w-full items-center justify-center bg-gray-100">
+    <div className="relative flex h-[75vh] w-full items-center justify-center bg-gray-100">
       <TransformWrapper
         minScale={0.5}
-        maxScale={10}
-        centerOnInit={true}
-        limitToBounds={false}
-        centerZoomedOut={false}
-        panning={{ velocityDisabled: true }}
-        pinch={{ step: 5 }}
-        wheel={{ step: 0.1, wheelDisabled: false, touchPadDisabled: true }}
+        maxScale={3}
+        initialScale={1}
+        centerOnInit={true} // ✅ centers once at start
+        limitToBounds={false} // ✅ prevents "snapping back" / jiggle
+        alignmentAnimation={{ disabled: true }} // ✅ disables auto-align animation
+        panning={{ velocityDisabled: true }} // ✅ smooth manual panning only
+        pinch={{ step: 5 }} // ✅ allow natural pinch behavior
+        doubleClick={{ disabled: true }} // disable double-click zoom
+        wheel={{ step: 0.1, smoothStep: 0.02 }} // smoother wheel zoom
       >
         {({ zoomIn, zoomOut, resetTransform, centerView }) => {
           return (
@@ -179,7 +181,11 @@ function Tree({ data, session }: TreeProps) {
                 <Button
                   size="sm"
                   variant="flat"
-                  onClick={() => resetTransform()}
+                  onClick={() => {
+                    resetTransform();
+                    // small delay ensures transform fully resets before centering
+                    setTimeout(() => centerView(), 50);
+                  }}
                 >
                   Reset
                 </Button>

@@ -157,7 +157,7 @@ function Tree({ data, session }: TreeProps) {
   return (
     <div className="relative flex h-screen w-full items-center justify-center bg-gray-100">
       <TransformWrapper
-        initialScale={1} // <-- changed from defaultScale
+        initialScale={0.8} // <-- changed from defaultScale
         minScale={0.5}
         maxScale={2}
         centerOnInit={true} // center content initially
@@ -166,7 +166,7 @@ function Tree({ data, session }: TreeProps) {
       >
         {({ zoomIn, zoomOut, resetTransform }) => (
           <>
-            <div className="controls absolute right-4 top-4 flex gap-2">
+            <div className="controls absolute right-4 top-4 z-10 flex gap-2">
               <Button size="sm" variant="flat" onClick={() => zoomIn()}>
                 Zoom In
               </Button>

@@ -155,74 +155,58 @@ function Tree({ data, session }: TreeProps) {
   };
 
   return (
-    <>
-      <style>{`
-        .zoom-container {
-          touch-action: none;
-          overscroll-behavior: contain;
-        }
-
-        html, body {
-          touch-action: none;
-          overscroll-behavior: contain;
-        }
-      `}</style>
-      <div className="zoom-container relative flex h-screen w-full items-center justify-center bg-gray-100">
-        <TransformWrapper
-          minScale={0.5}
-          maxScale={3}
-          limitToBounds={false}
-          centerZoomedOut={false}
-          panning={{ velocityDisabled: true }}
-          pinch={{ step: 5 }}
-          wheel={{ step: 0.1, wheelDisabled: false, touchPadDisabled: true }}
-        >
-          {({ zoomIn, zoomOut, resetTransform, centerView }) => {
-            return (
-              <>
-                <div className="controls absolute right-4 top-4 z-10 flex gap-2">
-                  <Button size="sm" variant="flat" onClick={() => zoomIn()}>
-                    Zoom In
-                  </Button>
-                  <Button size="sm" variant="flat" onClick={() => zoomOut()}>
-                    Zoom Out
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="flat"
-                    onClick={() => resetTransform()}
-                  >
-                    Reset
-                  </Button>
-                </div>
-                <TransformComponent>
-                  <div id="mlm-diagram">
-                    {data.upline !== 'sistem' &&
-                      data.upline !== session?.user?.id && (
-                        <div className="flex flex-col justify-center text-center">
-                          <div>
-                            <Link href={`/diagram-jaringan/${data.upline}`}>
-                              <Button
-                                size="sm"
-                                color="primary"
-                                disabled={false}
-                              >
-                                <PiArrowUpBold className="text-xl" />
-                              </Button>
-                            </Link>
-                          </div>
-                          <div className="mx-auto mt-1 h-4 w-1 bg-gray-300" />
+    <div className="relative flex h-screen w-full items-center justify-center bg-gray-100">
+      <TransformWrapper
+        minScale={0.5}
+        maxScale={10}
+        centerOnInit={true}
+        limitToBounds={false}
+        centerZoomedOut={false}
+        panning={{ velocityDisabled: true }}
+        pinch={{ step: 5 }}
+        wheel={{ step: 0.1, wheelDisabled: false, touchPadDisabled: true }}
+      >
+        {({ zoomIn, zoomOut, resetTransform, centerView }) => {
+          return (
+            <>
+              <div className="controls absolute right-4 top-4 z-10 flex gap-2">
+                <Button size="sm" variant="flat" onClick={() => zoomIn()}>
+                  Zoom In
+                </Button>
+                <Button size="sm" variant="flat" onClick={() => zoomOut()}>
+                  Zoom Out
+                </Button>
+                <Button
+                  size="sm"
+                  variant="flat"
+                  onClick={() => resetTransform()}
+                >
+                  Reset
+                </Button>
+              </div>
+              <TransformComponent>
+                <div id="mlm-diagram">
+                  {data.upline !== 'sistem' &&
+                    data.upline !== session?.user?.id && (
+                      <div className="flex flex-col justify-center text-center">
+                        <div>
+                          <Link href={`/diagram-jaringan/${data.upline}`}>
+                            <Button size="sm" color="primary" disabled={false}>
+                              <PiArrowUpBold className="text-xl" />
+                            </Button>
+                          </Link>
                         </div>
-                      )}
-                    {data && renderNode(data, '0', data.user_id)}
-                  </div>
-                </TransformComponent>
-              </>
-            );
-          }}
-        </TransformWrapper>
-      </div>
-    </>
+                        <div className="mx-auto mt-1 h-4 w-1 bg-gray-300" />
+                      </div>
+                    )}
+                  {data && renderNode(data, '0', data.user_id)}
+                </div>
+              </TransformComponent>
+            </>
+          );
+        }}
+      </TransformWrapper>
+    </div>
   );
 }
 

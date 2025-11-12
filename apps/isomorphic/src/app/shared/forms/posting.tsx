@@ -123,6 +123,7 @@ function Formnya({
       })
       .catch((error) => {
         console.error(error);
+        setFeedback(`❌ ${error ?? 'Sponsor tidak ditemukan'}`);
         // Clear the data so UI can show "no data"
       })
       .finally(() => setChecking(false));
@@ -155,7 +156,7 @@ function Formnya({
 
   useEffect(() => {
     if (dataSPin) {
-      setValue('mlm_user_id', dataSPin.mlm_user_id); // ✅ update RHF state
+      setValue('mlm_user_id', dataSPin.mlm_user_id?.toLowerCase()); // ✅ update RHF state
       setValue('type_plan', dataSPin?.type); // ✅ sync state to form
     }
   }, [dataSPin, setValue]);
@@ -219,6 +220,7 @@ function Formnya({
               label="ID Yang Terbentuk"
               placeholder="(Otomatis by system)"
               {...field}
+              inputClassName="[&_input]:uppercase"
               error={error?.message as any}
               disabled
             />
@@ -230,6 +232,7 @@ function Formnya({
           placeholder="Upline"
           {...register(`upline`)}
           // @ts-ignore
+          inputClassName="[&_input]:uppercase"
           error={errors?.upline?.message as any}
           disabled
         />

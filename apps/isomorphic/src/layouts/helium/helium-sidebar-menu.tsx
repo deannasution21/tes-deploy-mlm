@@ -36,7 +36,7 @@ export function HeliumSidebarMenu() {
   const menuFinal =
     role === 'admin'
       ? menuItemsAdmin
-      : role === 'stockist' && username === 'adminpin2025'
+      : role === 'stockist' && username === 'adminpin2026'
         ? menuItemsStockistAdminPin
         : role === 'stockist'
           ? menuItemsStockist

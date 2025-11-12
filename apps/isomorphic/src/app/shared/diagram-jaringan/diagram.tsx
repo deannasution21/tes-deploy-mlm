@@ -159,7 +159,7 @@ function Tree({ data, session }: TreeProps) {
       <TransformWrapper
         minScale={0.5}
         maxScale={3}
-        initialScale={1}
+        initialScale={0.55}
         centerOnInit={true} // ✅ centers once at start
         limitToBounds={false} // ✅ prevents "snapping back" / jiggle
         alignmentAnimation={{ disabled: true }} // ✅ disables auto-align animation

@@ -155,64 +155,82 @@ function Tree({ data, session }: TreeProps) {
   };
 
   return (
-    <div className="relative flex h-[75vh] w-full items-center justify-center bg-gray-100">
-      <TransformWrapper
-        minScale={0.5}
-        maxScale={3}
-        initialScale={0.55}
-        centerOnInit={true} // ✅ centers once at start
-        limitToBounds={false} // ✅ prevents "snapping back" / jiggle
-        alignmentAnimation={{ disabled: true }} // ✅ disables auto-align animation
-        panning={{ velocityDisabled: true }} // ✅ smooth manual panning only
-        pinch={{ step: 5 }} // ✅ allow natural pinch behavior
-        doubleClick={{ disabled: true }} // disable double-click zoom
-        wheel={{ step: 0.1, smoothStep: 0.02 }} // smoother wheel zoom
-      >
-        {({ zoomIn, zoomOut, resetTransform, centerView }) => {
-          return (
-            <>
-              <div className="controls absolute right-4 top-4 z-10 flex gap-2">
-                <Button size="sm" variant="flat" onClick={() => zoomIn()}>
-                  Zoom In
-                </Button>
-                <Button size="sm" variant="flat" onClick={() => zoomOut()}>
-                  Zoom Out
-                </Button>
-                <Button
-                  size="sm"
-                  variant="flat"
-                  onClick={() => {
-                    resetTransform();
-                    // small delay ensures transform fully resets before centering
-                    setTimeout(() => centerView(), 50);
-                  }}
-                >
-                  Reset
-                </Button>
-              </div>
-              <TransformComponent>
-                <div id="mlm-diagram">
-                  {data.upline !== 'sistem' &&
-                    data.upline !== session?.user?.id && (
-                      <div className="flex flex-col justify-center text-center">
-                        <div>
-                          <Link href={`/diagram-jaringan/${data.upline}`}>
-                            <Button size="sm" color="primary" disabled={false}>
-                              <PiArrowUpBold className="text-xl" />
-                            </Button>
-                          </Link>
-                        </div>
-                        <div className="mx-auto mt-1 h-4 w-1 bg-gray-300" />
-                      </div>
-                    )}
-                  {data && renderNode(data, '0', data.user_id)}
+    <>
+      <style jsx global>{`
+        html,
+        body {
+          touch-action: none;
+          overscroll-behavior: contain;
+        }
+        .zoom-container {
+          touch-action: none;
+          overscroll-behavior: contain;
+        }
+      `}</style>
+      <div className="zoom-container relative flex h-[75vh] w-full items-center justify-center overflow-hidden bg-gray-100">
+        {/* <div className="zoom-container h-screen w-full overflow-hidden"> */}
+        <TransformWrapper
+          minScale={0.5}
+          maxScale={3}
+          initialScale={0.55}
+          centerOnInit={true} // ✅ centers once at start
+          limitToBounds={false} // ✅ prevents "snapping back" / jiggle
+          alignmentAnimation={{ disabled: true }} // ✅ disables auto-align animation
+          panning={{ velocityDisabled: true }} // ✅ smooth manual panning only
+          pinch={{ step: 5 }} // ✅ allow natural pinch behavior
+          doubleClick={{ disabled: true }} // disable double-click zoom
+          wheel={{ step: 0.1, smoothStep: 0.02 }} // smoother wheel zoom
+        >
+          {({ zoomIn, zoomOut, resetTransform, centerView }) => {
+            return (
+              <>
+                <div className="controls absolute right-4 top-4 z-10 flex gap-2">
+                  <Button size="sm" variant="flat" onClick={() => zoomIn()}>
+                    Zoom In
+                  </Button>
+                  <Button size="sm" variant="flat" onClick={() => zoomOut()}>
+                    Zoom Out
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="flat"
+                    onClick={() => {
+                      resetTransform();
+                      // small delay ensures transform fully resets before centering
+                      setTimeout(() => centerView(), 50);
+                    }}
+                  >
+                    Reset
+                  </Button>
                 </div>
-              </TransformComponent>
-            </>
-          );
-        }}
-      </TransformWrapper>
-    </div>
+                <TransformComponent>
+                  <div id="mlm-diagram">
+                    {data.upline !== 'sistem' &&
+                      data.upline !== session?.user?.id && (
+                        <div className="flex flex-col justify-center text-center">
+                          <div>
+                            <Link href={`/diagram-jaringan/${data.upline}`}>
+                              <Button
+                                size="sm"
+                                color="primary"
+                                disabled={false}
+                              >
+                                <PiArrowUpBold className="text-xl" />
+                              </Button>
+                            </Link>
+                          </div>
+                          <div className="mx-auto mt-1 h-4 w-1 bg-gray-300" />
+                        </div>
+                      )}
+                    {data && renderNode(data, '0', data.user_id)}
+                  </div>
+                </TransformComponent>
+              </>
+            );
+          }}
+        </TransformWrapper>
+      </div>
+    </>
   );
 }
 

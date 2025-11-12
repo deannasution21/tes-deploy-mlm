@@ -1,5 +1,8 @@
-import cn from '../utils/class-names';
-import { formatDate } from '../utils/format-date';
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+import cn from "../utils/class-names";
+import { formatDate } from "../utils/format-date";
 
 interface DateCellProps {
   date: Date;
@@ -10,27 +13,50 @@ interface DateCellProps {
   timeClassName?: string;
 }
 
+dayjs.extend(customParseFormat);
+
 export default function DateCell({
   date,
   className,
   timeClassName,
   dateClassName,
-  dateFormat = 'MMMM D, YYYY',
-  timeFormat = 'h:mm A',
-}: DateCellProps) {
+  dateFormat = "MMMM D, YYYY",
+  timeFormat = "h:mm A",
+}: {
+  date: string | Date;
+  className?: string;
+  timeClassName?: string;
+  dateClassName?: string;
+  dateFormat?: string;
+  timeFormat?: string;
+}) {
+  // ✅ Safely handle both Date objects and DD-MM-YYYY strings
+  let parsedDate: Date;
+  if (typeof date === "string") {
+    // Try parsing as DD-MM-YYYY HH:mm (your format)
+    const d = dayjs(
+      date,
+      ["DD-MM-YYYY HH:mm", "YYYY-MM-DD HH:mm:ss", "YYYY-MM-DD"],
+      true
+    );
+    parsedDate = d.isValid() ? d.toDate() : new Date(date);
+  } else {
+    parsedDate = date;
+  }
+
   return (
-    <div className={cn('grid gap-1', className)}>
+    <div className={cn("grid gap-1", className)}>
       <time
-        dateTime={formatDate(date, 'YYYY-MM-DD')}
-        className={cn('font-medium text-gray-700', dateClassName)}
+        dateTime={formatDate(parsedDate, "YYYY-MM-DD")}
+        className={cn("font-medium text-gray-700", dateClassName)}
       >
-        {formatDate(date, dateFormat)}
+        {formatDate(parsedDate, dateFormat)}
       </time>
       <time
-        dateTime={formatDate(date, 'HH:mm:ss')}
-        className={cn('text-[13px] text-gray-500', timeClassName)}
+        dateTime={formatDate(parsedDate, "HH:mm:ss")}
+        className={cn("text-[13px] text-gray-500", timeClassName)}
       >
-        {formatDate(date, timeFormat)}
+        {formatDate(parsedDate, timeFormat)}
       </time>
     </div>
   );

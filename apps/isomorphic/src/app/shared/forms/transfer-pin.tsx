@@ -415,7 +415,7 @@ export default function TransferPinPage() {
                         {tujuan && (
                           <FormBlockWrapper
                             title={'Data Penerima:'}
-                            className="hidden pt-7 @2xl:pt-9 @3xl:pt-11"
+                            className="pt-7 @2xl:pt-9 @3xl:pt-11"
                           >
                             <Input
                               label="Jenis Member"

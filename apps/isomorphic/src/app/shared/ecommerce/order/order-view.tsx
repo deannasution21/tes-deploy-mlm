@@ -1,16 +1,17 @@
 'use client';
 
 import Image from 'next/image';
-import { PiCheckBold, PiXBold } from 'react-icons/pi';
+import { PiCheckBold, PiPrinter, PiXBold } from 'react-icons/pi';
 import OrderViewProducts from '@/app/shared/ecommerce/order/order-products/order-view-products';
-import { Title, Text, Alert } from 'rizzui';
+import { Title, Text, Alert, Button } from 'rizzui';
 import cn from '@core/utils/class-names';
 import { formatDate } from '@core/utils/format-date';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
+import { useReactToPrint } from 'react-to-print';
 
 export interface TransactionDetailResponse {
   code: number;
@@ -117,7 +118,7 @@ function WidgetCard({
     <div className={className}>
       <Title
         as="h3"
-        className="mb-3.5 text-base font-semibold @5xl:mb-5 4xl:text-lg"
+        className="mb-3.5 text-base font-semibold @5xl:mb-5 4xl:text-lg print:text-sm"
       >
         {title}
       </Title>
@@ -150,7 +151,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className={`w-fit rounded-sm px-2 text-[13px] text-white transition ${copied ? 'bg-green-600' : 'bg-indigo-600 hover:bg-indigo-700'} `}
+      className={`w-fit rounded-sm px-2 text-[13px] text-white transition print:hidden ${copied ? 'bg-green-600' : 'bg-indigo-600 hover:bg-indigo-700'} `}
     >
       {copied ? 'Copied!' : 'Copy'}
     </button>
@@ -164,6 +165,12 @@ export default function OrderView() {
 
   const [invoice, setInvoice] = useState<TransactionData | null>(null);
   const [isLoading, setLoading] = useState(true);
+
+  const ref = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({
+    contentRef: ref, // ✅ new type-safe property
+    documentTitle: `Invoice #${invoiceID}`,
+  });
 
   const orderStatus = [
     { id: 0, label: 'Pesanan Dibuat' },
@@ -268,7 +275,7 @@ export default function OrderView() {
 
   if (!invoice) {
     return (
-      <Alert variant="flat" color="success" className="mt-5">
+      <Alert variant="flat" color="danger" className="mt-5">
         <Text className="font-semibold">Invoice tidak ditemukan</Text>
         <Text className="break-normal">
           Invoice bisa jadi salah atau sudah kadaluarsa
@@ -278,49 +285,55 @@ export default function OrderView() {
   }
 
   return (
-    <div className="@container">
-      <div className="flex flex-wrap justify-center gap-3 border-b border-t border-gray-300 py-4 font-medium text-gray-700 @5xl:justify-between">
-        <span className="@5xl:my-2">
+    <div ref={ref} className="@container">
+      <div className="flex flex-wrap items-center justify-center gap-3 border-b border-t border-gray-300 py-4 font-medium text-gray-700 @5xl:justify-between print:text-xs">
+        <span className="@5xl:my-2 print:px-5">
           {/* October 22, 2022 at 10:30 pm */}
           {formatDate(
             new Date(invoice?.attribute?.waktu),
             'MMMM D, YYYY'
           )} at {formatDate(new Date(invoice?.attribute?.waktu), 'h:mm A')}
         </span>
-        <span
-          className={`rounded-3xl px-2.5 py-1 text-xs uppercase ${currentStatus === 2 ? 'bg-red-lighter text-red-dark' : currentStatus === 0 ? 'bg-green-lighter text-green-dark' : 'bg-primary-lighter text-primary-dark'} @5xl:my-2`}
-        >
-          {invoice?.attribute?.status?.message}
-        </span>
+        <div className="flex flex-col gap-3 xl:flex-row print:px-5">
+          <span
+            className={`rounded-3xl px-2.5 py-1 text-xs uppercase ${currentStatus === 2 ? 'bg-red-lighter text-red-dark' : currentStatus === 0 ? 'bg-green-lighter text-green-dark' : 'bg-primary-lighter text-primary-dark'} @5xl:my-2`}
+          >
+            {invoice?.attribute?.status?.message}
+          </span>
+          <Button className="print:hidden" onClick={() => handlePrint()}>
+            <PiPrinter className="me-1.5 h-[17px] w-[17px]" />
+            Cetak Invoice
+          </Button>
+        </div>
       </div>
-      <div className="items-start pt-10 @5xl:grid @5xl:grid-cols-12 @5xl:gap-7 @6xl:grid-cols-10 @7xl:gap-10">
+      <div className="items-start pt-10 @5xl:grid @5xl:grid-cols-12 @5xl:gap-7 @6xl:grid-cols-10 @7xl:gap-10 print:px-5">
         <div className="space-y-7 @5xl:col-span-8 @5xl:space-y-10 @6xl:col-span-7">
           <div className="pb-5">
             <OrderViewProducts
               data={invoice?.attribute?.form_data?.products ?? []}
             />
-            <div className="mb-3">
+            <div className="mb-3 print:hidden">
               <small className="italic text-green-700 xl:hidden">
                 *Geser table ke samping untuk melihat keseluruhan data
               </small>
             </div>
             <div className="border-t border-muted pt-7 @5xl:mt-3">
               <div className="ms-auto max-w-lg space-y-6">
-                <div className="flex justify-between font-medium">
+                <div className="flex justify-between font-medium print:text-sm">
                   Subtotal{' '}
                   <span>
                     {invoice?.attribute?.bill_payment?.sub_total?.nominal_rp ??
                       'Rp 0'}
                   </span>
                 </div>
-                <div className="flex justify-between font-medium">
+                <div className="flex justify-between font-medium print:text-sm">
                   Diskon{' '}
                   <span>
                     {invoice?.attribute?.bill_payment?.discount?.nominal_rp ??
                       'Rp 0'}
                   </span>
                 </div>
-                <div className="flex justify-between font-medium">
+                <div className="flex justify-between font-medium print:text-sm">
                   Biaya Admin{' '}
                   <span>
                     {/* {' '}
@@ -329,13 +342,13 @@ export default function OrderView() {
                     FREE
                   </span>
                 </div>
-                <div className="flex justify-between font-medium">
+                <div className="flex justify-between font-medium print:text-sm">
                   Pengiriman <span>FREE</span>
                 </div>
-                <div className="flex justify-between border-t border-muted pt-5 text-base font-semibold">
+                <div className="flex justify-between border-t border-muted pt-5 text-base font-semibold print:text-sm">
                   Total{' '}
                   <div className="flex gap-2">
-                    <span className="text-2xl text-primary">
+                    <span className="text-2xl text-primary print:text-lg">
                       {invoice?.attribute?.bill_payment?.total?.nominal_rp ??
                         'Rp 0'}
                     </span>
@@ -355,14 +368,14 @@ export default function OrderView() {
           <div>
             <Title
               as="h3"
-              className="mb-3.5 text-base font-semibold @5xl:mb-5 @7xl:text-lg"
+              className="mb-3.5 text-base font-semibold @5xl:mb-5 @7xl:text-lg print:text-sm"
             >
               Metode Pembayaran
             </Title>
 
             <div className="space-y-4">
               {currentStatus === 0 ? (
-                <span className="my-2 py-0.5 font-medium text-red-500">
+                <span className="my-2 py-0.5 font-medium text-red-500 print:text-xs">
                   Bayar Sebelum: {/* October 22, 2022 at 10:30 pm */}
                   {formatDate(
                     new Date(invoice?.attribute?.payment?.expired_at),
@@ -400,14 +413,14 @@ export default function OrderView() {
                       className="object-contain"
                     />
                   </div>
-                  <div className="flex flex-col gap-2 ps-4">
+                  <div className="flex flex-col gap-2 ps-4 print:text-xs">
                     <Text as="span" className="font-lexend text-gray-700">
                       {invoice?.attribute?.payment?.payment_method ?? '-'}{' '}
                       {' | '}
                       {invoice?.attribute?.payment?.payment_channel ?? '-'}
                     </Text>
                     <div className="flex flex-col gap-1">
-                      <Text className="text-2xl text-green-700">
+                      <Text className="text-2xl text-green-700 print:text-sm">
                         {invoice?.attribute?.payment?.payment_number ?? '-'}
                       </Text>
                       <Text className="text-gray-500">
@@ -448,7 +461,7 @@ export default function OrderView() {
                   <div
                     key={item.id}
                     className={cn(
-                      'relative ps-6 text-sm font-medium before:absolute before:-start-[9px] before:top-px before:h-5 before:w-5 before:-translate-x-px before:rounded-full before:content-[""] after:absolute after:-start-px after:top-5 after:h-10 after:w-0.5 after:content-[""] last:after:hidden',
+                      'relative ps-6 text-sm font-medium before:absolute before:-start-[9px] before:top-px before:h-5 before:w-5 before:-translate-x-px before:rounded-full before:content-[""] after:absolute after:-start-px after:top-5 after:h-10 after:w-0.5 after:content-[""] last:after:hidden print:text-xs',
                       isExpired
                         ? 'text-red-600 before:bg-red-500'
                         : isCompleted || isActive || nextIsCompleted
@@ -491,7 +504,7 @@ export default function OrderView() {
             <div className="">
               <Title
                 as="h3"
-                className="mb-2.5 text-base font-semibold @7xl:text-lg"
+                className="mb-2.5 text-base font-semibold @7xl:text-lg print:text-sm"
               >
                 {invoice?.attribute?.form_data?.customer_name ?? '-'}
                 <span className="uppercase">
@@ -499,10 +512,13 @@ export default function OrderView() {
                   ({'@' + (invoice?.attribute?.form_data?.username ?? '-')})
                 </span>
               </Title>
-              <Text as="p" className="mb-2 break-all uppercase last:mb-0">
+              <Text
+                as="p"
+                className="mb-2 break-all uppercase last:mb-0 print:text-xs"
+              >
                 {session?.user?.role}
               </Text>
-              <Text as="p" className="mb-2 last:mb-0">
+              <Text as="p" className="mb-2 last:mb-0 print:text-xs">
                 {invoice?.attribute?.form_data?.customer_phone ?? '-'}
               </Text>
             </div>
@@ -513,13 +529,16 @@ export default function OrderView() {
           >
             <Title
               as="h3"
-              className="mb-2.5 text-base font-semibold @7xl:text-lg"
+              className="mb-2.5 text-base font-semibold @7xl:text-lg print:text-sm"
             >
               {invoice?.attribute?.form_data?.shipping_method ?? '-'}
             </Title>
             {invoice?.attribute?.form_data?.shipping_method ===
               'PENGIRIMAN BIASA' && (
-              <Text as="p" className="mb-2 leading-loose last:mb-0">
+              <Text
+                as="p"
+                className="mb-2 leading-loose last:mb-0 print:text-xs"
+              >
                 {invoice?.attribute?.form_data?.shipping_address ?? '-'},{' '}
                 {invoice?.attribute?.form_data?.province ?? '-'},{' '}
                 {invoice?.attribute?.form_data?.city ?? '-'}

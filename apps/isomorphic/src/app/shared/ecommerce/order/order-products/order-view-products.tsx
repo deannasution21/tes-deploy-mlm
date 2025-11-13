@@ -8,19 +8,30 @@ import { toCurrency } from '@core/utils/to-currency';
 import { CartItem } from '@/types';
 import { TransactionProduct } from '../order-view';
 import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
+import imgHNB from '@public/assets/img/product/HNB 19.jpg';
+import imgSNP from '@public/assets/img/product/SNP 3.jpg';
+import imgLILAC from '@public/assets/img/product/LILAC.jpeg';
 
 const columns = [
   {
     title: <HeaderCell title="Produk" />,
-    dataIndex: 'product',
-    key: 'product',
+    dataIndex: 'id',
+    key: 'id',
     width: 150,
     render: (_: any, row: CartItem) => (
       <div className="flex items-center">
         <div className="relative aspect-square w-12 overflow-hidden rounded-lg">
           <Image
             alt={row.name}
-            src={row.image ?? defaultPlaceholder}
+            src={
+              String(row.id) === 'prd0002'
+                ? imgHNB
+                : String(row.id) === 'prd0003'
+                  ? imgLILAC
+                  : String(row.id) === 'prd0001'
+                    ? imgSNP
+                    : defaultPlaceholder
+            }
             fill
             sizes="(max-width: 768px) 100vw"
             className="object-cover"
@@ -35,10 +46,10 @@ const columns = [
     ),
   },
   {
-    title: <HeaderCell title="PIN Generate" align="right" />,
+    title: <HeaderCell title="PIN" align="right" />,
     dataIndex: 'total_pin',
     key: 'total_pin',
-    width: 150,
+    width: 100,
     render: (total_pin: number) => (
       <Text className="text-end text-sm">{total_pin}</Text>
     ),
@@ -47,7 +58,7 @@ const columns = [
     title: <HeaderCell title="Harga" align="right" />,
     dataIndex: 'price',
     key: 'price',
-    width: 150,
+    width: 100,
     render: (price: number, row: any) => {
       const discount = row.discount_per_unit;
       // if (discount > 0) {
@@ -83,7 +94,7 @@ const columns = [
     title: <HeaderCell title="Total Harga" align="right" />,
     dataIndex: 'sub_total',
     key: 'sub_total',
-    width: 150,
+    width: 100,
     render: (sub_total: number, row: CartItem) => (
       <Text className="text-end text-sm">{toCurrency(sub_total)}</Text>
     ),
@@ -101,7 +112,7 @@ export default function OrderViewProducts({ data }: { data: any }) {
       className="text-sm"
       variant="minimal"
       rowKey={(record) => record.id}
-      scroll={{ x: 700 }}
+      scroll={{ x: 550 }}
     />
   );
 }

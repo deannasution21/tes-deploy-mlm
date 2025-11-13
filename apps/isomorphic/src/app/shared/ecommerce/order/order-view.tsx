@@ -168,9 +168,10 @@ export default function OrderView() {
   const orderStatus = [
     { id: 0, label: 'Pesanan Dibuat' },
     { id: 1, label: 'Menunggu Pembayaran' },
-    { id: 2, label: 'Pembayaran Dibatalkan' },
+    { id: 2, label: 'Transaksi Gagal' },
     { id: 3, label: 'Pembayaran Berhasil' },
-    { id: 4, label: 'Pesanan Selesai' },
+    { id: 4, label: 'Transaksi Diproses dan Dikirim' },
+    { id: 5, label: 'Pesanan Selesai' },
   ];
 
   const rawStatus = Number(invoice?.attribute?.status?.code ?? 0);
@@ -183,7 +184,9 @@ export default function OrderView() {
         ? 3 // pembayaran selesai
         : rawStatus === -2
           ? 2 // expired
-          : 0; // fallback
+          : rawStatus === 2
+            ? 4
+            : 0; // fallback
 
   // ✅ Hide expired if status is 3, or hide selesai if expired
   const filteredStatuses = orderStatus.filter((step) => {
@@ -379,7 +382,9 @@ export default function OrderView() {
                 </span>
               )}
               <div className="relative flex items-center justify-between rounded-lg border border-gray-100 px-5 py-5 font-medium shadow-sm transition-shadow @5xl:px-7">
-                {(currentStatus === 2 || currentStatus === 3) && (
+                {(currentStatus === 2 ||
+                  currentStatus === 3 ||
+                  currentStatus === 4) && (
                   <div className="absolute left-0 h-full w-full bg-gray-300/50"></div>
                 )}
 
@@ -433,7 +438,8 @@ export default function OrderView() {
                 const isCompleted = item.id <= currentStatus;
                 const isActive = currentStatus === item.id;
                 const nextIsCompleted =
-                  item.id > currentStatus && currentStatus === 3;
+                  (item.id > currentStatus && currentStatus === 3) ||
+                  (item.id > currentStatus && currentStatus === 4);
 
                 const nextIsExpired =
                   filteredStatuses[index + 1]?.id === 2 && currentStatus === 2;

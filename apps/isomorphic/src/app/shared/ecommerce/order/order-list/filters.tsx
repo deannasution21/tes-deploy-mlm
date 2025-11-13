@@ -25,7 +25,7 @@ const statusOptions = [
   },
   {
     value: '-2',
-    label: 'Transaksi Dibatalkan',
+    label: 'Transaksi Gagal',
   },
   {
     value: '2',

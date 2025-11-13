@@ -191,36 +191,26 @@ export default function TransferPinPage() {
       session.accessToken
     )
       .then((data) => {
-        toast.success(
-          <div>
-            <Text as="b">
-              Selamat anda telah mengirim PIN {pin} sebanyak{' '}
-              {payload?.amount ?? 0} buah, ke ID {payload?.to}!
-            </Text>
-            <div className="mt-2 flex justify-end">
-              <Button
-                size="sm"
-                onClick={() => {
-                  toast.dismiss();
-                  getDataPin();
-                  rollbackTransfer();
-                }} // manually close
-              >
-                Tutup
-              </Button>
-            </div>
-          </div>,
-          {
-            duration: Infinity, // 👈 will not auto-close
-            id: 'pin-toast', // optional unique id to avoid duplicates
-          }
-        );
+        Swal.fire({
+          title: 'Transfer Berhasil',
+          html: `Selamat anda telah mengirim PIN <b>${pin}</b> sebanyak <b>${payload?.amount ?? 0}</b> buah, ke ID <b>${payload?.to}</b>!`,
+          confirmButtonText: 'Tutup',
+          showConfirmButton: true,
+          confirmButtonColor: '#ca8a04',
+          allowOutsideClick: false, // 🔒 disable click outside
+          allowEscapeKey: false, // 🔒 disable ESC
+          allowEnterKey: true,
+        }).then(() => {
+          getDataPin();
+          rollbackTransfer();
+          setLoadingS(false);
+        });
       })
       .catch((error) => {
         toast.error(<Text as="b">Transfer PIN Gagal</Text>);
         console.error(error);
-      })
-      .finally(() => setLoadingS(false));
+        setLoadingS(false);
+      });
   };
 
   const rollbackTransfer = () => {
@@ -438,6 +428,7 @@ export default function TransferPinPage() {
                         <Button
                           variant="outline"
                           className="w-full @xl:w-auto"
+                          disabled={isLoadingS}
                           onClick={rollbackTransfer}
                         >
                           Batal

@@ -9,10 +9,32 @@ import {
   menuItemsUser,
   menuItemsStockist,
   menuItemsStockistAdminPin,
+  menuItemsAdminStock,
+  menuItemsKosongan,
 } from '@/layouts/helium/helium-menu-items';
 import { signOut, useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 import { createPortal } from 'react-dom';
+
+type LabelOnlyItem = {
+  name: string;
+};
+
+type LinkOrDropdownItem = {
+  name: string;
+  href?: string;
+  icon?: React.ReactNode;
+  dropdownItems?: {
+    name: string;
+    href: string;
+  }[];
+};
+
+export type MenuItem = LabelOnlyItem | LinkOrDropdownItem;
+
+function hasHrefOrDropdown(item: MenuItem): item is LinkOrDropdownItem {
+  return 'href' in item || 'dropdownItems' in item;
+}
 
 export function HeliumSidebarMenu() {
   const pathname = usePathname();
@@ -33,14 +55,18 @@ export function HeliumSidebarMenu() {
   const username = isLoggingOut ? cachedUsername : session?.user?.id;
 
   // pick menu normally
-  const menuFinal =
+  const menuFinal: MenuItem[] =
     role === 'admin'
       ? menuItemsAdmin
-      : role === 'stockist' && username === 'adminpin2026'
-        ? menuItemsStockistAdminPin
-        : role === 'stockist'
-          ? menuItemsStockist
-          : menuItemsUser;
+      : role === 'admin_stock' && username === 'adminstock'
+        ? menuItemsAdminStock
+        : role === 'stockist' && username === 'adminpin2026'
+          ? menuItemsStockistAdminPin
+          : role === 'member'
+            ? menuItemsUser
+            : role === 'stockist'
+              ? menuItemsStockist
+              : menuItemsKosongan;
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -67,11 +93,29 @@ export function HeliumSidebarMenu() {
         )}
       <div className="mb-20 mt-4 pb-3 3xl:mt-6">
         {menuFinal.map((item, index) => {
-          const isActive = pathname === (item?.href as string);
-          const pathnameExistInDropdowns: any = item?.dropdownItems?.filter(
-            (dropdownItem) => dropdownItem.href === pathname
-          );
-          const isDropdownOpen = Boolean(pathnameExistInDropdowns?.length);
+          if (!hasHrefOrDropdown(item)) {
+            return (
+              <Fragment key={item.name + '-' + index}>
+                <Title
+                  as="h6"
+                  className={cn(
+                    'mb-2 truncate px-6 text-xs font-normal uppercase tracking-widest text-gray-500 dark:text-gray-500 2xl:px-8',
+                    index !== 0 && 'mt-6 3xl:mt-7'
+                  )}
+                >
+                  {item.name}
+                </Title>
+              </Fragment>
+            );
+          }
+
+          // ✅ TypeScript now knows item has href and dropdownItems
+          const isActive = pathname === (item.href ?? '');
+          const pathnameExistInDropdowns =
+            item.dropdownItems?.filter(
+              (dropdownItem) => dropdownItem.href === pathname
+            ) ?? [];
+          const isDropdownOpen = pathnameExistInDropdowns.length > 0;
 
           return (
             <Fragment key={item.name + '-' + index}>

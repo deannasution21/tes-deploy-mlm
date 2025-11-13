@@ -44,7 +44,12 @@ export default async function RootLayout({
             <NextProgress />
             <JotaiProvider>
               {children}
-              <Toaster />
+              <Toaster
+                position="top-center"
+                toastOptions={{
+                  style: { marginTop: '100px' }, // 👈 this pushes it 100px lower
+                }}
+              />
               <GlobalDrawer />
               <GlobalModal />
             </JotaiProvider>

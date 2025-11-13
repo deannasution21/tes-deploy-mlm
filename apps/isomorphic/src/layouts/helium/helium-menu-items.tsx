@@ -61,6 +61,7 @@ import {
   PiLog,
   PiLock,
   PiTrophy,
+  PiInvoice,
 } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
@@ -811,6 +812,50 @@ export const menuItemsStockistAdminPin = [
   },
 ];
 
+export const menuItemsAdminStock = [
+  // label start
+  {
+    name: 'Menu',
+  },
+  // label end
+  {
+    name: 'Dashboard',
+    href: routes.dashboard.index,
+    icon: <PiHouseLineDuotone />,
+  },
+  {
+    name: 'Manajemen Produk',
+    href: '#',
+    icon: <PiShoppingCart />,
+    dropdownItems: [
+      {
+        name: 'Daftar Produk',
+        href: '#',
+      },
+    ],
+  },
+  {
+    name: 'History Pembelian Stockist',
+    href: routes.produk.pesananStockist.index,
+    icon: <PiInvoice />,
+  },
+
+  {
+    name: 'Personal',
+  },
+  // label end
+  {
+    name: 'Profil Saya',
+    href: routes.profil.index,
+    icon: <PiUser />,
+  },
+  {
+    name: 'Ganti Password',
+    href: routes.profil.ubahPassword,
+    icon: <PiLock />,
+  },
+];
+
 export const menuItemsAdmin = [
   // label start
   {
@@ -882,4 +927,12 @@ export const menuItemsAdmin = [
     href: routes.stockist.index,
     icon: <PiUsers />,
   },
+];
+
+export const menuItemsKosongan = [
+  // label start
+  {
+    name: 'Menu',
+  },
+  // label end
 ];

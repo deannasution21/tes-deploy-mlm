@@ -31,11 +31,19 @@ export const ordersColumnsNew = (
     // }),
     columnHelperNew.accessor('attributes.created_at', {
       id: 'createdAt',
-      size: 150,
+      size: 130,
       header: 'Tanggal',
       cell: ({ row }) => (
         <DateCell date={new Date(row.original.attributes.created_at)} />
       ),
+    }),
+    columnHelperNew.accessor('attributes.status.message', {
+      id: 'status',
+      size: 150,
+      header: 'Status',
+      enableSorting: false,
+      cell: ({ row }) =>
+        getStatusBadge(row.original.attributes.status.code.toString()),
     }),
     columnHelperNew.accessor('attributes.ref_id', {
       id: 'attributes.ref_id',
@@ -55,6 +63,7 @@ export const ordersColumnsNew = (
         );
       },
     }),
+
     columnHelperNew.accessor('attributes.buyer.customer_name', {
       id: 'customer_name',
       size: 150,
@@ -136,14 +145,6 @@ export const ordersColumnsNew = (
           {row.original.attributes.totals.total_pin}
         </Text>
       ),
-    }),
-    columnHelperNew.accessor('attributes.status.message', {
-      id: 'status',
-      size: 150,
-      header: 'Status',
-      enableSorting: false,
-      cell: ({ row }) =>
-        getStatusBadge(row.original.attributes.status.code.toString()),
     }),
     columnHelperNew.accessor('attributes.status.code', {
       id: 'aksi',

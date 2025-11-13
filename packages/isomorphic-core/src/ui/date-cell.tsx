@@ -48,13 +48,13 @@ export default function DateCell({
     <div className={cn("grid gap-1", className)}>
       <time
         dateTime={formatDate(parsedDate, "YYYY-MM-DD")}
-        className={cn("font-medium text-gray-700", dateClassName)}
+        className={cn("font-medium text-[12px] text-gray-700", dateClassName)}
       >
         {formatDate(parsedDate, dateFormat)}
       </time>
       <time
         dateTime={formatDate(parsedDate, "HH:mm:ss")}
-        className={cn("text-[13px] text-gray-500", timeClassName)}
+        className={cn("text-[12px] text-gray-500", timeClassName)}
       >
         {formatDate(parsedDate, timeFormat)}
       </time>

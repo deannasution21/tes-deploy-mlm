@@ -52,7 +52,10 @@ export function getStatusBadge(status: string) {
       <Flex align="center" gap="2" className="w-auto">
         <Badge renderAsDot className={allStatus[statusLower][1]} />
         <Text
-          className={cn("font-medium capitalize", allStatus[statusLower][0])}
+          className={cn(
+            "font-medium text-[12px] uppercase",
+            allStatus[statusLower][0]
+          )}
         >
           {status === "0"
             ? "Menunggu Pembayaran"
@@ -76,7 +79,7 @@ export function getStatusBadge(status: string) {
       {/* <Badge renderAsDot className="bg-gray-600" /> */}
       <Badge renderAsDot className="bg-green-dark min-w-2" />
       {/* <Text className="font-medium capitalize text-gray-600"> */}
-      <Text className="font-medium capitalize text-green-dark">
+      <Text className="font-medium text-[12px] uppercase text-green-dark">
         {replaceUnderscoreDash(statusLower)}
       </Text>
     </Flex>

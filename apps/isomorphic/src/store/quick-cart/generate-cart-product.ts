@@ -2,6 +2,9 @@ import { CartItem, Product, ProductCartItem, ProductColor } from '@/types';
 import { ProductItem } from '@/types';
 import { generateSlug } from '@core/utils/generate-slug';
 import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
+import imgHNB from '@public/assets/img/product/HNB 19.jpg';
+import imgSNP from '@public/assets/img/product/SNP 3.jpg';
+import imgLILAC from '@public/assets/img/product/LILAC.jpeg';
 
 // interface CartProduct extends Omit<Product, 'colors' | 'sizes'> {
 //   color: ProductColor;
@@ -25,7 +28,14 @@ export function generateCartProduct(product: CartProduct): ProductCartItem {
     description: description,
     price: price,
     quantity: quantity,
-    image: defaultPlaceholder,
+    image:
+      product_id === 'PRD0002'
+        ? imgHNB
+        : product_id === 'PRD0003'
+          ? imgLILAC
+          : product_id === 'PRD0001'
+            ? imgSNP
+            : defaultPlaceholder,
     size: 1,
   };
 }

@@ -150,9 +150,21 @@ export interface ProductItem {
 export interface ProductAttribute {
   name: string;
   stock: number;
-  stock_pin?: number;
+  stock_pin: number;
+  min_order_quantity?: number;
   description: string;
   price: ProductPrice;
+  discount_rule?: DiscountRule;
+}
+
+export interface DiscountRule {
+  amount: number;
+  apply_to: string;
+  currency: string;
+  first_threshold_packages: number;
+  min_purchase_allowed: number;
+  next_threshold_packages: number;
+  type: string;
 }
 
 export interface ProductPrice {
@@ -289,6 +301,7 @@ export interface NetworkNode {
   point_left: number;
   point_right: number;
   upline: string;
+  sponsor?: string;
   isPlaceholder: boolean;
   hasData: boolean;
   children?: NetworkNode[]; // recursive structure

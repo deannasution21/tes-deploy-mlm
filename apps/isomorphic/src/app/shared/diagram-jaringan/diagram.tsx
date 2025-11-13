@@ -209,55 +209,58 @@ function Tree({ data, session }: TreeProps) {
 
               <TransformComponent>
                 <div id="mlm-diagram" className="pointer-events-auto">
-                  {/* {data.upline !== 'sistem' &&
-                    data.upline !== session?.user?.id && ( */}
-                  <div className="flex flex-col justify-center text-center">
-                    <div>
-                      <Link
-                        href={`/diagram-jaringan/${data.upline}`}
-                        className="inline-block"
-                      >
-                        <div className="aspect-square h-20">
-                          <Image alt={'diagram sebelumnya'} src={imgArrowUp} />
+                  {data.upline !== 'sistem' &&
+                    data.upline !== session?.user?.id && (
+                      <div className="flex flex-col justify-center text-center">
+                        <div>
+                          <Link
+                            href={`/diagram-jaringan/${data.upline}`}
+                            className="inline-block"
+                          >
+                            <div className="aspect-square h-20">
+                              <Image
+                                alt={'diagram sebelumnya'}
+                                src={imgArrowUp}
+                              />
+                            </div>
+                          </Link>
+                          <div
+                            className="mx-auto flex max-w-40 flex-col gap-1 bg-contain bg-center bg-no-repeat"
+                            // style={{ backgroundImage: `url(${imgRibbon.src})` }}
+                          >
+                            <p>
+                              Jaringan:{' '}
+                              <span className="font-medium uppercase text-primary">
+                                {data?.user_id} ({data?.name})
+                              </span>
+                            </p>
+                            <p>
+                              Sponsor:{' '}
+                              <span className="font-medium uppercase text-primary">
+                                {data?.sponsor ?? '-'}
+                              </span>
+                            </p>
+                            <p>
+                              Upline:{' '}
+                              <span className="font-medium uppercase text-primary">
+                                {data?.upline}
+                              </span>
+                            </p>
+                          </div>
                         </div>
-                      </Link>
-                      <div
-                        className="mx-auto flex max-w-40 flex-col gap-1 bg-contain bg-center bg-no-repeat"
-                        // style={{ backgroundImage: `url(${imgRibbon.src})` }}
-                      >
-                        <p>
-                          Jaringan:{' '}
-                          <span className="font-medium uppercase text-primary">
-                            {data?.user_id} ({data?.name})
-                          </span>
-                        </p>
-                        <p>
-                          Sponsor:{' '}
-                          <span className="font-medium uppercase text-primary">
-                            {data?.sponsor ?? '-'}
-                          </span>
-                        </p>
-                        <p>
-                          Upline:{' '}
-                          <span className="font-medium uppercase text-primary">
-                            {data?.upline}
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="mx-auto h-6">
-                      <Image
-                        alt="golden ribbon"
-                        src={imgRibbon}
-                        width={0}
-                        height={0}
-                        className="h-full w-auto object-contain"
-                      />
-                    </div>
+                        <div className="mx-auto h-6">
+                          <Image
+                            alt="golden ribbon"
+                            src={imgRibbon}
+                            width={0}
+                            height={0}
+                            className="h-full w-auto object-contain"
+                          />
+                        </div>
 
-                    <div className="mx-auto mt-1 h-6 w-1 bg-gray-300" />
-                  </div>
-                  {/* )} */}
+                        <div className="mx-auto mt-1 h-6 w-1 bg-gray-300" />
+                      </div>
+                    )}
                   {data && renderNode(data, '0', data.user_id)}
                 </div>
               </TransformComponent>

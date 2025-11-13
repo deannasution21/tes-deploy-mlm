@@ -68,10 +68,10 @@ function Formnya({
   } = useFormContext();
 
   const typeStockist = [
-    {
-      label: 'Master Stockist',
-      value: 'master_stockist',
-    },
+    // {
+    //   label: 'Master Stockist',
+    //   value: 'master_stockist',
+    // },
     {
       label: 'Stockist',
       value: 'stockist',

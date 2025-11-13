@@ -57,7 +57,7 @@ export const ordersColumnsNew = (
               )
             : routes.produk.pesanan.detail(row.original.attributes.ref_id);
         return (
-          <Link href={url} className="font-medium text-primary">
+          <Link href={url} className="text-xs font-medium text-primary">
             <u>{row.original.attributes.ref_id}</u>
           </Link>
         );
@@ -71,7 +71,7 @@ export const ordersColumnsNew = (
       enableSorting: false,
       cell: ({ row }) => (
         <>
-          <Text className="text-gray-700">
+          <Text className="text-xs text-gray-700">
             {row.original.attributes.buyer.customer_name}
           </Text>
           <Text className="text-xs text-gray-500">
@@ -87,7 +87,7 @@ export const ordersColumnsNew = (
       enableSorting: false,
       cell: (info) => (
         <>
-          <Text className="text-gray-700">{info.getValue()}</Text>
+          <Text className="text-xs text-gray-700">{info.getValue()}</Text>
         </>
       ),
     }),
@@ -98,7 +98,7 @@ export const ordersColumnsNew = (
       enableSorting: false,
       cell: ({ row }) => (
         <>
-          <Text className="text-gray-700">
+          <Text className="text-xs text-gray-700">
             {row.original.attributes.buyer.shipping_address},{' '}
             {row.original.attributes.buyer.shipping_city},{' '}
             {row.original.attributes.buyer.shipping_province}
@@ -114,7 +114,7 @@ export const ordersColumnsNew = (
         const products = row.original.attributes.products;
 
         return (
-          <ul className="list-disc ps-5">
+          <ul className="list-disc ps-5 text-xs">
             {products?.map((v, i) => (
               <li key={i}>
                 <Text className="text-gray-700">
@@ -131,7 +131,7 @@ export const ordersColumnsNew = (
       size: 150,
       header: 'Total',
       cell: ({ row }) => (
-        <Text className="text-gray-700">
+        <Text className="text-xs text-gray-700">
           {row.original.attributes.totals.sub_total_currency}
         </Text>
       ),
@@ -141,7 +141,7 @@ export const ordersColumnsNew = (
       size: 150,
       header: 'PIN Generate',
       cell: ({ row }) => (
-        <Text className="text-gray-700">
+        <Text className="text-xs text-gray-700">
           {row.original.attributes.totals.total_pin}
         </Text>
       ),

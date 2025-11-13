@@ -7,6 +7,7 @@ const statusColors = {
   warning: ["text-orange-dark", "bg-orange-dark"],
   danger: ["text-red-dark", "bg-red-dark"],
   default: ["text-gray-600", "bg-gray-600"],
+  blue: ["text-blue-600", "bg-blue-400"],
 };
 
 const allStatus = {
@@ -30,6 +31,7 @@ const allStatus = {
   refunded: statusColors.default,
   SUCCESS: statusColors.success,
   FAILED: statusColors.danger,
+  BLUE: statusColors.blue,
   "0": statusColors.warning,
   "1": statusColors.success,
   "-2": statusColors.danger,
@@ -45,7 +47,7 @@ export function getStatusBadge(status: string) {
       : status === "-2"
         ? "overdue"
         : status === "1"
-          ? "bg-blue-400"
+          ? "BLUE"
           : status === "2"
             ? "online"
             : (status.toLowerCase() as StatusTypes);

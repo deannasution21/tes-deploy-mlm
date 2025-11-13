@@ -41,12 +41,14 @@ export type StatusTypes = keyof typeof allStatus;
 export function getStatusBadge(status: string) {
   const statusLower =
     status === "0"
-      ? "offline"
+      ? "pending"
       : status === "-2"
         ? "overdue"
         : status === "1"
-          ? "online"
-          : (status.toLowerCase() as StatusTypes);
+          ? "bg-blue-400"
+          : status === "2"
+            ? "online"
+            : (status.toLowerCase() as StatusTypes);
   if (statusLower in allStatus) {
     return (
       <Flex align="center" gap="2" className="w-auto">

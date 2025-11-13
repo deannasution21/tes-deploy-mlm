@@ -118,8 +118,18 @@ function renderOptionDisplayValue(option: {
     case 'all':
       return (
         <div className="flex items-center">
-          <Badge color="warning" renderAsDot />
-          <Text className="ms-2 font-semibold uppercase text-orange-dark">
+          <Badge renderAsDot className="bg-gray-400" />
+          <Text className="ms-2 font-semibold uppercase text-gray-600">
+            {option.label}
+          </Text>
+        </div>
+      );
+
+    case '0':
+      return (
+        <div className="flex items-center">
+          <Badge renderAsDot className="bg-yellow-400" />
+          <Text className="ms-2 font-semibold uppercase text-yellow-600">
             {option.label}
           </Text>
         </div>
@@ -128,8 +138,8 @@ function renderOptionDisplayValue(option: {
     case '1':
       return (
         <div className="flex items-center">
-          <Badge color="success" renderAsDot />
-          <Text className="ms-2 font-semibold uppercase text-green-dark">
+          <Badge renderAsDot className="bg-blue-400" />
+          <Text className="ms-2 font-semibold uppercase text-blue-600">
             {option.label}
           </Text>
         </div>

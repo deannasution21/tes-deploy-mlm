@@ -295,11 +295,11 @@ export default function OrderView() {
           )} at {formatDate(new Date(invoice?.attribute?.waktu), 'h:mm A')}
         </span>
         <div className="flex flex-col gap-3 xl:flex-row print:px-5">
-          <span
-            className={`rounded-3xl px-2.5 py-1 text-xs uppercase ${currentStatus === 2 ? 'bg-red-lighter text-red-dark' : currentStatus === 0 ? 'bg-green-lighter text-green-dark' : 'bg-primary-lighter text-primary-dark'} @5xl:my-2`}
+          <Text
+            className={`rounded-3xl px-2.5 py-1 text-xs uppercase ${currentStatus === 2 ? 'bg-red-400 text-red-dark' : currentStatus === 1 ? 'bg-yellow-300 text-primary-dark' : currentStatus === 3 ? 'bg-blue-100 text-green-dark' : 'bg-green-300 text-green-dark'} @5xl:my-2`}
           >
             {invoice?.attribute?.status?.message}
-          </span>
+          </Text>
           <Button className="print:hidden" onClick={() => handlePrint()}>
             <PiPrinter className="me-1.5 h-[17px] w-[17px]" />
             Cetak Invoice
@@ -348,10 +348,10 @@ export default function OrderView() {
                 <div className="flex justify-between border-t border-muted pt-5 text-base font-semibold print:text-sm">
                   Total{' '}
                   <div className="flex gap-2">
-                    <span className="text-2xl text-primary print:text-lg">
+                    <Text className="text-2xl font-semibold text-green-700 print:text-lg">
                       {invoice?.attribute?.bill_payment?.total?.nominal_rp ??
                         'Rp 0'}
-                    </span>
+                    </Text>
                     {currentStatus === 1 && (
                       <CopyButton
                         text={
@@ -388,11 +388,11 @@ export default function OrderView() {
                   )}
                 </span>
               ) : (
-                <span
-                  className={`rounded-3xl px-2.5 py-1 text-xs uppercase ${currentStatus === 2 ? 'bg-red-lighter text-red-dark' : 'bg-primary-lighter text-primary-dark'} @5xl:my-2`}
+                <Text
+                  className={`inline-block rounded-3xl px-2.5 py-1 text-xs uppercase ${currentStatus === 2 ? 'bg-red-400 text-red-dark' : currentStatus === 1 ? 'bg-yellow-300 text-primary-dark' : currentStatus === 3 ? 'bg-blue-100 text-blue-dark' : 'bg-green-300 text-green-dark'} @5xl:my-2`}
                 >
                   {invoice?.attribute?.status?.message}
-                </span>
+                </Text>
               )}
               <div className="relative flex items-center justify-between rounded-lg border border-gray-100 px-5 py-5 font-medium shadow-sm transition-shadow @5xl:px-7">
                 {(currentStatus === 2 ||

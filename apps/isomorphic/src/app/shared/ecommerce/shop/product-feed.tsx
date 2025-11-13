@@ -10,6 +10,9 @@ import { routes } from '@/config/routes';
 import { useSession } from 'next-auth/react';
 import { ProductItem, ProductResponse } from '@/types';
 import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
+import imgHNB from '@public/assets/img/product/HNB 19.jpg';
+import imgSNP from '@public/assets/img/product/SNP 3.jpg';
+import imgLILAC from '@public/assets/img/product/LILAC.jpeg';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 let countPerPage = 12;
@@ -67,7 +70,15 @@ export default function ProductFeed() {
             <ProdukCard
               key={product.product_id}
               product={product}
-              image={defaultPlaceholder}
+              image={
+                product.product_id === 'PRD0002'
+                  ? imgHNB
+                  : product.product_id === 'PRD0003'
+                    ? imgLILAC
+                    : product.product_id === 'PRD0001'
+                      ? imgSNP
+                      : defaultPlaceholder
+              }
               routes={routes}
             />
           ))}

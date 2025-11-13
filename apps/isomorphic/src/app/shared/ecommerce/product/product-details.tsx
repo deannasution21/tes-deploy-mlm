@@ -7,6 +7,9 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { ProductDetailResponse, ProductItem } from '@/types';
 import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
+import imgHNB from '@public/assets/img/product/HNB 19.jpg';
+import imgSNP from '@public/assets/img/product/SNP 3.jpg';
+import imgLILAC from '@public/assets/img/product/LILAC.jpeg';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function ProductDetails() {
@@ -62,7 +65,17 @@ export default function ProductDetails() {
     <div className="@container">
       <div className="@3xl:grid @3xl:grid-cols-12">
         <div className="col-span-7 mb-7 @container @lg:mb-10 @3xl:pe-10">
-          <ProductDetailsGallery image={defaultPlaceholder} />
+          <ProductDetailsGallery
+            image={
+              product.product_id === 'PRD0002'
+                ? imgHNB
+                : product.product_id === 'PRD0003'
+                  ? imgLILAC
+                  : product.product_id === 'PRD0001'
+                    ? imgSNP
+                    : defaultPlaceholder
+            }
+          />
         </div>
         <div className="col-span-5 @container">
           <ProductDetailsSummery product={product} />

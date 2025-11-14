@@ -4,7 +4,7 @@ import { generateSlug } from '@core/utils/generate-slug';
 import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
 import imgHNB from '@public/assets/img/product/HNB 19.jpg';
 import imgSNP from '@public/assets/img/product/SNP 3.jpg';
-import imgLILAC from '@public/assets/img/product/LILAC.jpeg';
+import imgLILAC from '@public/assets/img/product/LILAC.jpg';
 
 // interface CartProduct extends Omit<Product, 'colors' | 'sizes'> {
 //   color: ProductColor;

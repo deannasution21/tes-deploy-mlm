@@ -9,7 +9,7 @@ import { ProductDetailResponse, ProductItem } from '@/types';
 import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
 import imgHNB from '@public/assets/img/product/HNB 19.jpg';
 import imgSNP from '@public/assets/img/product/SNP 3.jpg';
-import imgLILAC from '@public/assets/img/product/LILAC.jpeg';
+import imgLILAC from '@public/assets/img/product/LILAC.jpg';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function ProductDetails() {

@@ -20,7 +20,7 @@ const columns = [
     width: 150,
     render: (_: any, row: CartItem) => (
       <div className="flex items-center">
-        <div className="relative aspect-square w-12 overflow-hidden rounded-lg">
+        <div className="relative aspect-square w-12 overflow-hidden rounded-lg print:w-9">
           <Image
             alt={row.name}
             src={

@@ -13,6 +13,8 @@ import { toast } from 'react-hot-toast';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { useReactToPrint } from 'react-to-print';
 import { createPortal } from 'react-dom';
+import imgVA from '@public/assets/img/va-logo.png';
+import { removeUnderscore } from '@/utils/helper';
 
 export interface TransactionDetailResponse {
   code: number;
@@ -216,7 +218,7 @@ export const InvoiceComponent = forwardRef<
         )}
 
       <div ref={ref} className="@container">
-        <div className="flex flex-wrap items-center justify-center gap-3 border-b border-t border-gray-300 py-4 font-medium text-gray-700 @5xl:justify-between print:text-xs">
+        <div className="flex flex-wrap items-center justify-center gap-3 border-b border-t border-gray-300 py-4 font-medium text-gray-700 @5xl:justify-between print:py-2 print:text-xs">
           <span className="@5xl:my-2 print:px-5">
             {/* October 22, 2022 at 10:30 pm */}
             {formatDate(
@@ -241,19 +243,19 @@ export const InvoiceComponent = forwardRef<
             </Button>
           </div>
         </div>
-        <div className="items-start pt-10 @5xl:grid @5xl:grid-cols-12 @5xl:gap-7 @6xl:grid-cols-10 @7xl:gap-10 print:px-5">
-          <div className="space-y-7 @5xl:col-span-8 @5xl:space-y-10 @6xl:col-span-7">
-            <div className="pb-5">
+        <div className="items-start pt-10 @5xl:grid @5xl:grid-cols-12 @5xl:gap-7 @6xl:grid-cols-10 @7xl:gap-10 print:px-5 print:pt-5">
+          <div className="space-y-7 @5xl:col-span-8 @5xl:space-y-10 @6xl:col-span-7 print:space-y-3">
+            <div className="">
               <OrderViewProducts
                 data={invoice?.attribute?.form_data?.products ?? []}
               />
-              <div className="mb-3 print:hidden">
+              <div className="mb-3 print:mb-0 print:hidden">
                 <small className="italic text-green-700 xl:hidden">
                   *Geser table ke samping untuk melihat keseluruhan data
                 </small>
               </div>
-              <div className="border-t border-muted pt-7 @5xl:mt-3">
-                <div className="ms-auto max-w-lg space-y-6">
+              <div className="border-t border-muted pt-7 @5xl:mt-3 print:pt-3">
+                <div className="ms-auto max-w-lg space-y-6 print:space-y-3">
                   <div className="flex justify-between font-medium print:text-sm">
                     Subtotal{' '}
                     <span>
@@ -280,7 +282,7 @@ export const InvoiceComponent = forwardRef<
                   <div className="flex justify-between font-medium print:text-sm">
                     Pengiriman <span>FREE</span>
                   </div>
-                  <div className="flex justify-between border-t border-muted pt-5 text-base font-semibold print:text-sm">
+                  <div className="flex justify-between border-t border-muted pt-5 text-base font-semibold print:pt-3 print:text-sm">
                     Total{' '}
                     <div className="flex gap-2">
                       <Text className="text-2xl font-semibold text-green-700 print:text-lg">
@@ -303,7 +305,7 @@ export const InvoiceComponent = forwardRef<
             <div>
               <Title
                 as="h3"
-                className="mb-3.5 text-base font-semibold @5xl:mb-5 @7xl:text-lg print:text-sm"
+                className="mb-3.5 text-base font-semibold @5xl:mb-5 @7xl:text-lg print:mb-0 print:text-sm"
               >
                 Metode Pembayaran
               </Title>
@@ -339,9 +341,7 @@ export const InvoiceComponent = forwardRef<
                   <div className="flex w-full items-center">
                     <div className="shrink-0">
                       <Image
-                        src={
-                          'https://isomorphic-furyroad.s3.amazonaws.com/public/payment/master.png'
-                        }
+                        src={imgVA}
                         alt="metode pembayaran"
                         height={60}
                         width={60}
@@ -349,10 +349,21 @@ export const InvoiceComponent = forwardRef<
                       />
                     </div>
                     <div className="flex flex-col gap-2 ps-4 print:text-xs">
-                      <Text as="span" className="font-lexend text-gray-700">
-                        {invoice?.attribute?.payment?.payment_method ?? '-'}{' '}
+                      <Text
+                        as="span"
+                        className="font-lexend uppercase text-gray-700"
+                      >
+                        {invoice?.attribute?.payment?.payment_method
+                          ? removeUnderscore(
+                              invoice?.attribute?.payment?.payment_method
+                            )
+                          : '-'}{' '}
                         {' | '}
-                        {invoice?.attribute?.payment?.payment_channel ?? '-'}
+                        {invoice?.attribute?.payment?.payment_channel
+                          ? removeUnderscore(
+                              invoice?.attribute?.payment?.payment_channel
+                            )
+                          : '-'}
                       </Text>
                       <div className="flex flex-col gap-1">
                         <Text className="text-2xl text-green-700 print:text-sm">
@@ -394,7 +405,7 @@ export const InvoiceComponent = forwardRef<
                     currentStatus === 2;
 
                   return (
-                    <div
+                    <Text
                       key={item.id}
                       className={cn(
                         'relative ps-6 text-sm font-medium before:absolute before:-start-[9px] before:top-px before:h-5 before:w-5 before:-translate-x-px before:rounded-full before:content-[""] after:absolute after:-start-px after:top-5 after:h-10 after:w-0.5 after:content-[""] last:after:hidden print:text-xs',
@@ -428,7 +439,7 @@ export const InvoiceComponent = forwardRef<
                           valid. Silakan lakukan pesanan baru.
                         </p>
                       )}
-                    </div>
+                    </Text>
                   );
                 })}
               </div>

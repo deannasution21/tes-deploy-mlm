@@ -7,3 +7,9 @@ export function getBankNameByCode(
   const found = dataBank.find((item) => item.bank_code === bankCode);
   return found ? found.name : null;
 }
+
+export function removeUnderscore(str?: string) {
+  const what =
+    str?.replace(/_/g, ' ')?.replace(/\b\w/g, (c) => c.toUpperCase()) ?? '-';
+  return what;
+}

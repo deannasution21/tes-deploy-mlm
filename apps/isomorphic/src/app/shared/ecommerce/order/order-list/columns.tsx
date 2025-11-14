@@ -20,7 +20,9 @@ export const ordersColumnsNew = (
       username: string;
       status: string;
     }>
-  >
+  >,
+  startPrint: (invoiceID: string) => void,
+  isPrinting: boolean
 ) => {
   const columns = [
     // columnHelperNew.display({
@@ -51,7 +53,7 @@ export const ordersColumnsNew = (
       header: 'Invoice',
       cell: ({ row }) => {
         const url =
-          username === 'adminpin2026'
+          username === 'adminpin2026' || username === 'adminstock'
             ? routes.produk.pesananStockist.detail(
                 row.original.attributes.ref_id
               )
@@ -154,7 +156,16 @@ export const ordersColumnsNew = (
       cell: ({ row }) => {
         return (
           <div className="flex flex-col gap-2">
-            <Button size="sm">
+            <Button
+              size="sm"
+              disabled={isPrinting}
+              isLoading={isPrinting}
+              onClick={() => {
+                if (row.original) {
+                  startPrint(row.original.attributes.ref_id); // trigger printing
+                }
+              }}
+            >
               <PiPrinter className="mr-2 h-4 w-4" />
               <span>Cetak Invoice</span>
             </Button>

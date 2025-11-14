@@ -17,7 +17,7 @@ import {
   Title,
 } from 'rizzui';
 import { Form } from '@core/ui/form';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import WidgetCard from '@core/components/cards/widget-card';
@@ -29,6 +29,12 @@ import {
   ubahStatusPesananSchema,
 } from '@/validators/ubah-status-pesanan-schema';
 import { toast } from 'react-hot-toast';
+import {
+  InvoiceComponent,
+  TransactionData as InvoiceTransactionData,
+  TransactionDetailResponse,
+} from '../order-view';
+import { useReactToPrint } from 'react-to-print';
 
 export interface TransactionResponse {
   code: number;
@@ -106,6 +112,32 @@ export default function OrderTable({
   const [isLoadingS, setLoadingS] = useState(false);
   const [type, setType] = useState<string>('all');
 
+  const [invoice, setInvoice] = useState<InvoiceTransactionData | null>(null);
+
+  const printRef = useRef<HTMLDivElement>(null);
+  const [isPrinting, setIsPrinting] = useState(false);
+
+  const handlePrint = useReactToPrint({
+    contentRef: printRef, // ✅ new type-safe property
+    documentTitle: `Invoice #`,
+    onAfterPrint: () => {
+      setIsPrinting(false); // printing finished
+    },
+  });
+
+  const startPrint = (invoiceID?: string) => {
+    setIsPrinting(true);
+
+    if (invoiceID) {
+      // Update document title dynamically
+      document.title = `Invoice-${invoiceID}`;
+
+      fetchInvoice(invoiceID);
+    } else {
+      toast.error(<Text as="b">ID Invoice tidak dicantumkan</Text>);
+    }
+  };
+
   const [modalState, setModalState] = useState({
     isOpen: false,
   });
@@ -128,13 +160,36 @@ export default function OrderTable({
     status: '',
   });
 
+  const fetchInvoice = async (invoiceID: string) => {
+    if (!session?.accessToken) return;
+
+    setIsPrinting(true);
+
+    fetchWithAuth<TransactionDetailResponse>(
+      `/_transactions/${invoiceID}`,
+      { method: 'GET' },
+      session.accessToken
+    )
+      .then((data) => {
+        setInvoice(data.data); // <--- ADD THIS LINE
+        setTimeout(() => {
+          handlePrint?.();
+        }, 150);
+      })
+      .catch((error) => {
+        console.error(error);
+        setInvoice(null);
+        setIsPrinting(false);
+      });
+  };
+
   useEffect(() => {
     if (!session?.accessToken) return;
 
     setLoading(true);
 
     const url =
-      session?.user?.id === 'adminpin2026'
+      session?.user?.id === 'adminpin2026' || session?.user?.id === 'adminstock'
         ? `/_transactions/history-transaction?type=payment`
         : `/_transactions/history-transaction/${session?.user?.id}?type=payment`;
 
@@ -169,7 +224,9 @@ export default function OrderTable({
     columnConfig: ordersColumnsNew(
       session?.user?.id as string,
       setModalState,
-      setValuesModal
+      setValuesModal,
+      startPrint,
+      isPrinting
     ),
     options: {
       initialState: {
@@ -243,113 +300,125 @@ export default function OrderTable({
           </WidgetCard>
         </div>
       </div>
-      {session?.user?.id === 'adminpin2026' && (
-        <Modal
-          isOpen={modalState.isOpen}
-          size="sm"
-          onClose={() =>
-            setModalState((prevState) => ({ ...prevState, isOpen: false }))
-          }
-        >
-          <div className="m-auto px-7 pb-8 pt-6">
-            <div className="mb-7 flex items-center justify-between">
-              <Title as="h3">Ubah Status Pesanan</Title>
-              <ActionIcon
-                size="sm"
-                variant="text"
-                onClick={() =>
-                  setModalState((prevState) => ({
-                    ...prevState,
-                    isOpen: false,
-                  }))
-                }
-              >
-                <PiX className="h-auto w-6" strokeWidth={1.8} />
-              </ActionIcon>
-            </div>
-            <Form<UbahStatusPesananInput>
-              validationSchema={ubahStatusPesananSchema}
-              onSubmit={onSubmit}
-              resetValues={{
-                ref_id: valuesModal.ref_id,
-                status: valuesModal.status, // convert number to string
-              }}
-              useFormProps={{
-                defaultValues: {
-                  ref_id: valuesModal.ref_id,
-                  status: valuesModal.status,
-                },
-              }}
-              className="flex flex-col gap-x-5 gap-y-6 [&_label>span]:font-medium"
-            >
-              {({
-                register,
-                control,
-                watch,
-                setValue,
-                reset,
-                formState: { errors },
-              }) => {
-                return (
-                  <>
-                    <Input
-                      label="Username Pembeli"
-                      value={valuesModal.username} // 👈 directly use value from state
-                      inputClassName="[&_input]:uppercase"
-                      disabled
-                    />
-                    <Input
-                      label="Invoice ID"
-                      {...register('ref_id')}
-                      disabled
-                    />
 
-                    <Controller
-                      name="status"
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <Select
-                          label="Status Pesanan"
-                          placeholder="Pilih Status Pesanan"
-                          options={statusPesanan}
-                          onChange={onChange}
-                          value={value}
-                          getOptionValue={(o) => o.value}
-                          displayValue={(v) =>
-                            statusPesanan.find((s) => s.value === v)?.label ??
-                            ''
-                          }
-                          error={errors.status?.message}
-                        />
-                      )}
-                    />
-
-                    <div className="mt-2 flex justify-end gap-2">
-                      <Button
-                        variant="outline"
-                        disabled={isLoadingS}
-                        onClick={() => {
-                          reset(resetValues); // clear form
-                          setModalState({ isOpen: false });
-                        }}
-                      >
-                        Batal
-                      </Button>
-                      <Button
-                        type="submit"
-                        isLoading={isLoadingS}
-                        disabled={isLoadingS}
-                      >
-                        Ubah Status
-                      </Button>
-                    </div>
-                  </>
-                );
-              }}
-            </Form>
-          </div>
-        </Modal>
+      {invoice && (
+        <InvoiceComponent
+          invoice={invoice}
+          ref={printRef}
+          handlePrint={startPrint}
+          isPrinting={isPrinting}
+        />
       )}
+
+      {/* Modal */}
+      {session?.user?.id === 'adminpin2026' ||
+        (session?.user?.id === 'adminstock' && (
+          <Modal
+            isOpen={modalState.isOpen}
+            size="sm"
+            onClose={() =>
+              setModalState((prevState) => ({ ...prevState, isOpen: false }))
+            }
+          >
+            <div className="m-auto px-7 pb-8 pt-6">
+              <div className="mb-7 flex items-center justify-between">
+                <Title as="h3">Ubah Status Pesanan</Title>
+                <ActionIcon
+                  size="sm"
+                  variant="text"
+                  onClick={() =>
+                    setModalState((prevState) => ({
+                      ...prevState,
+                      isOpen: false,
+                    }))
+                  }
+                >
+                  <PiX className="h-auto w-6" strokeWidth={1.8} />
+                </ActionIcon>
+              </div>
+              <Form<UbahStatusPesananInput>
+                validationSchema={ubahStatusPesananSchema}
+                onSubmit={onSubmit}
+                resetValues={{
+                  ref_id: valuesModal.ref_id,
+                  status: valuesModal.status, // convert number to string
+                }}
+                useFormProps={{
+                  defaultValues: {
+                    ref_id: valuesModal.ref_id,
+                    status: valuesModal.status,
+                  },
+                }}
+                className="flex flex-col gap-x-5 gap-y-6 [&_label>span]:font-medium"
+              >
+                {({
+                  register,
+                  control,
+                  watch,
+                  setValue,
+                  reset,
+                  formState: { errors },
+                }) => {
+                  return (
+                    <>
+                      <Input
+                        label="Username Pembeli"
+                        value={valuesModal.username} // 👈 directly use value from state
+                        inputClassName="[&_input]:uppercase"
+                        disabled
+                      />
+                      <Input
+                        label="Invoice ID"
+                        {...register('ref_id')}
+                        disabled
+                      />
+
+                      <Controller
+                        name="status"
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                          <Select
+                            label="Status Pesanan"
+                            placeholder="Pilih Status Pesanan"
+                            options={statusPesanan}
+                            onChange={onChange}
+                            value={value}
+                            getOptionValue={(o) => o.value}
+                            displayValue={(v) =>
+                              statusPesanan.find((s) => s.value === v)?.label ??
+                              ''
+                            }
+                            error={errors.status?.message}
+                          />
+                        )}
+                      />
+
+                      <div className="mt-2 flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          disabled={isLoadingS}
+                          onClick={() => {
+                            reset(resetValues); // clear form
+                            setModalState({ isOpen: false });
+                          }}
+                        >
+                          Batal
+                        </Button>
+                        <Button
+                          type="submit"
+                          isLoading={isLoadingS}
+                          disabled={isLoadingS}
+                        >
+                          Ubah Status
+                        </Button>
+                      </div>
+                    </>
+                  );
+                }}
+              </Form>
+            </div>
+          </Modal>
+        ))}
     </>
   );
 }

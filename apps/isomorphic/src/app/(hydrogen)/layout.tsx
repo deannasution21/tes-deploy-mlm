@@ -17,13 +17,14 @@ export default function DefaultLayout({ children }: LayoutProps) {
 
 function LayoutProvider({ children }: LayoutProps) {
   const { data: session, status, update } = useSession();
+  const role = session?.user?.role ?? 'member';
 
   useEffect(() => {
     // periodically re-check session validity every 5 minutes
     const interval = setInterval(
       async () => {
         const newSession = await update();
-        if (!newSession) handleSessionExpired();
+        if (!newSession) handleSessionExpired(role);
       },
       5 * 60 * 1000
     );

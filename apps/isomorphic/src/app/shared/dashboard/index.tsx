@@ -12,15 +12,19 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { DealerSummaryData, DealerSummaryResponse } from '@/types';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
+import { handleSessionExpired } from '@/utils/sessionHandler';
 
-export default function Dashboard() {
+export default function DashboardPage() {
   const { data: session } = useSession();
 
   const [dataPins, setDataPins] = useState<DealerSummaryData | null>(null);
   const [isLoading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!session?.accessToken) return;
+  const fetchDataPin = async () => {
+    if (!session?.accessToken) {
+      handleSessionExpired;
+      return;
+    }
 
     setLoading(true);
 
@@ -37,6 +41,12 @@ export default function Dashboard() {
         setDataPins(null);
       })
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    if (session?.user?.role !== 'admin_stock') {
+      fetchDataPin();
+    }
   }, [session?.accessToken]);
 
   if (isLoading) {
@@ -75,34 +85,39 @@ export default function Dashboard() {
               </div>
             </div>
           }
-          contentClassName="@2xl:max-w-[calc(100%-340px)]"
-          className="border border-muted bg-gray-0 pb-8 @4xl:col-span-2 @7xl:col-span-8 @7xl:min-h-[412px] dark:bg-gray-100/30 lg:pb-9"
+          contentClassName={
+            session?.user?.role === 'admin_stock'
+              ? 'w-full'
+              : '@2xl:max-w-[calc(100%-340px)]'
+          }
+          className={`border border-muted bg-gray-0 pb-8 @4xl:col-span-2 ${session?.user?.role === 'admin_stock' ? '@7xl:col-span-full' : '@7xl:col-span-8'} @7xl:min-h-[412px] dark:bg-gray-100/30 lg:pb-9`}
         >
-          {session?.user?.role === 'stockist' && (
-            <div className="flex gap-2">
-              <Link href={routes.produk.index} className="inline-flex">
-                <Button as="span" className="h-[38px] shadow md:h-10">
-                  <PiShoppingCart className="me-1 h-4 w-4" /> Beli Produk
-                </Button>
-              </Link>
-              {(session?.user?.id === 'adminstock' ||
-                session?.user?.id === 'admin_stock' ||
-                session?.user?.id === 'adminpin2026') && (
-                <Link
-                  href={routes.produk.pesananStockist.index}
-                  className="inline-flex"
-                >
-                  <Button
-                    as="span"
-                    className="h-[38px] bg-blue-400 shadow hover:bg-blue-500 md:h-10"
-                  >
-                    <PiNotepad className="me-1 h-4 w-4" /> History Pembelian
-                    Stockist
+          {session?.user?.role === 'stockist' ||
+            (session?.user?.role === 'admin_stock' && (
+              <div className="flex gap-2">
+                <Link href={routes.produk.index} className="inline-flex">
+                  <Button as="span" className="h-[38px] shadow md:h-10">
+                    <PiShoppingCart className="me-1 h-4 w-4" /> Beli Produk
                   </Button>
                 </Link>
-              )}
-            </div>
-          )}
+                {(session?.user?.id === 'adminstock' ||
+                  session?.user?.id === 'admin_stock' ||
+                  session?.user?.id === 'adminpin2026') && (
+                  <Link
+                    href={routes.produk.pesananStockist.index}
+                    className="inline-flex"
+                  >
+                    <Button
+                      as="span"
+                      className="h-[38px] bg-blue-500 shadow hover:bg-blue-700 md:h-10"
+                    >
+                      <PiNotepad className="me-1 h-4 w-4" /> History Pembelian
+                      Stockist
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            ))}
         </WelcomeBanner>
 
         {dataPins && (

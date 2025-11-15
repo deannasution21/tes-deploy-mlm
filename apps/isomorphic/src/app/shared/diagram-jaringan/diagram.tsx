@@ -159,32 +159,17 @@ function Tree({ data, session }: TreeProps) {
 
   return (
     <>
-      <Head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-        />
-      </Head>
-
-      <style jsx global>{`
-        .zoom-container {
-          touch-action: none;
-          overscroll-behavior: contain;
-        }
-      `}</style>
-
-      <div className="zoom-container relative flex h-[75vh] w-full items-center justify-center overflow-hidden bg-gray-100">
+      <div className="relative flex h-[80vh] w-full items-center justify-center overflow-hidden bg-gray-100">
         <TransformWrapper
-          minScale={0.5}
+          initialScale={0.5}
+          minScale={0.25}
           maxScale={3}
-          initialScale={0.55}
           centerOnInit
-          limitToBounds={false}
-          alignmentAnimation={{ disabled: true }}
-          panning={{ velocityDisabled: true }}
+          wheel={{ step: 0.1 }}
+          doubleClick={{ disabled: false }}
           pinch={{ step: 5 }}
-          doubleClick={{ disabled: true }}
-          wheel={{ step: 0.1, smoothStep: 0.02 }}
+          panning={{ disabled: false, velocityDisabled: true }}
+          limitToBounds={false}
         >
           {({ zoomIn, zoomOut, resetTransform, centerView }) => (
             <>
@@ -200,15 +185,14 @@ function Tree({ data, session }: TreeProps) {
                   variant="flat"
                   onClick={() => {
                     resetTransform();
-                    setTimeout(() => centerView(), 50);
+                    setTimeout(() => centerView(0.5), 50);
                   }}
                 >
                   Reset
                 </Button>
               </div>
-
               <TransformComponent>
-                <div id="mlm-diagram" className="pointer-events-auto">
+                <div id="mlm-diagram">
                   {data.upline !== 'sistem' &&
                     data.upline !== session?.user?.id && (
                       <div className="flex flex-col justify-center text-center">

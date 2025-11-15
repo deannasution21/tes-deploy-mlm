@@ -178,7 +178,13 @@ function Tree({ data, session }: TreeProps) {
           wheel={{ step: 0.1 }}
           doubleClick={{ disabled: false }}
           pinch={{ step: 5 }}
-          panning={{ disabled: false, velocityDisabled: true }}
+          panning={{
+            disabled: false,
+            velocityDisabled: true,
+            lockAxisX: false,
+            lockAxisY: false,
+            excluded: [], // allow pan again
+          }}
           limitToBounds={false}
         >
           {({ zoomIn, zoomOut, resetTransform, centerView }) => (

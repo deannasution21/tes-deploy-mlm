@@ -177,11 +177,14 @@ function Tree({ data, session }: TreeProps) {
           centerOnInit
           wheel={{ step: 0.1 }}
           doubleClick={{ disabled: false }}
-          pinch={{ step: 5, disabled: false }}
           panning={{
-            disabled: false,
+            disabled: false, // mouse panning OK
             velocityDisabled: true,
-            excluded: ['touch'], // <-- IMPORTANT FIX
+          }}
+          // @ts-ignore
+          touch={{
+            pan: false, // ❗ disable one-finger panning on touch
+            pinch: true, // allow natural two-finger pinch
           }}
           limitToBounds={false}
         >

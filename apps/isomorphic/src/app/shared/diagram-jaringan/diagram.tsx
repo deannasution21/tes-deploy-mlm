@@ -177,7 +177,7 @@ function Tree({ data, session }: TreeProps) {
           centerOnInit
           wheel={{ step: 0.1 }}
           doubleClick={{ disabled: false }}
-          pinch={{ step: 5 }}
+          pinch={{ step: 5, disabled: false }}
           panning={{
             disabled: false,
             velocityDisabled: true,

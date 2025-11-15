@@ -159,7 +159,17 @@ function Tree({ data, session }: TreeProps) {
 
   return (
     <>
-      <div className="relative flex h-[80vh] w-full items-center justify-center overflow-hidden bg-gray-100">
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+      </Head>
+
+      <div
+        className="relative flex h-[80vh] w-full items-center justify-center overflow-hidden bg-gray-100"
+        style={{ touchAction: 'none', overscrollBehavior: 'contain' }}
+      >
         <TransformWrapper
           initialScale={0.5}
           minScale={0.25}

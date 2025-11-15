@@ -166,6 +166,10 @@ function Tree({ data, session }: TreeProps) {
         />
       </Head>
 
+      <p className="mb-2 text-sm text-green-600">
+        **Untuk melakukan zoom in/out dengan jari, lakukan seperti gerakan
+        mencubit biasa, namun 1 jari Anda tahan pada layar.
+      </p>
       <div
         className="relative flex h-[80vh] w-full items-center justify-center overflow-hidden bg-gray-100"
         style={{ touchAction: 'none', overscrollBehavior: 'contain' }}

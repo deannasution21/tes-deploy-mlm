@@ -32,7 +32,11 @@ export default function FiltersDiagramJaringan({
         prefix={<PiMagnifyingGlassBold className="size-4" />}
       />
 
-      <Button size="sm" onClick={() => handleSearch?.()} className="h-9">
+      <Button
+        size="sm"
+        onClick={() => handleSearch?.(username)}
+        className="h-9"
+      >
         Cari
       </Button>
       {/* <Button

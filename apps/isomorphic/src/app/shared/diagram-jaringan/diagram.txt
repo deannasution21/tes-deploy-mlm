@@ -15,7 +15,6 @@ import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import Head from 'next/head';
 import imgArrowUp from '@public/assets/img/arrow-up-golden.png';
 import imgRibbon from '@public/assets/img/golden-ribbon.png';
-import { useRouter } from 'next/navigation';
 
 type TreeProps = {
   data: NetworkNode;
@@ -167,31 +166,25 @@ function Tree({ data, session }: TreeProps) {
         />
       </Head>
 
-      <p className="mb-2 text-sm text-green-600">
-        **Untuk melakukan zoom in/out dengan jari, lakukan seperti gerakan
-        mencubit biasa, namun 1 jari Anda tahan pada layar.
-      </p>
-      <div
-        className="relative flex h-[80vh] w-full items-center justify-center overflow-hidden bg-gray-100"
-        style={{ touchAction: 'none', overscrollBehavior: 'contain' }}
-      >
+      <style jsx global>{`
+        .zoom-container {
+          touch-action: none;
+          overscroll-behavior: contain;
+        }
+      `}</style>
+
+      <div className="zoom-container relative flex h-[75vh] w-full items-center justify-center overflow-hidden bg-gray-100">
         <TransformWrapper
-          initialScale={0.5}
-          minScale={0.25}
+          minScale={0.5}
           maxScale={3}
+          initialScale={0.55}
           centerOnInit
-          wheel={{ step: 0.1 }}
-          doubleClick={{ disabled: false }}
-          panning={{
-            disabled: false, // mouse panning OK
-            velocityDisabled: true,
-          }}
-          // @ts-ignore
-          touch={{
-            pan: false, // ❗ disable one-finger panning on touch
-            pinch: true, // allow natural two-finger pinch
-          }}
           limitToBounds={false}
+          alignmentAnimation={{ disabled: true }}
+          panning={{ velocityDisabled: true }}
+          pinch={{ step: 5 }}
+          doubleClick={{ disabled: true }}
+          wheel={{ step: 0.1, smoothStep: 0.02 }}
         >
           {({ zoomIn, zoomOut, resetTransform, centerView }) => (
             <>
@@ -207,121 +200,67 @@ function Tree({ data, session }: TreeProps) {
                   variant="flat"
                   onClick={() => {
                     resetTransform();
-                    setTimeout(() => centerView(0.5), 50);
+                    setTimeout(() => centerView(), 50);
                   }}
                 >
                   Reset
                 </Button>
               </div>
-              <TransformComponent>
-                <div id="mlm-diagram">
-                  {data.upline !== 'sistem' && (
-                    <>
-                      {session?.user?.id === 'admin' ? (
-                        <div className="flex flex-col justify-center text-center">
-                          <div>
-                            <Link
-                              href={`/diagram-jaringan/${data.upline}`}
-                              className="inline-block"
-                            >
-                              <div className="aspect-square h-20">
-                                <Image
-                                  alt={'diagram sebelumnya'}
-                                  src={imgArrowUp}
-                                />
-                              </div>
-                            </Link>
-                            <div
-                              className="mx-auto flex max-w-40 flex-col gap-1 bg-contain bg-center bg-no-repeat"
-                              // style={{ backgroundImage: `url(${imgRibbon.src})` }}
-                            >
-                              <p>
-                                Jaringan:{' '}
-                                <span className="font-medium uppercase text-primary">
-                                  {data?.user_id} ({data?.name})
-                                </span>
-                              </p>
-                              <p>
-                                Sponsor:{' '}
-                                <span className="font-medium uppercase text-primary">
-                                  {data?.sponsor ?? '-'}
-                                </span>
-                              </p>
-                              <p>
-                                Upline:{' '}
-                                <span className="font-medium uppercase text-primary">
-                                  {data?.upline}
-                                </span>
-                              </p>
-                            </div>
-                          </div>
-                          <div className="mx-auto h-6">
-                            <Image
-                              alt="golden ribbon"
-                              src={imgRibbon}
-                              width={0}
-                              height={0}
-                              className="h-full w-auto object-contain"
-                            />
-                          </div>
 
-                          <div className="mx-auto mt-1 h-6 w-1 bg-gray-300" />
-                        </div>
-                      ) : (
-                        data.upline !== session?.user?.id && (
-                          <div className="flex flex-col justify-center text-center">
-                            <div>
-                              <Link
-                                href={`/diagram-jaringan/${data.upline}`}
-                                className="inline-block"
-                              >
-                                <div className="aspect-square h-20">
-                                  <Image
-                                    alt={'diagram sebelumnya'}
-                                    src={imgArrowUp}
-                                  />
-                                </div>
-                              </Link>
-                              <div
-                                className="mx-auto flex max-w-40 flex-col gap-1 bg-contain bg-center bg-no-repeat"
-                                // style={{ backgroundImage: `url(${imgRibbon.src})` }}
-                              >
-                                <p>
-                                  Jaringan:{' '}
-                                  <span className="font-medium uppercase text-primary">
-                                    {data?.user_id} ({data?.name})
-                                  </span>
-                                </p>
-                                <p>
-                                  Sponsor:{' '}
-                                  <span className="font-medium uppercase text-primary">
-                                    {data?.sponsor ?? '-'}
-                                  </span>
-                                </p>
-                                <p>
-                                  Upline:{' '}
-                                  <span className="font-medium uppercase text-primary">
-                                    {data?.upline}
-                                  </span>
-                                </p>
-                              </div>
-                            </div>
-                            <div className="mx-auto h-6">
+              <TransformComponent>
+                <div id="mlm-diagram" className="pointer-events-auto">
+                  {data.upline !== 'sistem' &&
+                    data.upline !== session?.user?.id && (
+                      <div className="flex flex-col justify-center text-center">
+                        <div>
+                          <Link
+                            href={`/diagram-jaringan/${data.upline}`}
+                            className="inline-block"
+                          >
+                            <div className="aspect-square h-20">
                               <Image
-                                alt="golden ribbon"
-                                src={imgRibbon}
-                                width={0}
-                                height={0}
-                                className="h-full w-auto object-contain"
+                                alt={'diagram sebelumnya'}
+                                src={imgArrowUp}
                               />
                             </div>
-
-                            <div className="mx-auto mt-1 h-6 w-1 bg-gray-300" />
+                          </Link>
+                          <div
+                            className="mx-auto flex max-w-40 flex-col gap-1 bg-contain bg-center bg-no-repeat"
+                            // style={{ backgroundImage: `url(${imgRibbon.src})` }}
+                          >
+                            <p>
+                              Jaringan:{' '}
+                              <span className="font-medium uppercase text-primary">
+                                {data?.user_id} ({data?.name})
+                              </span>
+                            </p>
+                            <p>
+                              Sponsor:{' '}
+                              <span className="font-medium uppercase text-primary">
+                                {data?.sponsor ?? '-'}
+                              </span>
+                            </p>
+                            <p>
+                              Upline:{' '}
+                              <span className="font-medium uppercase text-primary">
+                                {data?.upline}
+                              </span>
+                            </p>
                           </div>
-                        )
-                      )}
-                    </>
-                  )}
+                        </div>
+                        <div className="mx-auto h-6">
+                          <Image
+                            alt="golden ribbon"
+                            src={imgRibbon}
+                            width={0}
+                            height={0}
+                            className="h-full w-auto object-contain"
+                          />
+                        </div>
+
+                        <div className="mx-auto mt-1 h-6 w-1 bg-gray-300" />
+                      </div>
+                    )}
                   {data && renderNode(data, '0', data.user_id)}
                 </div>
               </TransformComponent>
@@ -351,24 +290,20 @@ export default function DiagramJaringanPage({
 }) {
   const { data: session } = useSession();
   const [isLoading, setLoading] = useState(true);
-  const router = useRouter();
 
   const [dataDiagramJaringan, setDataDiagramJaringan] = useState<NetworkNode>();
   const [username, setUsername] = useState(bawaUsername ?? '');
+  const debouncedUsername = useDebounce(username, 600);
 
-  const handleSearch = (query?: string) => {
-    console.log(query);
-    router.push(`/diagram-jaringan/${query || ''}`);
-    // fetchDataDiagram(query ?? username);
-  };
-
-  const fetchDataDiagram = async (query?: string) => {
+  useEffect(() => {
     if (!session?.accessToken) return;
 
     setLoading(true);
 
+    const username = debouncedUsername;
+
     fetchWithAuth<NetworkDiagramResponse>(
-      `/_network-diagrams/${query || ''}`,
+      `/_network-diagrams/${username || ''}`,
       { method: 'GET' },
       session.accessToken
     )
@@ -377,27 +312,15 @@ export default function DiagramJaringanPage({
       })
       .catch((error) => {
         console.error(error);
+        // Clear the data so UI can show "no data"
         setDataDiagramJaringan(undefined);
       })
       .finally(() => setLoading(false));
-  };
-
-  useEffect(() => {
-    if (!session?.accessToken) return;
-
-    // If you open via URL: /network-diagram/{username}
-    // Fetch automatically using the param
-    fetchDataDiagram(bawaUsername);
-  }, [session?.accessToken, bawaUsername]);
+  }, [session?.accessToken, debouncedUsername]);
 
   return (
     <div className="@container">
-      <FiltersDiagramJaringan
-        username={username}
-        setUsername={setUsername}
-        handleSearch={handleSearch}
-        upline={dataDiagramJaringan?.upline ?? ''}
-      />
+      <FiltersDiagramJaringan username={username} setUsername={setUsername} />
       {isLoading ? (
         <div className="py-20 text-center">
           <p>Sedang memuat diagram...</p>
@@ -407,13 +330,6 @@ export default function DiagramJaringanPage({
       ) : (
         <div className="py-20 text-center text-gray-500">
           <p>Tidak ada data diagram jaringan untuk pengguna ini.</p>
-          <Button
-            size="sm"
-            onClick={() => handleSearch?.('')}
-            className="mt-5 h-9"
-          >
-            Kembali
-          </Button>
         </div>
       )}
     </div>

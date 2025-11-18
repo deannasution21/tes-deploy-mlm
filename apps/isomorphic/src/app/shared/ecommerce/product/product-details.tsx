@@ -10,6 +10,7 @@ import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
 import imgHNB from '@public/assets/img/product/HNB 19.jpg';
 import imgSNP from '@public/assets/img/product/SNP 3.jpg';
 import imgLILAC from '@public/assets/img/product/LILAC.jpg';
+import imgFCMIST from '@public/assets/img/product/FCMIST.jpeg';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function ProductDetails() {
@@ -73,7 +74,9 @@ export default function ProductDetails() {
                   ? imgLILAC
                   : product.product_id === 'PRD0001'
                     ? imgSNP
-                    : defaultPlaceholder
+                    : product.product_id === 'PRD0004'
+                      ? imgFCMIST
+                      : defaultPlaceholder
             }
           />
         </div>

@@ -99,6 +99,7 @@ function Formnya({
     if (!session?.accessToken) return;
 
     const sponsor = getValues('sponsor')?.trim();
+    const upline = getValues('upline')?.trim();
     if (!sponsor) {
       setFeedback('Mohon isi sponsor terlebih dahulu');
       return;
@@ -108,7 +109,7 @@ function Formnya({
     setFeedback(null);
 
     fetchWithAuth<CekSponsorResponse>(
-      `/_network-diagrams/check-sponsor/${sponsor}`,
+      `/_network-diagrams/check-sponsor/${sponsor}?upline=${upline}`,
       {
         method: 'GET',
       },

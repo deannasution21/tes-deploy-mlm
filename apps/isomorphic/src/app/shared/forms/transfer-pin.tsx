@@ -227,7 +227,7 @@ export default function TransferPinPage() {
     setLoadingS(true);
 
     if (!tujuan) {
-      getDataTo(data.to);
+      getDataTo(data.to?.toLowerCase());
     } else {
       Swal.fire({
         title: 'Konfirmasi Transfer',
@@ -251,7 +251,7 @@ export default function TransferPinPage() {
           } else {
             doTransfer({
               from: session?.user?.id,
-              to: data.to,
+              to: data.to?.toLowerCase(),
               amount: data.amount,
               type_pin: data.type_pin,
               note: '',
@@ -340,6 +340,12 @@ export default function TransferPinPage() {
                               transfer
                             </Text>
                           </li>
+                          <li>
+                            <Text className="break-normal">
+                              Pastikan Username/ID tujuan dalam huruf kecil
+                              semua
+                            </Text>
+                          </li>
                         </ol>
                       </Alert>
 
@@ -350,6 +356,7 @@ export default function TransferPinPage() {
                             placeholder="Ketikkan username"
                             {...register('to')}
                             error={errors.to?.message}
+                            inputClassName="[&_input]:lowercase"
                             autoComplete="off"
                           />
                           <Controller

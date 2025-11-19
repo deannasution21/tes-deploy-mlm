@@ -53,5 +53,9 @@ export const config = {
     '/stockist',
     '/stockist/:path*',
     '/invoice/:path*',
+    '/promo',
+    '/promo/:path',
+    '/kontak',
+    '/kontak/:path',
   ],
 };

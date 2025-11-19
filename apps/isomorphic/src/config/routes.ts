@@ -75,6 +75,12 @@ export const routes = {
     daftar: '/stockist/daftar',
     list: '/stockist/list',
   },
+  kontak: {
+    index: '/kontak',
+  },
+  promo: {
+    index: '/promo',
+  },
   eCommerce: {
     dashboard: '/ecommerce',
     products: '/ecommerce/products',

@@ -62,6 +62,7 @@ import {
   PiLock,
   PiTrophy,
   PiInvoice,
+  PiPercent,
 } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
@@ -689,6 +690,18 @@ export const menuItemsUser = [
     icon: <PiUsers />,
     badge: '',
   },
+  {
+    name: 'Promo',
+    href: routes.promo.index,
+    icon: <PiPercent />,
+    badge: '',
+  },
+  {
+    name: 'Kontak',
+    href: routes.kontak.index,
+    icon: <PiHeadset />,
+    badge: '',
+  },
 
   {
     name: 'Personal',
@@ -741,6 +754,18 @@ export const menuItemsStockist = [
     name: 'Transfer PIN',
     href: routes.transferPin.index,
     icon: <PiArrowsHorizontal />,
+  },
+  {
+    name: 'Promo',
+    href: routes.promo.index,
+    icon: <PiPercent />,
+    badge: '',
+  },
+  {
+    name: 'Kontak',
+    href: routes.kontak.index,
+    icon: <PiHeadset />,
+    badge: '',
   },
 
   {

@@ -63,6 +63,8 @@ import {
   PiTrophy,
   PiInvoice,
   PiPercent,
+  PiBook,
+  PiDownload,
 } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
@@ -697,6 +699,18 @@ export const menuItemsUser = [
     badge: '',
   },
   {
+    name: 'Download',
+    href: routes.download.index,
+    icon: <PiDownload />,
+    badge: '',
+  },
+  {
+    name: 'Profil Perusahaan',
+    href: routes.profilPerusahaan.index,
+    icon: <PiBook />,
+    badge: '',
+  },
+  {
     name: 'Kontak',
     href: routes.kontak.index,
     icon: <PiHeadset />,
@@ -759,6 +773,18 @@ export const menuItemsStockist = [
     name: 'Promo',
     href: routes.promo.index,
     icon: <PiPercent />,
+    badge: '',
+  },
+  {
+    name: 'Download',
+    href: routes.download.index,
+    icon: <PiDownload />,
+    badge: '',
+  },
+  {
+    name: 'Profil Perusahaan',
+    href: routes.profilPerusahaan.index,
+    icon: <PiBook />,
     badge: '',
   },
   {

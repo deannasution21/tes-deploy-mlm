@@ -81,6 +81,12 @@ export const routes = {
   promo: {
     index: '/promo',
   },
+  download: {
+    index: '/download',
+  },
+  profilPerusahaan: {
+    index: '/profil-perusahaan',
+  },
   eCommerce: {
     dashboard: '/ecommerce',
     products: '/ecommerce/products',

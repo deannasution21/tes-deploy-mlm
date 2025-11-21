@@ -32,7 +32,7 @@ export default function DownloadTable({ className }: { className?: string }) {
       {
         name: 'KeyNote IPG Marketing Plan',
         format: '.key',
-        url: '/files/',
+        url: '/files/KeynoteIPG_Marketing_plan.key',
       },
       {
         name: 'Windows IPG Marketing Plan',

@@ -2,13 +2,13 @@
 
 import { createColumnHelper } from '@tanstack/react-table';
 import { Button, Text } from 'rizzui';
-import { UserSummary } from '@/types';
 import { generateSlug } from '@core/utils/generate-slug';
 import Link from 'next/link';
 import { PiGift } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
+import { SummaryItem } from '@/types/wd-bonus';
 
-const columnHelper = createColumnHelper<UserSummary>();
+const columnHelper = createColumnHelper<SummaryItem>();
 
 export const WDBonusColumns = [
   {
@@ -40,9 +40,20 @@ export const WDBonusColumns = [
     cell: ({ row }: { row: any }) => {
       const username = row?.original?.username;
       const amount = row?.original?.balance?.amount;
+      const isDisabled = !amount || amount <= 0;
+
+      if (isDisabled) {
+        return (
+          <Button size="sm" disabled>
+            <PiGift className="mr-2 h-4 w-4" />
+            <span>Withdrawal</span>
+          </Button>
+        );
+      }
+
       return (
         <Link href={`withdrawal-bonus/${generateSlug(username)}/withdrawal`}>
-          <Button size="sm" disabled={amount === 0}>
+          <Button size="sm">
             <PiGift className="mr-2 h-4 w-4" />
             <span>Withdrawal</span>
           </Button>

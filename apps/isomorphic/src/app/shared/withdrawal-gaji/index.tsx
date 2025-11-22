@@ -3,11 +3,6 @@
 import { useEffect, useState } from 'react';
 import { Badge, Button, Text, Title } from 'rizzui';
 import { useSession } from 'next-auth/react';
-import {
-  WithdrawalSummaryData,
-  WithdrawalSummaryResponse,
-  WithdrawalUserDetail,
-} from '@/types';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import cn from '@core/utils/class-names';
 import Image from 'next/image';
@@ -15,13 +10,20 @@ import pinImg from '@public/assets/img/golden-coin.png';
 import Link from 'next/link';
 import { routes } from '@/config/routes';
 import WithdrawalGajiTable from '../tables/withdrawal-gaji';
+import {
+  DetailUsers,
+  WithdrawalSummaryData,
+  WithdrawalSummaryResponse,
+} from '@/types/wd-gaji';
 
 function FleetStatus({
   data,
   className,
+  akumulasiGaji,
 }: {
-  data?: WithdrawalUserDetail;
+  data?: DetailUsers;
   className?: string;
+  akumulasiGaji: string;
 }) {
   return (
     <div className={cn('flex flex-col gap-5 border-0 p-0 lg:p-0', className)}>
@@ -93,6 +95,10 @@ function FleetStatus({
               {data?.point.bonus_flushed ?? 0} Poin
             </strong>
           </Title>
+          <Title as="h6" className="mb-3 text-center">
+            Akumulasi Gaji Anda:{' '}
+            <strong className="text-xl text-primary">{akumulasiGaji}</strong>
+          </Title>
           <Text as="p" className="text-stone-500">
             Withdrawal Gaji dapat dlakukan jika poin Anda sudah mencapai{' '}
             <strong className="text-primary">30 poin</strong>, dan akan
@@ -155,6 +161,7 @@ export default function WithdrawalGajiPage() {
             {/* FleetStatus first on small screens */}
             <FleetStatus
               data={dataGaji?.detail_users}
+              akumulasiGaji={dataGaji?.balance?.currency}
               className="order-1 @7xl:order-2 @7xl:col-span-4 @7xl:col-start-9 @7xl:row-start-1 @7xl:row-end-3 @7xl:h-full"
             />
 

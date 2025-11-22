@@ -3,9 +3,9 @@
 import DateCell from '@core/ui/date-cell';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Text } from 'rizzui';
-import { WithdrawalSummaryItem } from '@/types';
+import { SummaryItem } from '@/types/wd-gaji';
 
-const columnHelper = createColumnHelper<WithdrawalSummaryItem>();
+const columnHelper = createColumnHelper<SummaryItem>();
 
 export const withdrawalGajiColumns = [
   {

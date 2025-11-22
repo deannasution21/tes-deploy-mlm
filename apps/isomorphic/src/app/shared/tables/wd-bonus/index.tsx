@@ -7,16 +7,16 @@ import { useTanStackTable } from '@core/components/table/custom/use-TanStack-Tab
 import TablePagination from '@core/components/table/pagination';
 import cn from '@core/utils/class-names';
 import Filters from './filters';
-import { UserSummary } from '@/types';
+import { SummaryItem } from '@/types/wd-bonus';
 
 export default function WDBonusTable({
   datanya,
   className,
 }: {
-  datanya: UserSummary[];
+  datanya: SummaryItem[];
   className?: string;
 }) {
-  const { table, setData } = useTanStackTable<UserSummary>({
+  const { table, setData } = useTanStackTable<SummaryItem>({
     tableData: datanya,
     columnConfig: WDBonusColumns,
     options: {

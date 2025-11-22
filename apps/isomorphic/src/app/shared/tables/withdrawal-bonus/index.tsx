@@ -2,16 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import {
-  BankData,
-  BankStatusResponse,
-  TransactionData,
-  TransactionResponse,
-} from '@/types';
+import { BankData, BankStatusResponse } from '@/types';
 import { Alert, Text } from 'rizzui';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { getBankNameByCode } from '@/utils/helper';
 import WDBonusTable from '../wd-bonus';
+import { SummaryData, SummaryResponse } from '@/types/wd-bonus';
 
 export default function WithdrawalBonusTable({
   className,
@@ -21,7 +17,7 @@ export default function WithdrawalBonusTable({
   const { data: session } = useSession();
   const [isLoading, setLoading] = useState(true);
 
-  const [dataUser, setDataUser] = useState<TransactionData | null>(null);
+  const [dataUser, setDataUser] = useState<SummaryData | null>(null);
   const [dataBank, setDataBank] = useState<BankData[]>([]);
 
   useEffect(() => {
@@ -30,7 +26,7 @@ export default function WithdrawalBonusTable({
     setLoading(true);
 
     Promise.all([
-      fetchWithAuth<TransactionResponse>(
+      fetchWithAuth<SummaryResponse>(
         `/_transactions/withdrawal-summary?type=plan_a&category=bonus`,
         { method: 'GET' },
         session.accessToken
@@ -104,10 +100,20 @@ export default function WithdrawalBonusTable({
           </ul>
           <Alert variant="flat" color="success" className="mt-5">
             <Text className="font-semibold">Informasi</Text>
-            <Text className="break-normal">
-              Anda memiliki total <strong>{dataUser?.count ?? 0} ID</strong>{' '}
-              dengan rekening yang sama
-            </Text>
+            <ol className="list-disc ps-5">
+              <li>
+                <Text className="break-normal">
+                  Anda memiliki total <strong>{dataUser?.count ?? 0} ID</strong>{' '}
+                  dengan rekening yang sama
+                </Text>
+              </li>
+              <li>
+                <Text className="break-normal">
+                  Anda memiliki total akumulasi{' '}
+                  <strong>{dataUser?.balance?.currency}</strong> bonus
+                </Text>
+              </li>
+            </ol>
           </Alert>
         </div>
         <WDBonusTable datanya={dataUser?.summary ?? []} />

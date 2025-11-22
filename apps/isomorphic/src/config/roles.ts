@@ -1,0 +1,135 @@
+// config/roles.ts
+export const rolePermissions = {
+  // Member - most restricted
+  member: {
+    allowedPaths: [
+      '/dashboard',
+      '/diagram-jaringan',
+      '/diagram-jaringan/:path*',
+      '/pindah-id/',
+      '/bonus/',
+      '/bonus/:path*',
+      '/withdrawal-bonus',
+      '/withdrawal-bonus/:path*',
+      '/withdrawal-gaji',
+      '/withdrawal-gaji/:path*',
+      '/lihat-pin',
+      '/lihat-pin/:path*',
+      '/transfer-pin',
+      '/transfer-pin/:path*',
+      '/stockist',
+      '/stockist/:path*',
+      '/profil',
+      '/profil/:path*',
+      '/download',
+      '/download/:path*',
+      '/profil-perusahaan',
+      '/profil-perusahaan/:path*',
+      '/promo',
+      '/promo/:path*',
+      '/kontak',
+      '/kontak/:path*',
+    ],
+    deniedPaths: ['/produk', '/produk/:path*'],
+  },
+
+  // Stockist - can access products + member features
+  stockist: {
+    allowedPaths: [
+      '/dashboard',
+      '/produk',
+      '/produk/:path*',
+      '/lihat-pin',
+      '/lihat-pin/:path*',
+      '/transfer-pin',
+      '/transfer-pin/:path*',
+      '/profil',
+      '/profil/:path*',
+    ],
+    deniedPaths: [
+      '/diagram-jaringan',
+      '/diagram-jaringan/:path*',
+      '/pindah-id/',
+      '/bonus/',
+      '/bonus/:path*',
+      '/withdrawal-bonus',
+      '/withdrawal-bonus/:path*',
+      '/withdrawal-gaji',
+      '/withdrawal-gaji/:path*',
+      '/download',
+      '/download/:path*',
+      '/profil-perusahaan',
+      '/profil-perusahaan/:path*',
+      '/promo',
+      '/promo/:path*',
+      '/kontak',
+      '/kontak/:path*',
+    ],
+  },
+
+  // Admin Member - can manage members
+  adminmember: {
+    allowedPaths: ['/dashboard'],
+    deniedPaths: [
+      '/diagram-jaringan',
+      '/diagram-jaringan/:path*',
+      '/pindah-id/',
+      '/bonus/',
+      '/bonus/:path*',
+      '/withdrawal-bonus',
+      '/withdrawal-bonus/:path*',
+      '/withdrawal-gaji',
+      '/withdrawal-gaji/:path*',
+      '/download',
+      '/download/:path*',
+      '/profil-perusahaan',
+      '/profil-perusahaan/:path*',
+      '/promo',
+      '/promo/:path*',
+      '/kontak',
+      '/kontak/:path*',
+    ],
+  },
+
+  // Admin Stock - can manage stockists + products
+  adminstock: {
+    allowedPaths: [
+      '/dashboard',
+      '/produk',
+      '/produk/:path*',
+      '/lihat-pin',
+      '/lihat-pin/:path*',
+      '/transfer-pin',
+      '/transfer-pin/:path*',
+      '/profil',
+      '/profil/:path*',
+    ],
+    deniedPaths: [
+      '/diagram-jaringan',
+      '/diagram-jaringan/:path*',
+      '/pindah-id/',
+      '/bonus/',
+      '/bonus/:path*',
+      '/withdrawal-bonus',
+      '/withdrawal-bonus/:path*',
+      '/withdrawal-gaji',
+      '/withdrawal-gaji/:path*',
+      '/download',
+      '/download/:path*',
+      '/profil-perusahaan',
+      '/profil-perusahaan/:path*',
+      '/promo',
+      '/promo/:path*',
+      '/kontak',
+      '/kontak/:path*',
+    ],
+  },
+
+  // Admin Owner - full access
+  adminowner: {
+    allowedPaths: ['/dashboard'],
+    deniedPaths: [], // No restrictions for owner
+  },
+} as const;
+
+export type UserRole = keyof typeof rolePermissions;

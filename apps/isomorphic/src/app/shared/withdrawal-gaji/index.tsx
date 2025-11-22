@@ -161,7 +161,7 @@ export default function WithdrawalGajiPage() {
             {/* FleetStatus first on small screens */}
             <FleetStatus
               data={dataGaji?.detail_users}
-              akumulasiGaji={dataGaji?.balance?.currency}
+              akumulasiGaji={dataGaji?.balance?.currency ?? 'Rp 0'}
               className="order-1 @7xl:order-2 @7xl:col-span-4 @7xl:col-start-9 @7xl:row-start-1 @7xl:row-end-3 @7xl:h-full"
             />
 

@@ -65,6 +65,8 @@ export const rolePermissions = {
       '/dashboard',
       '/produk',
       '/produk/:path*',
+      '/stok',
+      '/stok/:path*',
       '/profil',
       '/profil/:path*',
     ],

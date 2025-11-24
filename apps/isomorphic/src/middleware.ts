@@ -78,6 +78,8 @@ export const config = {
 
     '/produk',
     '/produk/:path*',
+    '/stok',
+    '/stok/:path*',
 
     '/stockist',
     '/stockist/:path*',

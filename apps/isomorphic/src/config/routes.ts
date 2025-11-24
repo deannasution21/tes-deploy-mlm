@@ -57,6 +57,12 @@ export const routes = {
     history: '/produk/history',
     keranjang: '/produk/keranjang',
     checkout: '/produk/checkout',
+    manajemen: {
+      index: '/produk/manajemen',
+      tambah: '/produk/tambah',
+      detail: (id: string) => `/produk/manajemen/${id}`,
+      edit: (id: string) => `/produk/edit/${id}`,
+    },
     pesanan: {
       index: '/produk/pesanan',
       detail: (id: string) => `/produk/pesanan/${id}`,
@@ -64,6 +70,13 @@ export const routes = {
     pesananStockist: {
       index: '/produk/pesanan-stockist',
       detail: (id: string) => `/produk/pesanan-stockist/${id}`,
+    },
+  },
+  stok: {
+    manajemen: {
+      index: '/stok/manajemen',
+      detail: (id: string) => `/stok/manajemen/${id}`,
+      edit: (id: string) => `/stok/edit/${id}`,
     },
   },
   kelolaProduk: {

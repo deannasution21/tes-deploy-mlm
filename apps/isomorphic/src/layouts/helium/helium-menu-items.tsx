@@ -887,7 +887,7 @@ export const menuItemsAdminStock = [
     dropdownItems: [
       {
         name: 'Daftar Produk',
-        href: '#',
+        href: routes.produk.manajemen.index,
       },
     ],
   },
@@ -898,7 +898,7 @@ export const menuItemsAdminStock = [
     dropdownItems: [
       {
         name: 'Daftar Stok',
-        href: '#',
+        href: routes.stok.manajemen.index,
       },
     ],
   },

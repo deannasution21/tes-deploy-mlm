@@ -681,7 +681,7 @@ export const menuItemsUser = [
     icon: <PiArrowsHorizontal />,
   },
   {
-    name: 'Daftar Stockist',
+    name: 'Pendaftaran Stockist',
     href: routes.stockist.daftar,
     icon: <PiUserPlus />,
     badge: '',
@@ -692,6 +692,12 @@ export const menuItemsUser = [
     icon: <PiUsers />,
     badge: '',
   },
+  // {
+  //   name: 'Peringkat',
+  //   href: routes.peringkat.index,
+  //   icon: <PiSteps />,
+  //   badge: '',
+  // },
   {
     name: 'Promo',
     href: routes.promo.index,
@@ -724,7 +730,7 @@ export const menuItemsUser = [
   {
     name: 'Profil Saya',
     href: routes.profil.index,
-    icon: <PiUser />,
+    icon: <PiUserGear />,
   },
   {
     name: 'Ganti Password',
@@ -801,7 +807,7 @@ export const menuItemsStockist = [
   {
     name: 'Profil Saya',
     href: routes.profil.index,
-    icon: <PiUser />,
+    icon: <PiUserGear />,
   },
   {
     name: 'Ganti Password',
@@ -854,7 +860,7 @@ export const menuItemsStockistAdminPin = [
   {
     name: 'Profil Saya',
     href: routes.profil.index,
-    icon: <PiUser />,
+    icon: <PiUserGear />,
   },
   {
     name: 'Ganti Password',
@@ -886,6 +892,17 @@ export const menuItemsAdminStock = [
     ],
   },
   {
+    name: 'Manajemen Stok',
+    href: '#',
+    icon: <PiPackage />,
+    dropdownItems: [
+      {
+        name: 'Daftar Stok',
+        href: '#',
+      },
+    ],
+  },
+  {
     name: 'History Pembelian Stockist',
     href: routes.produk.pesananStockist.index,
     icon: <PiInvoice />,
@@ -898,7 +915,50 @@ export const menuItemsAdminStock = [
   {
     name: 'Profil Saya',
     href: routes.profil.index,
-    icon: <PiUser />,
+    icon: <PiUserGear />,
+  },
+  {
+    name: 'Ganti Password',
+    href: routes.profil.ubahPassword,
+    icon: <PiLock />,
+  },
+];
+
+export const menuItemsAdminMember = [
+  // label start
+  {
+    name: 'Menu',
+  },
+  // label end
+  {
+    name: 'Dashboard',
+    href: routes.dashboard.index,
+    icon: <PiHouseLineDuotone />,
+  },
+  {
+    name: 'Manajemen Member',
+    href: '#',
+    icon: <PiUsers />,
+    dropdownItems: [
+      {
+        name: 'Daftar Member',
+        href: '#',
+      },
+      {
+        name: 'History Edit Member',
+        href: '#',
+      },
+    ],
+  },
+
+  {
+    name: 'Personal',
+  },
+  // label end
+  {
+    name: 'Profil Saya',
+    href: routes.profil.index,
+    icon: <PiUserGear />,
   },
   {
     name: 'Ganti Password',
@@ -974,9 +1034,24 @@ export const menuItemsAdmin = [
     ],
   },
   {
-    name: 'Daftar Stockist',
+    name: 'Pendaftaran Stockist',
     href: routes.stockist.index,
     icon: <PiUsers />,
+  },
+
+  {
+    name: 'Personal',
+  },
+  // label end
+  {
+    name: 'Profil Saya',
+    href: routes.profil.index,
+    icon: <PiUserGear />,
+  },
+  {
+    name: 'Ganti Password',
+    href: routes.profil.ubahPassword,
+    icon: <PiLock />,
   },
 ];
 

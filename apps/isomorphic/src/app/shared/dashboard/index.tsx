@@ -44,7 +44,10 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    if (session?.user?.role !== 'admin_stock') {
+    if (
+      session?.user?.role !== 'admin_stock' &&
+      session?.user?.role !== 'admin_member'
+    ) {
       fetchDataPin();
     }
   }, [session?.accessToken]);

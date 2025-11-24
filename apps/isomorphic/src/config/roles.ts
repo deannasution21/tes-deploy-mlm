@@ -19,6 +19,8 @@ export const rolePermissions = {
       '/transfer-pin/:path*',
       '/stockist',
       '/stockist/:path*',
+      '/peringkat',
+      '/peringkat/:path*',
       '/profil',
       '/profil/:path*',
       '/download',
@@ -30,7 +32,6 @@ export const rolePermissions = {
       '/kontak',
       '/kontak/:path*',
     ],
-    deniedPaths: ['/produk', '/produk/:path*'],
   },
 
   // Stockist - can access products + member features
@@ -46,89 +47,27 @@ export const rolePermissions = {
       '/profil',
       '/profil/:path*',
     ],
-    deniedPaths: [
-      '/diagram-jaringan',
-      '/diagram-jaringan/:path*',
-      '/pindah-id/',
-      '/bonus/',
-      '/bonus/:path*',
-      '/withdrawal-bonus',
-      '/withdrawal-bonus/:path*',
-      '/withdrawal-gaji',
-      '/withdrawal-gaji/:path*',
-      '/download',
-      '/download/:path*',
-      '/profil-perusahaan',
-      '/profil-perusahaan/:path*',
-      '/promo',
-      '/promo/:path*',
-      '/kontak',
-      '/kontak/:path*',
-    ],
+  },
+
+  // Admin Owner - full access
+  admin: {
+    allowedPaths: ['/dashboard', '/pindah-id/', '/profil', '/profil/:path*'],
   },
 
   // Admin Member - can manage members
-  adminmember: {
-    allowedPaths: ['/dashboard'],
-    deniedPaths: [
-      '/diagram-jaringan',
-      '/diagram-jaringan/:path*',
-      '/pindah-id/',
-      '/bonus/',
-      '/bonus/:path*',
-      '/withdrawal-bonus',
-      '/withdrawal-bonus/:path*',
-      '/withdrawal-gaji',
-      '/withdrawal-gaji/:path*',
-      '/download',
-      '/download/:path*',
-      '/profil-perusahaan',
-      '/profil-perusahaan/:path*',
-      '/promo',
-      '/promo/:path*',
-      '/kontak',
-      '/kontak/:path*',
-    ],
+  admin_member: {
+    allowedPaths: ['/dashboard', '/profil', '/profil/:path*'],
   },
 
   // Admin Stock - can manage stockists + products
-  adminstock: {
+  admin_stock: {
     allowedPaths: [
       '/dashboard',
       '/produk',
       '/produk/:path*',
-      '/lihat-pin',
-      '/lihat-pin/:path*',
-      '/transfer-pin',
-      '/transfer-pin/:path*',
       '/profil',
       '/profil/:path*',
     ],
-    deniedPaths: [
-      '/diagram-jaringan',
-      '/diagram-jaringan/:path*',
-      '/pindah-id/',
-      '/bonus/',
-      '/bonus/:path*',
-      '/withdrawal-bonus',
-      '/withdrawal-bonus/:path*',
-      '/withdrawal-gaji',
-      '/withdrawal-gaji/:path*',
-      '/download',
-      '/download/:path*',
-      '/profil-perusahaan',
-      '/profil-perusahaan/:path*',
-      '/promo',
-      '/promo/:path*',
-      '/kontak',
-      '/kontak/:path*',
-    ],
-  },
-
-  // Admin Owner - full access
-  adminowner: {
-    allowedPaths: ['/dashboard'],
-    deniedPaths: [], // No restrictions for owner
   },
 } as const;
 

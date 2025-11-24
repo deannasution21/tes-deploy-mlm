@@ -10,19 +10,27 @@ export default withAuth(
   function middleware(req) {
     const { pathname } = req.nextUrl;
     const token = req.nextauth.token;
+    const username = token?.user?.id as string;
     const role = token?.user?.role as UserRole;
 
-    // If no role or invalid role, redirect to signin
-    if (!role || !isValidRole(role)) {
+    // If no role, redirect to signin
+    if (!role) {
       const url = req.nextUrl.clone();
       url.pathname = '/signin';
       return NextResponse.redirect(url);
     }
 
-    // Check if path is allowed for this role
+    // Validate role
+    if (!isValidRole(role)) {
+      const url = req.nextUrl.clone();
+      url.pathname = '/signin';
+      return NextResponse.redirect(url);
+    }
+
+    // Check allowed route
     if (!isPathAllowed(pathname, role)) {
       const url = req.nextUrl.clone();
-      url.pathname = routes.unauthorized.index; // Create this page
+      url.pathname = routes.unauthorized.index;
       return NextResponse.redirect(url);
     }
 
@@ -41,9 +49,9 @@ function isValidRole(role: string): role is UserRole {
   return [
     'member',
     'stockist',
-    'adminmember',
-    'adminstock',
-    'adminowner',
+    'admin',
+    'admin_member',
+    'admin_stock',
   ].includes(role);
 }
 
@@ -73,6 +81,9 @@ export const config = {
 
     '/stockist',
     '/stockist/:path*',
+
+    '/peringkat',
+    '/peringkat/:path*',
 
     // other
     '/profil',

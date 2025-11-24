@@ -152,7 +152,7 @@ function Formnya({
         <Button
           type="submit"
           isLoading={isLoading}
-          disabled={isLoading}
+          disabled={role === 'member' ? isLoading : true}
           className="w-full @xl:w-auto"
         >
           Ubah Data

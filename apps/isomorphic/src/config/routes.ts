@@ -78,6 +78,9 @@ export const routes = {
   kontak: {
     index: '/kontak',
   },
+  peringkat: {
+    index: '/peringkat',
+  },
   promo: {
     index: '/promo',
   },

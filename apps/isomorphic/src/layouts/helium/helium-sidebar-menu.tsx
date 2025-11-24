@@ -11,6 +11,7 @@ import {
   menuItemsStockistAdminPin,
   menuItemsAdminStock,
   menuItemsKosongan,
+  menuItemsAdminMember,
 } from '@/layouts/helium/helium-menu-items';
 import { signOut, useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
@@ -56,17 +57,19 @@ export function HeliumSidebarMenu() {
 
   // pick menu normally
   const menuFinal: MenuItem[] =
-    role === 'admin'
+    role === 'admin' && username === 'adminowner'
       ? menuItemsAdmin
       : role === 'admin_stock' && username === 'adminstock'
         ? menuItemsAdminStock
-        : role === 'stockist' && username === 'adminpin2026'
-          ? menuItemsStockistAdminPin
-          : role === 'member'
-            ? menuItemsUser
-            : role === 'stockist'
-              ? menuItemsStockist
-              : menuItemsKosongan;
+        : role === 'admin_member' && username === 'adminmember'
+          ? menuItemsAdminMember
+          : role === 'stockist' && username === 'adminpin2026'
+            ? menuItemsStockistAdminPin
+            : role === 'member'
+              ? menuItemsUser
+              : role === 'stockist'
+                ? menuItemsStockist
+                : menuItemsKosongan;
 
   const handleLogout = async () => {
     setIsLoggingOut(true);

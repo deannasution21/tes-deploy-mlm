@@ -1,22 +1,40 @@
+// middleware.ts
 import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 import { pagesOptions } from '@/app/api/auth/[...nextauth]/pages-options';
+import { UserRole } from '@/config/roles';
 import { routes } from './config/routes';
+import { isPathAllowed, getRedirectPath } from './utils/auth-utils';
 
 export default withAuth(
   function middleware(req) {
     const { pathname } = req.nextUrl;
-    const role = req.nextauth.token?.user?.role; // access the user's role from token
+    const token = req.nextauth.token;
+    const username = token?.user?.id as string;
+    const role = token?.user?.role as UserRole;
 
-    // Example restriction: "member" CANNOT access "/produk" routes
-    if (role === 'member' && pathname.startsWith('/produk')) {
-      // redirect them somewhere safe
+    // If no role, redirect to signin
+    if (!role) {
+      const url = req.nextUrl.clone();
+      url.pathname = '/signin';
+      return NextResponse.redirect(url);
+    }
+
+    // Validate role
+    if (!isValidRole(role)) {
+      const url = req.nextUrl.clone();
+      url.pathname = '/signin';
+      return NextResponse.redirect(url);
+    }
+
+    // Check allowed route
+    if (!isPathAllowed(pathname, role)) {
       const url = req.nextUrl.clone();
       url.pathname = routes.unauthorized.index;
       return NextResponse.redirect(url);
     }
 
-    // Otherwise, allow access
+    // Allow access
     return NextResponse.next();
   },
   {
@@ -26,33 +44,50 @@ export default withAuth(
   }
 );
 
+// Helper function to validate roles
+function isValidRole(role: string): role is UserRole {
+  return [
+    'member',
+    'stockist',
+    'admin',
+    'admin_member',
+    'admin_stock',
+  ].includes(role);
+}
+
 export const config = {
   matcher: [
     '/dashboard',
-    '/dashboard/:path*',
-    '/history-bonus',
+    '/diagram-jaringan',
+    '/diagram-jaringan/:path*',
     '/pindah-id/',
     '/bonus/',
     '/bonus/:path*',
-    '/produk',
-    '/produk/:path*',
-    '/profil',
-    '/profil/:path*',
-    '/lihat-pin',
-    '/lihat-pin/:path*',
-    '/generate-pin',
-    '/generate-pin/:path*',
-    '/transfer-pin',
-    '/transfer-pin/:path*',
+
+    // wd
     '/withdrawal-bonus',
     '/withdrawal-bonus/:path*',
     '/withdrawal-gaji',
     '/withdrawal-gaji/:path*',
-    '/diagram-jaringan',
-    '/diagram-jaringan/:path*',
+
+    // pin
+    '/lihat-pin',
+    '/lihat-pin/:path*',
+    '/transfer-pin',
+    '/transfer-pin/:path*',
+
+    '/produk',
+    '/produk/:path*',
+
     '/stockist',
     '/stockist/:path*',
-    '/invoice/:path*',
+
+    '/peringkat',
+    '/peringkat/:path*',
+
+    // other
+    '/profil',
+    '/profil/:path*',
     '/download',
     '/download/:path*',
     '/profil-perusahaan',

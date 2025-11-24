@@ -6,17 +6,17 @@ import { useTanStackTable } from '@core/components/table/custom/use-TanStack-Tab
 import TablePagination from '@core/components/table/pagination';
 import cn from '@core/utils/class-names';
 import Filters from './filters';
-import { WithdrawalSummaryItem } from '@/types';
 import { withdrawalGajiColumns } from './columns';
+import { SummaryItem } from '@/types/wd-gaji';
 
 export default function WithdrawalGajiTable({
   datanya,
   className,
 }: {
-  datanya: WithdrawalSummaryItem[];
+  datanya: SummaryItem[];
   className?: string;
 }) {
-  const { table, setData } = useTanStackTable<WithdrawalSummaryItem>({
+  const { table, setData } = useTanStackTable<SummaryItem>({
     tableData: datanya,
     columnConfig: withdrawalGajiColumns,
     options: {

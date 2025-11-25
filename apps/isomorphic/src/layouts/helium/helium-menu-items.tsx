@@ -942,7 +942,7 @@ export const menuItemsAdminMember = [
     dropdownItems: [
       {
         name: 'Daftar Member',
-        href: '#',
+        href: routes.member.manajemen.index,
       },
       {
         name: 'History Edit Member',

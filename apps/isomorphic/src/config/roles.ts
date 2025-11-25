@@ -56,7 +56,13 @@ export const rolePermissions = {
 
   // Admin Member - can manage members
   admin_member: {
-    allowedPaths: ['/dashboard', '/profil', '/profil/:path*'],
+    allowedPaths: [
+      '/dashboard',
+      '/member',
+      '/member/:path*',
+      '/profil',
+      '/profil/:path*',
+    ],
   },
 
   // Admin Stock - can manage stockists + products

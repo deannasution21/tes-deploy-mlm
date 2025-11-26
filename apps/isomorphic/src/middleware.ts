@@ -61,6 +61,7 @@ export const config = {
     '/diagram-jaringan',
     '/diagram-jaringan/:path*',
     '/pindah-id/',
+    '/pindah-id/:path*',
     '/bonus/',
     '/bonus/:path*',
 
@@ -80,6 +81,8 @@ export const config = {
     '/produk/:path*',
     '/stok',
     '/stok/:path*',
+    '/member',
+    '/member/:path*',
 
     '/stockist',
     '/stockist/:path*',

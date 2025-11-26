@@ -79,6 +79,13 @@ export const routes = {
       edit: (id: string) => `/stok/edit/${id}`,
     },
   },
+  member: {
+    manajemen: {
+      index: '/member/manajemen',
+      detail: (id: string) => `/member/manajemen/${id}`,
+      edit: (id: string) => `/member/edit/${id}`,
+    },
+  },
   kelolaProduk: {
     index: '/produk/kelola',
     transaksi: '/produk/transaksi',

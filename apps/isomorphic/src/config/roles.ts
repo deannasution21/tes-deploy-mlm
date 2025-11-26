@@ -7,6 +7,7 @@ export const rolePermissions = {
       '/diagram-jaringan',
       '/diagram-jaringan/:path*',
       '/pindah-id/',
+      '/pindah-id/:path*',
       '/bonus/',
       '/bonus/:path*',
       '/withdrawal-bonus',

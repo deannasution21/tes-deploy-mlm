@@ -61,6 +61,7 @@ export const config = {
     '/diagram-jaringan',
     '/diagram-jaringan/:path*',
     '/pindah-id/',
+    '/pindah-id/:path*',
     '/bonus/',
     '/bonus/:path*',
 

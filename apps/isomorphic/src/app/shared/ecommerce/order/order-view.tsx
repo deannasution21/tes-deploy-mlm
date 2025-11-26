@@ -14,6 +14,7 @@ import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { useReactToPrint } from 'react-to-print';
 import { createPortal } from 'react-dom';
 import imgVA from '@public/assets/img/va-logo.png';
+import imgBankTransfer from '@public/assets/img/transfer-bank.png';
 import { removeUnderscore } from '@/utils/helper';
 
 export interface TransactionDetailResponse {
@@ -341,7 +342,11 @@ export const InvoiceComponent = forwardRef<
                   <div className="flex w-full items-center">
                     <div className="shrink-0">
                       <Image
-                        src={imgVA}
+                        src={
+                          invoice?.attribute?.payment?.payment_method === 'va'
+                            ? imgVA
+                            : imgBankTransfer
+                        }
                         alt="metode pembayaran"
                         height={60}
                         width={60}

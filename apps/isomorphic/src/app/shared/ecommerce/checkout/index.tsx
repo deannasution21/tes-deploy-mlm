@@ -518,7 +518,7 @@ export default function CheckoutPageWrapper({
             products: products,
             note: '',
             payment_method: payload?.payment_method,
-            type: 'payment',
+            type: 'deposit',
           })
         : JSON.stringify({
             username: session?.user?.id,
@@ -531,7 +531,7 @@ export default function CheckoutPageWrapper({
             products: products,
             note: '',
             payment_method: payload?.payment_method,
-            type: 'payment',
+            type: 'deposit',
           });
 
     fetchWithAuth<PaymentTransactionResponse>(
@@ -596,40 +596,98 @@ export default function CheckoutPageWrapper({
         { method: 'GET' },
         session.accessToken
       ),
-      fetchWithAuth<PaymentMethodResponse>(
-        `/_services/payment-method`,
-        { method: 'GET' },
-        session.accessToken
-      ),
+      // fetchWithAuth<PaymentMethodResponse>(
+      //   `/_services/payment-method`,
+      //   { method: 'GET' },
+      //   session.accessToken
+      // ),
     ])
-      .then(([usersData, paymentData]) => {
+      .then(([usersData]) => {
         const userData = usersData?.data?.attribute;
         setDataUser(userData || null);
 
+        const paymentData = {
+          data: {
+            transfer: [
+              {
+                id: 'bri',
+                payment_method: 'transfer_bank',
+                payment_channel: 'bri',
+                percentage_type: 'fix',
+                fee: {
+                  value: 0,
+                  formatted: 'Rp 0,00',
+                },
+              },
+              {
+                id: 'bni',
+                payment_method: 'transfer_bank',
+                payment_channel: 'bni',
+                percentage_type: 'fix',
+                fee: {
+                  value: 0,
+                  formatted: 'Rp 0,00',
+                },
+              },
+              {
+                id: 'bca',
+                payment_method: 'transfer_bank',
+                payment_channel: 'bca',
+                percentage_type: 'fix',
+                fee: {
+                  value: 0,
+                  formatted: 'Rp 0,00',
+                },
+              },
+              {
+                id: 'mandiri',
+                payment_method: 'transfer_bank',
+                payment_channel: 'mandiri',
+                percentage_type: 'fix',
+                fee: {
+                  value: 0,
+                  formatted: 'Rp 0,00',
+                },
+              },
+            ],
+            qris: [],
+          },
+        };
+
         if (paymentData?.data) {
+          const paymentDataTyped = paymentData.data as any;
           const options: PaymentOption[] = [];
 
-          // VA methods
-          if (Array.isArray(paymentData.data.va)) {
-            paymentData.data.va.forEach((item: PaymentItem) => {
-              options.push({
-                value: item.id,
-                label: `Virtual Account - ${item.payment_channel.toUpperCase()}`,
-                fee: item.fee.value,
-              });
-            });
-          }
+          // Helper function to format labels
+          const createPaymentLabel = (item: PaymentItem) => {
+            const formatMethod = (method: string) => {
+              return method
+                .split('_')
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+            };
 
-          // QRIS / wallet
-          if (Array.isArray(paymentData.data.qris)) {
-            paymentData.data.qris.forEach((item: PaymentItem) => {
-              options.push({
-                value: item.id,
-                label: `${item.payment_channel.toUpperCase()}`,
-                fee: item.fee.value,
+            const methodName = formatMethod(item.payment_method);
+            const channelName = item.payment_channel.toUpperCase();
+
+            return `${methodName} - ${channelName}`;
+          };
+
+          // Process all payment methods dynamically
+          Object.entries(paymentDataTyped).forEach(([methodType, items]) => {
+            if (Array.isArray(items) && items.length > 0) {
+              (items as PaymentItem[]).forEach((item: PaymentItem) => {
+                options.push({
+                  value: item.id,
+                  label: createPaymentLabel(item),
+                  fee: item.fee.value,
+                  //  payment_method: item.payment_method,
+                  //  payment_channel: item.payment_channel,
+                  //  method_type: methodType,
+                });
               });
-            });
-          }
+            }
+          });
 
           setDataPayment(options);
         }

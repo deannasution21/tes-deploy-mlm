@@ -22,6 +22,8 @@ export const rolePermissions = {
       '/stockist/:path*',
       '/peringkat',
       '/peringkat/:path*',
+      '/sertifikat',
+      '/sertifikat/:path*',
       '/profil',
       '/profil/:path*',
       '/download',
@@ -52,7 +54,14 @@ export const rolePermissions = {
 
   // Admin Owner - full access
   admin: {
-    allowedPaths: ['/dashboard', '/pindah-id/', '/profil', '/profil/:path*'],
+    allowedPaths: [
+      '/dashboard',
+      '/pindah-id/',
+      '/member',
+      '/member/:path*',
+      '/profil',
+      '/profil/:path*',
+    ],
   },
 
   // Admin Member - can manage members

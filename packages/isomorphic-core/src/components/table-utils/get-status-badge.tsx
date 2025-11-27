@@ -8,6 +8,12 @@ const statusColors = {
   danger: ["text-red-dark", "bg-red-dark"],
   default: ["text-gray-600", "bg-gray-600"],
   blue: ["text-blue-600", "bg-blue-400"],
+  yellow: ["text-yellow-600", "bg-yellow-400"],
+  green: ["text-green-600", "bg-green-400"],
+  red: ["text-red-600", "bg-red-400"],
+  purple: ["text-purple-600", "bg-purple-400"],
+  pink: ["text-pink-600", "bg-pink-400"],
+  indigo: ["text-indigo-600", "bg-indigo-400"],
 };
 
 const allStatus = {
@@ -36,6 +42,13 @@ const allStatus = {
   "1": statusColors.success,
   "-2": statusColors.danger,
   "2": statusColors.success,
+  infinity_emperor: statusColors.yellow,
+  global_ambassador: statusColors.blue,
+  grand_director: statusColors.green,
+  prestige_leader: statusColors.red,
+  royal_achiever: statusColors.purple,
+  elite_builder: statusColors.pink,
+  starter_member: statusColors.indigo,
 };
 
 export type StatusTypes = keyof typeof allStatus;

@@ -101,6 +101,9 @@ export const routes = {
   peringkat: {
     index: '/peringkat',
   },
+  sertifikat: {
+    index: '/sertifikat',
+  },
   promo: {
     index: '/promo',
   },

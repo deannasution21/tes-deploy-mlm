@@ -1,7 +1,7 @@
 'use client';
 
 import Table from '@core/components/table';
-import { listStockistColumns } from './columns';
+import { listPeringkatColumns } from './columns';
 import WidgetCard from '@core/components/cards/widget-card';
 import { useTanStackTable } from '@core/components/table/custom/use-TanStack-Table';
 import TablePagination from '@core/components/table/pagination';
@@ -9,8 +9,8 @@ import cn from '@core/utils/class-names';
 import Filters from './filters';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { StockistListDetail, StockistListDetailResponse } from '@/types';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
+import { LeaderboardItem, LeaderboardResponse } from '@/types/peringkat';
 
 export default function ListPeringkatTable({
   className,
@@ -20,21 +20,21 @@ export default function ListPeringkatTable({
   const { data: session } = useSession();
   const [isLoading, setLoading] = useState(true);
 
-  const [dataPeringkat, setDataPeringkat] = useState<StockistListDetail[]>([]);
-  const [type, setType] = useState<string>('received');
+  const [dataPeringkat, setDataPeringkat] = useState<LeaderboardItem[]>([]);
+  const [type, setType] = useState<string>('infinity_emperor');
 
   useEffect(() => {
     if (!session?.accessToken) return;
 
     setLoading(true);
 
-    fetchWithAuth<StockistListDetailResponse>(
-      `/_reports/rankings?type=ranking_pairing&period=daily`,
+    fetchWithAuth<LeaderboardResponse>(
+      `/_reports/documents?type=leaderboard&leaderboard=${type}`,
       { method: 'GET' },
       session.accessToken
     )
       .then((data) => {
-        const datanya = data?.data?.detail || [];
+        const datanya = data?.data?.leaderboards || [];
         setDataPeringkat(datanya);
         setData(datanya);
       })
@@ -44,11 +44,11 @@ export default function ListPeringkatTable({
         setData([]);
       })
       .finally(() => setLoading(false));
-  }, [session?.accessToken]);
+  }, [session?.accessToken, type]);
 
-  const { table, setData } = useTanStackTable<StockistListDetail>({
+  const { table, setData } = useTanStackTable<LeaderboardItem>({
     tableData: dataPeringkat,
-    columnConfig: listStockistColumns,
+    columnConfig: listPeringkatColumns,
     options: {
       initialState: {
         pagination: {

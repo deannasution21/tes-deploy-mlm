@@ -3,14 +3,8 @@
 import { Badge, Button, Flex, Input, Text } from 'rizzui';
 import { type Table as ReactTableType } from '@tanstack/react-table';
 import StatusField from '@core/components/controlled-table/status-field';
-import {
-  PiArrowsHorizontal,
-  PiMagnifyingGlassBold,
-  PiTrashDuotone,
-} from 'react-icons/pi';
+import { PiMagnifyingGlassBold, PiTrashDuotone } from 'react-icons/pi';
 import { transactionTypes } from '@/data/transaction-history';
-import { routes } from '@/config/routes';
-import { useRouter } from 'next/navigation';
 
 const transactionTypesOptions = Object.entries(transactionTypes).map(
   ([value, label]) => ({ label, value })
@@ -18,12 +12,32 @@ const transactionTypesOptions = Object.entries(transactionTypes).map(
 
 const statusOptions = [
   {
-    value: 'received',
-    label: 'Diterima',
+    value: 'infinity_emperor',
+    label: 'Infinity Emperor',
   },
   {
-    value: 'send',
-    label: 'Dikirim',
+    value: 'global_ambassador',
+    label: 'Global Ambassador',
+  },
+  {
+    value: 'grand_director',
+    label: 'Grand Director',
+  },
+  {
+    value: 'prestige_leader',
+    label: 'Prestige Leader',
+  },
+  {
+    value: 'royal_achiever',
+    label: 'Royal Achiever',
+  },
+  {
+    value: 'elite_builder',
+    label: 'Elite Builder',
+  },
+  {
+    value: 'starter_member',
+    label: 'Starter Member',
   },
 ];
 
@@ -38,7 +52,6 @@ export default function Filters<TData extends Record<string, any>>({
   type,
   setType,
 }: TableToolbarProps<TData>) {
-  const router = useRouter();
   const isFiltered =
     table.getState().globalFilter || table.getState().columnFilters.length > 0;
 
@@ -48,7 +61,16 @@ export default function Filters<TData extends Record<string, any>>({
       direction="col"
       className="mt-6 @3xl:flex-row @[62rem]:mt-0"
     >
-      {/* <Flex align="center" className="order-2 @3xl:order-1 @3xl:max-w-[180px]">
+      <Flex align="center" className="order-2 @3xl:order-1 @3xl:max-w-[250px]">
+        {/* <StatusField
+          className="w-full"
+          placeholder="Select type"
+          options={transactionTypesOptions}
+          dropdownClassName="!z-10 h-auto"
+          getOptionValue={(option) => option.label}
+          value={table.getColumn('type')?.getFilterValue() ?? ''}
+          onChange={(e) => table.getColumn('type')?.setFilterValue(e)}
+        /> */}
         <StatusField
           className="w-full"
           options={statusOptions}
@@ -64,7 +86,7 @@ export default function Filters<TData extends Record<string, any>>({
             )
           }
         />
-      </Flex> */}
+      </Flex>
 
       {isFiltered ? (
         <Button
@@ -101,31 +123,61 @@ function renderOptionDisplayValue(option: {
   const valueStr = String(option.value).toLowerCase();
 
   switch (valueStr) {
-    case 'received':
+    case 'infinity_emperor':
       return (
         <div className="flex items-center">
-          <Badge color="warning" renderAsDot />
-          <Text className="ms-2 font-semibold uppercase text-orange-dark">
+          <Badge renderAsDot className="bg-yellow-400" />
+          <Text className="ms-2 font-semibold uppercase text-yellow-600">
             {option.label}
           </Text>
         </div>
       );
 
-    case 'send':
+    case 'global_ambassador':
       return (
         <div className="flex items-center">
-          <Badge color="success" renderAsDot />
-          <Text className="ms-2 font-semibold uppercase text-green-dark">
+          <Badge renderAsDot className="bg-blue-400" />
+          <Text className="ms-2 font-semibold uppercase text-blue-600">
             {option.label}
           </Text>
         </div>
       );
 
-    case 'canceled':
+    case 'grand_director':
       return (
         <div className="flex items-center">
-          <Badge color="danger" renderAsDot />
+          <Badge renderAsDot className="bg-green-400" />
+          <Text className="ms-2 font-semibold uppercase text-green-600">
+            {option.label}
+          </Text>
+        </div>
+      );
+
+    case 'prestige_leader':
+      return (
+        <div className="flex items-center">
+          <Badge renderAsDot className="bg-red-400" />
           <Text className="ms-2 font-semibold uppercase text-red-600">
+            {option.label}
+          </Text>
+        </div>
+      );
+
+    case 'royal_achiever':
+      return (
+        <div className="flex items-center">
+          <Badge renderAsDot className="bg-purple-400" />
+          <Text className="ms-2 font-semibold uppercase text-purple-600">
+            {option.label}
+          </Text>
+        </div>
+      );
+
+    case 'elite_builder':
+      return (
+        <div className="flex items-center">
+          <Badge renderAsDot className="bg-pink-400" />
+          <Text className="ms-2 font-semibold uppercase text-pink-600">
             {option.label}
           </Text>
         </div>
@@ -134,8 +186,8 @@ function renderOptionDisplayValue(option: {
     default:
       return (
         <div className="flex items-center">
-          <Badge renderAsDot className="bg-gray-400" />
-          <Text className="ms-2 font-semibold uppercase text-gray-600">
+          <Badge renderAsDot className="bg-indigo-400" />
+          <Text className="ms-2 font-semibold uppercase text-indigo-600">
             {option.label}
           </Text>
         </div>

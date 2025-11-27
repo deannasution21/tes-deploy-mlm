@@ -90,6 +90,9 @@ export const config = {
     '/peringkat',
     '/peringkat/:path*',
 
+    '/sertifikat',
+    '/sertifikat/:path*',
+
     // other
     '/profil',
     '/profil/:path*',

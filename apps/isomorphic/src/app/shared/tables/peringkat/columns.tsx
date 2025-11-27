@@ -3,44 +3,47 @@
 import { getStatusBadge } from '@core/components/table-utils/get-status-badge';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Text } from 'rizzui';
-import { StockistListDetail } from '@/types';
+import { LeaderboardItem } from '@/types/peringkat';
 
-const columnHelper = createColumnHelper<StockistListDetail>();
+const columnHelper = createColumnHelper<LeaderboardItem>();
 
-export const listStockistColumns = [
-  {
-    id: 'no',
-    header: '#',
+export const listPeringkatColumns = [
+  columnHelper.accessor('key', {
+    id: 'key',
+    header: 'Peringkat',
     size: 60,
-    cell: ({ row }: { row: any }) => row.index + 1 + '.',
-  },
+    cell: (info) => info.getValue(),
+  }),
   columnHelper.accessor('username', {
     id: 'username',
-    header: 'Nama',
-    size: 180,
-    cell: ({ row }) => (
+    header: 'Username',
+    size: 150,
+    cell: (info) => (
       <>
-        <Text className="text-gray-700">{row.original.full_name}</Text>
-        <Text className="text-xs text-gray-500">@{row.original.username}</Text>
+        <Text className="font-medium text-gray-700">{info.getValue()}</Text>
       </>
     ),
   }),
-  columnHelper.accessor('province', {
-    id: 'alamat',
-    header: 'Alamat',
-    size: 180,
-    cell: ({ row }) => (
-      <Text className="whitespace-nowrap">
-        {row.original.city}, {row.original.province}
-      </Text>
+  columnHelper.accessor('attribute.name', {
+    id: 'name',
+    header: 'Nama',
+    size: 150,
+    cell: (info) => (
+      <Text className="text-xs text-gray-500">{info.getValue()}</Text>
     ),
   }),
-  columnHelper.accessor('phone_number', {
-    id: 'phone_number',
-    header: 'No. HP',
-    size: 180,
+  columnHelper.accessor('attribute.amount.currency', {
+    id: 'currency',
+    header: 'Omset',
+    size: 150,
     cell: (info) => (
-      <Text className="whitespace-nowrap">{info.getValue()}</Text>
+      <Text className="text-xs text-gray-500">{info.getValue()}</Text>
     ),
+  }),
+  columnHelper.accessor('attribute.type.leaderboard', {
+    id: 'type',
+    header: 'Tipe',
+    size: 150,
+    cell: (info) => getStatusBadge(info.getValue().toString()),
   }),
 ];

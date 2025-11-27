@@ -45,6 +45,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (
+      session?.user?.role !== 'admin' &&
       session?.user?.role !== 'admin_stock' &&
       session?.user?.role !== 'admin_member'
     ) {

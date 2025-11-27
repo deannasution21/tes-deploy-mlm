@@ -65,6 +65,7 @@ import {
   PiPercent,
   PiBook,
   PiDownload,
+  PiCertificate,
 } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
@@ -692,12 +693,18 @@ export const menuItemsUser = [
     icon: <PiUsers />,
     badge: '',
   },
-  // {
-  //   name: 'Peringkat',
-  //   href: routes.peringkat.index,
-  //   icon: <PiSteps />,
-  //   badge: '',
-  // },
+  {
+    name: 'Peringkat',
+    href: routes.peringkat.index,
+    icon: <PiSteps />,
+    badge: '',
+  },
+  {
+    name: 'Sertifikat',
+    href: routes.sertifikat.index,
+    icon: <PiCertificate />,
+    badge: '',
+  },
   {
     name: 'Promo',
     href: routes.promo.index,
@@ -979,10 +986,19 @@ export const menuItemsAdmin = [
     icon: <PiHouseLineDuotone />,
   },
   {
-    name: 'Diagram Jaringan',
-    href: routes.diagramJaringan.index,
-    icon: <PiTreeStructure />,
-    badge: 'NEW',
+    name: 'Manajemen Member',
+    href: '#',
+    icon: <PiUsers />,
+    dropdownItems: [
+      {
+        name: 'Daftar Member',
+        href: routes.member.manajemen.index,
+      },
+      {
+        name: 'History Edit Member',
+        href: '#',
+      },
+    ],
   },
   {
     name: 'Request PIN',

@@ -65,6 +65,13 @@ export default function SertifikatPage({ className }: { className?: string }) {
   if (isLoading)
     return <p className="py-20 text-center">Sedang memuat data...</p>;
 
+  if (!dataSertifikat)
+    return (
+      <p className="py-20 text-center">
+        Tidak ada data sertifikat untuk pengguna ini
+      </p>
+    );
+
   return (
     <>
       {isPrinting &&

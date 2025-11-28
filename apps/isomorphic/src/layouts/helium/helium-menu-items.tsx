@@ -66,6 +66,7 @@ import {
   PiBook,
   PiDownload,
   PiCertificate,
+  PiNote,
 } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
@@ -984,6 +985,27 @@ export const menuItemsAdmin = [
     name: 'Dashboard',
     href: routes.dashboard.index,
     icon: <PiHouseLineDuotone />,
+  },
+
+  // label start
+  {
+    name: 'Laporan',
+  },
+  // label end
+  {
+    name: 'Generate PIN',
+    href: routes.laporan.generatePin,
+    icon: <ProjectWriteIcon />,
+  },
+  {
+    name: 'Posting PIN',
+    href: routes.laporan.postingPin,
+    icon: <ProjectWriteIcon />,
+  },
+  {
+    name: 'Total PIN',
+    href: routes.laporan.totalPin,
+    icon: <ProjectWriteIcon />,
   },
   {
     name: 'Manajemen Member',

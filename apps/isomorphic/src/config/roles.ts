@@ -56,6 +56,8 @@ export const rolePermissions = {
   admin: {
     allowedPaths: [
       '/dashboard',
+      '/laporan',
+      '/laporan/:path*',
       '/pindah-id/',
       '/member',
       '/member/:path*',

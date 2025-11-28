@@ -44,6 +44,16 @@ export default function DownloadTable({ className }: { className?: string }) {
         format: '.pptx',
         url: '/files/Windows_IPG_Marketing_plan.pptx',
       },
+      {
+        name: 'Kopi Sniper Produk Knowledge',
+        format: '.pptx',
+        url: '/files/Kopi_Sniper_Produk_Knowledge.pptx',
+      },
+      {
+        name: 'Lilac Lace Knowledge',
+        format: '.pptx',
+        url: '/files/Lilac_Lace_Knowledge.pptx',
+      },
     ];
     setDataDownload(datanya);
     setData(datanya);

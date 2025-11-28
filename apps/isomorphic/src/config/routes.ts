@@ -113,6 +113,13 @@ export const routes = {
   profilPerusahaan: {
     index: '/profil-perusahaan',
   },
+  laporan: {
+    generatePin: '/laporan/generate-pin',
+    postingPin: '/laporan/posting-pin',
+    totalPin: '/laporan/total-pin',
+    pembayaranBonus: '/laporan/pembayaran-bonus',
+    pembagianBonus: '/laporan/pembagian-bonus',
+  },
   eCommerce: {
     dashboard: '/ecommerce',
     products: '/ecommerce/products',

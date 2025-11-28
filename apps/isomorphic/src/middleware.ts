@@ -93,6 +93,9 @@ export const config = {
     '/sertifikat',
     '/sertifikat/:path*',
 
+    '/laporan',
+    '/laporan/:path*',
+
     // other
     '/profil',
     '/profil/:path*',

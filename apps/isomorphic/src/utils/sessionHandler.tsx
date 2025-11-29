@@ -16,7 +16,11 @@ export function handleSessionExpired(role?: string, message?: string) {
   );
   setTimeout(async () => {
     await signOut({ redirect: false });
-    router.push(role === 'admin' ? '/signin-admin-ipg-2025' : '/signin');
+    router.push(
+      role === 'admin' || role === 'admin_stock' || role === 'admin_member'
+        ? '/signin-admin-ipg-2025'
+        : '/signin'
+    );
   }, 5000);
 }
 

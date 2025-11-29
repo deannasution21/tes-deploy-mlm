@@ -14,27 +14,9 @@ export const listPeringkatColumns = [
     size: 60,
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('username', {
-    id: 'username',
-    header: 'Username',
-    size: 150,
-    cell: (info) => (
-      <>
-        <Text className="font-medium text-gray-700">{info.getValue()}</Text>
-      </>
-    ),
-  }),
   columnHelper.accessor('attribute.name', {
     id: 'name',
     header: 'Nama',
-    size: 150,
-    cell: (info) => (
-      <Text className="text-xs text-gray-500">{info.getValue()}</Text>
-    ),
-  }),
-  columnHelper.accessor('attribute.amount.currency', {
-    id: 'currency',
-    header: 'Omset',
     size: 150,
     cell: (info) => (
       <Text className="text-xs text-gray-500">{info.getValue()}</Text>

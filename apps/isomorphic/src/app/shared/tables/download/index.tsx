@@ -54,6 +54,11 @@ export default function DownloadTable({ className }: { className?: string }) {
         format: '.pptx',
         url: '/files/Lilac_Lace_Knowledge.pptx',
       },
+      {
+        name: 'HNB Product Knowledge',
+        format: '.pptx',
+        url: '/files/HNB_Produk_Knowledge.pptx',
+      },
     ];
     setDataDownload(datanya);
     setData(datanya);

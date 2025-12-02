@@ -23,6 +23,7 @@ type DropdownActionProps = {
   selectClassName?: string;
   inPortal?: boolean;
   variant?: SelectProps<SelectOption>['variant'];
+  value?: string; // Add this
 };
 
 export default function DropdownAction({
@@ -35,10 +36,13 @@ export default function DropdownAction({
   selectClassName,
   dropdownClassName,
   inPortal = true,
+  value, // Add this prop
 }: DropdownActionProps) {
-  const [viewType, setViewType] = useState(options[0]);
+  // Remove local state, use prop instead
+  // const [viewType, setViewType] = useState(options[0]);
+
   function handleOnChange(data: Options) {
-    setViewType(data);
+    // setViewType(data); // Remove this
     onChange && onChange(data.value);
   }
 
@@ -46,13 +50,13 @@ export default function DropdownAction({
     <Select
       inPortal={inPortal}
       variant={variant}
-      value={viewType.value}
+      value={value || options[0].value} // Use prop instead of local state
       options={options}
       onChange={handleOnChange}
       displayValue={(selected) =>
         options.find((option) => option.value === selected)?.label
       }
-      selectClassName={cn('py-1 px-2 leading-[32px] h-8 me-2', selectClassName)}
+      selectClassName={cn('py-1 px-2 leading-[32px] me-2', selectClassName)}
       optionClassName="py-1 px-2 leading-[32px] h-8"
       dropdownClassName={cn(
         'p-2 gap-1 grid !z-0',

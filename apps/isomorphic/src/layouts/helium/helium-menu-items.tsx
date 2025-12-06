@@ -1008,6 +1008,36 @@ export const menuItemsAdmin = [
     icon: <ProjectWriteIcon />,
   },
   {
+    name: 'Pembayaran',
+    href: '#',
+    icon: <PiInvoice />,
+    dropdownItems: [
+      {
+        name: 'Bonus',
+        href: routes.laporan.pembayaranBonus,
+      },
+      {
+        name: 'Gaji',
+        href: routes.laporan.pembayaranGaji,
+      },
+    ],
+  },
+  {
+    name: 'Pembagian',
+    href: '#',
+    icon: <PiInvoice />,
+    dropdownItems: [
+      {
+        name: 'Bonus',
+        href: routes.laporan.pembagianBonus,
+      },
+      {
+        name: 'Gaji',
+        href: routes.laporan.pembagianGaji,
+      },
+    ],
+  },
+  {
     name: 'Manajemen Member',
     href: '#',
     icon: <PiUsers />,

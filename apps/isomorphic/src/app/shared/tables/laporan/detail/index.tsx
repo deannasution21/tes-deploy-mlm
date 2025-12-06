@@ -1,29 +1,55 @@
 'use client';
 
 import Table from '@core/components/table';
-import { reportGeneratePinDetailColumns } from './columns';
+import {
+  reportGeneratePinDetailColumns,
+  reportPembayaranBonusDetailColumns,
+  reportPostingPinDetailColumns,
+} from './columns';
 import WidgetCard from '@core/components/cards/widget-card';
 import { useTanStackTable } from '@core/components/table/custom/use-TanStack-Table';
 import TablePagination from '@core/components/table/pagination';
 import cn from '@core/utils/class-names';
 import Filters from './filters';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ActivityItem } from '@/types/report-generate-pin';
+import { PostingActivityItem } from '@/types/report-posting-pin';
+import { ColumnDef } from '@tanstack/react-table';
+import { WithdrawalBonusReportDetail } from '@/types/report-pembayaran-bonus';
 
-export default function ReportGeneratePinDetailTable({
+export default function ReportDetailTable<
+  T extends ActivityItem | PostingActivityItem | WithdrawalBonusReportDetail,
+>({
   className,
   dataOperan,
+  typeReport,
 }: {
   className?: string;
-  dataOperan: ActivityItem[];
+  dataOperan: T[];
+  typeReport: string;
 }) {
   useEffect(() => {
     setData(dataOperan);
   }, [dataOperan]);
 
-  const { table, setData } = useTanStackTable<ActivityItem>({
+  const columnConfig: ColumnDef<T, any>[] = useMemo(() => {
+    if (typeReport === 'generate') {
+      return reportGeneratePinDetailColumns as unknown as ColumnDef<T, any>[];
+    } else if (typeReport === 'posting') {
+      return reportPostingPinDetailColumns as unknown as ColumnDef<T, any>[];
+    } else if (typeReport === 'pembayaranBonus') {
+      return reportPembayaranBonusDetailColumns as unknown as ColumnDef<
+        T,
+        any
+      >[];
+    } else {
+      return reportGeneratePinDetailColumns as unknown as ColumnDef<T, any>[];
+    }
+  }, [typeReport]);
+
+  const { table, setData } = useTanStackTable<T>({
     tableData: dataOperan,
-    columnConfig: reportGeneratePinDetailColumns,
+    columnConfig,
     options: {
       initialState: {
         pagination: {

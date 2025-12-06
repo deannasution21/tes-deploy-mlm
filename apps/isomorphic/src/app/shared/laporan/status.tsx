@@ -13,10 +13,13 @@ import {
   PiInvoice,
 } from 'react-icons/pi';
 import { Analytics } from '@/types/report-generate-pin';
+import WidgetCard from '@core/components/cards/widget-card';
+import { underscoreToCaptalize } from '@/utils/helper';
 
 type AppointmentStatsType = {
   className?: string;
   dataOperan: Analytics | null;
+  typeReport: string;
 };
 
 export type StatType = {
@@ -32,11 +35,13 @@ export type StatType = {
 export type StatCardProps = {
   className?: string;
   transaction: StatType;
+  isUsed?: boolean;
 };
 
-export default function ReportGeneratePinStatGrid({
+export default function ReportStatGrid({
   className,
   dataOperan,
+  typeReport,
 }: AppointmentStatsType) {
   const {
     sliderEl,
@@ -84,30 +89,32 @@ export default function ReportGeneratePinStatGrid({
 }
 
 export function StatGrid(data: any) {
+  const type = data?.data?.filter?.type;
+  const typenya = underscoreToCaptalize(type);
   const statData: StatType[] = [
     {
-      title: 'Invoice Generate',
+      title: 'Invoice ' + typenya,
       amount: data?.data?.count ?? 0,
       increased: true,
       percentage: '0',
       icon: PiInvoice,
     },
     {
-      title: 'Total PIN Generate',
+      title: 'Total ' + typenya,
       amount: data?.data?.total?.amount ?? 0,
       increased: true,
       percentage: '0',
       icon: PiTrophy,
     },
     {
-      title: 'Min PIN',
+      title: 'Min ' + typenya,
       amount: data?.data?.min?.amount ?? 0,
       increased: false,
       percentage: '0',
       icon: PiTrophy,
     },
     {
-      title: 'Max PIN',
+      title: 'Max ' + typenya,
       amount: data?.data?.max?.amount ?? 0,
       increased: true,
       percentage: '0',
@@ -117,34 +124,46 @@ export function StatGrid(data: any) {
 
   return (
     <>
-      {statData.map((stat: StatType, index: number) => {
-        return (
+      {type === '_withdrawal_bonus' || type === '_withdrawal_salary' ? (
+        <>
           <StatCard
-            key={'stat-card-' + index}
-            transaction={stat}
-            className="min-w-[300px]"
+            key={'stat-card-0'}
+            transaction={statData[0]}
+            className="w-full min-w-[300px] md:w-[300px] md:max-w-[300px]"
           />
-        );
-      })}
+        </>
+      ) : (
+        <>
+          {statData.map((stat: StatType, index: number) => {
+            return (
+              <StatCard
+                key={'stat-card-' + index}
+                transaction={stat}
+                className="min-w-[300px]"
+              />
+            );
+          })}
+        </>
+      )}
     </>
   );
 }
 
-function StatCard({ className, transaction }: StatCardProps) {
+function StatCard({ className, transaction, isUsed }: StatCardProps) {
   const { icon, title, amount, increased, percentage, iconWrapperFill } =
     transaction;
   const Icon = icon;
   return (
     <div
       className={cn(
-        'group w-full rounded-[14px] border border-gray-300 px-6 py-7 @container first:bg-primary',
+        `group w-full rounded-[14px] border border-gray-300 px-6 py-7 @container ${isUsed ? 'first:bg-gray-400' : 'first:bg-primary'}`,
         className
       )}
     >
       <div className="flex items-center gap-5">
         <span
           className={cn(
-            'flex rounded-[14px] bg-primary p-2.5 text-gray-0 group-first:bg-gray-0 group-first:text-primary dark:text-gray-900 dark:group-first:bg-gray-900'
+            `flex rounded-[14px] ${isUsed ? 'bg-gray-400 text-gray-0 group-first:bg-gray-0 group-first:text-gray-400' : 'bg-primary text-gray-0 group-first:bg-gray-0 group-first:text-primary'} p-2.5 dark:text-gray-900 dark:group-first:bg-gray-900`
           )}
         >
           <Icon className="h-auto w-[30px]" />
@@ -157,6 +176,72 @@ function StatCard({ className, transaction }: StatCardProps) {
             {amount}
           </p>
         </div>
+      </div>
+    </div>
+  );
+}
+
+export function StatCardTotal(data: any) {
+  return (
+    <div>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 3xl:gap-8">
+        <WidgetCard
+          title="PIN Tersedia"
+          titleClassName="text-gray-800 sm:text-lg font-inter"
+          headerClassName="items-center"
+          className={cn('@container')}
+        >
+          <div className="mt-5 grid gap-5 md:grid-cols-2 2xl:gap-6 3xl:gap-8">
+            {Object.entries(data?.dataOperan?.active ?? {}).map(
+              ([key, value]) => {
+                const stat = {
+                  title: underscoreToCaptalize(key),
+                  amount: String(value),
+                  increased: true,
+                  percentage: '0',
+                  icon: PiTrophy,
+                };
+
+                return (
+                  <StatCard
+                    key={'stat-card-' + key}
+                    transaction={stat}
+                    className=""
+                  />
+                );
+              }
+            )}
+          </div>
+        </WidgetCard>
+        <WidgetCard
+          title="PIN Terpakai"
+          titleClassName="text-gray-800 sm:text-lg font-inter"
+          headerClassName="items-center"
+          className={cn('@container')}
+        >
+          <div className="mt-5 grid gap-5 md:grid-cols-2 2xl:gap-6 3xl:gap-8">
+            {Object.entries(data?.dataOperan?.used ?? {}).map(
+              ([key, value]) => {
+                const stat = {
+                  title: underscoreToCaptalize(key),
+                  amount: String(value),
+                  increased: true,
+                  percentage: '0',
+                  icon: PiTrophy,
+                };
+
+                return (
+                  <StatCard
+                    key={'stat-card-' + key}
+                    transaction={stat}
+                    className=""
+                    isUsed={true}
+                  />
+                );
+              }
+            )}
+          </div>
+        </WidgetCard>
       </div>
     </div>
   );

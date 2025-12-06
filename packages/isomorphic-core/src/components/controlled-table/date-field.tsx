@@ -4,7 +4,7 @@ import { DatePicker, DatePickerProps } from "@core/ui/datepicker";
 
 export default function DateFiled({
   onClear,
-  placeholderText = "Select date",
+  placeholderText = "Pilih tanggal",
   inputProps,
   ...props
 }: DatePickerProps & { onClear?: () => void }) {

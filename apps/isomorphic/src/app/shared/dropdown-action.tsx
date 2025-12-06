@@ -5,6 +5,25 @@ import { Select, SelectOption, SelectProps } from 'rizzui';
 import { PiCalendarBlank, PiCaretDownBold } from 'react-icons/pi';
 import cn from '@core/utils/class-names';
 
+export const optionsTimeframe = [
+  {
+    value: 'daily',
+    label: 'Harian',
+  },
+  {
+    value: 'weekly',
+    label: 'Mingguan',
+  },
+  {
+    value: 'monthly',
+    label: 'Bulanan',
+  },
+  {
+    value: 'custom',
+    label: 'Custom',
+  },
+];
+
 type Options = {
   value: string;
   label: string;
@@ -59,7 +78,7 @@ export default function DropdownAction({
       selectClassName={cn('py-1 px-2 leading-[32px] me-2', selectClassName)}
       optionClassName="py-1 px-2 leading-[32px] h-8"
       dropdownClassName={cn(
-        'p-2 gap-1 grid !z-0',
+        'p-2 gap-1 grid z-10',
         !inPortal && 'w-full !z-10 h-auto',
         dropdownClassName
       )}

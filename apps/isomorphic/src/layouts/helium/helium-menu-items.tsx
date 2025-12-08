@@ -1028,12 +1028,16 @@ export const menuItemsAdmin = [
     icon: <PiInvoice />,
     dropdownItems: [
       {
-        name: 'Bonus',
-        href: routes.laporan.pembagianBonus,
+        name: 'Bonus Gaji',
+        href: routes.laporan.pembagianGaji,
       },
       {
-        name: 'Gaji',
-        href: routes.laporan.pembagianGaji,
+        name: 'Bonus Sponsor',
+        href: routes.laporan.pembagianSponsor,
+      },
+      {
+        name: 'Bonus Pasangan',
+        href: routes.laporan.pembagianPasangan,
       },
     ],
   },

@@ -7,11 +7,14 @@ import { ActivityItem } from '@/types/report-generate-pin';
 import DateCell from '@core/ui/date-cell';
 import { PostingActivityItem } from '@/types/report-posting-pin';
 import { WithdrawalBonusReportDetail } from '@/types/report-pembayaran-bonus';
+import { PembagianBonusReportDetail } from '@/types/report-pembagian-bonus';
 
 const columnHelper = createColumnHelper<ActivityItem>();
 const columnHelperPosting = createColumnHelper<PostingActivityItem>();
 const columnHelperPembayaranBonus =
   createColumnHelper<WithdrawalBonusReportDetail>();
+const columnHelperPembagianBonus =
+  createColumnHelper<PembagianBonusReportDetail>();
 
 export const reportGeneratePinDetailColumns = [
   {
@@ -185,6 +188,41 @@ export const reportPembayaranBonusDetailColumns = [
   columnHelperPembayaranBonus.accessor('withdrawal.amount_currency', {
     id: 'withdrawal',
     header: 'Nominal WD',
+    size: 180,
+    cell: (info) => (
+      <Text className="whitespace-nowrap uppercase">{info.getValue()}</Text>
+    ),
+  }),
+];
+
+export const reportPembagianBonusDetailColumns = [
+  {
+    id: 'no',
+    header: '#',
+    size: 60,
+    cell: ({ row }: { row: any }) => row.index + 1 + '.',
+  },
+  columnHelperPembagianBonus.accessor('date', {
+    id: 'date',
+    header: 'Tanggal',
+    size: 180,
+    cell: (info) => <DateCell date={info.getValue()} />,
+  }),
+  columnHelperPembagianBonus.accessor('username', {
+    id: 'username',
+    header: 'Username',
+    size: 150,
+    cell: (info) => (
+      <>
+        <Text className="font-medium uppercase text-gray-700">
+          {info.getValue()}
+        </Text>
+      </>
+    ),
+  }),
+  columnHelperPembagianBonus.accessor('payment.amount_currency', {
+    id: 'payment',
+    header: 'Nominal Bonus',
     size: 180,
     cell: (info) => (
       <Text className="whitespace-nowrap uppercase">{info.getValue()}</Text>

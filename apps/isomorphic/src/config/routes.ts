@@ -119,8 +119,9 @@ export const routes = {
     totalPin: '/laporan/total-pin',
     pembayaranBonus: '/laporan/pembayaran-bonus',
     pembayaranGaji: '/laporan/pembayaran-gaji',
-    pembagianBonus: '/laporan/pembagian-bonus',
     pembagianGaji: '/laporan/pembagian-gaji',
+    pembagianSponsor: '/laporan/pembagian-sponsor',
+    pembagianPasangan: '/laporan/pembagian-pasangan',
   },
   eCommerce: {
     dashboard: '/ecommerce',

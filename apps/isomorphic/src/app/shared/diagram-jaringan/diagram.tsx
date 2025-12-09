@@ -247,12 +247,12 @@ function Tree({ data, session }: TreeProps) {
                                   {data?.sponsor ?? '-'}
                                 </span>
                               </p>
-                              <p>
+                              {/* <p>
                                 Upline:{' '}
                                 <span className="font-medium uppercase text-primary">
                                   {data?.upline}
                                 </span>
-                              </p>
+                              </p> */}
                             </div>
                           </div>
                           <div className="mx-auto h-6">
@@ -298,12 +298,12 @@ function Tree({ data, session }: TreeProps) {
                                     {data?.sponsor ?? '-'}
                                   </span>
                                 </p>
-                                <p>
+                                {/* <p>
                                   Upline:{' '}
                                   <span className="font-medium uppercase text-primary">
                                     {data?.upline}
                                   </span>
-                                </p>
+                                </p> */}
                               </div>
                             </div>
                             <div className="mx-auto h-6">

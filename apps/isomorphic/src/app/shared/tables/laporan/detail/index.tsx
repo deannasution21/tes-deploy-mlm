@@ -3,6 +3,7 @@
 import Table from '@core/components/table';
 import {
   reportGeneratePinDetailColumns,
+  reportPembagianBonusDetailColumns,
   reportPembayaranBonusDetailColumns,
   reportPostingPinDetailColumns,
 } from './columns';
@@ -16,9 +17,14 @@ import { ActivityItem } from '@/types/report-generate-pin';
 import { PostingActivityItem } from '@/types/report-posting-pin';
 import { ColumnDef } from '@tanstack/react-table';
 import { WithdrawalBonusReportDetail } from '@/types/report-pembayaran-bonus';
+import { PembagianBonusReportDetail } from '@/types/report-pembagian-bonus';
 
 export default function ReportDetailTable<
-  T extends ActivityItem | PostingActivityItem | WithdrawalBonusReportDetail,
+  T extends
+    | ActivityItem
+    | PostingActivityItem
+    | WithdrawalBonusReportDetail
+    | PembagianBonusReportDetail,
 >({
   className,
   dataOperan,
@@ -39,6 +45,11 @@ export default function ReportDetailTable<
       return reportPostingPinDetailColumns as unknown as ColumnDef<T, any>[];
     } else if (typeReport === 'pembayaranBonus') {
       return reportPembayaranBonusDetailColumns as unknown as ColumnDef<
+        T,
+        any
+      >[];
+    } else if (typeReport === 'pembagianBonus') {
+      return reportPembagianBonusDetailColumns as unknown as ColumnDef<
         T,
         any
       >[];

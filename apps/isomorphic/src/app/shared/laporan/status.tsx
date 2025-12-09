@@ -91,6 +91,25 @@ export default function ReportStatGrid({
 export function StatGrid(data: any) {
   const type = data?.data?.filter?.type;
   const typenya = underscoreToCaptalize(type);
+  const total =
+    type === 'withdrawal_bonus' ||
+    type === 'withdrawal_salary' ||
+    type === 'bonus_salary'
+      ? data?.data?.total?.amount_currency
+      : data?.data?.total?.amount;
+  const min =
+    type === 'withdrawal_bonus' ||
+    type === 'withdrawal_salary' ||
+    type === 'bonus_salary'
+      ? data?.data?.min?.amount_currency
+      : data?.data?.min?.amount;
+  const max =
+    type === 'withdrawal_bonus' ||
+    type === 'withdrawal_salary' ||
+    type === 'bonus_salary'
+      ? data?.data?.max?.amount_currency
+      : data?.data?.max?.amount;
+
   const statData: StatType[] = [
     {
       title: 'Invoice ' + typenya,
@@ -101,21 +120,21 @@ export function StatGrid(data: any) {
     },
     {
       title: 'Total ' + typenya,
-      amount: data?.data?.total?.amount ?? 0,
+      amount: total ?? 0,
       increased: true,
       percentage: '0',
       icon: PiTrophy,
     },
     {
       title: 'Min ' + typenya,
-      amount: data?.data?.min?.amount ?? 0,
+      amount: min ?? 0,
       increased: false,
       percentage: '0',
       icon: PiTrophy,
     },
     {
       title: 'Max ' + typenya,
-      amount: data?.data?.max?.amount ?? 0,
+      amount: max ?? 0,
       increased: true,
       percentage: '0',
       icon: PiTrophy,

@@ -1056,60 +1056,6 @@ export const menuItemsAdmin = [
       },
     ],
   },
-  {
-    name: 'Request PIN',
-    href: '#',
-    icon: <ProjectWriteIcon />,
-    dropdownItems: [
-      {
-        name: 'Request PIN A',
-        href: routes.requestPin.index,
-        badge: '',
-      },
-      {
-        name: 'History Request PIN A',
-        href: routes.requestPin.history,
-        badge: '',
-      },
-    ],
-  },
-  {
-    name: 'Generate PIN',
-    href: '#',
-    icon: <ProjectWriteIcon />,
-    dropdownItems: [
-      {
-        name: 'Generate PIN A',
-        href: routes.generatePin.index,
-      },
-      {
-        name: 'History Generate PIN A',
-        href: routes.generatePin.history,
-      },
-    ],
-  },
-  {
-    name: 'Kelola Produk',
-    href: '#',
-    icon: <PiPackageDuotone />,
-    dropdownItems: [
-      {
-        name: 'Daftar Produk',
-        href: routes.kelolaProduk.index,
-        badge: '',
-      },
-      {
-        name: 'Transaksi Produk',
-        href: routes.kelolaProduk.transaksi,
-        badge: '',
-      },
-    ],
-  },
-  {
-    name: 'Pendaftaran Stockist',
-    href: routes.stockist.index,
-    icon: <PiUsers />,
-  },
 
   {
     name: 'Personal',

@@ -59,6 +59,11 @@ export default function DownloadTable({ className }: { className?: string }) {
         format: '.pptx',
         url: '/files/HNB_Produk_Knowledge.pptx',
       },
+      {
+        name: 'HNB Product Knowledge 2',
+        format: '.pptx',
+        url: '/files/HNB_Produk_Knowledge_2.pptx',
+      },
     ];
     setDataDownload(datanya);
     setData(datanya);

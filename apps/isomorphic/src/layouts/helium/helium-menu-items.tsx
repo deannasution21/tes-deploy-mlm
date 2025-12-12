@@ -1056,6 +1056,21 @@ export const menuItemsAdmin = [
       },
     ],
   },
+  {
+    name: 'Manajemen Stockist',
+    href: '#',
+    icon: <PiUsers />,
+    dropdownItems: [
+      {
+        name: 'Daftar Stockist',
+        href: routes.stockist.manajemen.index,
+      },
+      {
+        name: 'History Edit Stockist',
+        href: '#',
+      },
+    ],
+  },
 
   {
     name: 'Personal',

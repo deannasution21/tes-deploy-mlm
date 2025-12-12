@@ -12,24 +12,12 @@ const transactionTypesOptions = Object.entries(transactionTypes).map(
 
 const statusOptions = [
   {
-    value: 'all',
-    label: 'Semua Status',
+    value: 'member',
+    label: 'MEMBER',
   },
   {
-    value: '0',
-    label: 'Menunggu Pembayaran',
-  },
-  {
-    value: '1',
-    label: 'Pembayaran Berhasil',
-  },
-  {
-    value: '-2',
-    label: 'Transaksi Gagal',
-  },
-  {
-    value: '2',
-    label: 'Transaksi Telah Diproses dan Dikirim',
+    value: 'stockist',
+    label: 'STOCKIST',
   },
 ];
 
@@ -56,12 +44,18 @@ export default function Filters<TData extends Record<string, any>>({
       <Flex align="center" className="order-2 @3xl:order-1 @3xl:max-w-[250px]">
         {/* <StatusField
           className="w-full"
-          placeholder="Select type"
-          options={transactionTypesOptions}
+          options={statusOptions}
           dropdownClassName="!z-10 h-auto"
-          getOptionValue={(option) => option.label}
-          value={table.getColumn('type')?.getFilterValue() ?? ''}
-          onChange={(e) => table.getColumn('type')?.setFilterValue(e)}
+          getOptionValue={(option) => option.value}
+          value={type}
+          onChange={(value: string) => setType(value)}
+          getOptionDisplayValue={(option) => renderOptionDisplayValue(option)}
+          displayValue={(selected: string) =>
+            renderOptionDisplayValue(
+              statusOptions.find((opt) => opt.value === selected) ??
+                statusOptions[0]
+            )
+          }
         /> */}
       </Flex>
 
@@ -82,7 +76,7 @@ export default function Filters<TData extends Record<string, any>>({
         type="search"
         clearable={true}
         inputClassName="h-[36px]"
-        placeholder="Cari data member..."
+        placeholder="Cari data member/stockist..."
         onClear={() => table.setGlobalFilter('')}
         value={table.getState().globalFilter ?? ''}
         prefix={<PiMagnifyingGlassBold className="size-4" />}
@@ -100,17 +94,7 @@ function renderOptionDisplayValue(option: {
   const valueStr = String(option.value).toLowerCase();
 
   switch (valueStr) {
-    case 'all':
-      return (
-        <div className="flex items-center">
-          <Badge renderAsDot className="bg-gray-400" />
-          <Text className="ms-2 font-semibold uppercase text-gray-600">
-            {option.label}
-          </Text>
-        </div>
-      );
-
-    case '0':
+    case 'member':
       return (
         <div className="flex items-center">
           <Badge renderAsDot className="bg-yellow-400" />
@@ -120,31 +104,11 @@ function renderOptionDisplayValue(option: {
         </div>
       );
 
-    case '1':
+    case 'stockist':
       return (
         <div className="flex items-center">
           <Badge renderAsDot className="bg-blue-400" />
           <Text className="ms-2 font-semibold uppercase text-blue-600">
-            {option.label}
-          </Text>
-        </div>
-      );
-
-    case '-2':
-      return (
-        <div className="flex items-center">
-          <Badge color="danger" renderAsDot />
-          <Text className="ms-2 font-semibold uppercase text-red-600">
-            {option.label}
-          </Text>
-        </div>
-      );
-
-    case '2':
-      return (
-        <div className="flex items-center">
-          <Badge color="success" renderAsDot />
-          <Text className="ms-2 font-semibold uppercase text-green-600">
             {option.label}
           </Text>
         </div>

@@ -61,6 +61,8 @@ export const rolePermissions = {
       '/pindah-id/',
       '/member',
       '/member/:path*',
+      '/stockist',
+      '/stockist/:path*',
       '/profil',
       '/profil/:path*',
     ],

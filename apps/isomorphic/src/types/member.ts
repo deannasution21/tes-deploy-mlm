@@ -35,6 +35,8 @@ export interface UserAttributes {
   npwp_name: string | null;
   npwp_number: string | null;
   npwp_address: string | null;
+  master_username?: string;
+  address?: string;
 
   // These are currently strings like "[object Object]"
   // If backend should send real objects, update accordingly.

@@ -36,9 +36,9 @@ import { routes } from '@/config/routes';
 import { FormBlockWrapper } from '../invoice/form-utils';
 import Link from 'next/link';
 import {
-  EditMemberInput,
-  editMemberSchema,
-} from '@/validators/edit-member-schema';
+  EditStockistInput,
+  editStockistSchema,
+} from '@/validators/edit-stockist-schema';
 import { PiCheck, PiPencil } from 'react-icons/pi';
 
 function Formnya({
@@ -48,9 +48,6 @@ function Formnya({
   setSelectedCityName,
   editMode,
   setEditMode,
-  dataBank,
-  dataPin,
-  dataPin2,
   type,
   session,
 }: {
@@ -60,9 +57,6 @@ function Formnya({
   setSelectedCityName?: (value: string) => void;
   editMode: boolean;
   setEditMode: (value: boolean) => void;
-  dataBank: OptionType[];
-  dataPin: OptionType[];
-  dataPin2: Pin[];
   type: string;
   session: any;
 }) {
@@ -81,67 +75,6 @@ function Formnya({
   // Watch selected values
   const selectedProvinsi = getValues('province').trim();
   const selectedKabupaten = getValues('city').trim();
-
-  const pasangan = [
-    {
-      label: 'Suami',
-      value: 'Husband',
-    },
-    {
-      label: 'Istri',
-      value: 'Wife',
-    },
-    {
-      label: 'Anak',
-      value: 'Children',
-    },
-    {
-      label: 'Saudara',
-      value: 'Brother',
-    },
-    {
-      label: 'Ibu Kandung',
-      value: 'Mother',
-    },
-  ];
-
-  const [checking, setChecking] = useState(false);
-  const [feedback, setFeedback] = useState<string | null>(null);
-
-  const handleCheckSponsor = async () => {
-    if (!session?.accessToken) return;
-
-    const sponsor = getValues('sponsor')?.trim();
-    const upline = getValues('upline')?.trim();
-    if (!sponsor) {
-      setFeedback('Mohon isi sponsor terlebih dahulu');
-      return;
-    }
-
-    setChecking(true);
-    setFeedback(null);
-
-    fetchWithAuth<CekSponsorResponse>(
-      `/_network-diagrams/check-sponsor/${sponsor}?upline=${upline}`,
-      {
-        method: 'GET',
-      },
-      session.accessToken
-    )
-      .then((data) => {
-        if (data?.success) {
-          setFeedback(`✅ ${data?.message ?? 'Sponsor valid'}`);
-        } else {
-          setFeedback(`❌ ${data?.message ?? 'Sponsor tidak ditemukan'}`);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        setFeedback(`❌ ${error ?? 'Sponsor tidak ditemukan'}`);
-        // Clear the data so UI can show "no data"
-      })
-      .finally(() => setChecking(false));
-  };
 
   // String similarity function
   const getSimilarity = (str1: string, str2: string): number => {
@@ -204,6 +137,38 @@ function Formnya({
     setValue('kabupaten', '');
   };
 
+  // useEffect(() => {
+  //   if (!editMode) return;
+
+  //   const init = async () => {
+  //     const selectedProv = watch('province');
+
+  //     if (!selectedProv) {
+  //       setDataKabupaten([]);
+  //       return;
+  //     }
+
+  //     const foundProvince = findClosestMatch(selectedProv, dataProvinsi);
+
+  //     if (foundProvince) {
+  //       setValue('province', foundProvince.value);
+  //     }
+
+  //     const cityRes = await fetch(
+  //       `/api/wilayah/regencies/${foundProvince ? foundProvince.value : selectedProv}`
+  //     );
+  //     const cityData = (await cityRes.json()) as Regencies[];
+  //     const kabupatenOptions = cityData.map((k: any) => ({
+  //       value: k.id,
+  //       label: k.name,
+  //     }));
+
+  //     setDataKabupaten(kabupatenOptions);
+  //   };
+
+  //   init();
+  // }, [editMode, watch('province')]);
+
   return (
     <>
       <div className="flex-grow pb-10">
@@ -225,48 +190,14 @@ function Formnya({
             />
 
             <Input
-              label="Upline"
-              placeholder="Upline"
-              {...register(`upline`)}
+              label="Master Username"
+              placeholder="Master Username"
+              {...register(`master_username`)}
               // @ts-ignore
               inputClassName="[&_input]:uppercase"
-              error={errors?.upline?.message as any}
+              error={errors?.master_username?.message as any}
               disabled
             />
-
-            <div className="space-y-1">
-              <div className="flex items-end gap-2">
-                <Input
-                  label="Sponsor"
-                  placeholder="Sponsor"
-                  {...register('sponsor')}
-                  // @ts-ignore
-                  error={errors?.sponsor?.message as any}
-                  className="flex-1"
-                />
-                <Button
-                  type="button"
-                  onClick={handleCheckSponsor}
-                  isLoading={checking}
-                  disabled={checking}
-                  className="shrink-0"
-                >
-                  Cek
-                </Button>
-              </div>
-
-              {feedback && (
-                <p
-                  className={`text-sm ${
-                    feedback.includes('Valid')
-                      ? 'text-green-600'
-                      : 'text-red-600'
-                  }`}
-                >
-                  {feedback}
-                </p>
-              )}
-            </div>
 
             <Input
               label="Email"
@@ -284,18 +215,9 @@ function Formnya({
             <Input
               label="Nama Lengkap"
               placeholder="Nama Lengkap"
-              {...register(`full_name`)}
+              {...register(`nama`)}
               // @ts-ignore
-              className="col-span-full"
-              error={errors?.full_name?.message as any}
-              disabled={type === 'clone'}
-            />
-            <Input
-              label="NIK"
-              placeholder="(Nomor Induk Kependudukan)"
-              {...register(`nik`)}
-              // @ts-ignore
-              error={errors?.nik?.message as any}
+              error={errors?.nama?.message as any}
               disabled={type === 'clone'}
             />
             <Controller
@@ -313,35 +235,7 @@ function Formnya({
                 />
               )}
             />
-            <Input
-              label="Nama Ahli Waris"
-              placeholder="Nama Ahli Waris"
-              {...register(`heir_name`)}
-              // @ts-ignore
-              error={errors?.heir_name?.message as any}
-              disabled={type === 'clone'}
-            />
-            <Controller
-              name="heir_relationship"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Select
-                  label="Status Ahli Waris"
-                  dropdownClassName="!z-10 h-fit"
-                  inPortal={false}
-                  placeholder="Pilih Status Ahli Waris"
-                  options={pasangan}
-                  onChange={onChange}
-                  value={value}
-                  getOptionValue={(option) => option.value}
-                  displayValue={(selected) =>
-                    pasangan?.find((con) => con.value === selected)?.label ?? ''
-                  }
-                  error={errors?.heir_relationship?.message as string}
-                  disabled={type === 'clone'}
-                />
-              )}
-            />
+
             {!editMode && (
               <>
                 <Input
@@ -457,73 +351,7 @@ function Formnya({
                 </div>
               </>
             )}
-          </FormBlockWrapper>
-          <FormBlockWrapper
-            title={'Informasi Rekening:'}
-            className="pt-7 @2xl:pt-9 @3xl:pt-11"
-          >
-            <Controller
-              control={control}
-              name="bank_name"
-              render={({ field: { onChange, value } }) => (
-                <Select
-                  label="Bank"
-                  dropdownClassName="!z-10 h-fit"
-                  inPortal={false}
-                  placeholder="Pilih Bank"
-                  options={dataBank}
-                  onChange={(selectedValue) => {
-                    // 🔹 Update form field value
-                    onChange(selectedValue);
-                  }}
-                  value={value}
-                  searchable={true}
-                  getOptionValue={(option) => option.value}
-                  displayValue={(selected) =>
-                    dataBank.find((k) => k.value === selected)?.label ?? ''
-                  }
-                  error={errors?.bank_name?.message as string | undefined}
-                  disabled={type === 'clone'}
-                />
-              )}
-            />
-            <Input
-              label="No. Rekening"
-              placeholder="No. Rekening"
-              {...register(`bank_account_number`)}
-              // @ts-ignore
-              error={errors?.bank_account_number?.message as any}
-              disabled={type === 'clone'}
-            />
-            <Input
-              label="Atas Nama"
-              placeholder="Atas Nama"
-              {...register(`bank_account_name`)}
-              // @ts-ignore
-              error={errors?.bank_account_name?.message as any}
-              disabled={type === 'clone'}
-            />
-          </FormBlockWrapper>
-          <FormBlockWrapper
-            title={'Informasi NPWP:'}
-            className="pt-7 @2xl:pt-9 @3xl:pt-11"
-          >
-            <Input
-              label="Nama Pada NPWP"
-              placeholder="Nama Pada NPWP"
-              {...register(`npwp_name`)}
-              // @ts-ignore
-              error={errors?.npwp_name?.message as any}
-              disabled={type === 'clone'}
-            />
-            <Input
-              label="No. NPWP"
-              placeholder="No. NPWP"
-              {...register(`npwp_number`)}
-              // @ts-ignore
-              error={errors?.npwp_number?.message as any}
-              disabled={type === 'clone'}
-            />
+
             <style>
               {`
     textarea:-webkit-autofill {
@@ -532,12 +360,12 @@ function Formnya({
   `}
             </style>
             <Textarea
-              label="Alamat NPWP"
-              placeholder="Alamat NPWP"
-              {...register('npwp_address')}
-              error={errors.npwp_address?.message as string}
-              textareaClassName="h-10"
-              disabled={type === 'clone'}
+              label="Alamat"
+              placeholder="Alamat"
+              {...register('address')}
+              error={errors.address?.message as string}
+              textareaClassName="h-20"
+              className="col-span-full"
             />
           </FormBlockWrapper>
         </div>
@@ -547,7 +375,7 @@ function Formnya({
 }
 
 // main order form component for create and update order
-export default function FormEditMember({
+export default function FormEditStockist({
   className,
   user_id,
 }: {
@@ -563,9 +391,6 @@ export default function FormEditMember({
   const position = searchParams.get('position');
 
   const [dataUser, setDataUser] = useState<UserData | null>(null);
-  const [dataPin, setDataPin] = useState<OptionType[]>([]);
-  const [dataPin2, setDataPin2] = useState<Pin[]>([]);
-  const [dataBank, setDataBank] = useState<OptionType[]>([]);
   const [selectedProvinceName, setSelectedProvinceName] = useState<string>('');
   const [selectedCityName, setSelectedCityName] = useState<string>('');
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -573,24 +398,15 @@ export default function FormEditMember({
   const methods = useForm({
     defaultValues: {
       username: '',
-      upline: '',
-      sponsor: '',
-      full_name: '',
+      master_username: '',
+      nama: '',
       email: '',
       phone: '',
       province: '',
       city: '',
-      bank_name: '',
-      bank_account_name: '',
-      bank_account_number: '',
-      nik: '',
-      npwp_name: '',
-      npwp_number: '',
-      npwp_address: '',
-      heir_name: '',
-      heir_relationship: '',
+      address: '',
     },
-    resolver: zodResolver(editMemberSchema),
+    resolver: zodResolver(editStockistSchema),
   });
 
   const doSave = async (payload: any) => {
@@ -612,21 +428,13 @@ export default function FormEditMember({
       {
         method: 'PUT',
         body: JSON.stringify({
-          nama: body?.full_name,
+          nama: body?.nama,
           email: body?.email,
           no_hp: body?.phone,
-          account_name: body?.bank_account_name,
-          account_number: body?.bank_account_number,
-          bank_code: body?.bank_name,
           province: body?.province,
           city: body?.city,
-          nik: body?.nik,
-          npwp_name: body?.npwp_name,
-          npwp_number: body?.npwp_number,
-          npwp_address: body?.npwp_address,
-          heir_name: body?.heir_name,
-          heir_relationship: body?.heir_relationship,
-          type: 'member',
+          address: body?.address,
+          type: 'stockist',
         }),
       },
       session.accessToken
@@ -634,7 +442,7 @@ export default function FormEditMember({
       .then((data) => {
         toast.success(<Text as="b">Ubah data berhasil!</Text>);
         setTimeout(() => {
-          router.push(routes.member.manajemen.index);
+          router.push(routes.stockist.manajemen.index);
         }, 300);
       })
       .catch((error) => {
@@ -645,7 +453,7 @@ export default function FormEditMember({
       });
   };
 
-  const onSubmit: SubmitHandler<EditMemberInput> = (data) => {
+  const onSubmit: SubmitHandler<EditStockistInput> = (data) => {
     setLoadingS(true);
 
     Swal.fire({
@@ -685,54 +493,28 @@ export default function FormEditMember({
         { method: 'GET' },
         session.accessToken
       ),
-      fetchWithAuth<BankStatusResponse>(
-        `/_services/list-bank`,
-        { method: 'GET' },
-        session.accessToken
-      ),
     ])
-      .then(([usersData, bankData]) => {
+      .then(([usersData]) => {
         const userData = usersData?.data?.attribute;
         setDataUser(userData || null);
-        setDataPin([]);
-        setDataPin2([]);
-        setDataBank(
-          (bankData?.data ?? []).map((p: any) => ({
-            value: p.bank_code,
-            label: p.name.toUpperCase(),
-          }))
-        );
-
         if (userData) {
           // update form values dynamically
           methods.reset({
             ...methods.getValues(),
             username: user_id ?? '',
-            sponsor: userData.sponsor_id ?? '',
-            upline: userData.parent_id ?? '',
-            full_name: userData.nama ?? '',
+            master_username: userData.master_username ?? '',
+            nama: userData.nama ?? '',
             email: session?.user?.email ?? '',
             phone: userData.no_hp ?? '',
             province: userData.province ?? '',
             city: userData.city ?? '',
-            bank_name: userData.code_bank ?? '',
-            bank_account_name: userData.nama_pemilik_rekening ?? '',
-            bank_account_number: userData.no_rekening ?? '',
-            nik: userData.nik ?? '',
-            npwp_name: userData.npwp_name ?? '',
-            npwp_number: userData.npwp_number ?? '',
-            npwp_address: userData.npwp_address ?? '',
-            heir_name: userData.heir_name ?? '',
-            heir_relationship: userData.heir_relationship ?? '',
+            address: userData.address ?? '',
           });
         }
       })
       .catch((error) => {
         console.error(error);
         setDataUser(null);
-        setDataPin([]);
-        setDataPin2([]);
-        setDataBank([]);
       })
       .finally(() => setLoading(false));
   }, [session?.accessToken]);
@@ -758,7 +540,7 @@ export default function FormEditMember({
     <div className="@container">
       <div className="grid grid-cols-1 gap-6 3xl:gap-8">
         <WidgetCard
-          title={<span className="text-[#c69731]">Form Edit Member</span>}
+          title={<span className="text-[#c69731]">Form Edit Stockist</span>}
           titleClassName="text-gray-700 font-bold text-2xl sm:text-2xl font-inter mb-5"
         >
           <FormProvider {...methods}>
@@ -774,14 +556,11 @@ export default function FormEditMember({
                 setSelectedCityName={setSelectedCityName}
                 editMode={editMode}
                 setEditMode={setEditMode}
-                dataBank={dataBank}
-                dataPin={dataPin}
-                dataPin2={dataPin2}
                 type="edit"
                 session={session}
               />
               <div className="-mb-4 flex items-center justify-end gap-4 border-t py-4 dark:bg-gray-50">
-                <Link href={routes.member.manajemen.index}>
+                <Link href={routes.stockist.manajemen.index}>
                   <Button variant="outline" className="w-full @xl:w-auto">
                     Batal
                   </Button>

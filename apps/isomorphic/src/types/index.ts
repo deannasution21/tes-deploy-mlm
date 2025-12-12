@@ -227,6 +227,8 @@ export interface UserData {
     hasData: boolean;
     isPending: boolean;
   };
+  master_username?: string;
+  address?: string;
 }
 
 export interface PinResponse {

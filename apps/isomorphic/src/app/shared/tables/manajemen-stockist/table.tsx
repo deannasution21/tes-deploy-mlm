@@ -3,7 +3,6 @@
 import Table from '@core/components/table';
 import { useTanStackTable } from '@core/components/table/custom/use-TanStack-Table';
 import TablePagination from '@core/components/table/pagination';
-import Filters from './filters';
 import { Alert, Button, TableVariantProps, Text } from 'rizzui';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
@@ -11,14 +10,15 @@ import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import WidgetCard from '@core/components/cards/widget-card';
 import cn from '@core/utils/class-names';
 import { UserListItem, UserListResponse } from '@/types/member';
+import Filters from '../manajemen-member/filters';
+import { createColumnHelper } from '@tanstack/react-table';
+import Link from 'next/link';
+import { routes } from '@/config/routes';
 import { PiPencil, PiSignIn, PiTrash } from 'react-icons/pi';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
-import { createColumnHelper } from '@tanstack/react-table';
-import { UserBankResponse } from '../../pindah-id';
 import { toast } from 'react-hot-toast';
-import { routes } from '@/config/routes';
-import Link from 'next/link';
+import { UserBankResponse } from '../../pindah-id';
 
 const doLogin = ({
   router,
@@ -70,7 +70,7 @@ const doLogin = ({
     .finally(() => setLoadingS(false));
 };
 
-export default function ManajemenMemberTable({
+export default function ManajemenStockistTable({
   className,
   variant = 'modern',
   hideFilters = false,
@@ -89,7 +89,7 @@ export default function ManajemenMemberTable({
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const [dataMember, setDataMember] = useState<UserListItem[]>([]);
-  const [type, setType] = useState<string>('member');
+  const [type, setType] = useState<string>('stockist');
 
   const columnHelperNew = createColumnHelper<UserListItem>();
 
@@ -111,7 +111,7 @@ export default function ManajemenMemberTable({
         return (
           <div className="flex flex-col gap-2 md:flex-row">
             <Link
-              href={routes.member.manajemen.edit(id as string)}
+              href={routes.stockist.manajemen.edit(id as string)}
               className="inline-flex"
             >
               <Button
@@ -126,25 +126,23 @@ export default function ManajemenMemberTable({
               <PiTrash className="mr-2 h-4 w-4" />
               <span>Hapus</span>
             </Button>
-            {session?.user?.id === 'adminowner' && (
-              <Button
-                size="sm"
-                isLoading={loadingS}
-                disabled={loadingS}
-                onClick={() =>
-                  doLogin({
-                    router,
-                    username: id,
-                    session,
-                    setLoadingS,
-                    setIsLoggingOut,
-                  })
-                }
-              >
-                <PiSignIn className="mr-2 h-4 w-4" />
-                <span>Login ID Ini</span>
-              </Button>
-            )}
+            <Button
+              size="sm"
+              isLoading={loadingS}
+              disabled={loadingS}
+              onClick={() =>
+                doLogin({
+                  router,
+                  username: id,
+                  session,
+                  setLoadingS,
+                  setIsLoggingOut,
+                })
+              }
+            >
+              <PiSignIn className="mr-2 h-4 w-4" />
+              <span>Login ID Ini</span>
+            </Button>
           </div>
         );
       },
@@ -156,7 +154,7 @@ export default function ManajemenMemberTable({
       cell: (info) => {
         return (
           <Text
-            className={`text-xs font-medium uppercase tracking-wider text-yellow-600`}
+            className={`text-xs font-medium uppercase tracking-wider text-blue-600`}
           >
             {info.getValue()}
           </Text>
@@ -181,6 +179,16 @@ export default function ManajemenMemberTable({
         );
       },
     }),
+    columnHelperNew.accessor('attribute.master_username', {
+      id: 'master_username',
+      size: 100,
+      header: 'Master Username',
+      cell: (info) => (
+        <Text className="text-xs uppercase text-gray-700">
+          {info.getValue()}
+        </Text>
+      ),
+    }),
     columnHelperNew.accessor('attribute.no_hp', {
       id: 'hp',
       size: 150,
@@ -195,128 +203,9 @@ export default function ManajemenMemberTable({
       header: 'Alamat',
       cell: ({ row }) => (
         <Text className="text-xs text-gray-700">
-          {row.original.attribute.city}, {row.original.attribute.province}
+          {row.original.attribute.address}, {row.original.attribute.city},{' '}
+          {row.original.attribute.province}
         </Text>
-      ),
-    }),
-    columnHelperNew.accessor('attribute.nik', {
-      id: 'nik',
-      size: 100,
-      header: 'NIK',
-      cell: (info) => (
-        <Text className="text-xs text-gray-700">{info.getValue()}</Text>
-      ),
-    }),
-    columnHelperNew.accessor('attribute.parent_id', {
-      id: 'upline',
-      size: 100,
-      header: 'Upline',
-      cell: (info) => (
-        <Text className="text-xs uppercase text-gray-700">
-          {info.getValue()}
-        </Text>
-      ),
-    }),
-    columnHelperNew.accessor('attribute.sponsor_id', {
-      id: 'sponsor',
-      size: 100,
-      header: 'Sponsor',
-      cell: (info) => (
-        <Text className="text-xs uppercase text-gray-700">
-          {info.getValue()}
-        </Text>
-      ),
-    }),
-    columnHelperNew.accessor('attribute.level', {
-      id: 'level',
-      size: 100,
-      header: 'Level',
-      cell: (info) => (
-        <Text className="text-xs text-gray-700">{info.getValue()}</Text>
-      ),
-    }),
-    columnHelperNew.accessor('attribute.point_left', {
-      id: 'point_left',
-      size: 100,
-      header: 'Point Kiri',
-      cell: (info) => (
-        <Text className="text-xs text-gray-700">{info.getValue()}</Text>
-      ),
-    }),
-    columnHelperNew.accessor('attribute.point_right', {
-      id: 'point_right',
-      size: 100,
-      header: 'Point Kanan',
-      cell: (info) => (
-        <Text className="text-xs text-gray-700">{info.getValue()}</Text>
-      ),
-    }),
-    columnHelperNew.accessor('attribute.bonus_pairing', {
-      id: 'bonus_pairing',
-      size: 100,
-      header: 'Pasangan Bonus',
-      cell: (info) => (
-        <Text className="text-xs text-gray-700">{info.getValue()}</Text>
-      ),
-    }),
-    columnHelperNew.accessor('attribute.heir_name', {
-      id: 'heir_name',
-      size: 100,
-      header: 'Ahli Waris',
-      cell: (info) => (
-        <Text className="text-xs text-gray-700">{info.getValue()}</Text>
-      ),
-    }),
-    columnHelperNew.accessor('attribute.heir_relationship', {
-      id: 'heir_relationship',
-      size: 100,
-      header: 'Status Ahli Waris',
-      cell: (info) => (
-        <Text className="text-xs text-gray-700">{info.getValue()}</Text>
-      ),
-    }),
-    columnHelperNew.accessor('attribute.npwp_name', {
-      id: 'npwp_name',
-      size: 150,
-      header: 'NPWP',
-      cell: ({ row }) => (
-        <ul>
-          <li>
-            <Text className="text-xs text-gray-700">
-              Nama: {row.original.attribute.npwp_name}
-            </Text>
-          </li>
-          <li>
-            <Text className="text-xs text-gray-700">
-              Nomor: {row.original.attribute.npwp_number}
-            </Text>
-          </li>
-          <li>
-            <Text className="text-xs text-gray-700">
-              Alamat: {row.original.attribute.npwp_address}
-            </Text>
-          </li>
-        </ul>
-      ),
-    }),
-    columnHelperNew.accessor('attribute.no_rekening', {
-      id: 'no_rekening',
-      size: 150,
-      header: 'Rekening',
-      cell: ({ row }) => (
-        <ul>
-          <li>
-            <Text className="text-xs text-gray-700">
-              Bank: {row.original.attribute.nama_bank} -{' '}
-              {row.original.attribute.no_rekening}
-            </Text>
-          </li>
-          <li>
-            <Text className="text-xs text-gray-700">
-              An: {row.original.attribute.nama_pemilik_rekening}
-            </Text>
-          </li>
-        </ul>
       ),
     }),
   ];
@@ -382,7 +271,7 @@ export default function ManajemenMemberTable({
         <div className="grid grid-cols-1 gap-6 3xl:gap-8">
           <WidgetCard
             className={cn('p-0 lg:p-0', className)}
-            title={`Daftar Member`}
+            title={`Daftar ${type.toLocaleUpperCase()}`}
             titleClassName="w-[19ch]"
             actionClassName="w-full ps-0 items-center weee"
             headerClassName="mb-6 items-start flex-col @[57rem]:flex-row @[57rem]:items-center px-5 pt-5 lg:pt-7 lg:px-7"

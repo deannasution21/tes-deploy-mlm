@@ -29,7 +29,10 @@ import {
 import React from "react";
 
 interface ExtendTableOptions<T extends Record<string, unknown>>
-  extends Omit<TableOptions<T>, "data" | "columns" | "getCoreRowModel" | "state"> {}
+  extends Omit<
+    TableOptions<T>,
+    "data" | "columns" | "getCoreRowModel" | "state"
+  > {}
 
 export function useTanStackTable<T extends Record<string, any>>({
   options,
@@ -45,9 +48,16 @@ export function useTanStackTable<T extends Record<string, any>>({
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [expanded, setExpanded] = React.useState<ExpandedState>({});
-  const [columnOrder, setColumnOrder] = React.useState<string[]>(() => columns.map((c) => c.id!));
-  const dataIds = React.useMemo<UniqueIdentifier[]>(() => data?.map(({ id }) => id), [data]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
+    columns.map((c) => c.id!)
+  );
+  const dataIds = React.useMemo<UniqueIdentifier[]>(
+    () => data?.map(({ id }) => id),
+    [data]
+  );
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
   const [rowPinning, setRowPinning] = React.useState<RowPinningState>({
     top: [],
     bottom: [],

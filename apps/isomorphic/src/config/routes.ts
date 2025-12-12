@@ -94,6 +94,11 @@ export const routes = {
     index: '/stockist',
     daftar: '/stockist/daftar',
     list: '/stockist/list',
+    manajemen: {
+      index: '/stockist/manajemen',
+      detail: (id: string) => `/stockist/manajemen/${id}`,
+      edit: (id: string) => `/stockist/edit/${id}`,
+    },
   },
   kontak: {
     index: '/kontak',

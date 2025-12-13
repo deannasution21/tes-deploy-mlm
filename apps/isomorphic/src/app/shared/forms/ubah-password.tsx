@@ -118,11 +118,16 @@ export default function UbahPasswordPage() {
 
     setLoadingS(true);
 
+    const body = {
+      ...payload,
+      type: session?.user?.role ?? 'member',
+    };
+
     fetchWithAuth<any>(
       `/_users/change-password`,
       {
         method: 'PUT',
-        body: JSON.stringify(payload),
+        body: JSON.stringify(body),
       },
       session.accessToken
     )

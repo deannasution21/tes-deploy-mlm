@@ -70,6 +70,47 @@ const doLogin = ({
     .finally(() => setLoadingS(false));
 };
 
+function ApiPagination({
+  meta,
+  onPageChange,
+}: {
+  meta: {
+    total: number;
+    current_page: number;
+    per_page: number;
+    last_page: number;
+  };
+  onPageChange: (page: number) => void;
+}) {
+  if (!meta) return null;
+
+  return (
+    <div className="flex items-center justify-between border-t px-4 py-3">
+      <div className="text-sm text-gray-600">
+        Page {meta.current_page} of {meta.last_page} • Total {meta.total}
+      </div>
+
+      <div className="flex gap-2">
+        <button
+          className="rounded border px-3 py-1 disabled:opacity-50"
+          disabled={meta.current_page === 1}
+          onClick={() => onPageChange(meta.current_page - 1)}
+        >
+          Prev
+        </button>
+
+        <button
+          className="rounded border px-3 py-1 disabled:opacity-50"
+          disabled={meta.current_page === meta.last_page}
+          onClick={() => onPageChange(meta.current_page + 1)}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function ManajemenMemberTable({
   className,
   variant = 'modern',
@@ -87,6 +128,14 @@ export default function ManajemenMemberTable({
   const [isLoading, setLoading] = useState(true);
   const [loadingS, setLoadingS] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const [page, setPage] = useState(1);
+  const [meta, setMeta] = useState({
+    total: 0,
+    current_page: 1,
+    per_page: 100,
+    last_page: 1,
+  });
 
   const [dataMember, setDataMember] = useState<UserListItem[]>([]);
   const [type, setType] = useState<string>('member');
@@ -327,27 +376,37 @@ export default function ManajemenMemberTable({
     setLoading(true);
 
     fetchWithAuth<UserListResponse>(
-      `/_users?role=${type}`,
+      `/_users?role=${type}&page=${page}`,
       { method: 'GET' },
       session.accessToken
     )
       .then((data) => {
+        const metaData = data?.data?.meta ?? null;
+
         setDataMember(data?.data?.list ?? []);
         setData(data?.data?.list ?? []);
+        setMeta(metaData);
       })
       .catch((error) => {
         console.error(error);
         setDataMember([]);
         setData([]);
+        setMeta({
+          total: 0,
+          current_page: 1,
+          per_page: 100,
+          last_page: 1,
+        });
       })
       .finally(() => setLoading(false));
-  }, [session?.accessToken, type]);
+  }, [session?.accessToken, type, page]);
 
   // 🧩 Table initialization
   const { table, setData } = useTanStackTable<UserListItem>({
     tableData: dataMember,
     columnConfig: columns,
     options: {
+      manualPagination: true, // 🔥 important
       initialState: {
         pagination: {
           pageIndex: 0,
@@ -389,7 +448,8 @@ export default function ManajemenMemberTable({
             action={<Filters table={table} type={type} setType={setType} />}
           >
             <Table table={table} variant="modern" />
-            <TablePagination table={table} className="p-4" />
+            {/* <TablePagination table={table} className="p-4" /> */}
+            <ApiPagination meta={meta} onPageChange={(p) => setPage(p)} />
           </WidgetCard>
         </div>
       </div>

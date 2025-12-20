@@ -1,5 +1,13 @@
 import { type Table as ReactTableType } from "@tanstack/react-table";
-import { ActionIcon, Box, Flex, Grid, Select, SelectOption, Text } from "rizzui";
+import {
+  ActionIcon,
+  Box,
+  Flex,
+  Grid,
+  Select,
+  SelectOption,
+  Text,
+} from "rizzui";
 import {
   PiCaretLeftBold,
   PiCaretRightBold,
@@ -9,11 +17,10 @@ import {
 import cn from "@core/utils/class-names";
 
 const options = [
-  { value: 5, label: "5" },
   { value: 10, label: "10" },
-  { value: 15, label: "15" },
-  { value: 20, label: "20" },
   { value: 25, label: "25" },
+  { value: 50, label: "50" },
+  { value: 100, label: "100" },
 ];
 
 export default function TablePagination<TData extends Record<string, any>>({
@@ -32,11 +39,10 @@ export default function TablePagination<TData extends Record<string, any>>({
       justify="between"
       className={cn("@container", className)}
     >
-      <Flex
-        align="center"
-        className="w-auto shrink-0"
-      >
-        <Text className="hidden font-normal text-gray-600 @md:block">Rows per page</Text>
+      <Flex align="center" className="w-auto shrink-0">
+        <Text className="hidden font-normal text-gray-600 @md:block">
+          Rows per page
+        </Text>
         <Select
           size="sm"
           variant="flat"
@@ -59,18 +65,12 @@ export default function TablePagination<TData extends Record<string, any>>({
           </Text>
         </Box>
       )}
-      <Flex
-        justify="end"
-        align="center"
-      >
+      <Flex justify="end" align="center">
         <Text className="hidden font-normal text-gray-600 @3xl:block">
           Page {table.getState().pagination.pageIndex + 1} of{" "}
           {table.getPageCount().toLocaleString()}
         </Text>
-        <Grid
-          gap="2"
-          columns="4"
-        >
+        <Grid gap="2" columns="4">
           <ActionIcon
             size="sm"
             rounded="lg"

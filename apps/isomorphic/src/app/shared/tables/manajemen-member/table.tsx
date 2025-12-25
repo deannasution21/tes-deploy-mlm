@@ -137,6 +137,8 @@ export default function ManajemenMemberTable({
     last_page: 1,
   });
 
+  const [username, setUsername] = useState<string>('');
+  const [searchBy, setSearchBy] = useState<string>('username');
   const [dataMember, setDataMember] = useState<UserListItem[]>([]);
   const [type, setType] = useState<string>('member');
 
@@ -370,16 +372,20 @@ export default function ManajemenMemberTable({
     }),
   ];
 
-  useEffect(() => {
+  const handleSearch = (query?: string) => {
+    fetchDataMember(query);
+  };
+
+  const fetchDataMember = (query?: string) => {
     if (!session?.accessToken) return;
 
     setLoading(true);
 
-    fetchWithAuth<UserListResponse>(
-      `/_users?role=${type}&page=${page}`,
-      { method: 'GET' },
-      session.accessToken
-    )
+    const url = query
+      ? `/_users?role=${type}&${searchBy}=${query}`
+      : `/_users?role=${type}&page=${page}`;
+
+    fetchWithAuth<UserListResponse>(url, { method: 'GET' }, session.accessToken)
       .then((data) => {
         const metaData = data?.data?.meta ?? null;
 
@@ -399,6 +405,10 @@ export default function ManajemenMemberTable({
         });
       })
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchDataMember();
   }, [session?.accessToken, type, page]);
 
   // 🧩 Table initialization
@@ -410,7 +420,7 @@ export default function ManajemenMemberTable({
       initialState: {
         pagination: {
           pageIndex: 0,
-          pageSize: 10,
+          pageSize: 100,
         },
       },
       enableColumnResizing: false,
@@ -445,7 +455,18 @@ export default function ManajemenMemberTable({
             titleClassName="w-[19ch]"
             actionClassName="w-full ps-0 items-center weee"
             headerClassName="mb-6 items-start flex-col @[57rem]:flex-row @[57rem]:items-center px-5 pt-5 lg:pt-7 lg:px-7"
-            action={<Filters table={table} type={type} setType={setType} />}
+            action={
+              <Filters
+                table={table}
+                type={type}
+                setType={setType}
+                searchBy={searchBy}
+                setSearchBy={setSearchBy}
+                username={username}
+                setUsername={setUsername}
+                handleSearch={handleSearch}
+              />
+            }
           >
             <Table table={table} variant="modern" />
             {/* <TablePagination table={table} className="p-4" /> */}

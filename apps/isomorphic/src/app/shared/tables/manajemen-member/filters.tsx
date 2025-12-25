@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge, Button, Flex, Input, Text } from 'rizzui';
+import { Badge, Button, Flex, Input, Select, Text } from 'rizzui';
 import { type Table as ReactTableType } from '@tanstack/react-table';
 import StatusField from '@core/components/controlled-table/status-field';
 import { PiMagnifyingGlassBold, PiTrashDuotone } from 'react-icons/pi';
@@ -21,16 +21,49 @@ const statusOptions = [
   },
 ];
 
+const tipeSearch = [
+  {
+    label: 'Username',
+    value: 'username',
+  },
+  {
+    label: 'Nama',
+    value: 'name',
+  },
+  {
+    label: 'Provinsi',
+    value: 'province',
+  },
+  {
+    label: 'Kota',
+    value: 'city',
+  },
+  {
+    label: 'Sponsor ID',
+    value: 'sponsor_id',
+  },
+];
+
 interface TableToolbarProps<T extends Record<string, any>> {
   table: ReactTableType<T>;
   type: string;
   setType: React.Dispatch<React.SetStateAction<string>>;
+  username: string;
+  setUsername: React.Dispatch<React.SetStateAction<string>>;
+  searchBy: string;
+  setSearchBy: React.Dispatch<React.SetStateAction<string>>;
+  handleSearch?: (query?: string) => void;
 }
 
 export default function Filters<TData extends Record<string, any>>({
   table,
   type,
   setType,
+  username,
+  setUsername,
+  searchBy,
+  setSearchBy,
+  handleSearch,
 }: TableToolbarProps<TData>) {
   const isFiltered =
     table.getState().globalFilter || table.getState().columnFilters.length > 0;
@@ -59,7 +92,7 @@ export default function Filters<TData extends Record<string, any>>({
         /> */}
       </Flex>
 
-      {isFiltered ? (
+      {/* {isFiltered ? (
         <Button
           variant="flat"
           onClick={() => {
@@ -82,7 +115,48 @@ export default function Filters<TData extends Record<string, any>>({
         prefix={<PiMagnifyingGlassBold className="size-4" />}
         onChange={(e) => table.setGlobalFilter(e.target.value)}
         className="w-full @3xl:order-3 @3xl:ms-auto @3xl:max-w-72"
-      />
+      /> */}
+
+      <Flex align="center" justify="start" className="gap-2">
+        <Select
+          label=""
+          // size="sm"
+          className="w-32"
+          selectClassName="h-9"
+          dropdownClassName="!z-10 h-fit"
+          inPortal={false}
+          placeholder="Pilih Tipe"
+          options={tipeSearch}
+          onChange={(value) => setSearchBy(value as string)}
+          value={searchBy}
+          getOptionValue={(option) => option.value}
+          displayValue={(selected) =>
+            tipeSearch?.find((con) => con.value === selected)?.label ?? ''
+          }
+        />
+
+        <Input
+          type="search"
+          placeholder={`Cari data ${type} disini...`}
+          value={username}
+          onClear={() => {
+            setUsername('');
+            handleSearch?.(''); // 🔥 run search automatically
+          }}
+          onChange={(e) => setUsername(e.target.value?.toLowerCase())}
+          inputClassName="h-9 [&>input]:lowercase"
+          clearable
+          prefix={<PiMagnifyingGlassBold className="size-4" />}
+        />
+
+        <Button
+          size="sm"
+          onClick={() => handleSearch?.(username)}
+          className="h-9"
+        >
+          Cari
+        </Button>
+      </Flex>
     </Flex>
   );
 }

@@ -711,7 +711,7 @@ export default function FormEditMember({
             sponsor: userData.sponsor_id ?? '',
             upline: userData.parent_id ?? '',
             full_name: userData.nama ?? '',
-            email: session?.user?.email ?? '',
+            email: userData?.email ?? '',
             phone: userData.no_hp ?? '',
             province: userData.province ?? '',
             city: userData.city ?? '',

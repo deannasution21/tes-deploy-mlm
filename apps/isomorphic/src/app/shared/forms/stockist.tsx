@@ -504,7 +504,7 @@ export default function FormEditStockist({
             username: user_id ?? '',
             master_username: userData.master_username ?? '',
             nama: userData.nama ?? '',
-            email: session?.user?.email ?? '',
+            email: userData?.email ?? '',
             phone: userData.no_hp ?? '',
             province: userData.province ?? '',
             city: userData.city ?? '',

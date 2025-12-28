@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import pageImg from '@public/assets/img/sertifikat.jpg';
+import pageImgThumbnail from '@public/assets/img/sertifikat-new-min.jpg';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { ReportData, ReportResponse } from '@/types/sertifikat';
 import { useReactToPrint } from 'react-to-print';
@@ -102,7 +102,11 @@ export default function SertifikatPage({ className }: { className?: string }) {
               <div ref={printRef} className="">
                 <svg viewBox="0 0 1200 800" className="h-auto w-full pt-5">
                   {/* Background */}
-                  <image href={pageImg.src} width="1200" height="800" />
+                  <image
+                    href={pageImgThumbnail.src}
+                    width="1200"
+                    height="800"
+                  />
 
                   {/* Name */}
                   <text

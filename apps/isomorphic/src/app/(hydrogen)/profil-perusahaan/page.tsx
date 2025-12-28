@@ -28,7 +28,7 @@ export default function Page() {
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
         <div className="mt-4 flex items-center gap-3 @lg:mt-0">
           <a
-            href={'/pdf/profil-perusahaan-ipg.pdf'}
+            href={'/pdf/profil-perusahaan-ipg-desember-2025.pdf'}
             download
             className="w-full @lg:w-auto"
           >

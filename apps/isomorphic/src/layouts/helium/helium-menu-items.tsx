@@ -67,6 +67,7 @@ import {
   PiDownload,
   PiCertificate,
   PiNote,
+  PiArrowsDownUp,
 } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
@@ -859,6 +860,11 @@ export const menuItemsStockistAdminPin = [
     name: 'Transfer PIN',
     href: routes.transferPin.index,
     icon: <PiArrowsHorizontal />,
+  },
+  {
+    name: 'Penarikan PIN',
+    href: routes.penarikanPin.index,
+    icon: <PiArrowsDownUp />,
   },
 
   {

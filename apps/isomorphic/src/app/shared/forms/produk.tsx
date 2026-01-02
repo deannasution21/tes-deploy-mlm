@@ -216,7 +216,7 @@ function Formnya({
                 />
               )}
             />
-            <Controller
+            {/* <Controller
               name="stock_pin"
               control={control}
               render={({ field: { name, onChange, value } }) => (
@@ -228,7 +228,7 @@ function Formnya({
                   error={errors?.stock_pin?.message as string}
                 />
               )}
-            />
+            /> */}
           </FormBlockWrapper>
         </div>
       </div>
@@ -295,11 +295,11 @@ export default function ProdukFormPage({
             Data berhasil {type === 'tambah' ? 'ditambahkan' : 'diubah'}
           </Text>
         );
-        if (type === 'tambah') {
-          reset();
-        } else {
-          router.push(routes.produk.manajemen.index);
-        }
+        // if (type === 'tambah') {
+        //   reset();
+        // } else {
+        // }
+        router.push(routes.produk.manajemen.index);
       })
       .catch((error) => {
         console.error(error);

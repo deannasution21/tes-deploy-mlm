@@ -173,10 +173,10 @@ export default function ManajemenMemberTable({
                 <span>Edit</span>
               </Button>
             </Link>
-            <Button size="sm" color="danger" variant="flat">
+            {/* <Button size="sm" color="danger" variant="flat">
               <PiTrash className="mr-2 h-4 w-4" />
               <span>Hapus</span>
-            </Button>
+            </Button> */}
             {session?.user?.id === 'adminowner' && (
               <Button
                 size="sm"

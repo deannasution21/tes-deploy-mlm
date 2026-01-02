@@ -60,7 +60,6 @@ function Formnya({
               placeholder="Username"
               {...register('username')}
               error={errors?.username?.message as any}
-              disabled
             />
             <Input
               label="Nama Lengkap"
@@ -68,7 +67,6 @@ function Formnya({
               {...register(`nama`)}
               // @ts-ignore
               error={errors?.nama?.message as any}
-              disabled
             />
             <Input
               label="Email"
@@ -76,7 +74,6 @@ function Formnya({
               {...register(`email`)}
               // @ts-ignore
               error={errors?.email?.message as any}
-              disabled
             />
             <Controller
               name="no_hp"
@@ -89,7 +86,6 @@ function Formnya({
                   onChange={onChange}
                   // @ts-ignore
                   error={errors?.no_hp?.message as string}
-                  disabled
                 />
               )}
             />

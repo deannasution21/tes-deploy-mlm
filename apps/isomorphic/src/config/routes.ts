@@ -36,6 +36,10 @@ export const routes = {
     index: '/transfer-pin',
     history: '/transfer-pin/history',
   },
+  penarikanPin: {
+    index: '/penarikan-pin',
+    history: '/penarikan-pin/history',
+  },
   postingPin: {
     index: '/posting-pin',
     history: '/posting-pin/history',

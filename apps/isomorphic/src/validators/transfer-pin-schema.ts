@@ -22,8 +22,21 @@ export const transferPinStockistSchema = z.object({
   amount: z.coerce.number().min(1, { message: 'Minimal 1 PIN' }),
 });
 
+export const penarikanPinSchema = z.object({
+  from: z.string().min(1, { message: messages.kolomIsRequired }),
+  to: z.string().min(1, { message: messages.kolomIsRequired }),
+  type_pin: z
+    .string({
+      required_error: messages.kolomIsRequired,
+    })
+    .min(1, { message: messages.kolomIsRequired }),
+  amount: z.coerce.number().min(1, { message: 'Minimal 1 PIN' }),
+  note: z.string().optional(),
+});
+
 // generate form types from zod validation schema
 export type TransferPinInput = z.infer<typeof transferPinSchema>;
 export type TransferPinStockistInput = z.infer<
   typeof transferPinStockistSchema
 >;
+export type PenarikanPinInput = z.infer<typeof penarikanPinSchema>;

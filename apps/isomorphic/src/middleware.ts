@@ -76,6 +76,8 @@ export const config = {
     '/lihat-pin/:path*',
     '/transfer-pin',
     '/transfer-pin/:path*',
+    '/penarikan-pin',
+    '/penarikan-pin/:path*',
 
     '/produk',
     '/produk/:path*',

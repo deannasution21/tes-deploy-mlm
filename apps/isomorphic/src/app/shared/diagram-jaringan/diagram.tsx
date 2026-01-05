@@ -160,19 +160,19 @@ function Tree({ data, session }: TreeProps) {
 
   return (
     <>
-      <Head>
+      {/* <Head>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
         />
-      </Head>
+      </Head> */}
 
       <p className="mb-2 text-sm text-green-600">
         **Untuk tampilan lebih besar, silakan lakukan zoom in/out dengar jari
         Anda pada layar.
       </p>
       <div
-        className="relative flex h-[80vh] w-full items-center overflow-auto bg-gray-100 lg:justify-center"
+        className="bg-gray-100s relative flex w-full items-center overflow-auto lg:justify-center"
         // style={{ touchAction: 'none', overscrollBehavior: 'contain' }}
       >
         <div id="mlm-diagram">

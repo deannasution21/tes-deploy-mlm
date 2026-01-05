@@ -126,6 +126,8 @@ export const routes = {
     generatePin: '/laporan/generate-pin',
     postingPin: '/laporan/posting-pin',
     totalPin: '/laporan/total-pin',
+    sniper: '/laporan/sniper',
+    pembayaran: '/laporan/pembayaran',
     pembayaranBonus: '/laporan/pembayaran-bonus',
     pembayaranGaji: '/laporan/pembayaran-gaji',
     pembagianGaji: '/laporan/pembagian-gaji',

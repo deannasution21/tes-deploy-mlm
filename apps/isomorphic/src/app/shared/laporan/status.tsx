@@ -72,7 +72,7 @@ export default function ReportStatGrid({
           ref={sliderEl}
           className="custom-scrollbar-x grid grid-flow-col gap-5 overflow-x-auto scroll-smooth 2xl:gap-6 3xl:gap-8 [&::-webkit-scrollbar]:h-0"
         >
-          <StatGrid data={dataOperan} />
+          <StatGrid data={dataOperan} typee={typeReport} />
         </div>
       </div>
       <Button
@@ -88,32 +88,37 @@ export default function ReportStatGrid({
   );
 }
 
-export function StatGrid(data: any) {
-  const type = data?.data?.filter?.type;
-  const typenya = underscoreToCaptalize(type);
+export function StatGrid({ data, typee }: { data: any; typee: string }) {
+  const type = data?.filter?.type
+    ? underscoreToCaptalize(data?.filter?.type)
+    : typee;
+  const typenya = type ?? '-';
   const total =
     type === 'withdrawal_bonus' ||
     type === 'withdrawal_salary' ||
+    type === 'pembayaran' ||
     type === 'bonus_salary'
-      ? data?.data?.total?.amount_currency
-      : data?.data?.total?.amount;
+      ? data?.total?.amount_currency
+      : data?.total?.amount;
   const min =
     type === 'withdrawal_bonus' ||
     type === 'withdrawal_salary' ||
+    type === 'pembayaran' ||
     type === 'bonus_salary'
-      ? data?.data?.min?.amount_currency
-      : data?.data?.min?.amount;
+      ? data?.min?.amount_currency
+      : data?.min?.amount;
   const max =
     type === 'withdrawal_bonus' ||
     type === 'withdrawal_salary' ||
+    type === 'pembayaran' ||
     type === 'bonus_salary'
-      ? data?.data?.max?.amount_currency
-      : data?.data?.max?.amount;
+      ? data?.max?.amount_currency
+      : data?.max?.amount;
 
   const statData: StatType[] = [
     {
       title: 'Invoice ' + typenya,
-      amount: data?.data?.count ?? 0,
+      amount: data?.count ?? 0,
       increased: true,
       percentage: '0',
       icon: PiInvoice,
@@ -143,7 +148,9 @@ export function StatGrid(data: any) {
 
   return (
     <>
-      {type === '_withdrawal_bonus' || type === '_withdrawal_salary' ? (
+      {type === '_withdrawal_bonus' ||
+      type === '_withdrawal_salary' ||
+      type === 'Sniper' ? (
         <>
           <StatCard
             key={'stat-card-0'}
@@ -188,7 +195,7 @@ function StatCard({ className, transaction, isUsed }: StatCardProps) {
           <Icon className="h-auto w-[30px]" />
         </span>
         <div className="space-y-1.5">
-          <p className="font-medium text-gray-500 group-first:text-gray-100 dark:group-first:text-gray-800">
+          <p className="font-medium capitalize text-gray-500 group-first:text-gray-100 dark:group-first:text-gray-800">
             {title}
           </p>
           <p className="text-lg font-bold text-gray-900 group-first:text-gray-0 dark:text-gray-700 dark:group-first:text-gray-900 2xl:text-[20px] 3xl:text-3xl">

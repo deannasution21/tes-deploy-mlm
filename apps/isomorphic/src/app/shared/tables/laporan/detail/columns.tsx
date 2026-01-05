@@ -8,13 +8,17 @@ import DateCell from '@core/ui/date-cell';
 import { PostingActivityItem } from '@/types/report-posting-pin';
 import { WithdrawalBonusReportDetail } from '@/types/report-pembayaran-bonus';
 import { PembagianBonusReportDetail } from '@/types/report-pembagian-bonus';
+import { PaymentReportDetail } from '@/types/report-pembayaran';
+import { SniperReportDetail } from '@/types/report-sniper';
 
 const columnHelper = createColumnHelper<ActivityItem>();
 const columnHelperPosting = createColumnHelper<PostingActivityItem>();
+const columnHelperPembayaran = createColumnHelper<PaymentReportDetail>();
 const columnHelperPembayaranBonus =
   createColumnHelper<WithdrawalBonusReportDetail>();
 const columnHelperPembagianBonus =
   createColumnHelper<PembagianBonusReportDetail>();
+const columnHelperSniperBonus = createColumnHelper<SniperReportDetail>();
 
 export const reportGeneratePinDetailColumns = [
   {
@@ -160,6 +164,49 @@ export const reportPostingPinDetailColumns = [
   }),
 ];
 
+export const reportPembayaranDetailColumns = [
+  {
+    id: 'no',
+    header: '#',
+    size: 60,
+    cell: ({ row }: { row: any }) => row.index + 1 + '.',
+  },
+  columnHelperPembayaran.accessor('date', {
+    id: 'date',
+    header: 'Tanggal',
+    size: 180,
+    cell: (info) => <DateCell date={info.getValue()} />,
+  }),
+  columnHelperPembayaran.accessor('username', {
+    id: 'username',
+    header: 'Username',
+    size: 150,
+    cell: (info) => (
+      <>
+        <Text className="font-medium uppercase text-gray-700">
+          {info.getValue()}
+        </Text>
+      </>
+    ),
+  }),
+  columnHelperPembayaran.accessor('payment.count', {
+    id: 'kuantiti',
+    header: 'Jumlah Invoice',
+    size: 100,
+    cell: (info) => (
+      <Text className="whitespace-nowrap uppercase">{info.getValue()}</Text>
+    ),
+  }),
+  columnHelperPembayaran.accessor('payment.amount_currency', {
+    id: 'payment',
+    header: 'Nominal Pembayaran',
+    size: 180,
+    cell: (info) => (
+      <Text className="whitespace-nowrap uppercase">{info.getValue()}</Text>
+    ),
+  }),
+];
+
 export const reportPembayaranBonusDetailColumns = [
   {
     id: 'no',
@@ -224,6 +271,59 @@ export const reportPembagianBonusDetailColumns = [
     id: 'payment',
     header: 'Nominal Bonus',
     size: 180,
+    cell: (info) => (
+      <Text className="whitespace-nowrap uppercase">{info.getValue()}</Text>
+    ),
+  }),
+];
+
+export const reportSniperDetailColumns = [
+  {
+    id: 'no',
+    header: '#',
+    size: 60,
+    cell: ({ row }: { row: any }) => row.index + 1 + '.',
+  },
+  columnHelperSniperBonus.accessor('date', {
+    id: 'date',
+    header: 'Tanggal',
+    size: 180,
+    cell: (info) => <DateCell date={info.getValue()} />,
+  }),
+  columnHelperSniperBonus.accessor('full_name', {
+    id: 'username',
+    header: 'Username',
+    size: 150,
+    cell: (info) => (
+      <>
+        <Text className="font-medium uppercase text-gray-700">
+          {info.getValue()}
+        </Text>
+      </>
+    ),
+  }),
+  columnHelperSniperBonus.accessor('type_counts', {
+    id: 'kuantiti',
+    header: 'Jumlah Invoice',
+    size: 100,
+    cell: (info) => {
+      const value = info.getValue() as Record<string, number>;
+
+      return (
+        <div className="space-y-1">
+          {Object.entries(value).map(([key, val]) => (
+            <Text key={key} className="whitespace-nowrap uppercase">
+              {key.replace('_', ' ')}: {val}
+            </Text>
+          ))}
+        </div>
+      );
+    },
+  }),
+  columnHelperSniperBonus.accessor('count', {
+    id: 'total',
+    header: 'Total Invoice',
+    size: 100,
     cell: (info) => (
       <Text className="whitespace-nowrap uppercase">{info.getValue()}</Text>
     ),

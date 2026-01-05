@@ -123,6 +123,7 @@ export const routes = {
     index: '/profil-perusahaan',
   },
   laporan: {
+    balance: '/laporan/balance',
     generatePin: '/laporan/generate-pin',
     postingPin: '/laporan/posting-pin',
     totalPin: '/laporan/total-pin',

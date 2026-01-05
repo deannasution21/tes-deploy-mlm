@@ -69,6 +69,7 @@ import {
   PiNote,
   PiArrowsDownUp,
   PiTarget,
+  PiWallet,
 } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
@@ -999,6 +1000,11 @@ export const menuItemsAdmin = [
     name: 'Laporan',
   },
   // label end
+  {
+    name: 'Sisa Saldo',
+    href: routes.laporan.balance,
+    icon: <PiWallet />,
+  },
   {
     name: 'Generate PIN',
     href: routes.laporan.generatePin,

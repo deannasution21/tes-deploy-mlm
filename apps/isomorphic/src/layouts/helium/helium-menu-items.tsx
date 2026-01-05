@@ -68,6 +68,7 @@ import {
   PiCertificate,
   PiNote,
   PiArrowsDownUp,
+  PiTarget,
 } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
@@ -1014,10 +1015,19 @@ export const menuItemsAdmin = [
     icon: <ProjectWriteIcon />,
   },
   {
+    name: 'ID Asumsi Sniper',
+    href: routes.laporan.sniper,
+    icon: <PiTarget />,
+  },
+  {
     name: 'Pembayaran',
     href: '#',
     icon: <PiInvoice />,
     dropdownItems: [
+      {
+        name: 'Keseluruhan',
+        href: routes.laporan.pembayaran,
+      },
       {
         name: 'Bonus',
         href: routes.laporan.pembayaranBonus,

@@ -5,7 +5,9 @@ import {
   reportGeneratePinDetailColumns,
   reportPembagianBonusDetailColumns,
   reportPembayaranBonusDetailColumns,
+  reportPembayaranDetailColumns,
   reportPostingPinDetailColumns,
+  reportSniperDetailColumns,
 } from './columns';
 import WidgetCard from '@core/components/cards/widget-card';
 import { useTanStackTable } from '@core/components/table/custom/use-TanStack-Table';
@@ -18,13 +20,17 @@ import { PostingActivityItem } from '@/types/report-posting-pin';
 import { ColumnDef } from '@tanstack/react-table';
 import { WithdrawalBonusReportDetail } from '@/types/report-pembayaran-bonus';
 import { PembagianBonusReportDetail } from '@/types/report-pembagian-bonus';
+import { PaymentReportDetail } from '@/types/report-pembayaran';
+import { SniperReportDetail } from '@/types/report-sniper';
 
 export default function ReportDetailTable<
   T extends
     | ActivityItem
     | PostingActivityItem
+    | PaymentReportDetail
     | WithdrawalBonusReportDetail
-    | PembagianBonusReportDetail,
+    | PembagianBonusReportDetail
+    | SniperReportDetail,
 >({
   className,
   dataOperan,
@@ -43,6 +49,8 @@ export default function ReportDetailTable<
       return reportGeneratePinDetailColumns as unknown as ColumnDef<T, any>[];
     } else if (typeReport === 'posting') {
       return reportPostingPinDetailColumns as unknown as ColumnDef<T, any>[];
+    } else if (typeReport === 'pembayaran') {
+      return reportPembayaranDetailColumns as unknown as ColumnDef<T, any>[];
     } else if (typeReport === 'pembayaranBonus') {
       return reportPembayaranBonusDetailColumns as unknown as ColumnDef<
         T,
@@ -53,6 +61,8 @@ export default function ReportDetailTable<
         T,
         any
       >[];
+    } else if (typeReport === 'sniper') {
+      return reportSniperDetailColumns as unknown as ColumnDef<T, any>[];
     } else {
       return reportGeneratePinDetailColumns as unknown as ColumnDef<T, any>[];
     }

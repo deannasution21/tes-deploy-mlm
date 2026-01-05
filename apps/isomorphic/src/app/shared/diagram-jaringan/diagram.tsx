@@ -172,10 +172,10 @@ function Tree({ data, session }: TreeProps) {
         Anda pada layar.
       </p>
       <div
-        className="bg-gray-100s relative flex w-full items-center overflow-auto lg:justify-center"
+        className="bg-gray-100s relative flex w-full items-center justify-center overflow-auto"
         // style={{ touchAction: 'none', overscrollBehavior: 'contain' }}
       >
-        <div id="mlm-diagram">
+        <div id="mlm-diagram" className="scale-50 md:scale-100">
           {data.upline !== 'sistem' && (
             <>
               {session?.user?.id === 'admin' ? (

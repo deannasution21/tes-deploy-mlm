@@ -60,6 +60,8 @@ export const config = {
     '/dashboard',
     '/diagram-jaringan',
     '/diagram-jaringan/:path*',
+    '/sponsor-unilevel/',
+    '/sponsor-unilevel/:path*',
     '/pindah-id/',
     '/pindah-id/:path*',
     '/bonus/',
@@ -99,6 +101,8 @@ export const config = {
     '/laporan/:path*',
 
     // other
+    '/perubahan-data',
+    '/perubahan-data/:path*',
     '/profil',
     '/profil/:path*',
     '/download',

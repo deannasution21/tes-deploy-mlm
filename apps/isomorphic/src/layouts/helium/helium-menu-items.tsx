@@ -70,6 +70,7 @@ import {
   PiArrowsDownUp,
   PiTarget,
   PiWallet,
+  PiArrowFatLinesDown,
 } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
@@ -635,6 +636,12 @@ export const menuItemsUser = [
     badge: '',
   },
   {
+    name: 'List Sponsor Unilevel',
+    href: routes.sponsorUnilevel.index,
+    icon: <PiArrowFatLinesDown />,
+    badge: '',
+  },
+  {
     name: 'Pindah ID',
     href: routes.pindahId.index,
     icon: <PiUserGear />,
@@ -739,8 +746,8 @@ export const menuItemsUser = [
   },
   // label end
   {
-    name: 'Profil Saya',
-    href: routes.profil.index,
+    name: 'Perubahan Data',
+    href: routes.perubahanData.index,
     icon: <PiUserGear />,
   },
   {
@@ -1071,6 +1078,10 @@ export const menuItemsAdmin = [
       {
         name: 'Daftar Member',
         href: routes.member.manajemen.index,
+      },
+      {
+        name: 'Konfirmasi Data Member',
+        href: routes.member.manajemen.konfirmasi,
       },
       {
         name: 'History Edit Member',

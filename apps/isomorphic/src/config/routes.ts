@@ -9,10 +9,16 @@ export const routes = {
     index: '/profil',
     ubahPassword: '/profil/ubah-password',
   },
+  perubahanData: {
+    index: '/perubahan-data',
+  },
   diagramJaringan: {
     index: '/diagram-jaringan',
     posting: (slug: string) => `/diagram-jaringan/${slug}/posting`,
     clone: (slug: string) => `/diagram-jaringan/${slug}/clone`,
+  },
+  sponsorUnilevel: {
+    index: '/sponsor-unilevel',
   },
   pindahId: {
     index: '/pindah-id',
@@ -86,6 +92,7 @@ export const routes = {
   member: {
     manajemen: {
       index: '/member/manajemen',
+      konfirmasi: '/member/manajemen/konfirmasi',
       detail: (id: string) => `/member/manajemen/${id}`,
       edit: (id: string) => `/member/edit/${id}`,
     },

@@ -36,7 +36,7 @@ export default function DateCell({
     // Try parsing as DD-MM-YYYY HH:mm (your format)
     const d = dayjs(
       date,
-      ["DD-MM-YYYY HH:mm", "YYYY-MM-DD HH:mm:ss", "YYYY-MM-DD"],
+      ["DD-MM-YYYY HH:mm", "DD-MM-YYYY", "YYYY-MM-DD HH:mm:ss", "YYYY-MM-DD"],
       true
     );
     parsedDate = d.isValid() ? d.toDate() : new Date(date);

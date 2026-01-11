@@ -70,6 +70,13 @@ export default function HistoryTransferPinTable({
       headerClassName="mb-6 items-start flex-col @[57rem]:flex-row @[57rem]:items-center px-5 pt-5 lg:pt-7 lg:px-7"
       action={<Filters table={table} type={type} setType={setType} />}
     >
+      <style>
+        {`
+    tr td {
+      vertical-align: top !important;
+    }
+  `}
+      </style>
       <Table table={table} variant="modern" />
       <TablePagination table={table} className="p-4" />
     </WidgetCard>

@@ -274,6 +274,17 @@ export interface HistoryTransferPinResponse {
 }
 
 export interface HistoryTransferPinItem {
+  message: string;
+  date: string;
+  from: string;
+  to: string;
+  data: HistoryTransferPinItem2[];
+
+  pin_code: string;
+  attributes: HistoryTransferPinAttributes;
+}
+
+export interface HistoryTransferPinItem2 {
   pin_code: string;
   attributes: HistoryTransferPinAttributes;
 }

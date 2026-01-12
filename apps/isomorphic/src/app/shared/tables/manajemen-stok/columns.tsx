@@ -12,6 +12,7 @@ import imgHNB from '@public/assets/img/product/HNB 19.jpg';
 import imgSNP from '@public/assets/img/product/SNP 3.jpg';
 import imgLILAC from '@public/assets/img/product/LILAC.jpg';
 import imgFCMIST from '@public/assets/img/product/FCMIST.jpeg';
+import imgEGAM from '@public/assets/img/product/EGAM.jpeg';
 
 const columnHelperNew = createColumnHelper<ProductItem>();
 
@@ -44,7 +45,9 @@ export const stokColumnsNew = () => {
                         ? imgSNP
                         : id === 'PRD0004'
                           ? imgFCMIST
-                          : defaultPlaceholder
+                          : id === 'PRD0005'
+                            ? imgEGAM
+                            : defaultPlaceholder
                 }
                 alt=""
                 fill

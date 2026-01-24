@@ -405,7 +405,7 @@ export default function PromoPage({ className }: { className?: string }) {
                                 isLoading={isLoadingS}
                                 disabled={
                                   dataWhole.package_info.available_packages
-                                    .length === 0 ?? isLoadingS
+                                    .length === 0 || isLoadingS
                                 }
                                 className="w-full @xl:w-auto"
                               >

@@ -195,6 +195,9 @@ export default function PromoPage({ className }: { className?: string }) {
                         reset,
                         formState: { errors },
                       }) => {
+                        const pointsByChannel =
+                          dataWhole?.points_summary?.points_by_channel ?? {};
+
                         return (
                           <>
                             <div className="flex-grow pb-10">
@@ -221,6 +224,93 @@ export default function PromoPage({ className }: { className?: string }) {
                                     readOnly
                                     disabled
                                   />
+
+                                  <div className="col-span-full">
+                                    {Object.entries(pointsByChannel).map(
+                                      ([channelKey, channelData]) => (
+                                        <div
+                                          key={channelKey}
+                                          className="mb-6 rounded-xl border border-gray-200 p-4"
+                                        >
+                                          {/* CHANNEL TITLE */}
+                                          <h3 className="mb-3 text-lg font-semibold capitalize">
+                                            {channelKey === 'car'
+                                              ? 'Point Promo Mobil'
+                                              : channelKey === 'trip'
+                                                ? 'Point Promo Wisata'
+                                                : ''}
+                                          </h3>
+
+                                          {/* TABLE */}
+                                          <table className="w-full border-collapse text-sm">
+                                            <thead>
+                                              <tr className="bg-gray-100 text-left">
+                                                <th className="border px-3 py-2">
+                                                  Jenis
+                                                </th>
+                                                <th className="border px-3 py-2 text-center">
+                                                  Kiri
+                                                </th>
+                                                <th className="border px-3 py-2 text-center">
+                                                  Kanan
+                                                </th>
+                                              </tr>
+                                            </thead>
+
+                                            <tbody>
+                                              {/* ACTIVE POINTS */}
+                                              <tr>
+                                                <td className="border px-3 py-2 font-medium">
+                                                  Point Aktif
+                                                </td>
+                                                <td className="border px-3 py-2 text-center">
+                                                  {
+                                                    channelData.active_points
+                                                      .left
+                                                  }
+                                                </td>
+                                                <td className="border px-3 py-2 text-center">
+                                                  {
+                                                    channelData.active_points
+                                                      .right
+                                                  }
+                                                </td>
+                                              </tr>
+
+                                              {/* HELD POINTS */}
+                                              <tr>
+                                                <td className="border px-3 py-2 font-medium">
+                                                  Point Ditahan
+                                                  {/* NOTE */}
+                                                  {channelData.held_points
+                                                    .note && (
+                                                    <p className="mt-2 text-xs text-gray-500">
+                                                      {
+                                                        channelData.held_points
+                                                          .note
+                                                      }
+                                                    </p>
+                                                  )}
+                                                </td>
+                                                <td className="border px-3 py-2 text-center">
+                                                  {channelData.held_points.left}
+                                                </td>
+                                                <td className="border px-3 py-2 text-center">
+                                                  {
+                                                    channelData.held_points
+                                                      .right
+                                                  }
+                                                </td>
+                                                <td className="border px-3 py-2 text-center">
+                                                  –
+                                                </td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      )
+                                    )}
+                                  </div>
                                 </FormBlockWrapper>
                                 <FormBlockWrapper
                                   title={'Pilih/Upgrade PROMO:'}

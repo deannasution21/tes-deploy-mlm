@@ -301,9 +301,6 @@ export default function PromoPage({ className }: { className?: string }) {
                                                       .right
                                                   }
                                                 </td>
-                                                <td className="border px-3 py-2 text-center">
-                                                  –
-                                                </td>
                                               </tr>
                                             </tbody>
                                           </table>

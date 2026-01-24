@@ -42,7 +42,7 @@ export interface AvailablePackage {
 
 export interface RewardPolicy {
   car: 'none' | 'choose_one';
-  trp: 'none' | 'choose_one';
+  trip: 'none' | 'choose_one';
 }
 
 export interface SelectionWindow {

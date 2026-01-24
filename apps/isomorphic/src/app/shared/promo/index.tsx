@@ -213,7 +213,7 @@ export default function PromoPage({ className }: { className?: string }) {
                                   />
 
                                   <Input
-                                    label="Jumlah Downline"
+                                    label="Jumlah User PIN Bayar"
                                     value={
                                       dataWhole?.user_status
                                         ?.active_downlines ?? 0
@@ -248,6 +248,26 @@ export default function PromoPage({ className }: { className?: string }) {
                                       const isDisabled =
                                         !isUserQualified || isDecisionLocked;
 
+                                      type RewardPolicy =
+                                        | 'choose_one'
+                                        | 'all'
+                                        | 'none';
+
+                                      const rewardPolicyLabel = (
+                                        policy?: RewardPolicy
+                                      ) => {
+                                        switch (policy) {
+                                          case 'choose_one':
+                                            return 'Pilih salah satu reward:';
+                                          case 'all':
+                                            return 'Berhak atas semua rewards:';
+                                          case 'none':
+                                            return 'Tidak ada reward pada channel ini';
+                                          default:
+                                            return '';
+                                        }
+                                      };
+
                                       if (
                                         dataWhole?.package_info
                                           ?.available_packages?.length === 0
@@ -259,87 +279,112 @@ export default function PromoPage({ className }: { className?: string }) {
                                         );
                                       } else {
                                         return (
-                                          <div className="space-y-5">
-                                            {packages.map((pkg) => (
-                                              <label
-                                                key={pkg.package_id}
-                                                className={`flex cursor-pointer gap-4 rounded-xl border p-4 transition ${
-                                                  value ==
-                                                  String(pkg.package_id)
-                                                    ? 'border-primary bg-primary/5'
-                                                    : 'border-gray-200 hover:border-gray-300'
-                                                } `}
-                                              >
-                                                {/* RADIO */}
-                                                <input
-                                                  type="radio"
-                                                  name={name}
-                                                  value={String(pkg.package_id)}
-                                                  checked={
-                                                    value ==
-                                                    String(pkg.package_id)
-                                                  }
-                                                  // disabled={isDisabled}
-                                                  onChange={(e) =>
-                                                    onChange(e.target.value)
-                                                  }
-                                                  className="mt-1 h-4 w-4"
-                                                />
+                                          <div className="col-span-full">
+                                            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                                              {packages.map((pkg) => (
+                                                <div key={pkg.package_id}>
+                                                  <label
+                                                    className={`flex cursor-pointer gap-4 rounded-xl border p-4 transition ${
+                                                      value ==
+                                                      String(pkg.package_id)
+                                                        ? 'border-primary bg-primary/5'
+                                                        : 'border-gray-200 hover:border-gray-300'
+                                                    } `}
+                                                  >
+                                                    {/* RADIO */}
+                                                    <input
+                                                      type="radio"
+                                                      name={name}
+                                                      value={String(
+                                                        pkg.package_id
+                                                      )}
+                                                      checked={
+                                                        value ==
+                                                        String(pkg.package_id)
+                                                      }
+                                                      // disabled={isDisabled}
+                                                      onChange={(e) =>
+                                                        onChange(e.target.value)
+                                                      }
+                                                      className="mt-1 h-4 w-4"
+                                                    />
 
-                                                {/* CONTENT */}
-                                                <div className="flex flex-col gap-3">
-                                                  {/* PACKAGE NAME */}
-                                                  <div className="font-semibold text-gray-900">
-                                                    Paket {pkg.package_id} ID
-                                                  </div>
-
-                                                  {/* CHANNEL DETAILS */}
-                                                  {channels.map((channel) => (
-                                                    <div
-                                                      key={channel.channel_id}
-                                                      className="rounded-lg bg-gray-50 p-3 text-sm"
-                                                    >
-                                                      {/* Program Name */}
-                                                      <div className="font-medium text-gray-800">
-                                                        {channel.name}
+                                                    {/* CONTENT */}
+                                                    <div className="flex flex-col gap-3">
+                                                      {/* PACKAGE NAME */}
+                                                      <div className="font-semibold text-gray-900">
+                                                        Paket {pkg.package_id}{' '}
+                                                        ID
                                                       </div>
 
-                                                      {/* Period */}
-                                                      <div className="text-gray-500">
-                                                        Periode:{' '}
-                                                        {channel.period.start} –{' '}
-                                                        {channel.period.end}
-                                                      </div>
-
-                                                      {/* Rewards */}
-                                                      <ul className="mt-1 list-inside list-disc text-gray-600">
-                                                        {channel.rewards.map(
-                                                          (r, idx) => (
-                                                            <li key={idx}>
-                                                              {r.requirement} →{' '}
-                                                              {r.reward}
-                                                            </li>
+                                                      {/* CHANNEL DETAILS */}
+                                                      {channels
+                                                        .filter((channel) =>
+                                                          pkg.eligible_channels.includes(
+                                                            channel.channel_id
                                                           )
-                                                        )}
-                                                      </ul>
+                                                        )
+                                                        .map((channel) => (
+                                                          <div
+                                                            key={
+                                                              channel.channel_id
+                                                            }
+                                                            className="rounded-lg bg-gray-50 p-3 text-sm"
+                                                          >
+                                                            {/* Program Name */}
+                                                            <div className="font-medium text-gray-800">
+                                                              {channel.name}
+                                                            </div>
 
-                                                      {/* Qualification Status */}
-                                                      <div
-                                                        className={`mt-2 text-xs font-semibold ${
-                                                          channel.qualified
-                                                            ? 'text-green-600'
-                                                            : 'text-red-500'
-                                                        }`}
-                                                      >
-                                                        {channel.qualified
-                                                          ? 'Qualified'
-                                                          : `Not Qualified (Min ${channel.min_ids_required} ID)`}
-                                                      </div>
+                                                            {/* Period */}
+                                                            <div className="text-gray-500">
+                                                              Periode:{' '}
+                                                              {
+                                                                channel.period
+                                                                  .start
+                                                              }{' '}
+                                                              –{' '}
+                                                              {
+                                                                channel.period
+                                                                  .end
+                                                              }
+                                                            </div>
+
+                                                            {/* Rewards */}
+                                                            <div className="mt-2">
+                                                              <div className="mb-1 text-xs font-semibold text-green-600">
+                                                                {rewardPolicyLabel(
+                                                                  pkg
+                                                                    .reward_policy?.[
+                                                                    channel
+                                                                      .channel_id
+                                                                  ]
+                                                                )}
+                                                              </div>
+
+                                                              <ul className="list-inside list-disc text-gray-600">
+                                                                {channel.rewards.map(
+                                                                  (r, idx) => (
+                                                                    <li
+                                                                      key={idx}
+                                                                    >
+                                                                      {
+                                                                        r.requirement
+                                                                      }{' '}
+                                                                      →{' '}
+                                                                      {r.reward}
+                                                                    </li>
+                                                                  )
+                                                                )}
+                                                              </ul>
+                                                            </div>
+                                                          </div>
+                                                        ))}
                                                     </div>
-                                                  ))}
+                                                  </label>
                                                 </div>
-                                              </label>
-                                            ))}
+                                              ))}
+                                            </div>
 
                                             {errors.package_id && (
                                               <p className="text-sm text-red-500">
@@ -359,8 +404,8 @@ export default function PromoPage({ className }: { className?: string }) {
                                 type="submit"
                                 isLoading={isLoadingS}
                                 disabled={
-                                  dataWhole?.package_info?.available_packages
-                                    ?.length === 0 ?? isLoadingS
+                                  dataWhole.package_info.available_packages
+                                    .length === 0 ?? isLoadingS
                                 }
                                 className="w-full @xl:w-auto"
                               >

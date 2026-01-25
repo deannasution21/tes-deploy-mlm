@@ -245,12 +245,12 @@ export default function PromoPage({ className }: { className?: string }) {
                                               <th className="min-w-28 border px-3 py-2 text-center">
                                                 Aktif (L / R)
                                               </th>
-                                              <th className="min-w-28 border px-3 py-2 text-center">
+                                              {/* <th className="min-w-28 border px-3 py-2 text-center">
                                                 Ditahan (L / R)
                                               </th>
                                               <th className="min-w-28 border px-3 py-2 text-center">
                                                 Efektif (L / R)
-                                              </th>
+                                              </th> */}
                                             </tr>
                                           </thead>
 
@@ -292,13 +292,13 @@ export default function PromoPage({ className }: { className?: string }) {
                                                     </td>
 
                                                     {/* HELD */}
-                                                    <td className="border px-3 py-2 text-center">
+                                                    {/* <td className="border px-3 py-2 text-center">
                                                       {pointData.held.left} /{' '}
                                                       {pointData.held.right}
-                                                    </td>
+                                                    </td> */}
 
                                                     {/* EFFECTIVE TOTAL */}
-                                                    <td className="border px-3 py-2 text-center">
+                                                    {/* <td className="border px-3 py-2 text-center">
                                                       {
                                                         pointData
                                                           .effective_total.left
@@ -308,7 +308,7 @@ export default function PromoPage({ className }: { className?: string }) {
                                                         pointData
                                                           .effective_total.right
                                                       }
-                                                    </td>
+                                                    </td> */}
                                                   </tr>
                                                 )
                                               )

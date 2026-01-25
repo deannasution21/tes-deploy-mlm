@@ -10,7 +10,7 @@ import pageImg2 from '@public/assets/img/promo-vietnam-januari-2026.jpeg';
 import WidgetCard from '@core/components/cards/widget-card';
 import { Form } from '@core/ui/form';
 import { FormBlockWrapper } from '../invoice/form-utils';
-import { Button, Input, Text } from 'rizzui';
+import { Alert, Button, Input, Text } from 'rizzui';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import {
   AvailablePackage,
@@ -167,346 +167,349 @@ export default function PromoPage({ className }: { className?: string }) {
             </div>
           </div>
 
-          {dataWhole?.promo_status === 'active' &&
-            dataWhole?.user_status?.qualified_for_promo && (
-              <div>
-                <WidgetCard
-                  title={
-                    <span className="text-[#c69731]">Form Pilih Promo</span>
-                  }
-                  titleClassName="text-gray-700 font-bold text-2xl sm:text-2xl font-inter mb-5"
-                >
-                  <div>
-                    <Form<PromoInput>
-                      validationSchema={promoSchema}
-                      onSubmit={onSubmit}
-                      useFormProps={{
-                        defaultValues: {
-                          package_id: '', // ✅ now valid
-                        } as PromoInput,
-                      }}
-                      className="flex flex-grow flex-col @container [&_label]:font-medium"
-                    >
-                      {({
-                        register,
-                        control,
-                        watch,
-                        setValue,
-                        reset,
-                        formState: { errors },
-                      }) => {
-                        const pointsByChannel =
-                          dataWhole?.points_summary?.points_by_channel ?? {};
+          {dataWhole?.promo_status === 'active' && (
+            <div>
+              <WidgetCard
+                title={<span className="text-[#c69731]">Form Promo</span>}
+                titleClassName="text-gray-700 font-bold text-2xl sm:text-2xl font-inter mb-5"
+              >
+                <div>
+                  <Form<PromoInput>
+                    validationSchema={promoSchema}
+                    onSubmit={onSubmit}
+                    useFormProps={{
+                      defaultValues: {
+                        package_id: '', // ✅ now valid
+                      } as PromoInput,
+                    }}
+                    className="flex flex-grow flex-col @container [&_label]:font-medium"
+                  >
+                    {({
+                      register,
+                      control,
+                      watch,
+                      setValue,
+                      reset,
+                      formState: { errors },
+                    }) => {
+                      const pointsByChannel =
+                        dataWhole?.points_summary?.points_by_channel ?? {};
 
-                        return (
-                          <>
-                            <div className="flex-grow pb-10">
-                              <div className="grid grid-cols-1 gap-8 divide-y divide-dashed divide-gray-200 @2xl:gap-10 @3xl:gap-12">
-                                <FormBlockWrapper
-                                  title={'Data PROMO Berjalan:'}
-                                >
-                                  <Input
-                                    label="Promo Dipilih"
-                                    value={
-                                      dataWhole?.package_info?.package_status ??
-                                      ''
-                                    }
-                                    readOnly
-                                    disabled
-                                  />
+                      const downlines = dataWhole?.downlines ?? [];
 
-                                  <Input
-                                    label="Jumlah User PIN Bayar"
-                                    value={
-                                      dataWhole?.user_status
-                                        ?.active_downlines ?? 0
-                                    }
-                                    readOnly
-                                    disabled
-                                  />
+                      return (
+                        <>
+                          <div className="flex-grow pb-10">
+                            <div className="grid grid-cols-1 gap-8 divide-y divide-dashed divide-gray-200 @2xl:gap-10 @3xl:gap-12">
+                              <FormBlockWrapper title={'Data PROMO Berjalan:'}>
+                                <Input
+                                  label="Promo Dipilih"
+                                  value={
+                                    dataWhole?.package_info?.package_status ??
+                                    ''
+                                  }
+                                  readOnly
+                                  disabled
+                                />
 
-                                  <div className="col-span-full">
-                                    {Object.entries(pointsByChannel).map(
-                                      ([channelKey, channelData]) => (
-                                        <div
-                                          key={channelKey}
-                                          className="mb-6 rounded-xl border border-gray-200 p-4"
-                                        >
-                                          {/* CHANNEL TITLE */}
-                                          <h3 className="mb-3 text-lg font-semibold capitalize">
-                                            {channelKey === 'car'
-                                              ? 'Point Promo Mobil'
-                                              : channelKey === 'trip'
-                                                ? 'Point Promo Wisata'
-                                                : ''}
-                                          </h3>
+                                <Input
+                                  label="Jumlah User PIN Bayar"
+                                  value={
+                                    dataWhole?.user_status?.active_downlines ??
+                                    0
+                                  }
+                                  readOnly
+                                  disabled
+                                />
 
-                                          {/* TABLE */}
-                                          <table className="w-full border-collapse text-sm">
-                                            <thead>
-                                              <tr className="bg-gray-100 text-left">
-                                                <th className="border px-3 py-2">
-                                                  Jenis
-                                                </th>
-                                                <th className="border px-3 py-2 text-center">
-                                                  Kiri
-                                                </th>
-                                                <th className="border px-3 py-2 text-center">
-                                                  Kanan
-                                                </th>
-                                              </tr>
-                                            </thead>
+                                <div className="col-span-full">
+                                  {downlines.length > 0 && (
+                                    <div className="rounded-xl border border-gray-200 p-4">
+                                      <h3 className="mb-4 text-lg font-semibold">
+                                        Detail Point User
+                                      </h3>
 
-                                            <tbody>
-                                              {/* ACTIVE POINTS */}
-                                              <tr>
-                                                <td className="border px-3 py-2 font-medium">
-                                                  Point Aktif
-                                                </td>
-                                                <td className="border px-3 py-2 text-center">
-                                                  {
-                                                    channelData.active_points
-                                                      .left
-                                                  }
-                                                </td>
-                                                <td className="border px-3 py-2 text-center">
-                                                  {
-                                                    channelData.active_points
-                                                      .right
-                                                  }
-                                                </td>
-                                              </tr>
+                                      <div className="overflow-x-auto">
+                                        <table className="w-full border-collapse text-xs lg:text-sm">
+                                          <thead>
+                                            <tr className="bg-gray-100 text-left">
+                                              <th className="border px-3 py-2">
+                                                Username
+                                              </th>
+                                              <th className="min-w-28 border px-3 py-2">
+                                                Nama
+                                              </th>
+                                              <th className="min-w-28 border px-3 py-2">
+                                                Jenis
+                                              </th>
+                                              <th className="min-w-28 border px-3 py-2 text-center">
+                                                Aktif (L / R)
+                                              </th>
+                                              <th className="min-w-28 border px-3 py-2 text-center">
+                                                Ditahan (L / R)
+                                              </th>
+                                              <th className="min-w-28 border px-3 py-2 text-center">
+                                                Efektif (L / R)
+                                              </th>
+                                            </tr>
+                                          </thead>
 
-                                              {/* HELD POINTS */}
-                                              <tr>
-                                                <td className="border px-3 py-2 font-medium">
-                                                  Point Ditahan
-                                                  {/* NOTE */}
-                                                  {channelData.held_points
-                                                    .note && (
-                                                    <p className="mt-2 text-xs text-gray-500">
+                                          <tbody>
+                                            {downlines.map((dl) =>
+                                              Object.entries(dl.points).map(
+                                                (
+                                                  [channelKey, pointData],
+                                                  idx
+                                                ) => (
+                                                  <tr
+                                                    key={`${dl.username}-${channelKey}`}
+                                                  >
+                                                    {/* USERNAME */}
+                                                    <td className="border px-3 py-2 font-medium uppercase">
+                                                      {idx === 0
+                                                        ? dl.username
+                                                        : ''}
+                                                    </td>
+
+                                                    {/* NAME */}
+                                                    <td className="border px-3 py-2">
+                                                      {idx === 0 ? dl.name : ''}
+                                                    </td>
+
+                                                    {/* CHANNEL */}
+                                                    <td className="border px-3 py-2 capitalize">
+                                                      {channelKey === 'car'
+                                                        ? 'Promo Mobil'
+                                                        : channelKey === 'trip'
+                                                          ? 'Promo Wisata'
+                                                          : ''}
+                                                    </td>
+
+                                                    {/* ACTIVE */}
+                                                    <td className="border px-3 py-2 text-center">
+                                                      {pointData.active.left} /{' '}
+                                                      {pointData.active.right}
+                                                    </td>
+
+                                                    {/* HELD */}
+                                                    <td className="border px-3 py-2 text-center">
+                                                      {pointData.held.left} /{' '}
+                                                      {pointData.held.right}
+                                                    </td>
+
+                                                    {/* EFFECTIVE TOTAL */}
+                                                    <td className="border px-3 py-2 text-center">
                                                       {
-                                                        channelData.held_points
-                                                          .note
+                                                        pointData
+                                                          .effective_total.left
+                                                      }{' '}
+                                                      /{' '}
+                                                      {
+                                                        pointData
+                                                          .effective_total.right
                                                       }
-                                                    </p>
-                                                  )}
-                                                </td>
-                                                <td className="border px-3 py-2 text-center">
-                                                  {channelData.held_points.left}
-                                                </td>
-                                                <td className="border px-3 py-2 text-center">
-                                                  {
-                                                    channelData.held_points
-                                                      .right
-                                                  }
-                                                </td>
-                                              </tr>
-                                            </tbody>
-                                          </table>
-                                        </div>
-                                      )
-                                    )}
-                                  </div>
-                                </FormBlockWrapper>
-                                <FormBlockWrapper
-                                  title={'Pilih/Upgrade PROMO:'}
-                                  className="pt-7 @2xl:pt-9 @3xl:pt-11"
-                                >
-                                  <Controller
-                                    name="package_id"
-                                    control={control}
-                                    render={({
-                                      field: { name, onChange, value },
-                                    }) => {
-                                      const packages =
-                                        dataWhole?.package_info
-                                          ?.available_packages ?? [];
-                                      const channels =
-                                        dataWhole?.channels ?? [];
+                                                    </td>
+                                                  </tr>
+                                                )
+                                              )
+                                            )}
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </FormBlockWrapper>
+                              <FormBlockWrapper
+                                title={'Pilih/Upgrade PROMO:'}
+                                className="pt-7 @2xl:pt-9 @3xl:pt-11"
+                              >
+                                <Controller
+                                  name="package_id"
+                                  control={control}
+                                  render={({
+                                    field: { name, onChange, value },
+                                  }) => {
+                                    const packages =
+                                      dataWhole?.package_info
+                                        ?.available_packages ?? [];
+                                    const channels = dataWhole?.channels ?? [];
 
-                                      const isUserQualified = channels.every(
-                                        (c) => c.qualified
+                                    const isUserQualified = channels.every(
+                                      (c) => c.qualified
+                                    );
+                                    const isDecisionLocked =
+                                      dataWhole?.package_info
+                                        ?.decision_locked ?? false;
+
+                                    const isDisabled =
+                                      !isUserQualified || isDecisionLocked;
+
+                                    type RewardPolicy =
+                                      | 'choose_one'
+                                      | 'all'
+                                      | 'none';
+
+                                    const rewardPolicyLabel = (
+                                      policy?: RewardPolicy
+                                    ) => {
+                                      switch (policy) {
+                                        case 'choose_one':
+                                          return 'Pilih salah satu reward:';
+                                        case 'all':
+                                          return 'Berhak atas semua rewards:';
+                                        case 'none':
+                                          return 'Tidak ada reward pada channel ini';
+                                        default:
+                                          return '';
+                                      }
+                                    };
+
+                                    if (
+                                      dataWhole?.package_info
+                                        ?.available_packages?.length === 0
+                                    ) {
+                                      return (
+                                        <Text className="text-base text-red-600">
+                                          Belum ada PROMO tersedia
+                                        </Text>
                                       );
-                                      const isDecisionLocked =
-                                        dataWhole?.package_info
-                                          ?.decision_locked ?? false;
-
-                                      const isDisabled =
-                                        !isUserQualified || isDecisionLocked;
-
-                                      type RewardPolicy =
-                                        | 'choose_one'
-                                        | 'all'
-                                        | 'none';
-
-                                      const rewardPolicyLabel = (
-                                        policy?: RewardPolicy
-                                      ) => {
-                                        switch (policy) {
-                                          case 'choose_one':
-                                            return 'Pilih salah satu reward:';
-                                          case 'all':
-                                            return 'Berhak atas semua rewards:';
-                                          case 'none':
-                                            return 'Tidak ada reward pada channel ini';
-                                          default:
-                                            return '';
-                                        }
-                                      };
-
-                                      if (
-                                        dataWhole?.package_info
-                                          ?.available_packages?.length === 0
-                                      ) {
-                                        return (
-                                          <Text className="text-base text-red-600">
-                                            Belum ada PROMO tersedia
-                                          </Text>
-                                        );
-                                      } else {
-                                        return (
-                                          <div className="col-span-full">
-                                            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-                                              {packages.map((pkg) => (
-                                                <div key={pkg.package_id}>
-                                                  <label
-                                                    className={`flex cursor-pointer gap-4 rounded-xl border p-4 transition ${
+                                    } else {
+                                      return (
+                                        <div className="col-span-full">
+                                          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                                            {packages.map((pkg) => (
+                                              <div key={pkg.package_id}>
+                                                <label
+                                                  className={`flex cursor-pointer gap-4 rounded-xl border p-4 transition ${
+                                                    value ==
+                                                    String(pkg.package_id)
+                                                      ? 'border-primary bg-primary/5'
+                                                      : 'border-gray-200 hover:border-gray-300'
+                                                  } `}
+                                                >
+                                                  {/* RADIO */}
+                                                  <input
+                                                    type="radio"
+                                                    name={name}
+                                                    value={String(
+                                                      pkg.package_id
+                                                    )}
+                                                    checked={
                                                       value ==
                                                       String(pkg.package_id)
-                                                        ? 'border-primary bg-primary/5'
-                                                        : 'border-gray-200 hover:border-gray-300'
-                                                    } `}
-                                                  >
-                                                    {/* RADIO */}
-                                                    <input
-                                                      type="radio"
-                                                      name={name}
-                                                      value={String(
-                                                        pkg.package_id
-                                                      )}
-                                                      checked={
-                                                        value ==
-                                                        String(pkg.package_id)
-                                                      }
-                                                      // disabled={isDisabled}
-                                                      onChange={(e) =>
-                                                        onChange(e.target.value)
-                                                      }
-                                                      className="mt-1 h-4 w-4"
-                                                    />
+                                                    }
+                                                    // disabled={isDisabled}
+                                                    onChange={(e) =>
+                                                      onChange(e.target.value)
+                                                    }
+                                                    className="mt-1 h-4 w-4"
+                                                  />
 
-                                                    {/* CONTENT */}
-                                                    <div className="flex flex-col gap-3">
-                                                      {/* PACKAGE NAME */}
-                                                      <div className="font-semibold text-gray-900">
-                                                        Paket {pkg.package_id}{' '}
-                                                        ID
-                                                      </div>
-
-                                                      {/* CHANNEL DETAILS */}
-                                                      {channels
-                                                        .filter((channel) =>
-                                                          pkg.eligible_channels.includes(
-                                                            channel.channel_id
-                                                          )
-                                                        )
-                                                        .map((channel) => (
-                                                          <div
-                                                            key={
-                                                              channel.channel_id
-                                                            }
-                                                            className="rounded-lg bg-gray-50 p-3 text-sm"
-                                                          >
-                                                            {/* Program Name */}
-                                                            <div className="font-medium text-gray-800">
-                                                              {channel.name}
-                                                            </div>
-
-                                                            {/* Period */}
-                                                            <div className="text-gray-500">
-                                                              Periode:{' '}
-                                                              {
-                                                                channel.period
-                                                                  .start
-                                                              }{' '}
-                                                              –{' '}
-                                                              {
-                                                                channel.period
-                                                                  .end
-                                                              }
-                                                            </div>
-
-                                                            {/* Rewards */}
-                                                            <div className="mt-2">
-                                                              <div className="mb-1 text-xs font-semibold text-green-600">
-                                                                {rewardPolicyLabel(
-                                                                  pkg
-                                                                    .reward_policy?.[
-                                                                    channel
-                                                                      .channel_id
-                                                                  ]
-                                                                )}
-                                                              </div>
-
-                                                              <ul className="list-inside list-disc text-gray-600">
-                                                                {channel.rewards.map(
-                                                                  (r, idx) => (
-                                                                    <li
-                                                                      key={idx}
-                                                                    >
-                                                                      {
-                                                                        r.requirement
-                                                                      }{' '}
-                                                                      →{' '}
-                                                                      {r.reward}
-                                                                    </li>
-                                                                  )
-                                                                )}
-                                                              </ul>
-                                                            </div>
-                                                          </div>
-                                                        ))}
+                                                  {/* CONTENT */}
+                                                  <div className="flex flex-col gap-3">
+                                                    {/* PACKAGE NAME */}
+                                                    <div className="font-semibold text-gray-900">
+                                                      Paket {pkg.package_id} ID
                                                     </div>
-                                                  </label>
-                                                </div>
-                                              ))}
-                                            </div>
 
-                                            {errors.package_id && (
-                                              <p className="text-sm text-red-500">
-                                                {errors.package_id.message}
-                                              </p>
-                                            )}
+                                                    {/* CHANNEL DETAILS */}
+                                                    {channels
+                                                      .filter((channel) =>
+                                                        pkg.eligible_channels.includes(
+                                                          channel.channel_id
+                                                        )
+                                                      )
+                                                      .map((channel) => (
+                                                        <div
+                                                          key={
+                                                            channel.channel_id
+                                                          }
+                                                          className="rounded-lg bg-gray-50 p-3 text-sm"
+                                                        >
+                                                          {/* Program Name */}
+                                                          <div className="font-medium text-gray-800">
+                                                            {channel.name}
+                                                          </div>
+
+                                                          {/* Period */}
+                                                          <div className="text-gray-500">
+                                                            Periode:{' '}
+                                                            {
+                                                              channel.period
+                                                                .start
+                                                            }{' '}
+                                                            –{' '}
+                                                            {channel.period.end}
+                                                          </div>
+
+                                                          {/* Rewards */}
+                                                          <div className="mt-2">
+                                                            <div className="mb-1 text-xs font-semibold text-green-600">
+                                                              {rewardPolicyLabel(
+                                                                pkg
+                                                                  .reward_policy?.[
+                                                                  channel
+                                                                    .channel_id
+                                                                ]
+                                                              )}
+                                                            </div>
+
+                                                            <ul className="list-inside list-disc text-gray-600">
+                                                              {channel.rewards.map(
+                                                                (r, idx) => (
+                                                                  <li key={idx}>
+                                                                    {
+                                                                      r.requirement
+                                                                    }{' '}
+                                                                    → {r.reward}
+                                                                  </li>
+                                                                )
+                                                              )}
+                                                            </ul>
+                                                          </div>
+                                                        </div>
+                                                      ))}
+                                                  </div>
+                                                </label>
+                                              </div>
+                                            ))}
                                           </div>
-                                        );
-                                      }
-                                    }}
-                                  />
-                                </FormBlockWrapper>
-                              </div>
+
+                                          {errors.package_id && (
+                                            <p className="text-sm text-red-500">
+                                              {errors.package_id.message}
+                                            </p>
+                                          )}
+                                        </div>
+                                      );
+                                    }
+                                  }}
+                                />
+                              </FormBlockWrapper>
                             </div>
-                            <div className="-mb-4 flex items-center justify-end gap-4 border-t py-4 dark:bg-gray-50">
-                              <Button
-                                type="submit"
-                                isLoading={isLoadingS}
-                                disabled={
-                                  dataWhole.package_info.available_packages
-                                    .length === 0 || isLoadingS
-                                }
-                                className="w-full @xl:w-auto"
-                              >
-                                Pilih Promo
-                              </Button>
-                            </div>
-                          </>
-                        );
-                      }}
-                    </Form>
-                  </div>
-                </WidgetCard>
-              </div>
-            )}
+                          </div>
+                          <div className="-mb-4 flex items-center justify-end gap-4 border-t py-4 dark:bg-gray-50">
+                            <Button
+                              type="submit"
+                              isLoading={isLoadingS}
+                              disabled={
+                                dataWhole.package_info.available_packages
+                                  .length === 0 || isLoadingS
+                              }
+                              className="w-full @xl:w-auto"
+                            >
+                              Pilih Promo
+                            </Button>
+                          </div>
+                        </>
+                      );
+                    }}
+                  </Form>
+                </div>
+              </WidgetCard>
+            </div>
+          )}
         </div>
       </div>
     </>

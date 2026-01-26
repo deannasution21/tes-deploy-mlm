@@ -15,6 +15,7 @@ import imgSNP from '@public/assets/img/product/SNP 3.jpg';
 import imgLILAC from '@public/assets/img/product/LILAC.jpg';
 import imgFCMIST from '@public/assets/img/product/FCMIST.jpeg';
 import imgEGAM from '@public/assets/img/product/EGAM.jpeg';
+import imgLP from '@public/assets/img/product/LP.jpeg';
 
 type CartDrawerViewProps = {
   items: ProductCartItem[];
@@ -64,7 +65,9 @@ export default function CartDrawerView({
                       ? imgFCMIST
                       : item.id === 'PRD0005'
                         ? imgEGAM
-                        : defaultPlaceholder,
+                        : item.id === 'PRD0006'
+                          ? imgLP
+                          : defaultPlaceholder,
           }))}
           showControls
           className="mb-5 gap-0 divide-y border-b border-gray-100"

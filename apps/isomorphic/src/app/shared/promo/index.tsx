@@ -287,8 +287,15 @@ export default function PromoPage({ className }: { className?: string }) {
 
                                                     {/* ACTIVE */}
                                                     <td className="border px-3 py-2 text-center">
-                                                      {pointData.active.left} /{' '}
-                                                      {pointData.active.right}
+                                                      {
+                                                        pointData
+                                                          .effective_total.left
+                                                      }{' '}
+                                                      /{' '}
+                                                      {
+                                                        pointData
+                                                          .effective_total.right
+                                                      }
                                                     </td>
 
                                                     {/* HELD */}

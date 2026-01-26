@@ -319,6 +319,37 @@ export interface NetworkNode {
   hasData: boolean;
   children?: NetworkNode[]; // recursive structure
   childrenCount?: number;
+  promo_points?: PromoPoints;
+}
+
+export interface PointsSide {
+  left: number;
+  right: number;
+  pairs: number;
+}
+
+export interface HeldPoints {
+  left: number;
+  right: number;
+  since: string | null;
+}
+
+export interface PromoFlags {
+  channel_eligible: number;
+  held_eligible_by_points_start_at: number;
+  bank_pkg: number;
+  bank_whitelist: number;
+}
+
+export interface PromoPointsChannel {
+  active: PointsSide;
+  held: HeldPoints;
+  effective_total: PointsSide;
+  flags: PromoFlags;
+}
+
+export interface PromoPoints {
+  [channelId: string]: PromoPointsChannel;
 }
 
 export interface PaymentMethodResponse {

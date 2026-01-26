@@ -13,6 +13,7 @@ import imgSNP from '@public/assets/img/product/SNP 3.jpg';
 import imgLILAC from '@public/assets/img/product/LILAC.jpg';
 import imgFCMIST from '@public/assets/img/product/FCMIST.jpeg';
 import imgEGAM from '@public/assets/img/product/EGAM.jpeg';
+import imgLP from '@public/assets/img/product/LP.jpeg';
 
 const columns = [
   {
@@ -36,7 +37,9 @@ const columns = [
                       ? imgFCMIST
                       : String(row.id) === 'prd0005'
                         ? imgEGAM
-                        : defaultPlaceholder
+                        : String(row.id) === 'prd0006'
+                          ? imgLP
+                          : defaultPlaceholder
             }
             fill
             sizes="(max-width: 768px) 100vw"

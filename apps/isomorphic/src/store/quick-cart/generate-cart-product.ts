@@ -7,6 +7,7 @@ import imgSNP from '@public/assets/img/product/SNP 3.jpg';
 import imgLILAC from '@public/assets/img/product/LILAC.jpg';
 import imgFCMIST from '@public/assets/img/product/FCMIST.jpeg';
 import imgEGAM from '@public/assets/img/product/EGAM.jpeg';
+import imgLP from '@public/assets/img/product/LP.jpeg';
 
 // interface CartProduct extends Omit<Product, 'colors' | 'sizes'> {
 //   color: ProductColor;
@@ -41,7 +42,9 @@ export function generateCartProduct(product: CartProduct): ProductCartItem {
               ? imgFCMIST
               : product_id === 'PRD0005'
                 ? imgEGAM
-                : defaultPlaceholder,
+                : product_id === 'PRD0006'
+                  ? imgLP
+                  : defaultPlaceholder,
     size: 1,
   };
 }

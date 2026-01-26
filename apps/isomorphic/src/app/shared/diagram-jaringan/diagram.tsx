@@ -103,6 +103,52 @@ function Tree({ data, session }: TreeProps) {
                 {node.point_right ?? 0}
               </Badge>
             </div>
+            {node?.promo_points && (
+              <>
+                <p className="text-[10px] text-green-600">Point Promo Mobil:</p>
+                <div className="flex justify-center gap-2">
+                  <Badge
+                    variant="flat"
+                    rounded="pill"
+                    className="font-medium"
+                    color="success"
+                    size="sm"
+                  >
+                    {node?.promo_points?.car?.effective_total?.left ?? 0}
+                  </Badge>
+                  <Badge
+                    variant="flat"
+                    rounded="pill"
+                    className="font-medium"
+                    color="success"
+                    size="sm"
+                  >
+                    {node?.promo_points?.car?.effective_total?.right ?? 0}
+                  </Badge>
+                </div>
+                <p className="text-[10px] text-blue-600">Point Promo Wisata:</p>
+                <div className="flex justify-center gap-2">
+                  <Badge
+                    variant="flat"
+                    rounded="pill"
+                    className="font-medium"
+                    color="info"
+                    size="sm"
+                  >
+                    {node?.promo_points?.trip?.effective_total?.left ?? 0}
+                  </Badge>
+                  <Badge
+                    variant="flat"
+                    rounded="pill"
+                    className="font-medium"
+                    color="info"
+                    size="sm"
+                  >
+                    {node?.promo_points?.trip?.effective_total?.right ?? 0}
+                  </Badge>
+                </div>
+              </>
+            )}
           </Link>
         ) : currentUpline ? (
           // ❗ Null node (potential downline)

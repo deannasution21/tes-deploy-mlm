@@ -15,6 +15,7 @@ import imgSNP from '@public/assets/img/product/SNP 3.jpg';
 import imgLILAC from '@public/assets/img/product/LILAC.jpg';
 import imgFCMIST from '@public/assets/img/product/FCMIST.jpeg';
 import imgEGAM from '@public/assets/img/product/EGAM.jpeg';
+import imgLP from '@public/assets/img/product/LP.jpeg';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 let countPerPage = 12;
@@ -83,7 +84,9 @@ export default function ProductFeed() {
                         ? imgFCMIST
                         : product.product_id === 'PRD0005'
                           ? imgEGAM
-                          : defaultPlaceholder
+                          : product.product_id === 'PRD0006'
+                            ? imgLP
+                            : defaultPlaceholder
               }
               routes={routes}
             />

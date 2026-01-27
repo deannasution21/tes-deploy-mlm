@@ -224,7 +224,7 @@ export default function PromoPage({ className }: { className?: string }) {
 
                                 <div className="col-span-full">
                                   {downlines.length > 0 && (
-                                    <div className="rounded-xl border border-gray-200 p-4">
+                                    <div className="hidden rounded-xl border border-gray-200 p-4">
                                       <h3 className="mb-4 text-lg font-semibold">
                                         Detail Point User
                                       </h3>

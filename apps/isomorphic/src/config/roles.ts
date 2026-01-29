@@ -55,6 +55,9 @@ export const rolePermissions = {
       '/penarikan-pin/:path*',
       '/profil',
       '/profil/:path*',
+
+      '/promo',
+      '/promo/:path*',
     ],
   },
 

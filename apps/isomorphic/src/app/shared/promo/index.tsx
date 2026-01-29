@@ -4,9 +4,10 @@ import cn from '@core/utils/class-names';
 import { useEffect, useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import pageImg from '@public/assets/img/promo-stockist-ipg-thailand.jpg';
-import pageImg1 from '@public/assets/img/promo-mobil-januari-2026.jpeg';
-import pageImg2 from '@public/assets/img/promo-vietnam-januari-2026.jpeg';
+import imgTripThailand from '@public/assets/img/promo-stockist-ipg-thailand.jpg';
+import imgMobilJan from '@public/assets/img/promo-mobil-januari-2026.jpeg';
+import imgTripVietnam from '@public/assets/img/promo-vietnam-januari-2026.jpeg';
+import imgStockistAkumulasi from '@public/assets/img/promo-stockist-akumulasi.jpg';
 import WidgetCard from '@core/components/cards/widget-card';
 import { Form } from '@core/ui/form';
 import { FormBlockWrapper } from '../invoice/form-utils';
@@ -30,6 +31,13 @@ export default function PromoPage({ className }: { className?: string }) {
 
   const [dataWhole, setDataWhole] = useState<PromoData | null>(null);
   const [dataPromo, setDataPromo] = useState<AvailablePackage[]>([]);
+
+  const gambarPromo = [
+    imgStockistAkumulasi,
+    imgTripThailand,
+    imgMobilJan,
+    imgTripVietnam,
+  ];
 
   const getDataPromo = async () => {
     if (!session?.accessToken) return;
@@ -137,32 +145,16 @@ export default function PromoPage({ className }: { className?: string }) {
           <div className="">
             <div className="mx-auto max-w-sm md:max-w-xl lg:max-w-2xl">
               <div className="flex flex-col gap-4">
-                <Image
-                  src={pageImg}
-                  alt=""
-                  width={800}
-                  height={600}
-                  priority
-                  className="h-auto w-full rounded-lg object-contain shadow-md"
-                />
-
-                <Image
-                  src={pageImg1}
-                  alt=""
-                  width={800}
-                  height={600}
-                  priority
-                  className="h-auto w-full rounded-lg object-contain shadow-md"
-                />
-
-                <Image
-                  src={pageImg2}
-                  alt=""
-                  width={800}
-                  height={600}
-                  priority
-                  className="h-auto w-full rounded-lg object-contain shadow-md"
-                />
+                {gambarPromo?.map((v, i) => (
+                  <Image
+                    src={v.src}
+                    alt=""
+                    width={800}
+                    height={600}
+                    priority
+                    className="h-auto w-full rounded-lg object-contain shadow-md"
+                  />
+                ))}
               </div>
             </div>
           </div>

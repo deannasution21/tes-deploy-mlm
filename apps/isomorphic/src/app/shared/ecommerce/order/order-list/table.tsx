@@ -283,7 +283,7 @@ export default function OrderTable({
     <>
       <div className="@container">
         <div className="grid grid-cols-1 gap-6 3xl:gap-8">
-          <StatCard
+          {/* <StatCard
             key={'stat-card-0'}
             transaction={{
               title: 'Total Pin Dibeli',
@@ -293,7 +293,7 @@ export default function OrderTable({
               icon: PiTrophy,
             }}
             className="w-full min-w-[300px] md:w-[300px] md:max-w-[300px]"
-          />
+          /> */}
 
           <WidgetCard
             className={cn('p-0 lg:p-0', className)}

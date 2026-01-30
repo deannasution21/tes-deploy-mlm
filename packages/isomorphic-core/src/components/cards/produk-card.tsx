@@ -23,7 +23,7 @@ export default function ProdukCard({
 }: ProductProps) {
   const { product_id, attribute } = product;
 
-  const { name, stock, stock_pin, description } = attribute;
+  const { name, stock, stock_pin, description, sold } = attribute;
 
   const price = attribute?.price?.amount ?? 0;
   const oldPrice = price / (1 - 0.12); // adds roughly 12% back
@@ -68,11 +68,11 @@ export default function ProdukCard({
           </Text>
           <div className="mt-2 flex items-center font-semibold text-gray-900">
             {toCurrency(Number(price))}
-            {/* {stock && (
-              <del className="ps-1.5 text-[13px] font-normal text-gray-500">
-                {toCurrency(Number(oldPrice))}
-              </del>
-            )} */}
+            {sold && (
+              <span className="ps-1.5 text-[13px] font-normal text-gray-400 ms-auto">
+                Terjual: {sold}
+              </span>
+            )}
           </div>
         </div>
       </Link>

@@ -102,6 +102,9 @@ export default function ProductDetailsSummery({
               );
             })()}
           </div>
+          <div className="font-medium text-gray-400">
+            Terjual: {product?.attribute?.sold ?? '-'}
+          </div>
           <div className="font-medium text-green-dark">
             Tersedia: {product?.attribute?.stock}
           </div>

@@ -22,7 +22,7 @@ import { useSession } from 'next-auth/react';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import WidgetCard from '@core/components/cards/widget-card';
 import cn from '@core/utils/class-names';
-import { PiX } from 'react-icons/pi';
+import { PiTrophy, PiX } from 'react-icons/pi';
 import { Controller, SubmitHandler } from 'react-hook-form';
 import {
   UbahStatusPesananInput,
@@ -35,6 +35,7 @@ import {
   TransactionDetailResponse,
 } from '../order-view';
 import { useReactToPrint } from 'react-to-print';
+import { StatCard } from '@/app/shared/laporan/status';
 
 export interface TransactionResponse {
   code: number;
@@ -45,6 +46,7 @@ export interface TransactionResponse {
 
 export interface TransactionData {
   count: number;
+  total_pin_generate?: number;
   transactions: Transaction[];
 }
 
@@ -108,6 +110,7 @@ export default function OrderTable({
 }) {
   const { data: session } = useSession();
   const [dataPesanan, setDataPesanan] = useState<Transaction[]>([]);
+  const [dataTP, setDataTP] = useState<TransactionData | null>(null);
   const [isLoading, setLoading] = useState(true);
   const [isLoadingS, setLoadingS] = useState(false);
   const [type, setType] = useState<string>('all');
@@ -201,11 +204,13 @@ export default function OrderTable({
       .then((data) => {
         setDataPesanan(data?.data?.transactions ?? []);
         setData(data?.data?.transactions ?? []);
+        setDataTP(data?.data ?? null);
       })
       .catch((error) => {
         console.error(error);
         setDataPesanan([]);
         setData([]);
+        setDataTP(null);
       })
       .finally(() => setLoading(false));
   }, [session?.accessToken]);
@@ -278,6 +283,18 @@ export default function OrderTable({
     <>
       <div className="@container">
         <div className="grid grid-cols-1 gap-6 3xl:gap-8">
+          <StatCard
+            key={'stat-card-0'}
+            transaction={{
+              title: 'Total Pin Dibeli',
+              amount: (dataTP?.total_pin_generate ?? 0).toString(),
+              increased: true,
+              percentage: '0',
+              icon: PiTrophy,
+            }}
+            className="w-full min-w-[300px] md:w-[300px] md:max-w-[300px]"
+          />
+
           <WidgetCard
             className={cn('p-0 lg:p-0', className)}
             title="History Pembelian"

@@ -175,7 +175,7 @@ export function StatGrid({ data, typee }: { data: any; typee: string }) {
   );
 }
 
-function StatCard({ className, transaction, isUsed }: StatCardProps) {
+export function StatCard({ className, transaction, isUsed }: StatCardProps) {
   const { icon, title, amount, increased, percentage, iconWrapperFill } =
     transaction;
   const Icon = icon;

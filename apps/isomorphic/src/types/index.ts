@@ -155,6 +155,7 @@ export interface ProductAttribute {
   description: string;
   price: ProductPrice;
   discount_rule?: DiscountRule;
+  sold?: number;
 }
 
 export interface DiscountRule {

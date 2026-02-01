@@ -13,6 +13,7 @@ import imgSNP from '@public/assets/img/product/SNP 3.jpg';
 import imgLILAC from '@public/assets/img/product/LILAC.jpg';
 import imgFCMIST from '@public/assets/img/product/FCMIST.jpeg';
 import imgEGAM from '@public/assets/img/product/EGAM.jpeg';
+import imgACC from '@public/assets/img/product/ACC.jpg';
 import imgLP from '@public/assets/img/product/LP.jpeg';
 
 const columnHelperNew = createColumnHelper<ProductItem>();
@@ -50,7 +51,9 @@ export const produkColumnsNew = () => {
                             ? imgEGAM
                             : id === 'PRD0006'
                               ? imgLP
-                              : defaultPlaceholder
+                              : id === 'PRD0007'
+                                ? imgACC
+                                : defaultPlaceholder
                 }
                 alt=""
                 fill

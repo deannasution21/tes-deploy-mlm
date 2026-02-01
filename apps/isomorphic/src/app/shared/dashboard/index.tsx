@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { DealerSummaryData, DealerSummaryResponse } from '@/types';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { handleSessionExpired } from '@/utils/sessionHandler';
+import imgStockistAkumulasi from '@public/assets/img/promo-stockist-akumulasi.jpg';
 
 export default function DashboardPage() {
   const { data: session } = useSession();
@@ -63,6 +64,20 @@ export default function DashboardPage() {
 
   return (
     <div className="@container">
+      <div className="mx-auto max-w-xl">
+        {session?.user?.role === 'stockist' && (
+          <div className="relative mb-5 flex h-full flex-col overflow-hidden rounded-xl shadow-lg">
+            {/* IMAGE */}
+            <Image
+              src={imgStockistAkumulasi.src}
+              alt="Promo Banner"
+              width={800}
+              height={1000}
+              className="h-auto w-full object-contain"
+            />
+          </div>
+        )}
+      </div>
       <div className="grid grid-cols-1 items-stretch gap-6 @4xl:grid-cols-2 @7xl:grid-cols-12 3xl:gap-8">
         <WelcomeBanner
           title={

@@ -191,10 +191,13 @@ export default function OrderTable({
 
     setLoading(true);
 
-    const url =
-      session?.user?.id === 'adminpin2026' || session?.user?.id === 'adminstock'
-        ? `/_transactions/history-transaction?type=payment`
-        : `/_transactions/history-transaction/${session?.user?.id}?type=payment`;
+    const isAdmin =
+      session?.user?.role === 'adminpin' ||
+      session?.user?.role === 'adminstock';
+
+    const url = isAdmin
+      ? '/_transactions/history-transaction?type=payment'
+      : `/_transactions/history-transaction/${session?.user?.id}?type=payment`;
 
     fetchWithAuth<TransactionResponse>(
       url,

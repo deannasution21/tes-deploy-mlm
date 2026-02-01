@@ -273,6 +273,9 @@ export default function PromoRewardStockistPage({
                           <th className="px-4 py-3 text-left font-semibold text-gray-700">
                             Reward
                           </th>
+                          <th className="px-4 py-3 text-left font-semibold text-gray-700">
+                            Withdraw Reward
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -286,6 +289,9 @@ export default function PromoRewardStockistPage({
                             </td>
                             <td className="px-4 py-3 text-gray-700">
                               {target.reward}
+                            </td>
+                            <td className="px-4 py-3">
+                              <Button disabled>Withdraw Sekarang</Button>
                             </td>
                           </tr>
                         ))}

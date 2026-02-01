@@ -65,7 +65,8 @@ export default function DashboardPage() {
   return (
     <div className="@container">
       <div className="mx-auto max-w-xl">
-        {session?.user?.role === 'stockist' && (
+        {(session?.user?.role === 'stockist' ||
+          session?.user?.role === 'member') && (
           <div className="relative mb-5 flex h-full flex-col overflow-hidden rounded-xl shadow-lg">
             {/* IMAGE */}
             <Image

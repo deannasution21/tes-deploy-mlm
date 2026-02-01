@@ -122,6 +122,8 @@ export const routes = {
   },
   promo: {
     index: '/promo',
+    tahunan: '/promo/tahunan',
+    rewardStockist: '/promo/reward-stockist',
   },
   download: {
     index: '/download',

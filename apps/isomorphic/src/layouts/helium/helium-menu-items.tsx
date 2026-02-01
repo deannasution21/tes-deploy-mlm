@@ -718,9 +718,18 @@ export const menuItemsUser = [
   },
   {
     name: 'Promo',
-    href: routes.promo.index,
+    href: '#',
     icon: <PiPercent />,
-    badge: '',
+    dropdownItems: [
+      {
+        name: 'Semua Promo',
+        href: routes.promo.index,
+      },
+      {
+        name: 'Promo Tahunan',
+        href: routes.promo.tahunan,
+      },
+    ],
   },
   {
     name: 'Download',
@@ -795,9 +804,22 @@ export const menuItemsStockist = [
   },
   {
     name: 'Promo',
-    href: routes.promo.index,
+    href: '#',
     icon: <PiPercent />,
-    badge: '',
+    dropdownItems: [
+      {
+        name: 'Semua Promo',
+        href: routes.promo.index,
+      },
+      {
+        name: 'Promo Tahunan',
+        href: routes.promo.tahunan,
+      },
+      {
+        name: 'Promo Reward Stockist',
+        href: routes.promo.rewardStockist,
+      },
+    ],
   },
   {
     name: 'Download',

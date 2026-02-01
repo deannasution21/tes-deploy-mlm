@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 import { DealerSummaryData, DealerSummaryResponse } from '@/types';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { handleSessionExpired } from '@/utils/sessionHandler';
-import imgStockistAkumulasi from '@public/assets/img/promo-stockist-akumulasi.jpg';
+import imgRugiWaktu from '@public/assets/img/rugi-waktu.jpg';
 
 export default function DashboardPage() {
   const { data: session } = useSession();
@@ -69,7 +69,7 @@ export default function DashboardPage() {
           <div className="relative mb-5 flex h-full flex-col overflow-hidden rounded-xl shadow-lg">
             {/* IMAGE */}
             <Image
-              src={imgStockistAkumulasi.src}
+              src={imgRugiWaktu.src}
               alt="Promo Banner"
               width={800}
               height={1000}

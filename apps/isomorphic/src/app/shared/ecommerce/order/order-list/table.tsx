@@ -193,7 +193,8 @@ export default function OrderTable({
 
     const isAdmin =
       session?.user?.role === 'adminpin' ||
-      session?.user?.role === 'adminstock';
+      session?.user?.role === 'adminstock' ||
+      session?.user?.role === 'admin_stock';
 
     const url = isAdmin
       ? '/_transactions/history-transaction?type=payment'

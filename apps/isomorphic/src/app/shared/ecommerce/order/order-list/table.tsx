@@ -191,10 +191,12 @@ export default function OrderTable({
 
     setLoading(true);
 
+    const adminRoles = ['adminpin', 'adminstock', 'admin_stock'];
+    const adminIds = ['adminpin2026'];
+
     const isAdmin =
-      session?.user?.role === 'adminpin' ||
-      session?.user?.role === 'adminstock' ||
-      session?.user?.role === 'admin_stock';
+      adminRoles.includes(session?.user?.role ?? '') ||
+      adminIds.includes(session?.user?.id ?? '');
 
     const url = isAdmin
       ? '/_transactions/history-transaction?type=payment'

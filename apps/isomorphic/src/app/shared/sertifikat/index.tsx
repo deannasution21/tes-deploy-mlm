@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import pageImgThumbnail from '@public/assets/img/sertifikat-msi-jan-2026.jpg';
+import pageImgThumbnail from '@public/assets/img/sertifikat-feb.jpg';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { ReportData, ReportResponse } from '@/types/sertifikat';
 import { useReactToPrint } from 'react-to-print';

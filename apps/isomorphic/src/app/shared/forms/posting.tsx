@@ -699,16 +699,32 @@ export default function Posting({
 
     setLoadingS(true);
 
-    const hasNpwp =
-      typeof payload?.npwp_number === 'string' &&
-      payload.npwp_number.trim() !== '';
+    const OPTIONAL_FIELDS = [
+      'npwp_name',
+      'npwp_number',
+      'npwp_address',
+      'heir_name',
+      'heir_relationship',
+    ];
 
     const body = {
       ...payload,
-      ...(hasNpwp ? { npwp_number: payload.npwp_number } : {}),
       province: type === 'posting' ? selectedProvinceName : payload.province,
       city: type === 'posting' ? selectedCityName : payload.city,
     };
+
+    // remove empty optional fields
+    OPTIONAL_FIELDS.forEach((key) => {
+      const value = body[key];
+
+      if (
+        value === null ||
+        value === undefined ||
+        (typeof value === 'string' && value.trim() === '')
+      ) {
+        delete body[key];
+      }
+    });
 
     fetchWithAuth<any>(
       `/_network-diagrams`,

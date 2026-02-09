@@ -699,8 +699,13 @@ export default function Posting({
 
     setLoadingS(true);
 
+    const hasNpwp =
+      typeof payload?.npwp_number === 'string' &&
+      payload.npwp_number.trim() !== '';
+
     const body = {
       ...payload,
+      ...(hasNpwp ? { npwp_number: payload.npwp_number } : {}),
       province: type === 'posting' ? selectedProvinceName : payload.province,
       city: type === 'posting' ? selectedCityName : payload.city,
     };

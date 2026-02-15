@@ -34,9 +34,10 @@ export const postingSchema = z
       .string()
       .transform((val) => (val === '' ? undefined : val))
       .optional(),
-    npwp_number: z.string().min(1, { message: messages.kolomIsRequired }),
-    // .transform((val) => (val === '' ? undefined : val))
-    // .optional()
+    npwp_number: z
+      .string()
+      .transform((val) => (val === '' ? undefined : val))
+      .optional(),
     // .refine((val) => !val || /^\d{15}$/.test(val), {
     //   message: 'NPWP harus terdiri dari 15 digit angka',
     // }),

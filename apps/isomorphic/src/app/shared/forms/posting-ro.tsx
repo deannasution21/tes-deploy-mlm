@@ -135,7 +135,7 @@ export default function PostingROPage() {
     const id = session?.user?.id;
 
     fetchWithAuth<PinResponse>(
-      `/_pins/dealer/${session?.user?.id}?fetch=all&status=active`,
+      `/_pins/dealer/${session?.user?.id}?type=plan_a&fetch=all&status=active`,
       { method: 'GET' },
       session.accessToken
     )

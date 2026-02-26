@@ -82,6 +82,15 @@ function Tree({ data, session }: TreeProps) {
               <span className="text-[10px] uppercase text-stone-500">
                 {node.location ?? '-'}
               </span>
+              <Badge
+                variant="flat"
+                rounded="pill"
+                className="mx-auto w-fit min-w-14 font-medium"
+                color="secondary"
+                size="sm"
+              >
+                RO: {node.ro_count ?? 0}
+              </Badge>
             </div>
             <div className="flex justify-center gap-2">
               <Badge

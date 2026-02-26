@@ -50,6 +50,9 @@ export const routes = {
     index: '/posting-pin',
     history: '/posting-pin/history',
   },
+  postingRO: {
+    index: '/posting-ro',
+  },
   withdrawalGaji: {
     index: '/withdrawal-gaji',
     history: '/withdrawal-gaji/history',

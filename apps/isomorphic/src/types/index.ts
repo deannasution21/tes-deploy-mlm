@@ -314,6 +314,7 @@ export interface NetworkNode {
   position: 'left' | 'right' | null;
   point_left: number;
   point_right: number;
+  ro_count: number;
   upline: string;
   sponsor?: string;
   isPlaceholder: boolean;

@@ -635,12 +635,12 @@ export const menuItemsUser = [
     icon: <PiTreeStructure />,
     badge: '',
   },
-  {
-    name: 'Posting RO',
-    href: routes.postingRO.index,
-    icon: <PiTreeStructure />,
-    badge: '',
-  },
+  // {
+  //   name: 'Posting RO',
+  //   href: routes.postingRO.index,
+  //   icon: <PiTreeStructure />,
+  //   badge: '',
+  // },
   {
     name: 'List Sponsor Unilevel',
     href: routes.sponsorUnilevel.index,
@@ -824,6 +824,10 @@ export const menuItemsStockist = [
       {
         name: 'Promo Reward Stockist',
         href: routes.promo.rewardStockist,
+      },
+      {
+        name: 'Promo Umroh 2026 Stockist',
+        href: routes.promo.umroh2026Stockist,
       },
     ],
   },

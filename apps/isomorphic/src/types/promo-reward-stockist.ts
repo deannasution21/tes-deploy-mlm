@@ -6,7 +6,9 @@ export interface PromoStatusResponse {
   code: number;
   success: boolean;
   message: string;
-  data: PromoStatusData;
+  data: {
+    promos: PromoStatusData[];
+  };
 }
 
 /* =========================

@@ -127,6 +127,7 @@ export const routes = {
     index: '/promo',
     tahunan: '/promo/tahunan',
     rewardStockist: '/promo/reward-stockist',
+    umroh2026Stockist: '/promo/umroh-2026-stockist',
   },
   download: {
     index: '/download',

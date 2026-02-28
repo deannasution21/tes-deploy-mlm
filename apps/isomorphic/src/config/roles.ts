@@ -6,6 +6,8 @@ export const rolePermissions = {
       '/dashboard',
       '/diagram-jaringan',
       '/diagram-jaringan/:path*',
+      '/posting-ro',
+      '/posting-ro/:path*',
       '/sponsor-unilevel/',
       '/sponsor-unilevel/:path*',
       '/pindah-id/',

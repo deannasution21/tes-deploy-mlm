@@ -4,16 +4,10 @@ import cn from '@core/utils/class-names';
 import { useEffect, useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import imgTripThailand from '@public/assets/img/promo-stockist-ipg-thailand.jpg';
-import imgMobilJan from '@public/assets/img/promo-mobil-januari-2026.jpeg';
-import imgTripVietnam from '@public/assets/img/promo-vietnam-januari-2026.jpeg';
-import imgStockistAkumulasi from '@public/assets/img/promo-stockist-akumulasi.jpg';
+import imgTemplate from '@public/assets/img/logo/logo-diagram-jaringan.jpeg';
 import WidgetCard from '@core/components/cards/widget-card';
-import { Form } from '@core/ui/form';
 import { Alert, Button, Input, Text } from 'rizzui';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
-import { PromoInput, promoSchema } from '@/validators/promo-schema';
-import { Controller, SubmitHandler } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import { toast } from 'react-hot-toast';
 import dynamic from 'next/dynamic';
@@ -24,7 +18,6 @@ const Slider = dynamic(() => import('react-slick'), {
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { FormBlockWrapper } from '../../invoice/form-utils';
 import { routes } from '@/config/routes';
 import { useRouter } from 'next/navigation';
 import {
@@ -33,7 +26,7 @@ import {
 } from '@/types/promo-reward-stockist';
 import DateCell from '@core/ui/date-cell';
 
-export default function PromoRewardStockistPage({
+export default function PromoUmroh2026StockistPage({
   className,
 }: {
   className?: string;
@@ -55,7 +48,7 @@ export default function PromoRewardStockistPage({
 
   const [dataWhole, setDataWhole] = useState<PromoStatusData | null>(null);
 
-  const gambarPromo = [imgStockistAkumulasi];
+  const gambarPromo = [imgTemplate];
 
   const settings = {
     dots: true,
@@ -102,7 +95,8 @@ export default function PromoRewardStockistPage({
         const promos = data?.data?.promos ?? [];
 
         const filteredPromo = promos.find(
-          (promo) => promo?.meta?.promo_config_id === 'PROMO#STOCKIST_2026'
+          (promo) =>
+            promo?.meta?.promo_config_id === 'PROMO#STOCKIST_SPEKTAKULER_2026'
         );
 
         setDataWhole(filteredPromo ?? null);

@@ -222,6 +222,43 @@ export default function WithdrawalBonusForm(slug: any) {
                       </ol>
                     </Alert>
 
+                    <Alert variant="flat" color="warning" className="mb-5">
+                      <Text className="font-semibold">SEKILAS INFORMASI</Text>
+
+                      <div className="mt-2 space-y-2">
+                        <Text className="break-normal">
+                          Kami informasikan kepada seluruh member bahwa{' '}
+                          <strong>Payment Gateway</strong> saat ini sedang
+                          mengalami gangguan dan sedang dalam proses perbaikan
+                          oleh pihak penyedia layanan.
+                        </Text>
+
+                        <Text className="break-normal">
+                          Sehubungan dengan proses perbaikan tersebut, maka
+                          untuk sementara waktu menu{' '}
+                          <strong>Withdraw (WD)</strong> ditutup terlebih dahulu
+                          sampai sistem Payment Gateway kembali normal dan dapat
+                          digunakan seperti biasa.
+                        </Text>
+
+                        <Text className="break-normal">
+                          Kami mohon pengertian dan kesabaran dari seluruh
+                          member. Setelah proses perbaikan selesai, menu WD akan
+                          segera dibuka kembali.
+                        </Text>
+
+                        <Text className="break-normal">
+                          Terima kasih atas perhatian dan kerja samanya.
+                        </Text>
+
+                        <div className="pt-2 text-right">
+                          <Text>TTD</Text>
+                          <Text>Owner</Text>
+                          <Text className="font-semibold">Muhammad Daud</Text>
+                        </div>
+                      </div>
+                    </Alert>
+
                     <div className="grid grid-cols-1 gap-8 divide-y divide-dashed divide-gray-200 @2xl:gap-10 @3xl:gap-12">
                       <FormBlockWrapper title={'Informasi Pencairan:'}>
                         <Input

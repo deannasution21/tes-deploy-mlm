@@ -227,24 +227,27 @@ export default function WithdrawalBonusForm(slug: any) {
 
                       <div className="mt-2 space-y-2">
                         <Text className="break-normal">
-                          Kami informasikan kepada seluruh member bahwa{' '}
-                          <strong>Payment Gateway</strong> saat ini sedang
-                          mengalami gangguan dan sedang dalam proses perbaikan
-                          oleh pihak penyedia layanan.
+                          Kami informasikan kepada seluruh member bahwa layanan{' '}
+                          <strong>Withdraw (WD)</strong>
+                          saat ini telah kembali dibuka mulai pukul{' '}
+                          <strong>14.00 WIB</strong>.
                         </Text>
 
                         <Text className="break-normal">
-                          Sehubungan dengan proses perbaikan tersebut, maka
-                          untuk sementara waktu menu{' '}
-                          <strong>Withdraw (WD)</strong> ditutup terlebih dahulu
-                          sampai sistem Payment Gateway kembali normal dan dapat
-                          digunakan seperti biasa.
+                          Namun demikian, untuk sementara waktu proses WD tidak
+                          dilakukan secara instan. Setiap transaksi penarikan
+                          dana akan{' '}
+                          <strong>
+                            diproses secara otomatis dalam waktu maksimal 4 jam
+                          </strong>
+                          .
                         </Text>
 
                         <Text className="break-normal">
-                          Kami mohon pengertian dan kesabaran dari seluruh
-                          member. Setelah proses perbaikan selesai, menu WD akan
-                          segera dibuka kembali.
+                          Kami mohon pengertian dari seluruh member selama masa
+                          penyesuaian sistem ini. Apabila sistem telah kembali
+                          sepenuhnya normal, proses WD akan kembali berjalan
+                          seperti biasa.
                         </Text>
 
                         <Text className="break-normal">

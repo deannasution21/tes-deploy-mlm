@@ -635,12 +635,12 @@ export const menuItemsUser = [
     icon: <PiTreeStructure />,
     badge: '',
   },
-  {
-    name: 'Posting RO',
-    href: routes.postingRO.index,
-    icon: <PiTreeStructure />,
-    badge: '',
-  },
+  // {
+  //   name: 'Posting RO',
+  //   href: routes.postingRO.index,
+  //   icon: <PiTreeStructure />,
+  //   badge: '',
+  // },
   {
     name: 'List Sponsor Unilevel',
     href: routes.sponsorUnilevel.index,

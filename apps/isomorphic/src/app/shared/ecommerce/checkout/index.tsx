@@ -518,7 +518,7 @@ export default function CheckoutPageWrapper({
             products: products,
             note: '',
             payment_method: payload?.payment_method,
-            type: 'deposit',
+            type: 'payment',
           })
         : JSON.stringify({
             username: session?.user?.id,
@@ -531,7 +531,7 @@ export default function CheckoutPageWrapper({
             products: products,
             note: '',
             payment_method: payload?.payment_method,
-            type: 'deposit',
+            type: 'payment',
           });
 
     fetchWithAuth<PaymentTransactionResponse>(
@@ -596,66 +596,66 @@ export default function CheckoutPageWrapper({
         { method: 'GET' },
         session.accessToken
       ),
-      // fetchWithAuth<PaymentMethodResponse>(
-      //   `/_services/payment-method`,
-      //   { method: 'GET' },
-      //   session.accessToken
-      // ),
+      fetchWithAuth<PaymentMethodResponse>(
+        `/_services/payment-method`,
+        { method: 'GET' },
+        session.accessToken
+      ),
     ])
-      .then(([usersData]) => {
+      .then(([usersData, paymentsData]) => {
         const userData = usersData?.data?.attribute;
         setDataUser(userData || null);
 
-        const paymentData = {
-          data: {
-            transfer: [
-              {
-                id: 'bri',
-                payment_method: 'transfer_bank',
-                payment_channel: 'bri',
-                percentage_type: 'fix',
-                fee: {
-                  value: 0,
-                  formatted: 'Rp 0,00',
-                },
-              },
-              {
-                id: 'bni',
-                payment_method: 'transfer_bank',
-                payment_channel: 'bni',
-                percentage_type: 'fix',
-                fee: {
-                  value: 0,
-                  formatted: 'Rp 0,00',
-                },
-              },
-              {
-                id: 'bca',
-                payment_method: 'transfer_bank',
-                payment_channel: 'bca',
-                percentage_type: 'fix',
-                fee: {
-                  value: 0,
-                  formatted: 'Rp 0,00',
-                },
-              },
-              {
-                id: 'mandiri',
-                payment_method: 'transfer_bank',
-                payment_channel: 'mandiri',
-                percentage_type: 'fix',
-                fee: {
-                  value: 0,
-                  formatted: 'Rp 0,00',
-                },
-              },
-            ],
-            qris: [],
-          },
-        };
+        // const paymentData = {
+        //   data: {
+        //     transfer: [
+        //       {
+        //         id: 'bri',
+        //         payment_method: 'transfer_bank',
+        //         payment_channel: 'bri',
+        //         percentage_type: 'fix',
+        //         fee: {
+        //           value: 0,
+        //           formatted: 'Rp 0,00',
+        //         },
+        //       },
+        //       {
+        //         id: 'bni',
+        //         payment_method: 'transfer_bank',
+        //         payment_channel: 'bni',
+        //         percentage_type: 'fix',
+        //         fee: {
+        //           value: 0,
+        //           formatted: 'Rp 0,00',
+        //         },
+        //       },
+        //       {
+        //         id: 'bca',
+        //         payment_method: 'transfer_bank',
+        //         payment_channel: 'bca',
+        //         percentage_type: 'fix',
+        //         fee: {
+        //           value: 0,
+        //           formatted: 'Rp 0,00',
+        //         },
+        //       },
+        //       {
+        //         id: 'mandiri',
+        //         payment_method: 'transfer_bank',
+        //         payment_channel: 'mandiri',
+        //         percentage_type: 'fix',
+        //         fee: {
+        //           value: 0,
+        //           formatted: 'Rp 0,00',
+        //         },
+        //       },
+        //     ],
+        //     qris: [],
+        //   },
+        // };
 
-        if (paymentData?.data) {
-          const paymentDataTyped = paymentData.data as any;
+        if (paymentsData?.data) {
+          const paymentDataTyped = paymentsData.data as any;
           const options: PaymentOption[] = [];
 
           // Helper function to format labels
@@ -668,7 +668,10 @@ export default function CheckoutPageWrapper({
             };
 
             const methodName = formatMethod(item.payment_method);
-            const channelName = item.payment_channel.toUpperCase();
+
+            const channelName = item.payment_channel
+              .replace(/_va.*$/, '')
+              .toUpperCase();
 
             return `${methodName} - ${channelName}`;
           };

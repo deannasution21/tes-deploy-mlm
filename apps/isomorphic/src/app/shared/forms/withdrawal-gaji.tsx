@@ -322,46 +322,6 @@ export default function WithdrawalGajiForm(slug: any) {
                       </ol>
                     </Alert>
 
-                    <Alert variant="flat" color="warning" className="mb-5">
-                      <Text className="font-semibold">SEKILAS INFORMASI</Text>
-
-                      <div className="mt-2 space-y-2">
-                        <Text className="break-normal">
-                          Kami informasikan kepada seluruh member bahwa layanan{' '}
-                          <strong>Withdraw (WD)</strong>
-                          saat ini telah kembali dibuka mulai pukul{' '}
-                          <strong>14.00 WIB</strong>.
-                        </Text>
-
-                        <Text className="break-normal">
-                          Namun demikian, untuk sementara waktu proses WD tidak
-                          dilakukan secara instan. Setiap transaksi penarikan
-                          dana akan{' '}
-                          <strong>
-                            diproses secara otomatis dalam waktu maksimal 4 jam
-                          </strong>
-                          .
-                        </Text>
-
-                        <Text className="break-normal">
-                          Kami mohon pengertian dari seluruh member selama masa
-                          penyesuaian sistem ini. Apabila sistem telah kembali
-                          sepenuhnya normal, proses WD akan kembali berjalan
-                          seperti biasa.
-                        </Text>
-
-                        <Text className="break-normal">
-                          Terima kasih atas perhatian dan kerja samanya.
-                        </Text>
-
-                        <div className="pt-2 text-right">
-                          <Text>TTD</Text>
-                          <Text>Owner</Text>
-                          <Text className="font-semibold">Muhammad Daud</Text>
-                        </div>
-                      </div>
-                    </Alert>
-
                     <div className="grid grid-cols-1 gap-8 divide-y divide-dashed divide-gray-200 @2xl:gap-10 @3xl:gap-12">
                       <FormBlockWrapper title={'Informasi Pencairan:'}>
                         <Input

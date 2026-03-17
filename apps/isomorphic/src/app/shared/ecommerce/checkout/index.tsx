@@ -677,19 +677,25 @@ export default function CheckoutPageWrapper({
           };
 
           // Process all payment methods dynamically
-          Object.entries(paymentDataTyped).forEach(([methodType, items]) => {
-            if (Array.isArray(items) && items.length > 0) {
-              (items as PaymentItem[]).forEach((item: PaymentItem) => {
-                options.push({
-                  value: item.id,
-                  label: createPaymentLabel(item),
-                  fee: item.fee.value,
-                  //  payment_method: item.payment_method,
-                  //  payment_channel: item.payment_channel,
-                  //  method_type: methodType,
-                });
-              });
-            }
+          // Object.entries(paymentDataTyped).forEach(([methodType, items]) => {
+          //   if (Array.isArray(items) && items.length > 0) {
+          //     (items as PaymentItem[]).forEach((item: PaymentItem) => {
+          //       options.push({
+          //         value: item.id,
+          //         label: createPaymentLabel(item),
+          //         fee: item.fee.value,
+          //         //  payment_method: item.payment_method,
+          //         //  payment_channel: item.payment_channel,
+          //         //  method_type: methodType,
+          //       });
+          //     });
+          //   }
+          // });
+
+          options.push({
+            value: 'bca',
+            label: 'BCA',
+            fee: 0,
           });
 
           setDataPayment(options);

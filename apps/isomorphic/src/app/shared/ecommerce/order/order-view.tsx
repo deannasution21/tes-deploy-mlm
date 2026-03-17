@@ -332,6 +332,27 @@ export const InvoiceComponent = forwardRef<
                     {invoice?.attribute?.status?.message}
                   </Text>
                 )}
+
+                <Alert variant="flat" color="success" className="mb-5">
+                  <Text className="font-semibold">Konfirmasi Pembayaran</Text>
+
+                  <div className="mt-2 space-y-2">
+                    <Text className="break-normal">
+                      Jika Anda telah melakukan pembayaran, silakan lakukan
+                      konfirmasi dengan menghubungi kami melalui WhatsApp.
+                    </Text>
+
+                    <a
+                      href="https://wa.me/6281528535938?text=Halo%20IPG,%20Saya%20mau%20konfirmasi%20pembayaran..."
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-block rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-600"
+                    >
+                      Hubungi WhatsApp
+                    </a>
+                  </div>
+                </Alert>
+
                 <div className="relative flex items-center justify-between rounded-lg border border-gray-100 px-5 py-5 font-medium shadow-sm transition-shadow @5xl:px-7">
                   {(currentStatus === 2 ||
                     currentStatus === 3 ||

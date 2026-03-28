@@ -385,9 +385,9 @@ export const InvoiceComponent = forwardRef<
                             )
                           : '-'}{' '}
                         {' | '}
-                        {invoice?.attribute?.payment?.payment_channel
+                        {invoice?.attribute?.payment?.payment_name
                           ? removeUnderscore(
-                              invoice?.attribute?.payment?.payment_channel
+                              invoice?.attribute?.payment?.payment_name
                             )
                           : '-'}
                       </Text>
@@ -395,9 +395,9 @@ export const InvoiceComponent = forwardRef<
                         <Text className="text-2xl text-green-700 print:text-sm">
                           {invoice?.attribute?.payment?.payment_number ?? '-'}
                         </Text>
-                        <Text className="text-gray-500">
+                        {/* <Text className="text-gray-500">
                           AN. {invoice?.attribute?.payment?.payment_name ?? '-'}
-                        </Text>
+                        </Text> */}
                         {currentStatus === 1 && (
                           <CopyButton
                             text={

@@ -585,6 +585,11 @@ export default function CheckoutPageWrapper({
     });
   };
 
+  function formatBank(payment) {
+    if (!payment) return '';
+    return payment.replace(/^h_/, '').toUpperCase();
+  }
+
   useEffect(() => {
     if (!session?.accessToken) return;
 
@@ -669,34 +674,38 @@ export default function CheckoutPageWrapper({
 
             const methodName = formatMethod(item.payment_method);
 
-            const channelName = item.payment_channel
-              .replace(/_va.*$/, '')
-              .toUpperCase();
+            // const channelName = item.payment_channel
+            //   .replace(/_va.*$/, '')
+            //   .toUpperCase();
+
+            const channelName = formatBank(item.id);
 
             return `${methodName} - ${channelName}`;
           };
 
           // Process all payment methods dynamically
-          // Object.entries(paymentDataTyped).forEach(([methodType, items]) => {
-          //   if (Array.isArray(items) && items.length > 0) {
-          //     (items as PaymentItem[]).forEach((item: PaymentItem) => {
-          //       options.push({
-          //         value: item.id,
-          //         label: createPaymentLabel(item),
-          //         fee: item.fee.value,
-          //         //  payment_method: item.payment_method,
-          //         //  payment_channel: item.payment_channel,
-          //         //  method_type: methodType,
-          //       });
-          //     });
-          //   }
-          // });
-
-          options.push({
-            value: 'bca',
-            label: 'BCA',
-            fee: 0,
+          Object.entries(paymentDataTyped).forEach(([methodType, items]) => {
+            if (Array.isArray(items) && items.length > 0) {
+              (items as PaymentItem[]).forEach((item: PaymentItem) => {
+                options.push({
+                  value: item.id,
+                  label: createPaymentLabel(item),
+                  // label: formatBank(item.id),
+                  fee: item.fee.value,
+                  //  payment_method: item.payment_method,
+                  //  payment_channel: item.payment_channel,
+                  //  method_type: methodType,
+                });
+              });
+            }
           });
+
+          // set static bca only
+          // options.push({
+          //   value: 'bca',
+          //   label: 'BCA',
+          //   fee: 0,
+          // });
 
           setDataPayment(options);
         }

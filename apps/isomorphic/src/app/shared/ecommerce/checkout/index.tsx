@@ -585,7 +585,7 @@ export default function CheckoutPageWrapper({
     });
   };
 
-  function formatBank(payment) {
+  function formatBank(payment: string) {
     if (!payment) return '';
     return payment.replace(/^h_/, '').toUpperCase();
   }

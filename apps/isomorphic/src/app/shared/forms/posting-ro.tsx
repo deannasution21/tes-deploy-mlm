@@ -14,7 +14,14 @@ import { FormBlockWrapper } from '@/app/shared/invoice/form-utils';
 import { toast } from 'react-hot-toast';
 import WidgetCard from '@core/components/cards/widget-card';
 import { useSession } from 'next-auth/react';
-import { UserData, OptionType, Pin, PinResponse } from '@/types';
+import {
+  UserData,
+  OptionType,
+  Pin,
+  PinResponse,
+  NetworkDiagramResponse,
+  NetworkNode,
+} from '@/types';
 import Swal from 'sweetalert2';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import {
@@ -95,20 +102,22 @@ function Formnya({
           )}
         />
 
-        <Controller
-          name="mlm_user_id"
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <Input
-              label="ID Yang Terbentuk"
-              placeholder="(Otomatis by system)"
-              {...field}
-              inputClassName="[&_input]:uppercase"
-              error={error?.message as any}
-              disabled
-            />
-          )}
-        />
+        <div style={{ visibility: 'hidden' }}>
+          <Controller
+            name="mlm_user_id"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <Input
+                label="ID Yang Terbentuk"
+                placeholder="(Otomatis by system)"
+                {...field}
+                inputClassName="[&_input]:uppercase"
+                error={error?.message as any}
+                disabled
+              />
+            )}
+          />
+        </div>
       </div>
     </>
   );
@@ -126,6 +135,7 @@ export default function PostingROPage() {
 
   const [dataPin, setDataPin] = useState<OptionType[]>([]);
   const [dataPin2, setDataPin2] = useState<Pin[]>([]);
+  const [dataDiagramJaringan, setDataDiagramJaringan] = useState<NetworkNode>();
 
   const getDataPin = async () => {
     if (!session?.accessToken) return;
@@ -133,6 +143,36 @@ export default function PostingROPage() {
     setLoading(true);
 
     const id = session?.user?.id;
+
+    Promise.all([
+      fetchWithAuth<PinResponse>(
+        `/_pins/dealer/${session?.user?.id}?type=plan_a&fetch=all&status=active`,
+        { method: 'GET' },
+        session.accessToken
+      ),
+      fetchWithAuth<NetworkDiagramResponse>(
+        `/_network-diagrams`,
+        { method: 'GET' },
+        session.accessToken
+      ),
+    ])
+      .then(([pinData, diagramData]) => {
+        setDataPin(
+          (pinData?.data?.pins ?? []).map((p: any) => ({
+            value: p.pin_code,
+            label: p.pin_code,
+          }))
+        );
+        setDataPin2(pinData?.data?.pins ?? []);
+        setDataDiagramJaringan(diagramData.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        setDataPin([]);
+        setDataPin2([]);
+        setDataDiagramJaringan(undefined);
+      })
+      .finally(() => setLoading(false));
 
     fetchWithAuth<PinResponse>(
       `/_pins/dealer/${session?.user?.id}?type=plan_a&fetch=all&status=active`,
@@ -249,6 +289,18 @@ export default function PostingROPage() {
   return (
     <div className="@container">
       <div className="grid grid-cols-1 gap-6 3xl:gap-8">
+        <Alert variant="flat" color="success">
+          <Text className="font-semibold">Informasi</Text>
+          <ol className="list-disc ps-5">
+            <li>
+              <Text className="break-normal">
+                Anda memiliki total{' '}
+                <strong>{dataDiagramJaringan?.ro_count}</strong> Repeat Order
+                (RO)
+              </Text>
+            </li>
+          </ol>
+        </Alert>
         <WidgetCard
           title={<span className="text-[#c69731]">Form Posting RO</span>}
           titleClassName="text-gray-700 font-bold text-2xl sm:text-2xl font-inter mb-5"

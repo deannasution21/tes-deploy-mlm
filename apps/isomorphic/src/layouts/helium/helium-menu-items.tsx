@@ -907,6 +907,12 @@ export const menuItemsStockistAdminPin = [
     href: routes.penarikanPin.index,
     icon: <PiArrowsDownUp />,
   },
+  {
+    name: 'List Stockist',
+    href: routes.stockist.list,
+    icon: <PiUsers />,
+    badge: '',
+  },
 
   {
     name: 'Personal',
@@ -962,6 +968,12 @@ export const menuItemsAdminStock = [
     href: routes.produk.pesananStockist.index,
     icon: <PiInvoice />,
   },
+  {
+    name: 'List Stockist',
+    href: routes.stockist.list,
+    icon: <PiUsers />,
+    badge: '',
+  },
 
   {
     name: 'Personal',
@@ -1004,6 +1016,12 @@ export const menuItemsAdminMember = [
         href: '#',
       },
     ],
+  },
+  {
+    name: 'List Stockist',
+    href: routes.stockist.list,
+    icon: <PiUsers />,
+    badge: '',
   },
 
   {
@@ -1135,6 +1153,12 @@ export const menuItemsAdmin = [
         href: '#',
       },
     ],
+  },
+  {
+    name: 'List Stockist',
+    href: routes.stockist.list,
+    icon: <PiUsers />,
+    badge: '',
   },
 
   {

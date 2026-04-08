@@ -24,6 +24,8 @@ export const rolePermissions = {
       '/transfer-pin/:path*',
       '/stockist',
       '/stockist/:path*',
+      '/top-income',
+      '/top-income/:path*',
       '/peringkat',
       '/peringkat/:path*',
       '/sertifikat',

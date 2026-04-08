@@ -71,6 +71,7 @@ import {
   PiTarget,
   PiWallet,
   PiArrowFatLinesDown,
+  PiStar,
 } from 'react-icons/pi';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import CrmDashIcon from '@core/components/icons/crm-icon';
@@ -708,6 +709,12 @@ export const menuItemsUser = [
     name: 'List Stockist',
     href: routes.stockist.list,
     icon: <PiUsers />,
+    badge: '',
+  },
+  {
+    name: 'Top Income',
+    href: routes.topIncome.index,
+    icon: <PiStar />,
     badge: '',
   },
   {

@@ -93,6 +93,9 @@ export const config = {
     '/stockist',
     '/stockist/:path*',
 
+    '/top-income',
+    '/top-income/:path*',
+
     '/peringkat',
     '/peringkat/:path*',
 

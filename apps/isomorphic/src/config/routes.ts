@@ -120,6 +120,9 @@ export const routes = {
   peringkat: {
     index: '/peringkat',
   },
+  topIncome: {
+    index: '/top-income',
+  },
   sertifikat: {
     index: '/sertifikat',
   },

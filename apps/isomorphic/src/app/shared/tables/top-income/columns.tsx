@@ -22,14 +22,6 @@ export const topIncomeColumns = [
       <Text className="whitespace-nowrap">{info.getValue()}</Text>
     ),
   }),
-  columnHelper.accessor('attribute.amount.currency', {
-    id: 'amount',
-    header: 'Income',
-    size: 180,
-    cell: (info) => (
-      <Text className="whitespace-nowrap">{info.getValue()}</Text>
-    ),
-  }),
   columnHelper.accessor('attribute.type.label', {
     id: 'type',
     header: 'Type',

@@ -115,7 +115,7 @@ export default function TransferPointWisataPage() {
   const [isLoadingS, setLoadingS] = useState(false);
 
   const [tujuan, setTujuan] = useState<UserData | null>(null);
-  const [dataPin, setDataPin] = useState<PointPromoWisataData | number>(0);
+  const [dataPin, setDataPin] = useState<number>(0);
 
   const getDataPin = async () => {
     if (!session?.accessToken) return;

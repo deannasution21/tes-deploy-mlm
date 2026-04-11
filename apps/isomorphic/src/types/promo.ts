@@ -132,3 +132,43 @@ export interface HeldWithSince {
   right: number;
   since: string | null;
 }
+
+export interface PointPromoWisataResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: PointPromoWisataData;
+}
+
+export interface PointPromoWisataData {
+  username: string;
+  role: 'stockist' | 'user' | string;
+  point_promo_wisata: number;
+}
+
+export interface PromoWisataPeriod {
+  key: string;
+  start_date: string;
+  end_date: string;
+}
+
+export interface PromoWisataReward {
+  id: string;
+  name: string;
+  point_promo_wisata: number;
+  note: string | null;
+  start_date: string;
+  end_date: string;
+}
+
+export interface PromoWisataRewardData {
+  period: PromoWisataPeriod;
+  rewards: PromoWisataReward[];
+}
+
+export interface PromoWisataRewardResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  data: PromoWisataRewardData;
+}

@@ -1,15 +1,12 @@
 'use client';
 
-import cn from '@core/utils/class-names';
 import { useEffect, useState } from 'react';
-import { signIn, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import imgTemplate from '@public/assets/img/logo/logo-diagram-jaringan.jpeg';
 import WidgetCard from '@core/components/cards/widget-card';
-import { Alert, Button, Input, Text } from 'rizzui';
+import { Button } from 'rizzui';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
-import Swal from 'sweetalert2';
-import { toast } from 'react-hot-toast';
 import dynamic from 'next/dynamic';
 
 const Slider = dynamic(() => import('react-slick'), {
@@ -24,7 +21,6 @@ import {
   PromoStatusData,
   PromoStatusResponse,
 } from '@/types/promo-reward-stockist';
-import DateCell from '@core/ui/date-cell';
 
 export default function PromoUmroh2026StockistPage({
   className,
@@ -94,10 +90,11 @@ export default function PromoUmroh2026StockistPage({
       .then((data) => {
         const promos = data?.data?.promos ?? [];
 
-        const filteredPromo = promos.find(
-          (promo) =>
+        const filteredPromo = promos.find((promo) => {
+          return (
             promo?.meta?.promo_config_id === 'PROMO#STOCKIST_SPEKTAKULER_2026'
-        );
+          );
+        });
 
         setDataWhole(filteredPromo ?? null);
       })
@@ -203,25 +200,15 @@ export default function PromoUmroh2026StockistPage({
           <div>
             <WidgetCard
               title={
-                <span className="text-[#c69731]">
-                  {dataWhole?.progress_raw?.promo_snapshot?.name}
-                </span>
+                <span className="text-[#c69731]">{dataWhole?.meta?.name}</span>
               }
               titleClassName="text-gray-700 font-bold text-2xl sm:text-2xl font-inter mb-5"
             >
-              <p className="mb-5">
-                {dataWhole?.progress_raw?.promo_snapshot?.description}
-              </p>
+              <p className="mb-5">{dataWhole?.meta?.description}</p>
 
               <p className="mb-5">
-                Periode:{' '}
-                {formatDateID(
-                  dataWhole?.progress_raw?.channels?.pin?.period_start
-                )}{' '}
-                sd{' '}
-                {formatDateID(
-                  dataWhole?.progress_raw?.channels?.pin?.period_end
-                )}
+                Periode: {formatDateID(dataWhole?.period?.period_start)} sd{' '}
+                {formatDateID(dataWhole?.period?.period_end)}
               </p>
 
               {/* HIGHLIGHT STATS */}

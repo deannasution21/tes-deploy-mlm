@@ -31,11 +31,23 @@ export interface PromoStatusData {
 
 export interface PromoMeta {
   promo_config_id: string;
+  name: string;
+  description: string;
+
   username: string;
   role: 'stockist' | 'user' | string;
+
   status: 'active' | 'inactive' | string;
   is_promo: number;
+
   progress_exists: boolean;
+
+  // tambahan baru
+  stockist_cohort: string; // contoh: "all_stockist" | "old_stockist"
+  stockist_type: string; // contoh: "Semua stockist"
+
+  user_registered_at: string; // ISO date string
+  promo_open_date: string | null; // bisa null
 }
 
 /* =========================

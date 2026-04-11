@@ -742,6 +742,10 @@ export const menuItemsUser = [
         name: 'Promo Tahunan',
         href: routes.promo.tahunan,
       },
+      {
+        name: 'Promo Wisata',
+        href: routes.promo.wisata.index,
+      },
     ],
   },
   {
@@ -839,6 +843,25 @@ export const menuItemsStockist = [
     ],
   },
   {
+    name: 'Promo Wisata',
+    href: '#',
+    icon: <PiBriefcase />,
+    dropdownItems: [
+      {
+        name: 'Transfer Point Promo',
+        href: routes.promo.wisata.transferPoint,
+      },
+      {
+        name: 'History Transfer Point Promo',
+        href: routes.promo.wisata.historyTransfer,
+      },
+      {
+        name: 'History Terima Point Promo',
+        href: routes.promo.wisata.historyTerima,
+      },
+    ],
+  },
+  {
     name: 'Download',
     href: routes.download.index,
     icon: <PiDownload />,
@@ -896,6 +919,29 @@ export const menuItemsStockistAdminPin = [
       {
         name: 'History Pembelian Stockist',
         href: routes.produk.pesananStockist.index,
+      },
+    ],
+  },
+  {
+    name: 'Promo Wisata',
+    href: '#',
+    icon: <PiBriefcase />,
+    dropdownItems: [
+      {
+        name: 'Generate Point Promo',
+        href: routes.promo.wisata.generatePoint,
+      },
+      {
+        name: 'History Generate Point Promo',
+        href: routes.promo.wisata.historyGenerate,
+      },
+      {
+        name: 'Transfer Point Promo',
+        href: routes.promo.wisata.transferPoint,
+      },
+      {
+        name: 'History Transfer Point Promo',
+        href: routes.promo.wisata.historyTransfer,
       },
     ],
   },

@@ -131,6 +131,14 @@ export const routes = {
     tahunan: '/promo/tahunan',
     rewardStockist: '/promo/reward-stockist',
     umroh2026Stockist: '/promo/umroh-2026-stockist',
+    wisata: {
+      index: '/promo/wisata',
+      transferPoint: '/promo/wisata/transfer-point',
+      generatePoint: '/promo/wisata/generate-point',
+      historyTransfer: '/promo/wisata/history-transfer-point',
+      historyTerima: '/promo/wisata/history-terima-point',
+      historyGenerate: '/promo/wisata/history-generate-point',
+    },
   },
   download: {
     index: '/download',

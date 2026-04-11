@@ -101,9 +101,11 @@ export default function PromoRewardStockistPage({
       .then((data) => {
         const promos = data?.data?.promos ?? [];
 
-        const filteredPromo = promos.find(
-          (promo) => promo?.meta?.promo_config_id === 'PROMO#STOCKIST_2026'
-        );
+        const filteredPromo = promos.find((promo) => {
+          return promo?.meta?.promo_config_id === 'PROMO#STOCKIST_2026';
+        });
+
+        console.log(filteredPromo);
 
         setDataWhole(filteredPromo ?? null);
       })
@@ -209,25 +211,15 @@ export default function PromoRewardStockistPage({
           <div>
             <WidgetCard
               title={
-                <span className="text-[#c69731]">
-                  {dataWhole?.progress_raw?.promo_snapshot?.name}
-                </span>
+                <span className="text-[#c69731]">{dataWhole?.meta?.name}</span>
               }
               titleClassName="text-gray-700 font-bold text-2xl sm:text-2xl font-inter mb-5"
             >
-              <p className="mb-5">
-                {dataWhole?.progress_raw?.promo_snapshot?.description}
-              </p>
+              <p className="mb-5">{dataWhole?.meta?.description}</p>
 
               <p className="mb-5">
-                Periode:{' '}
-                {formatDateID(
-                  dataWhole?.progress_raw?.channels?.pin?.period_start
-                )}{' '}
-                sd{' '}
-                {formatDateID(
-                  dataWhole?.progress_raw?.channels?.pin?.period_end
-                )}
+                Periode: {formatDateID(dataWhole?.period?.period_start)} sd{' '}
+                {formatDateID(dataWhole?.period?.period_end)}
               </p>
 
               {/* HIGHLIGHT STATS */}

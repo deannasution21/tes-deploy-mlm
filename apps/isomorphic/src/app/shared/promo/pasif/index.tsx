@@ -64,33 +64,45 @@ export default function PromoPasifPage({ className }: { className?: string }) {
     setLoading(true);
 
     const id = session?.user?.id;
+    const token = session.accessToken;
 
     Promise.all([
       fetchWithAuth<UserDataResponse>(
         `/_users/${id}`,
         { method: 'GET' },
-        session.accessToken
+        token
       ),
       fetchWithAuth<PromoMemberPasifResponse>(
         `/_promos?type=member_pasif&username=${id}`,
         { method: 'GET' },
-        session.accessToken
-      ),
-      fetchWithAuth<ProductResponse>(
-        `/_products`,
-        { method: 'GET' },
-        session.accessToken
+        token
       ),
     ])
-      .then(([userData, promoData, productData]) => {
+      .then(([userData, promoData]) => {
         // API: member_pasif === false artinya SUDAH aktivasi, true artinya BELUM aktivasi
-        setMemberPasifActive(!userData?.data?.attribute?.member_pasif);
+        const belumAktivasi = Boolean(
+          userData?.data?.attribute?.member_pasif
+        );
+        setMemberPasifActive(!belumAktivasi);
         setDataWhole(promoData?.data ?? null);
 
-        const products = productData?.data?.products ?? [];
-        setActivationProducts(
-          products.filter((p) => p?.attribute?.visible_for_member_pasif)
-        );
+        // Produk aktivasi cuma relevan (dan cuma perlu di-fetch) kalau member
+        // belum aktivasi — kalau sudah aktivasi, tidak perlu panggil /_products sama sekali.
+        if (!belumAktivasi) {
+          setActivationProducts([]);
+          return;
+        }
+
+        return fetchWithAuth<ProductResponse>(
+          `/_products`,
+          { method: 'GET' },
+          token
+        ).then((productData) => {
+          const products = productData?.data?.products ?? [];
+          setActivationProducts(
+            products.filter((p) => p?.attribute?.visible_for_member_pasif)
+          );
+        });
       })
       .catch((error: any) => {
         console.error(error);

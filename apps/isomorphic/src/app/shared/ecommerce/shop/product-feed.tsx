@@ -9,15 +9,7 @@ import shuffle from 'lodash/shuffle';
 import { routes } from '@/config/routes';
 import { useSession } from 'next-auth/react';
 import { ProductItem, ProductResponse } from '@/types';
-import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
-import imgHNB from '@public/assets/img/product/HNB 19.jpg';
-import imgSNP from '@public/assets/img/product/SNP 3.jpg';
-import imgLILAC from '@public/assets/img/product/LILAC.jpg';
-import imgFCMIST from '@public/assets/img/product/FCMIST.jpeg';
-import imgEGAM from '@public/assets/img/product/EGAM.jpeg';
-import imgACC from '@public/assets/img/product/ACC.jpg';
-import imgLP from '@public/assets/img/product/LP.jpeg';
-import imgBSRM from '@public/assets/img/product/BSRM.png';
+import { getProductImageById } from '@/utils/get-product-image';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 let countPerPage = 12;
@@ -75,25 +67,7 @@ export default function ProductFeed() {
             <ProdukCard
               key={product.product_id}
               product={product}
-              image={
-                product.product_id === 'PRD0002'
-                  ? imgHNB
-                  : product.product_id === 'PRD0003'
-                    ? imgLILAC
-                    : product.product_id === 'PRD0001'
-                      ? imgSNP
-                      : product.product_id === 'PRD0004'
-                        ? imgFCMIST
-                        : product.product_id === 'PRD0005'
-                          ? imgEGAM
-                          : product.product_id === 'PRD0006'
-                            ? imgLP
-                            : product.product_id === 'PRD0007'
-                              ? imgACC
-                              : product.product_id === 'PRD0008'
-                                ? imgBSRM
-                                : defaultPlaceholder
-              }
+              image={getProductImageById(product.product_id)}
               routes={routes}
             />
           ))}

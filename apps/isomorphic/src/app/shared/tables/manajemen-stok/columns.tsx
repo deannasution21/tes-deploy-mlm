@@ -6,16 +6,7 @@ import { ActionIcon, Button, Text } from 'rizzui';
 import Link from 'next/link';
 import { PiPencil, PiPrinter, PiTrash, PiTruck } from 'react-icons/pi';
 import { ProductItem } from '@/types';
-import Image from 'next/image';
-import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
-import imgHNB from '@public/assets/img/product/HNB 19.jpg';
-import imgSNP from '@public/assets/img/product/SNP 3.jpg';
-import imgLILAC from '@public/assets/img/product/LILAC.jpg';
-import imgFCMIST from '@public/assets/img/product/FCMIST.jpeg';
-import imgEGAM from '@public/assets/img/product/EGAM.jpeg';
-import imgACC from '@public/assets/img/product/ACC.jpg';
-import imgLP from '@public/assets/img/product/LP.jpeg';
-import imgBSRM from '@public/assets/img/product/BSRM.png';
+import ProductImage from '@core/components/product-image';
 
 const columnHelperNew = createColumnHelper<ProductItem>();
 
@@ -38,26 +29,9 @@ export const stokColumnsNew = () => {
         return (
           <div className="flex items-center gap-3">
             <div className="relative aspect-square h-10 w-10">
-              <Image
-                src={
-                  id === 'PRD0002'
-                    ? imgHNB
-                    : id === 'PRD0003'
-                      ? imgLILAC
-                      : id === 'PRD0001'
-                        ? imgSNP
-                        : id === 'PRD0004'
-                          ? imgFCMIST
-                          : id === 'PRD0005'
-                            ? imgEGAM
-                            : id === 'PRD0006'
-                              ? imgLP
-                              : id === 'PRD0007'
-                                ? imgACC
-                                : id === 'PRD0008'
-                                  ? imgBSRM
-                                  : defaultPlaceholder
-                }
+              <ProductImage
+                src={row.original.image}
+                productId={id}
                 alt=""
                 fill
                 priority

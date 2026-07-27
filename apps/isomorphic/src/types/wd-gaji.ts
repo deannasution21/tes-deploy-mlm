@@ -42,6 +42,9 @@ export interface UserPoint {
 export interface CanWithdrawSalary {
   can_withdrawal: boolean;
   remaining_count: number;
+  message?: string | null;
+  // false = SUDAH aktivasi member pasif, true = BELUM aktivasi
+  member_pasif?: boolean;
 }
 
 export interface DetailSalaryWithdrawal {

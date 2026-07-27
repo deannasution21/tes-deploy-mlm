@@ -7,7 +7,7 @@ export const metadata = {
   ...metaObject('Withdrawal Gaji'),
 };
 
-export default function Page() {
+export default function Page({ searchParams }: any) {
   const pageHeader = {
     title: `Withdrawal Gaji`,
     breadcrumb: [
@@ -28,7 +28,7 @@ export default function Page() {
   return (
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
-      <WithdrawalGajiForm />
+      <WithdrawalGajiForm plan={searchParams?.plan} />
     </>
   );
 }

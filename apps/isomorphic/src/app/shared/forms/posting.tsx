@@ -200,7 +200,7 @@ function Formnya({
                   (p) => p.value === selectedId
                 );
                 const selectedPinData = dataPin2.find(
-                  (p) => p.pin_code === selectedId
+                  (p) => p.pin_true === selectedId
                 );
 
                 // ✅ Update form and states
@@ -810,7 +810,7 @@ export default function Posting({
         setDataUser(userData || null);
         setDataPin(
           (pinData?.data?.pins ?? []).map((p: any) => ({
-            value: p.pin_code,
+            value: p.pin_true,
             label: p.pin_code,
           }))
         );

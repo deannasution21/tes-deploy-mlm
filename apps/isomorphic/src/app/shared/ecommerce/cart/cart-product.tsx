@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import ProductImage from '@core/components/product-image';
 import { ProductCartItem } from '@/types';
 import { toCurrency } from '@core/utils/to-currency';
 import { Title, Text } from 'rizzui';
@@ -12,8 +12,9 @@ export default function CartProduct({ product }: { product: ProductCartItem }) {
   return (
     <div className="grid grid-cols-12 items-start gap-4 border-b border-muted py-6 first:pt-0 sm:flex sm:gap-6 2xl:py-8">
       <figure className="col-span-4 sm:max-w-[180px]">
-        <Image
+        <ProductImage
           src={product.image}
+          productId={product.id}
           alt={product.name}
           width={180}
           height={180}

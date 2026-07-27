@@ -6,15 +6,7 @@ import ProductDetailsSummery from '@/app/shared/ecommerce/product/product-detail
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { ProductDetailResponse, ProductItem } from '@/types';
-import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
-import imgHNB from '@public/assets/img/product/HNB 19.jpg';
-import imgSNP from '@public/assets/img/product/SNP 3.jpg';
-import imgLILAC from '@public/assets/img/product/LILAC.jpg';
-import imgFCMIST from '@public/assets/img/product/FCMIST.jpeg';
-import imgEGAM from '@public/assets/img/product/EGAM.jpeg';
-import imgACC from '@public/assets/img/product/ACC.jpg';
-import imgLP from '@public/assets/img/product/LP.jpeg';
-import imgBSRM from '@public/assets/img/product/BSRM.png';
+import { getProductImageById } from '@/utils/get-product-image';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function ProductDetails() {
@@ -71,25 +63,8 @@ export default function ProductDetails() {
       <div className="@3xl:grid @3xl:grid-cols-12">
         <div className="col-span-7 mb-7 @container @lg:mb-10 @3xl:pe-10">
           <ProductDetailsGallery
-            image={
-              product.product_id === 'PRD0002'
-                ? imgHNB
-                : product.product_id === 'PRD0003'
-                  ? imgLILAC
-                  : product.product_id === 'PRD0001'
-                    ? imgSNP
-                    : product.product_id === 'PRD0004'
-                      ? imgFCMIST
-                      : product.product_id === 'PRD0005'
-                        ? imgEGAM
-                        : product.product_id === 'PRD0006'
-                          ? imgLP
-                          : product.product_id === 'PRD0007'
-                            ? imgACC
-                            : product.product_id === 'PRD0008'
-                              ? imgBSRM
-                              : defaultPlaceholder
-            }
+            image={product.image || getProductImageById(product.product_id)}
+            productId={product.product_id}
           />
         </div>
         <div className="col-span-5 @container">

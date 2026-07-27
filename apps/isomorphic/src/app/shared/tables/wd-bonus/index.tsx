@@ -1,7 +1,7 @@
 'use client';
 
 import Table from '@core/components/table';
-import { WDBonusColumns } from './columns';
+import { getWDBonusColumns } from './columns';
 import WidgetCard from '@core/components/cards/widget-card';
 import { useTanStackTable } from '@core/components/table/custom/use-TanStack-Table';
 import TablePagination from '@core/components/table/pagination';
@@ -11,14 +11,16 @@ import { SummaryItem } from '@/types/wd-bonus';
 
 export default function WDBonusTable({
   datanya,
+  plan,
   className,
 }: {
   datanya: SummaryItem[];
+  plan: string;
   className?: string;
 }) {
   const { table, setData } = useTanStackTable<SummaryItem>({
     tableData: datanya,
-    columnConfig: WDBonusColumns,
+    columnConfig: getWDBonusColumns(plan),
     options: {
       initialState: {
         pagination: {

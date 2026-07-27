@@ -71,9 +71,25 @@ export interface Status {
   message: string;
 }
 
+const tipePlan = [
+  {
+    value: 'free',
+    label: 'Pasif',
+  },
+  {
+    value: 'plan_a',
+    label: 'Reguler',
+  },
+];
+
 export default function WithdrawalBonusForm(slug: any) {
   const { data: session } = useSession();
   const usernamenya = slug?.slug ?? null;
+  // Plan dibawa dari halaman list withdrawal-bonus (?plan=...) supaya user
+  // tidak perlu pilih ulang; fallback ke 'plan_a' kalau tidak valid/tidak ada.
+  const initialPlan = tipePlan.some((p) => p.value === slug?.plan)
+    ? (slug.plan as string)
+    : 'plan_a';
   const router = useRouter();
   const [isLoading, setLoading] = useState(true);
   const [proses, setProses] = useState(false);
@@ -81,6 +97,8 @@ export default function WithdrawalBonusForm(slug: any) {
   const [reset, setReset] = useState({});
   const [dataUser, setDataUser] = useState<TransactionWDData | null>(null);
   const [dataBank, setDataBank] = useState<BankData[]>([]);
+  // Plan dikunci (tidak bisa diganti user di form ini), jadi cukup konstanta.
+  const selectedPlan = initialPlan;
 
   const doWD = async (payload: any) => {
     if (!session?.accessToken) {
@@ -99,7 +117,7 @@ export default function WithdrawalBonusForm(slug: any) {
           amount: payload?.amount,
           category: 'bonus',
           type: 'withdrawal',
-          type_plan: 'plan_a',
+          type_plan: payload?.type_plan,
         }),
       },
       session.accessToken
@@ -149,34 +167,44 @@ export default function WithdrawalBonusForm(slug: any) {
     });
   };
 
+  // Bank list cukup diambil sekali, tidak tergantung plan
+  useEffect(() => {
+    if (!session?.accessToken) return;
+
+    fetchWithAuth<BankStatusResponse>(
+      `/_services/list-bank`,
+      { method: 'GET' },
+      session.accessToken
+    )
+      .then((bankData) => {
+        setDataBank(bankData?.data || []);
+      })
+      .catch((error) => {
+        console.error(error);
+        setDataBank([]);
+      });
+  }, [session?.accessToken]);
+
+  // Saldo bonus berbeda per plan (Pasif / Reguler), jadi refetch tiap plan berubah
   useEffect(() => {
     if (!session?.accessToken) return;
 
     setLoading(true);
 
-    Promise.all([
-      fetchWithAuth<TransactionWDResponse>(
-        `/_transactions/withdrawal-data?type=plan_a&username=${usernamenya}&category=bonus`,
-        { method: 'GET' },
-        session.accessToken
-      ),
-      fetchWithAuth<BankStatusResponse>(
-        `/_services/list-bank`,
-        { method: 'GET' },
-        session.accessToken
-      ),
-    ])
-      .then(([withdrawalData, bankData]) => {
+    fetchWithAuth<TransactionWDResponse>(
+      `/_transactions/withdrawal-data?type=${selectedPlan}&username=${usernamenya}&category=bonus`,
+      { method: 'GET' },
+      session.accessToken
+    )
+      .then((withdrawalData) => {
         setDataUser(withdrawalData?.data || null);
-        setDataBank(bankData?.data || []);
       })
       .catch((error) => {
         console.error(error);
         setDataUser(null);
-        setDataBank([]);
       })
       .finally(() => setLoading(false));
-  }, [session?.accessToken]);
+  }, [session?.accessToken, selectedPlan, usernamenya]);
 
   if (isLoading)
     return <p className="py-20 text-center">Sedang memuat data...</p>;
@@ -197,6 +225,7 @@ export default function WithdrawalBonusForm(slug: any) {
                 defaultValues: {
                   username: usernamenya,
                   amount: 0,
+                  type_plan: initialPlan,
                 },
               }}
               className="flex flex-grow flex-col @container [&_label]:font-medium"
@@ -230,6 +259,9 @@ export default function WithdrawalBonusForm(slug: any) {
                           readOnly
                           inputClassName="bg-gray-200 text-gray-600"
                         />
+                        {/* Plan dikunci dari halaman list (tidak bisa diganti di sini),
+                            tapi tetap didaftarkan ke form supaya payload type_plan tetap terkirim. */}
+                        <input type="hidden" {...register('type_plan')} />
                         <Input
                           label="Jumlah Bonus"
                           value={dataUser?.balance?.currency}

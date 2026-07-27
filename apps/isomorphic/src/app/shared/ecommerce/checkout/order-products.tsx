@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import ProductImage from '@core/components/product-image';
 import { PiMinus, PiPlus, PiTrash } from 'react-icons/pi';
 import { toCurrency } from '@core/utils/to-currency';
 import { ProductCartItem } from '@/types';
@@ -48,8 +48,9 @@ export default function OrderProducts({
           >
             <div className="flex items-center pe-3">
               <figure className="relative aspect-[4/4.5] w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100">
-                <Image
+                <ProductImage
                   src={item.image}
+                  productId={item.id}
                   alt={item.name}
                   fill
                   priority

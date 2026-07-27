@@ -10,7 +10,7 @@ import { SummaryItem } from '@/types/wd-bonus';
 
 const columnHelper = createColumnHelper<SummaryItem>();
 
-export const WDBonusColumns = [
+export const getWDBonusColumns = (plan: string) => [
   {
     id: 'no',
     header: '#',
@@ -52,7 +52,9 @@ export const WDBonusColumns = [
       }
 
       return (
-        <Link href={`withdrawal-bonus/${generateSlug(username)}/withdrawal`}>
+        <Link
+          href={`withdrawal-bonus/${generateSlug(username)}/withdrawal?plan=${plan}`}
+        >
           <Button size="sm">
             <PiGift className="mr-2 h-4 w-4" />
             <span>Withdrawal</span>

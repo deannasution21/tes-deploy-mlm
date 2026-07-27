@@ -9,6 +9,7 @@ export const withdrawalBonusSchema = z.object({
   // an: z.string().min(1, { message: messages.kolomIsRequired }),
   amount: z.coerce.number().min(1, { message: messages.kolomIsRequired }),
   type: z.string().optional(),
+  type_plan: z.string().min(1, { message: messages.kolomIsRequired }),
 });
 
 // generate form types from zod validation schema

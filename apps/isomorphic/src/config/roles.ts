@@ -60,8 +60,13 @@ export const rolePermissions = {
       '/profil',
       '/profil/:path*',
 
+      // Promo Pasif khusus member, jadi tidak ada wildcard /promo/:path* di sini
       '/promo',
-      '/promo/:path*',
+      '/promo/tahunan',
+      '/promo/reward-stockist',
+      '/promo/umroh-2026-stockist',
+      '/promo/wisata',
+      '/promo/wisata/:path*',
     ],
   },
 

@@ -9,15 +9,6 @@ import cn from '@core/utils/class-names';
 import { routes } from '@/config/routes';
 import { ProductCartItem } from '@/types';
 import DrawerHeader from '@/app/shared/drawer-header';
-import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
-import imgHNB from '@public/assets/img/product/HNB 19.jpg';
-import imgSNP from '@public/assets/img/product/SNP 3.jpg';
-import imgLILAC from '@public/assets/img/product/LILAC.jpg';
-import imgFCMIST from '@public/assets/img/product/FCMIST.jpeg';
-import imgEGAM from '@public/assets/img/product/EGAM.jpeg';
-import imgACC from '@public/assets/img/product/ACC.jpg';
-import imgLP from '@public/assets/img/product/LP.jpeg';
-import imgBSRM from '@public/assets/img/product/BSRM.png';
 
 type CartDrawerViewProps = {
   items: ProductCartItem[];
@@ -54,27 +45,7 @@ export default function CartDrawerView({
         </div>
       ) : (
         <OrderProducts
-          items={items.map((item) => ({
-            ...item,
-            image:
-              item.id === 'PRD0002'
-                ? imgHNB
-                : item.id === 'PRD0003'
-                  ? imgLILAC
-                  : item.id === 'PRD0001'
-                    ? imgSNP
-                    : item.id === 'PRD0004'
-                      ? imgFCMIST
-                      : item.id === 'PRD0005'
-                        ? imgEGAM
-                        : item.id === 'PRD0006'
-                          ? imgLP
-                          : item.id === 'PRD0007'
-                            ? imgACC
-                            : item.id === 'PRD0008'
-                              ? imgBSRM
-                              : defaultPlaceholder,
-          }))}
+          items={items}
           showControls
           className="mb-5 gap-0 divide-y border-b border-gray-100"
           itemClassName="p-4 pb-5 md:px-6"

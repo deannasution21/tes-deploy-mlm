@@ -140,7 +140,7 @@ export default function TransferPinPage() {
         const options = Object.entries(data?.data.summary)
           .filter(([_, count]) => count > 0) // optional: only include those with >0
           .map(([key]) => ({
-            label: key === 'plan_a' ? 'PIN Normal' : 'PIN Free',
+            label: key === 'plan_a' ? 'Reguler' : key === 'free' ? 'Pasif' : key,
             value: key,
           }));
 
@@ -182,8 +182,10 @@ export default function TransferPinPage() {
 
     const pin =
       payload?.type_pin === 'plan_a'
-        ? 'PLAN'
-        : payload?.type_pin?.toUpperCase();
+        ? 'REGULER'
+        : payload?.type_pin === 'free'
+          ? 'PASIF'
+          : payload?.type_pin?.toUpperCase();
 
     fetchWithAuth<any>(
       `/_pins/transfer`,
@@ -328,7 +330,11 @@ export default function TransferPinPage() {
                                     Anda memiliki{' '}
                                     <strong className="uppercase">
                                       {count} PIN{' '}
-                                      {plan === 'plan_a' ? 'PLAN' : plan}
+                                      {plan === 'plan_a'
+                                        ? 'Reguler'
+                                        : plan === 'free'
+                                          ? 'Pasif'
+                                          : plan}
                                     </strong>
                                   </Text>
                                 </li>

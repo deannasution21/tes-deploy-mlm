@@ -1,5 +1,5 @@
 "use client";
-import Image, { StaticImageData } from "next/image";
+import { StaticImageData } from "next/image";
 import { Title, Text } from "rizzui";
 import cn from "../../utils/class-names";
 import { ProductItem } from "../../../../../apps/isomorphic/src/types";
@@ -7,6 +7,7 @@ import { toCurrency } from "../../utils/to-currency";
 import { generateSlug } from "@core/utils/generate-slug";
 import Link from "next/link";
 import { calculatePercentage } from "@core/utils/calculate-percentage";
+import ProductImage from "../product-image";
 
 interface ProductProps {
   product: ProductItem;
@@ -37,9 +38,10 @@ export default function ProdukCard({
       >
         <div className="relative">
           <div className="relative mx-auto aspect-square w-full overflow-hidden rounded-lg bg-gray-100">
-            <Image
+            <ProductImage
               alt={name}
-              src={image}
+              src={product.image || image}
+              productId={product_id}
               fill
               priority
               quality={90}

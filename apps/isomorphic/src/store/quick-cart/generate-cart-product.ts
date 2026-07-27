@@ -1,15 +1,7 @@
 import { CartItem, Product, ProductCartItem, ProductColor } from '@/types';
 import { ProductItem } from '@/types';
 import { generateSlug } from '@core/utils/generate-slug';
-import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
-import imgHNB from '@public/assets/img/product/HNB 19.jpg';
-import imgSNP from '@public/assets/img/product/SNP 3.jpg';
-import imgLILAC from '@public/assets/img/product/LILAC.jpg';
-import imgFCMIST from '@public/assets/img/product/FCMIST.jpeg';
-import imgEGAM from '@public/assets/img/product/EGAM.jpeg';
-import imgACC from '@public/assets/img/product/ACC.jpg';
-import imgLP from '@public/assets/img/product/LP.jpeg';
-import imgBSRM from '@public/assets/img/product/BSRM.png';
+import { getProductImageById } from '@/utils/get-product-image';
 
 // interface CartProduct extends Omit<Product, 'colors' | 'sizes'> {
 //   color: ProductColor;
@@ -21,7 +13,7 @@ interface CartProduct extends Omit<ProductItem, 'quantity'> {
 }
 
 export function generateCartProduct(product: CartProduct): ProductCartItem {
-  const { product_id, attribute, quantity } = product;
+  const { product_id, attribute, quantity, image } = product;
   const { name, stock, stock_pin, description, price } = attribute;
 
   return {
@@ -33,24 +25,9 @@ export function generateCartProduct(product: CartProduct): ProductCartItem {
     description: description,
     price: price,
     quantity: quantity,
-    image:
-      product_id === 'PRD0002'
-        ? imgHNB
-        : product_id === 'PRD0003'
-          ? imgLILAC
-          : product_id === 'PRD0001'
-            ? imgSNP
-            : product_id === 'PRD0004'
-              ? imgFCMIST
-              : product_id === 'PRD0005'
-                ? imgEGAM
-                : product_id === 'PRD0006'
-                  ? imgLP
-                  : product_id === 'PRD0007'
-                    ? imgACC
-                    : product_id === 'PRD0008'
-                      ? imgBSRM
-                      : defaultPlaceholder,
+    // pakai gambar dinamis dari API kalau ada; kalau tidak ada sama sekali baru fallback statis.
+    // Kalau path dari API 404 saat dirender, ProductImage yang menangani fallback via onError.
+    image: image || getProductImageById(product_id),
     size: 1,
   };
 }

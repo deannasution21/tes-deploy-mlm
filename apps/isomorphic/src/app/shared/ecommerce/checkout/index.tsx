@@ -15,7 +15,6 @@ import DifferentBillingAddress from '@/app/shared/ecommerce/order/order-form/dif
 import AddressInfo from '@/app/shared/ecommerce/order/order-form/address-info';
 import PaymentMethod from '@/app/shared/ecommerce/checkout/payment-method';
 import OrderSummery from '@/app/shared/ecommerce/checkout/order-summery';
-import { routes } from '@/config/routes';
 import {
   Checkbox,
   Input,
@@ -473,8 +472,12 @@ function Formnya({
 // main order form component for create and update order
 export default function CheckoutPageWrapper({
   className,
+  invoiceBasePath = '/produk/pesanan',
+  lockQuantity = false,
 }: {
   className?: string;
+  invoiceBasePath?: string;
+  lockQuantity?: boolean;
 }) {
   const [isLoading, setLoading] = useState(true);
   const [isLoadingS, setLoadingS] = useState(false);
@@ -503,9 +506,10 @@ export default function CheckoutPageWrapper({
     setLoadingS(true);
 
     // ✅ Transform items → products payload
+    // lockQuantity: dipakai alur aktivasi member pasif — qty selalu 1, tidak bisa diubah
     const products = items.map((item) => ({
       id: item.id?.toLowerCase(),
-      quantity: item.quantity,
+      quantity: lockQuantity ? 1 : item.quantity,
     }));
 
     const body =
@@ -543,15 +547,27 @@ export default function CheckoutPageWrapper({
       session.accessToken
     )
       .then((data) => {
-        toast.success(<Text as="b">Pesanan berhasil dibuat</Text>);
-        resetCart();
         const invoiceID = data?.data?.id;
-        router.push(routes.produk.pesanan.detail(invoiceID));
+
+        if (!invoiceID) {
+          toast.error(<Text as="b">Invoice tidak ditemukan pada respons</Text>);
+          return;
+        }
+
+        toast.success(<Text as="b">Pesanan berhasil dibuat</Text>);
+
+        // Redirect dulu sebelum reset cart, supaya halaman checkout tidak
+        // sempat re-render ke state "keranjang kosong" sebelum benar-benar
+        // berpindah ke halaman invoice.
+        router.push(`${invoiceBasePath}/${invoiceID}`);
+        resetCart();
       })
       .catch((error) => {
         console.error(error);
         // Clear the data so UI can show "no data"
         toast.error(<Text as="b">Terjadi kesalahan saat membuat pesanan</Text>);
+      })
+      .finally(() => {
         setLoadingS(false);
       });
   };

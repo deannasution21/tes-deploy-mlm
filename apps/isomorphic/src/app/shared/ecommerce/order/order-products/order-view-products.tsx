@@ -1,21 +1,12 @@
 'use client';
 
-import Image from 'next/image';
+import ProductImage from '@core/components/product-image';
 import Table, { HeaderCell } from '@core/components/legacy-table';
 import { useCart } from '@/store/quick-cart/cart.context';
 import { Title, Text } from 'rizzui';
 import { toCurrency } from '@core/utils/to-currency';
 import { CartItem } from '@/types';
 import { TransactionProduct } from '../order-view';
-import defaultPlaceholder from '@public/assets/img/logo/logo-ipg3.jpeg';
-import imgHNB from '@public/assets/img/product/HNB 19.jpg';
-import imgSNP from '@public/assets/img/product/SNP 3.jpg';
-import imgLILAC from '@public/assets/img/product/LILAC.jpg';
-import imgFCMIST from '@public/assets/img/product/FCMIST.jpeg';
-import imgEGAM from '@public/assets/img/product/EGAM.jpeg';
-import imgACC from '@public/assets/img/product/ACC.jpg';
-import imgLP from '@public/assets/img/product/LP.jpeg';
-import imgBSRM from '@public/assets/img/product/BSRM.png';
 
 const columns = [
   {
@@ -26,27 +17,10 @@ const columns = [
     render: (_: any, row: CartItem) => (
       <div className="flex items-center">
         <div className="relative aspect-square w-12 overflow-hidden rounded-lg print:w-9">
-          <Image
+          <ProductImage
             alt={row.name}
-            src={
-              String(row.id) === 'prd0002'
-                ? imgHNB
-                : String(row.id) === 'prd0003'
-                  ? imgLILAC
-                  : String(row.id) === 'prd0001'
-                    ? imgSNP
-                    : String(row.id) === 'prd0004'
-                      ? imgFCMIST
-                      : String(row.id) === 'prd0005'
-                        ? imgEGAM
-                        : String(row.id) === 'prd0006'
-                          ? imgLP
-                          : String(row.id) === 'prd0007'
-                            ? imgACC
-                            : String(row.id) === 'prd0008'
-                              ? imgBSRM
-                              : defaultPlaceholder
-            }
+            src={row.image}
+            productId={row.id}
             fill
             sizes="(max-width: 768px) 100vw"
             className="object-cover"

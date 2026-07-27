@@ -143,6 +143,8 @@ export interface AmountCurrencyWithCount extends AmountCurrency {
 export interface CanWithdrawalSalary {
   can_withdrawal: boolean;
   remaining_count: number;
+  message?: string | null;
+  member_pasif?: boolean;
 }
 
 export interface DetailSalaryWithdrawal {
@@ -152,9 +154,25 @@ export interface DetailSalaryWithdrawal {
   salary_balance: AmountCurrency;
 }
 
+const tipePlan = [
+  {
+    value: 'free',
+    label: 'Pasif',
+  },
+  {
+    value: 'plan_a',
+    label: 'Reguler',
+  },
+];
+
 export default function WithdrawalGajiForm(slug: any) {
   const { data: session } = useSession();
   const router = useRouter();
+  // Plan dibawa dari halaman dashboard withdrawal-gaji (?plan=...) supaya user
+  // tidak perlu pilih ulang; fallback ke 'plan_a' kalau tidak valid/tidak ada.
+  const selectedPlan = tipePlan.some((p) => p.value === slug?.plan)
+    ? (slug.plan as string)
+    : 'plan_a';
   const [isLoading, setLoading] = useState(true);
   const [proses, setProses] = useState(false);
 
@@ -179,7 +197,7 @@ export default function WithdrawalGajiForm(slug: any) {
           username: payload?.username,
           category: 'salary',
           type: 'withdrawal',
-          type_plan: 'plan_a',
+          type_plan: selectedPlan,
         }),
       },
       session.accessToken
@@ -237,7 +255,7 @@ export default function WithdrawalGajiForm(slug: any) {
 
     Promise.all([
       fetchWithAuth<WithdrawalSummarySingleResponse>(
-        `/_transactions/withdrawal-data?type=plan_a&username=${session?.user?.id || ''}&category=salary`,
+        `/_transactions/withdrawal-data?type=${selectedPlan}&username=${session?.user?.id || ''}&category=salary`,
         { method: 'GET' },
         session.accessToken
       ),
@@ -257,7 +275,7 @@ export default function WithdrawalGajiForm(slug: any) {
         setDataBank([]);
       })
       .finally(() => setLoading(false));
-  }, [session?.accessToken]);
+  }, [session?.accessToken, session?.user?.id, selectedPlan]);
 
   if (isLoading)
     return <p className="py-20 text-center">Sedang memuat data...</p>;
@@ -321,6 +339,15 @@ export default function WithdrawalGajiForm(slug: any) {
                         </li>
                       </ol>
                     </Alert>
+
+                    {!dataGaji?.can_withdrawal_salary?.can_withdrawal && (
+                      <Alert variant="flat" color="danger" className="mb-5">
+                        <Text className="break-normal">
+                          {dataGaji?.can_withdrawal_salary?.message ??
+                            'Anda belum dapat melakukan withdrawal gaji saat ini.'}
+                        </Text>
+                      </Alert>
+                    )}
 
                     <div className="grid grid-cols-1 gap-8 divide-y divide-dashed divide-gray-200 @2xl:gap-10 @3xl:gap-12">
                       <FormBlockWrapper title={'Informasi Pencairan:'}>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Badge, Button, Text, Title } from 'rizzui';
+import { Alert, Badge, Button, Select, Text, Title } from 'rizzui';
 import { useSession } from 'next-auth/react';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import cn from '@core/utils/class-names';
@@ -16,14 +16,27 @@ import {
   WithdrawalSummaryResponse,
 } from '@/types/wd-gaji';
 
+const tipePlan = [
+  {
+    value: 'free',
+    label: 'Pasif',
+  },
+  {
+    value: 'plan_a',
+    label: 'Reguler',
+  },
+];
+
 function FleetStatus({
   data,
   className,
   akumulasiGaji,
+  plan,
 }: {
   data?: DetailUsers;
   className?: string;
   akumulasiGaji: string;
+  plan: string;
 }) {
   return (
     <div className={cn('flex flex-col gap-5 border-0 p-0 lg:p-0', className)}>
@@ -112,7 +125,7 @@ function FleetStatus({
               Cairkan Gaji
             </Button>
           ) : (
-            <Link href={routes.withdrawalGaji.withdrawal}>
+            <Link href={`${routes.withdrawalGaji.withdrawal}?plan=${plan}`}>
               <Button className="w-full">Cairkan Gaji</Button>
             </Link>
           )}
@@ -128,6 +141,7 @@ export default function WithdrawalGajiPage() {
 
   const [dataGaji, setDataGaji] = useState<WithdrawalSummaryData | null>(null);
   const [dataHistory, setDataHistory] = useState<any[]>([]);
+  const [selectedPlan, setSelectedPlan] = useState('plan_a');
 
   useEffect(() => {
     if (!session?.accessToken) return;
@@ -135,7 +149,7 @@ export default function WithdrawalGajiPage() {
     setLoading(true);
 
     fetchWithAuth<WithdrawalSummaryResponse>(
-      `/_transactions/withdrawal-summary?type=plan_a&category=salary`,
+      `/_transactions/withdrawal-summary?type=${selectedPlan}&category=salary`,
       { method: 'GET' },
       session.accessToken
     )
@@ -148,20 +162,59 @@ export default function WithdrawalGajiPage() {
         setDataGaji(null);
       })
       .finally(() => setLoading(false));
-  }, [session?.accessToken]);
+  }, [session?.accessToken, selectedPlan]);
 
   if (isLoading)
     return <p className="py-20 text-center">Sedang memuat data...</p>;
 
+  const belumAktivasiPasif =
+    selectedPlan === 'free' &&
+    dataGaji?.detail_users?.can_withdrawal_salary?.member_pasif === true;
+
   return (
     <div className="@container">
-      {dataHistory ? (
+      <div className="mb-6 w-full max-w-[220px]">
+        <Select
+          label="Plan"
+          size="lg"
+          labelClassName="text-sm font-semibold text-gray-900"
+          selectClassName="border-2 border-primary bg-primary-lighter/40 font-semibold text-primary-dark shadow-sm"
+          dropdownClassName="!z-10 h-fit"
+          inPortal={false}
+          placeholder="Pilih Plan"
+          options={tipePlan}
+          onChange={(val) => setSelectedPlan(val as string)}
+          value={selectedPlan}
+          getOptionValue={(option) => option.value}
+          displayValue={(selected) =>
+            tipePlan.find((p) => p.value === selected)?.label ?? ''
+          }
+        />
+      </div>
+
+      {belumAktivasiPasif ? (
+        <Alert variant="flat" color="danger">
+          <Text className="font-semibold">
+            Anda Belum Aktivasi sebagai Member Pasif
+          </Text>
+          <Text className="mt-1 break-normal">
+            {dataGaji?.detail_users?.can_withdrawal_salary?.message ??
+              'Data gaji tidak dapat ditampilkan karena status Anda masih Member Pasif dan belum diaktivasi.'}
+          </Text>
+          <Link href={routes.promo.pasif.index}>
+            <Button size="sm" className="mt-3">
+              Aktivasi Sekarang
+            </Button>
+          </Link>
+        </Alert>
+      ) : dataHistory ? (
         <>
           <div className="grid grid-cols-1 gap-6 @4xl:grid-cols-2 @7xl:grid-cols-12 3xl:gap-8">
             {/* FleetStatus first on small screens */}
             <FleetStatus
               data={dataGaji?.detail_users}
               akumulasiGaji={dataGaji?.balance?.currency ?? 'Rp 0'}
+              plan={selectedPlan}
               className="order-1 @7xl:order-2 @7xl:col-span-4 @7xl:col-start-9 @7xl:row-start-1 @7xl:row-end-3 @7xl:h-full"
             />
 

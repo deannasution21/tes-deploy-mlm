@@ -132,6 +132,7 @@ export interface ProductResponse {
   data: {
     hasPurchasedPrd0004: boolean;
     products: ProductItem[];
+    member_pasif?: boolean;
   };
 }
 
@@ -144,17 +145,20 @@ export interface ProductDetailResponse {
 
 export interface ProductItem {
   product_id: string;
+  image?: string;
   attribute: ProductAttribute;
 }
 
 export interface ProductAttribute {
   name: string;
+  plan?: string;
   stock: number;
   stock_pin: number;
   min_order_quantity?: number;
   description: string;
   price: ProductPrice;
   discount_rule?: DiscountRule;
+  visible_for_member_pasif?: boolean;
   sold?: number;
 }
 
@@ -230,6 +234,9 @@ export interface UserData {
   };
   master_username?: string;
   address?: string;
+
+  // status keanggotaan promo pasif (harus beli produk pasif via stockist)
+  member_pasif?: boolean;
 }
 
 export interface PinResponse {
@@ -244,6 +251,7 @@ export interface PinResponse {
 
 export interface Pin {
   pin_code: string;
+  pin_true?: string;
   mlm_user_id: string;
   dealer_id: string;
   type: string;
@@ -314,6 +322,9 @@ export interface NetworkNode {
   position: 'left' | 'right' | null;
   point_left: number;
   point_right: number;
+  point_pasif_left?: number;
+  point_pasif_right?: number;
+  type_plan?: string;
   ro_count: number;
   upline: string;
   sponsor?: string;

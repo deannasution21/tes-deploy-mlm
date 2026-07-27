@@ -16,7 +16,8 @@ export default function LihatPinTable({ className }: { className?: string }) {
   const { data: session } = useSession();
   const [dataPins, setDataPins] = useState<Pin[]>([]);
   const [isLoading, setLoading] = useState(false);
-  const [type, setType] = useState<string>('all');
+  const [status, setStatus] = useState<string>('all');
+  const [plan, setPlan] = useState<string>('plan_a');
 
   useEffect(() => {
     if (!session?.accessToken) return;
@@ -24,9 +25,9 @@ export default function LihatPinTable({ className }: { className?: string }) {
     setLoading(true);
 
     const url =
-      type === 'all'
-        ? `/_pins/dealer/${session.user?.id}?fetch=all&type=plan_a`
-        : `/_pins/dealer/${session.user?.id}?fetch=all&type=plan_a&status=${type}`;
+      status === 'all'
+        ? `/_pins/dealer/${session.user?.id}?fetch=all&type=${plan}`
+        : `/_pins/dealer/${session.user?.id}?fetch=all&type=${plan}&status=${status}`;
 
     fetchWithAuth<PinResponse>(url, { method: 'GET' }, session.accessToken)
       .then((data) => {
@@ -40,7 +41,7 @@ export default function LihatPinTable({ className }: { className?: string }) {
         setData([]);
       })
       .finally(() => setLoading(false));
-  }, [session?.accessToken, type]);
+  }, [session?.accessToken, status, plan]);
 
   const { table, setData } = useTanStackTable<Pin>({
     tableData: dataPins,
@@ -74,7 +75,15 @@ export default function LihatPinTable({ className }: { className?: string }) {
           titleClassName="w-[19ch]"
           actionClassName="w-full ps-0 items-center"
           headerClassName="mb-6 items-start flex-col @[57rem]:flex-row @[57rem]:items-center px-5 pt-5 lg:pt-7 lg:px-7"
-          action={<Filters table={table} type={type} setType={setType} />}
+          action={
+            <Filters
+              table={table}
+              status={status}
+              setStatus={setStatus}
+              plan={plan}
+              setPlan={setPlan}
+            />
+          }
         >
           <Table table={table} variant="modern" />
           <TablePagination table={table} className="p-4" />

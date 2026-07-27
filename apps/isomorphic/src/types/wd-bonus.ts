@@ -19,12 +19,20 @@ export interface SummaryData {
   balance: BalanceSummary;
 }
 
+export interface CanWithdrawalBonus {
+  can_withdrawal: boolean;
+  message: string | null;
+  // false = SUDAH aktivasi member pasif, true = BELUM aktivasi
+  member_pasif: boolean;
+}
+
 export interface DetailUsers {
   type: string;
   username: string;
   name: string;
   point: UserPoint;
   bank_account: BankAccount;
+  can_withdrawal_bonus?: CanWithdrawalBonus;
 }
 
 export interface UserPoint {

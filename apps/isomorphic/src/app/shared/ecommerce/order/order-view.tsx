@@ -6,7 +6,7 @@ import OrderViewProducts from '@/app/shared/ecommerce/order/order-products/order
 import { Title, Text, Alert, Button } from 'rizzui';
 import cn from '@core/utils/class-names';
 import { formatDate } from '@core/utils/format-date';
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { toast } from 'react-hot-toast';
@@ -16,6 +16,39 @@ import { createPortal } from 'react-dom';
 import imgVA from '@public/assets/img/va-logo.png';
 import imgBankTransfer from '@public/assets/img/transfer-bank.png';
 import { removeUnderscore } from '@/utils/helper';
+
+// Backend kadang kirim tanggal "YYYY-MM-DD HH:mm:ss" (spasi, bukan ISO).
+// new Date() dengan format itu tidak konsisten antar browser, jadi selalu
+// dinormalisasi ke ISO ("T") dulu sebelum di-parse.
+function parseApiDate(value?: string | null): Date | null {
+  if (!value) return null;
+  const date = new Date(value.replace(' ', 'T'));
+  return isNaN(date.getTime()) ? null : date;
+}
+
+const ORDER_STATUS_STEPS = [
+  { id: 0, label: 'Pesanan Dibuat' },
+  { id: 1, label: 'Menunggu Pembayaran' },
+  { id: 2, label: 'Transaksi Gagal' },
+  { id: 3, label: 'Pembayaran Berhasil' },
+  { id: 4, label: 'Transaksi Diproses dan Dikirim' },
+  { id: 5, label: 'Pesanan Selesai' },
+] as const;
+
+// Dipakai untuk 2 badge status (header & metode pembayaran) — sebelumnya
+// masing-masing punya ternary sendiri yang sempat tidak sinkron satu sama lain.
+function getStatusBadgeClass(currentStatus: number): string {
+  switch (currentStatus) {
+    case 2:
+      return 'bg-red-400 text-red-dark';
+    case 1:
+      return 'bg-yellow-300 text-primary-dark';
+    case 3:
+      return 'bg-blue-100 text-blue-dark';
+    default:
+      return 'bg-green-300 text-green-dark';
+  }
+}
 
 export interface TransactionDetailResponse {
   code: number;
@@ -170,16 +203,9 @@ export const InvoiceComponent = forwardRef<
     isPrinting: boolean;
   }
 >(({ invoice, handlePrint, isPrinting }, ref) => {
-  const orderStatus = [
-    { id: 0, label: 'Pesanan Dibuat' },
-    { id: 1, label: 'Menunggu Pembayaran' },
-    { id: 2, label: 'Transaksi Gagal' },
-    { id: 3, label: 'Pembayaran Berhasil' },
-    { id: 4, label: 'Transaksi Diproses dan Dikirim' },
-    { id: 5, label: 'Pesanan Selesai' },
-  ];
+  const { attribute } = invoice;
 
-  const rawStatus = Number(invoice?.attribute?.status?.code ?? 0);
+  const rawStatus = Number(attribute?.status?.code ?? 0);
 
   // Map backend → UI step
   const currentStatus =
@@ -193,16 +219,25 @@ export const InvoiceComponent = forwardRef<
             ? 4
             : 0; // fallback
 
+  const statusBadgeClass = getStatusBadgeClass(currentStatus);
+
   // ✅ Hide expired if status is 3, or hide selesai if expired
-  const filteredStatuses = orderStatus.filter((step) => {
-    // Hide "Pembayaran Expired" unless it's the actual current status (2)
-    if (step.id === 2 && currentStatus !== 2) return false;
+  const filteredStatuses = useMemo(
+    () =>
+      ORDER_STATUS_STEPS.filter((step) => {
+        // Hide "Pembayaran Expired" unless it's the actual current status (2)
+        if (step.id === 2 && currentStatus !== 2) return false;
 
-    // Hide "Pembayaran Selesai" when expired
-    if (step.id === 3 && currentStatus === 2) return false;
+        // Hide "Pembayaran Selesai" when expired
+        if (step.id === 3 && currentStatus === 2) return false;
 
-    return true;
-  });
+        return true;
+      }),
+    [currentStatus]
+  );
+
+  const waktuDate = parseApiDate(attribute?.waktu);
+  const expiredAtDate = parseApiDate(attribute?.payment?.expired_at);
 
   return (
     <>
@@ -221,17 +256,15 @@ export const InvoiceComponent = forwardRef<
       <div ref={ref} className="@container">
         <div className="flex flex-wrap items-center justify-center gap-3 border-b border-t border-gray-300 py-4 font-medium text-gray-700 @5xl:justify-between print:py-2 print:text-xs">
           <span className="@5xl:my-2 print:px-5">
-            {/* October 22, 2022 at 10:30 pm */}
-            {formatDate(
-              new Date(invoice?.attribute?.waktu),
-              'MMMM D, YYYY'
-            )} at {formatDate(new Date(invoice?.attribute?.waktu), 'h:mm A')}
+            {waktuDate
+              ? `${formatDate(waktuDate, 'MMMM D, YYYY')} at ${formatDate(waktuDate, 'h:mm A')}`
+              : '-'}
           </span>
           <div className="flex flex-col gap-3 xl:flex-row print:px-5">
             <Text
-              className={`rounded-3xl px-2.5 py-1 text-xs uppercase ${currentStatus === 2 ? 'bg-red-400 text-red-dark' : currentStatus === 1 ? 'bg-yellow-300 text-primary-dark' : currentStatus === 3 ? 'bg-blue-100 text-green-dark' : 'bg-green-300 text-green-dark'} @5xl:my-2`}
+              className={`rounded-3xl px-2.5 py-1 text-xs uppercase ${statusBadgeClass} @5xl:my-2`}
             >
-              {invoice?.attribute?.status?.message}
+              {attribute?.status?.message}
             </Text>
             <Button
               className="print:hidden"
@@ -274,10 +307,10 @@ export const InvoiceComponent = forwardRef<
                   <div className="flex justify-between font-medium print:text-sm">
                     Biaya Admin{' '}
                     <span>
-                      {/* {' '}
-                    {invoice?.attribute?.bill_payment?.fee?.nominal_rp ??
-                      'Rp 0'} */}
-                      FREE
+                      {' '}
+                      {invoice?.attribute?.bill_payment?.fee?.nominal_rp ??
+                        'Rp 0'}
+                      {/* FREE */}
                     </span>
                   </div>
                   <div className="flex justify-between font-medium print:text-sm">
@@ -292,9 +325,9 @@ export const InvoiceComponent = forwardRef<
                       </Text>
                       {currentStatus === 1 && (
                         <CopyButton
-                          text={
-                            invoice?.attribute?.bill_payment?.total.nominal ?? 0
-                          }
+                          text={String(
+                            attribute?.bill_payment?.total?.nominal ?? 0
+                          )}
                         />
                       )}
                     </div>
@@ -314,22 +347,16 @@ export const InvoiceComponent = forwardRef<
               <div className="space-y-4">
                 {currentStatus === 0 ? (
                   <span className="my-2 py-0.5 font-medium text-red-500 print:text-xs">
-                    Bayar Sebelum: {/* October 22, 2022 at 10:30 pm */}
-                    {formatDate(
-                      new Date(invoice?.attribute?.payment?.expired_at),
-                      'MMMM D, YYYY'
-                    )}{' '}
-                    at{' '}
-                    {formatDate(
-                      new Date(invoice?.attribute?.payment?.expired_at),
-                      'h:mm A'
-                    )}
+                    Bayar Sebelum:{' '}
+                    {expiredAtDate
+                      ? `${formatDate(expiredAtDate, 'MMMM D, YYYY')} at ${formatDate(expiredAtDate, 'h:mm A')}`
+                      : '-'}
                   </span>
                 ) : (
                   <Text
-                    className={`inline-block rounded-3xl px-2.5 py-1 text-xs uppercase ${currentStatus === 2 ? 'bg-red-400 text-red-dark' : currentStatus === 1 ? 'bg-yellow-300 text-primary-dark' : currentStatus === 3 ? 'bg-blue-100 text-blue-dark' : 'bg-green-300 text-green-dark'} @5xl:my-2`}
+                    className={`inline-block rounded-3xl px-2.5 py-1 text-xs uppercase ${statusBadgeClass} @5xl:my-2`}
                   >
-                    {invoice?.attribute?.status?.message}
+                    {attribute?.status?.message}
                   </Text>
                 )}
 
@@ -549,7 +576,7 @@ export default function OrderView() {
     }, 150);
   };
 
-  const fetchInvoice = async () => {
+  const fetchInvoice = useCallback(async () => {
     if (!session?.accessToken) return;
 
     setLoading(true);
@@ -560,27 +587,23 @@ export default function OrderView() {
       session.accessToken
     )
       .then((data) => {
-        setInvoice(data.data); // <--- ADD THIS LINE
+        setInvoice(data.data);
       })
       .catch((error) => {
         console.error(error);
         setInvoice(null);
       })
       .finally(() => setLoading(false));
-  };
+  }, [session?.accessToken, invoiceID]);
 
   useEffect(() => {
-    setLoading(true);
     fetchInvoice();
-  }, [session?.accessToken]);
+  }, [fetchInvoice]);
 
-  // 🕒 Detect Expiry Time
+  // 🕒 Detect Expiry Time — refetch tepat saat waktu bayar habis
   useEffect(() => {
-    const expired_at = invoice?.attribute?.payment?.expired_at;
-    if (!expired_at) return;
-
-    const expiryTime = new Date(expired_at.replace(' ', 'T'));
-    if (isNaN(expiryTime.getTime())) return;
+    const expiryTime = parseApiDate(invoice?.attribute?.payment?.expired_at);
+    if (!expiryTime) return;
 
     const now = new Date();
 
@@ -594,7 +617,7 @@ export default function OrderView() {
     }, expiryTime.getTime() - now.getTime());
 
     return () => clearTimeout(timeout);
-  }, [invoice?.attribute?.payment?.expired_at]);
+  }, [invoice?.attribute?.payment?.expired_at, fetchInvoice]);
 
   // 🔁 Auto-Refresh Only When Status === 0 (Menunggu Pembayaran)
   useEffect(() => {
@@ -606,7 +629,7 @@ export default function OrderView() {
     }, 60000); // 1 minute
 
     return () => clearInterval(interval);
-  }, [invoice?.attribute?.status?.code]);
+  }, [invoice?.attribute?.status?.code, fetchInvoice]);
 
   if (isLoading) {
     return (

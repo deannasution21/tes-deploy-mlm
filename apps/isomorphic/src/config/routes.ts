@@ -131,6 +131,11 @@ export const routes = {
     tahunan: '/promo/tahunan',
     rewardStockist: '/promo/reward-stockist',
     umroh2026Stockist: '/promo/umroh-2026-stockist',
+    pasif: {
+      index: '/promo/pasif',
+      checkout: '/promo/pasif/checkout',
+      invoice: (id: string) => `/promo/pasif/invoice/${id}`,
+    },
     wisata: {
       index: '/promo/wisata',
       transferPoint: '/promo/wisata/transfer-point',

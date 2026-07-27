@@ -746,6 +746,10 @@ export const menuItemsUser = [
         name: 'Promo Wisata',
         href: routes.promo.wisata.index,
       },
+      {
+        name: 'Promo Pasif',
+        href: routes.promo.pasif.index,
+      },
     ],
   },
   {

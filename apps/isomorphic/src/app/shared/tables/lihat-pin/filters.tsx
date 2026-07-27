@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge, Button, Flex, Input, Text } from 'rizzui';
+import { Badge, Button, Flex, Input, Select, Text } from 'rizzui';
 import { type Table as ReactTableType } from '@tanstack/react-table';
 import StatusField from '@core/components/controlled-table/status-field';
 import { PiMagnifyingGlassBold, PiTrashDuotone } from 'react-icons/pi';
@@ -22,16 +22,31 @@ const statusOptions = [
   },
 ];
 
+const planOptions = [
+  {
+    value: 'free',
+    label: 'Pasif',
+  },
+  {
+    value: 'plan_a',
+    label: 'Reguler',
+  },
+];
+
 interface TableToolbarProps<T extends Record<string, any>> {
   table: ReactTableType<T>;
-  type: string;
-  setType: React.Dispatch<React.SetStateAction<string>>;
+  status: string;
+  setStatus: React.Dispatch<React.SetStateAction<string>>;
+  plan: string;
+  setPlan: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function Filters<TData extends Record<string, any>>({
   table,
-  type,
-  setType,
+  status,
+  setStatus,
+  plan,
+  setPlan,
 }: TableToolbarProps<TData>) {
   const router = useRouter();
   const isFiltered =
@@ -43,14 +58,29 @@ export default function Filters<TData extends Record<string, any>>({
       direction="col"
       className="mt-6 @3xl:flex-row @[62rem]:mt-0"
     >
-      <Flex align="center" className="order-2 @3xl:order-1 @3xl:max-w-[250px]">
+      <Flex align="center" className="order-1 @3xl:max-w-[200px]">
+        <Select
+          className="w-full"
+          dropdownClassName="!z-10 h-fit"
+          inPortal={false}
+          options={planOptions}
+          value={plan}
+          onChange={(value) => setPlan(value as string)}
+          getOptionValue={(option) => option.value}
+          displayValue={(selected) =>
+            planOptions.find((opt) => opt.value === selected)?.label ?? ''
+          }
+        />
+      </Flex>
+
+      <Flex align="center" className="order-2 @3xl:max-w-[250px]">
         <StatusField
           className="w-full"
           options={statusOptions}
           dropdownClassName="!z-10 h-auto"
           getOptionValue={(option) => option.value}
-          value={type}
-          onChange={(value: string) => setType(value)}
+          value={status}
+          onChange={(value: string) => setStatus(value)}
           getOptionDisplayValue={(option) => renderOptionDisplayValue(option)}
           displayValue={(selected: string) =>
             renderOptionDisplayValue(
@@ -68,7 +98,7 @@ export default function Filters<TData extends Record<string, any>>({
             table.resetGlobalFilter();
             table.resetColumnFilters();
           }}
-          className="order-3 h-9 w-full bg-gray-200/70 @3xl:order-2 @3xl:w-24"
+          className="order-3 h-9 w-full bg-gray-200/70 @3xl:order-3 @3xl:w-24"
         >
           <PiTrashDuotone className="me-1.5 size-4" /> Clear
         </Button>
@@ -83,7 +113,7 @@ export default function Filters<TData extends Record<string, any>>({
         value={table.getState().globalFilter ?? ''}
         prefix={<PiMagnifyingGlassBold className="size-4" />}
         onChange={(e) => table.setGlobalFilter(e.target.value)}
-        className="w-full @3xl:order-3 @3xl:ms-auto @3xl:max-w-72"
+        className="w-full @3xl:order-4 @3xl:ms-auto @3xl:max-w-72"
       />
     </Flex>
   );

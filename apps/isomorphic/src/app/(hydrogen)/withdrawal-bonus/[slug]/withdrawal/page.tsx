@@ -7,7 +7,7 @@ export const metadata = {
   ...metaObject('Withdrawal Bonus'),
 };
 
-export default function Page({ params }: any) {
+export default function Page({ params, searchParams }: any) {
   const pageHeader = {
     title: `Withdrawal Bonus: ${params.slug.toLocaleUpperCase()}`,
     breadcrumb: [
@@ -28,7 +28,7 @@ export default function Page({ params }: any) {
   return (
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
-      <WithdrawalBonusForm slug={params.slug} />
+      <WithdrawalBonusForm slug={params.slug} plan={searchParams?.plan} />
     </>
   );
 }

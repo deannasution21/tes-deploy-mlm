@@ -55,7 +55,7 @@ export interface PromoMemberPasifRewardTier {
   id: string;
   name: string;
   point_required: number;
-  status: 'locked' | 'achieved' | 'claimed' | string;
+  status: 'locked' | 'eligible' | 'claimed' | string;
   can_claim: boolean;
   achieved_at: string | null;
   report_key: string | null;

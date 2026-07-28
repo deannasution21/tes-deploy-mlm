@@ -92,6 +92,7 @@ function Tree({ data, session }: TreeProps) {
                 RO: {node.ro_count ?? 0}
               </Badge>
             </div>
+            <p className="text-[10px] text-red-600">Point Plan Regular:</p>
             <div className="flex justify-center gap-2">
               <Badge
                 variant="flat"
@@ -112,31 +113,6 @@ function Tree({ data, session }: TreeProps) {
                 {node.point_right ?? 0}
               </Badge>
             </div>
-            {node.type_plan === 'free' && (
-              <>
-                <p className="text-[10px] text-orange-600">Point Pasif:</p>
-                <div className="flex justify-center gap-2">
-                  <Badge
-                    variant="flat"
-                    rounded="pill"
-                    className="font-medium"
-                    color="warning"
-                    size="sm"
-                  >
-                    {node.point_pasif_left ?? 0}
-                  </Badge>
-                  <Badge
-                    variant="flat"
-                    rounded="pill"
-                    className="font-medium"
-                    color="warning"
-                    size="sm"
-                  >
-                    {node.point_pasif_right ?? 0}
-                  </Badge>
-                </div>
-              </>
-            )}
             {node?.promo_points && (
               <>
                 <p className="text-[10px] text-green-600">Point Promo Mobil:</p>
@@ -183,6 +159,27 @@ function Tree({ data, session }: TreeProps) {
                 </div>
               </>
             )}
+            <p className="text-[10px] text-orange-600">Point Pasif:</p>
+            <div className="flex justify-center gap-2">
+              <Badge
+                variant="flat"
+                rounded="pill"
+                className="font-medium"
+                color="warning"
+                size="sm"
+              >
+                {node.point_pasif_left ?? 0}
+              </Badge>
+              <Badge
+                variant="flat"
+                rounded="pill"
+                className="font-medium"
+                color="warning"
+                size="sm"
+              >
+                {node.point_pasif_right ?? 0}
+              </Badge>
+            </div>
           </Link>
         ) : currentUpline ? (
           // ❗ Null node (potential downline)

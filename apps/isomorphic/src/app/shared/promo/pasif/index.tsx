@@ -22,9 +22,8 @@ import { routes } from '@/config/routes';
 import { useCart } from '@/store/quick-cart/cart.context';
 import { generateCartProduct } from '@/store/quick-cart/generate-cart-product';
 
-// 🚧 Backend endpoint klaim (`POST /_promos/action`) belum siap di sisi server.
-// Set true kembali begitu backend sudah support action "claim" untuk type "member_pasif".
-const CLAIM_API_ENABLED = false;
+// ✅ Backend endpoint klaim (`POST /_promos/action`, action: "claim", type: "member_pasif") sudah siap.
+const CLAIM_API_ENABLED = true;
 
 export default function PromoPasifPage({ className }: { className?: string }) {
   const { data: session } = useSession();
@@ -64,33 +63,45 @@ export default function PromoPasifPage({ className }: { className?: string }) {
     setLoading(true);
 
     const id = session?.user?.id;
+    const token = session.accessToken;
 
     Promise.all([
       fetchWithAuth<UserDataResponse>(
         `/_users/${id}`,
         { method: 'GET' },
-        session.accessToken
+        token
       ),
       fetchWithAuth<PromoMemberPasifResponse>(
         `/_promos?type=member_pasif&username=${id}`,
         { method: 'GET' },
-        session.accessToken
-      ),
-      fetchWithAuth<ProductResponse>(
-        `/_products`,
-        { method: 'GET' },
-        session.accessToken
+        token
       ),
     ])
-      .then(([userData, promoData, productData]) => {
+      .then(([userData, promoData]) => {
         // API: member_pasif === false artinya SUDAH aktivasi, true artinya BELUM aktivasi
-        setMemberPasifActive(!userData?.data?.attribute?.member_pasif);
+        const belumAktivasi = Boolean(
+          userData?.data?.attribute?.member_pasif
+        );
+        setMemberPasifActive(!belumAktivasi);
         setDataWhole(promoData?.data ?? null);
 
-        const products = productData?.data?.products ?? [];
-        setActivationProducts(
-          products.filter((p) => p?.attribute?.visible_for_member_pasif)
-        );
+        // Produk aktivasi cuma relevan (dan cuma perlu di-fetch) kalau member
+        // belum aktivasi — kalau sudah aktivasi, tidak perlu panggil /_products sama sekali.
+        if (!belumAktivasi) {
+          setActivationProducts([]);
+          return;
+        }
+
+        return fetchWithAuth<ProductResponse>(
+          `/_products`,
+          { method: 'GET' },
+          token
+        ).then((productData) => {
+          const products = productData?.data?.products ?? [];
+          setActivationProducts(
+            products.filter((p) => p?.attribute?.visible_for_member_pasif)
+          );
+        });
       })
       .catch((error: any) => {
         console.error(error);
@@ -119,10 +130,13 @@ export default function PromoPasifPage({ className }: { className?: string }) {
       },
       session.accessToken
     )
-      .then(() => {
+      .then((data: any) => {
         Swal.fire({
           title: 'Klaim Berhasil',
-          html: `Selamat, reward <b>${target.name}</b> berhasil diklaim!`,
+          html:
+            data?.message ??
+            `Selamat, reward <b>${target.name}</b> berhasil diklaim!`,
+          icon: 'success',
           confirmButtonText: 'Tutup',
           showConfirmButton: true,
           confirmButtonColor: '#ca8a04',
@@ -133,9 +147,16 @@ export default function PromoPasifPage({ className }: { className?: string }) {
           getDataPromo();
         });
       })
-      .catch((error) => {
-        toast.error(<Text as="b">Klaim Reward Gagal</Text>);
+      .catch((error: any) => {
         console.error(error);
+        Swal.fire({
+          title: 'Klaim Gagal',
+          html: error?.message ?? 'Terjadi kesalahan saat mengklaim reward.',
+          icon: 'error',
+          confirmButtonText: 'Tutup',
+          showConfirmButton: true,
+          confirmButtonColor: '#ca8a04',
+        });
       })
       .finally(() => setClaiming(false));
   };
@@ -222,21 +243,15 @@ export default function PromoPasifPage({ className }: { className?: string }) {
     return <p className="py-20 text-center">Sedang memuat data...</p>;
 
   const accumulatePoint = dataWhole?.progress?.effective_point ?? 0;
-  const achievedRewards = dataWhole?.achieved_rewards ?? [];
   const targets = dataWhole?.reward_tiers ?? [];
 
-  const isTierClaimed = (tier: PromoMemberPasifRewardTier) => {
-    if (tier.status === 'claimed') return true;
+  // Aturan dari backend: status === 'claimed' => sudah diklaim.
+  const isTierClaimed = (tier: PromoMemberPasifRewardTier) =>
+    tier.status === 'claimed';
 
-    return achievedRewards.some((r: any) => {
-      if (typeof r === 'string') return r === tier.id;
-      return r?.id === tier.id || r?.tier_id === tier.id;
-    });
-  };
-
-  const isTierReached = (tier: PromoMemberPasifRewardTier) => {
-    return Boolean(tier.can_claim);
-  };
+  // Aturan dari backend: status === 'eligible' DAN can_claim === true => tombol klaim enable.
+  const isTierReached = (tier: PromoMemberPasifRewardTier) =>
+    tier.status === 'eligible' && tier.can_claim === true;
 
   const getProductImage = (product: ProductItem) => {
     // product.image berupa path lokal di folder public (mis. /images/produk/PRD0009.png)

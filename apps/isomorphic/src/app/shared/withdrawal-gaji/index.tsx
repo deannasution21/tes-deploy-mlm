@@ -18,10 +18,6 @@ import {
 
 const tipePlan = [
   {
-    value: 'free',
-    label: 'Pasif',
-  },
-  {
     value: 'plan_a',
     label: 'Reguler',
   },

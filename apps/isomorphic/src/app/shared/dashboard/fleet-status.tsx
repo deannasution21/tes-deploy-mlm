@@ -70,7 +70,7 @@ export default function FleetStatus({
               className="flex items-center justify-between border-b border-gray-300 py-3"
             >
               <Title as="h5" className="uppercase text-primary">
-                {plan === 'plan_a' ? 'PLAN' : plan}
+                {plan === 'plan_a' ? 'Reguler' : plan === 'free' ? 'Pasif' : plan}
               </Title>
               <Title as="h4" className="text-end text-primary">
                 {count ?? 0} PIN

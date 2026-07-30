@@ -235,8 +235,16 @@ export interface UserData {
   master_username?: string;
   address?: string;
 
-  // status keanggotaan promo pasif (harus beli produk pasif via stockist)
+  // status keanggotaan promo pasif — false = sudah aktivasi, true = belum aktivasi
   member_pasif?: boolean;
+  type_plan?: string;
+  // riwayat membership per plan (key = type_plan, mis. "free"/"plan_a")
+  membership?: Record<string, MembershipInfo>;
+}
+
+export interface MembershipInfo {
+  status: string;
+  created_at: string;
 }
 
 export interface PinResponse {

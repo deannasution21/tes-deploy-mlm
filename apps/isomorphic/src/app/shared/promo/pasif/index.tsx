@@ -299,24 +299,42 @@ export default function PromoPasifPage({ className }: { className?: string }) {
           </div>
 
           {needsActivation && (
-            <Alert variant="flat" color="danger">
-              <Text className="font-semibold">
-                Anda Belum Aktivasi sebagai Member Pasif
-              </Text>
-              <Text className="mt-1 break-normal">
-                Untuk dapat mengikuti Promo Pasif, Anda harus melakukan
-                aktivasi akun terlebih dahulu dari Member Pasif menjadi ID
-                Normal.
-              </Text>
-              <Button
-                className="mt-3"
-                isLoading={isActivating}
-                disabled={isActivating}
-                onClick={handleActivate}
-              >
-                Aktivasi
-              </Button>
-            </Alert>
+            <>
+              <Alert variant="flat" color="danger">
+                <Text className="font-semibold">
+                  Anda Belum Aktivasi sebagai Member Pasif
+                </Text>
+                <Text className="mt-1 break-normal">
+                  Untuk dapat mengikuti Promo Pasif, Anda harus melakukan
+                  aktivasi akun terlebih dahulu dari Member Pasif menjadi ID
+                  Normal.
+                </Text>
+                <Button
+                  className="mt-3"
+                  isLoading={isActivating}
+                  disabled={isActivating}
+                  onClick={handleActivate}
+                >
+                  Aktivasi
+                </Button>
+              </Alert>
+
+              <Alert variant="flat" color="info">
+                <Text className="font-semibold">
+                  Informasi Upgrade Member Pasif
+                </Text>
+                <Text className="mt-1 break-normal">
+                  Member berstatus <strong>Pasif</strong> yang ingin upgrade
+                  menjadi <strong>Member Aktif</strong> wajib menggunakan{' '}
+                  <strong>PIN Reguler</strong>. Pastikan Anda sudah memiliki
+                  PIN Reguler yang masih valid sebelum melakukan aktivasi.
+                </Text>
+                <Text className="mt-1 break-normal">
+                  Catatan: PIN dari jenis plan lain tidak dapat digunakan
+                  untuk proses upgrade Member Pasif ini.
+                </Text>
+              </Alert>
+            </>
           )}
 
           {!needsActivation && (

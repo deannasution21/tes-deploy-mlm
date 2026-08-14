@@ -98,6 +98,7 @@ export const routes = {
       konfirmasi: '/member/manajemen/konfirmasi',
       detail: (id: string) => `/member/manajemen/${id}`,
       edit: (id: string) => `/member/edit/${id}`,
+      ubahPassword: (id: string) => `/member/ubah-password/${id}`,
     },
   },
   kelolaProduk: {

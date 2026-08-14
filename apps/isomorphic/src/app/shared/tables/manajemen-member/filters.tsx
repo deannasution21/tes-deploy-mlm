@@ -42,6 +42,10 @@ const tipeSearch = [
     label: 'Sponsor ID',
     value: 'sponsor_id',
   },
+  {
+    label: 'No HP',
+    value: 'no_hp',
+  },
 ];
 
 interface TableToolbarProps<T extends Record<string, any>> {

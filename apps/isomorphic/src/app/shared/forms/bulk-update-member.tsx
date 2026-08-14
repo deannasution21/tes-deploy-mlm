@@ -50,6 +50,9 @@ export default function BulkUpdateMemberForm({
   const [accountName, setAccountName] = useState('');
   const [heirName, setHeirName] = useState('');
   const [heirRelationship, setHeirRelationship] = useState('');
+  const [npwpName, setNpwpName] = useState('');
+  const [npwpNumber, setNpwpNumber] = useState('');
+  const [npwpAddress, setNpwpAddress] = useState('');
 
   useEffect(() => {
     if (!session?.accessToken) return;
@@ -112,6 +115,9 @@ export default function BulkUpdateMemberForm({
     setAccountName('');
     setHeirName('');
     setHeirRelationship('');
+    setNpwpName('');
+    setNpwpNumber('');
+    setNpwpAddress('');
   };
 
   const doSave = (ids: string[]) => {
@@ -135,6 +141,9 @@ export default function BulkUpdateMemberForm({
     if (accountName) body.account_name = accountName;
     if (heirName) body.heir_name = heirName;
     if (heirRelationship) body.heir_relationship = heirRelationship;
+    if (npwpName) body.npwp_name = npwpName;
+    if (npwpNumber) body.npwp_number = npwpNumber;
+    if (npwpAddress) body.npwp_address = npwpAddress;
 
     fetchWithAuth<any>(
       `/_users/bulk-update`,
@@ -204,6 +213,10 @@ export default function BulkUpdateMemberForm({
           'bg-gray-300 hover:bg-gray-400 text-black font-semibold px-4 py-2 rounded',
       },
       buttonsStyling: false,
+      didOpen: () => {
+        const container = Swal.getContainer();
+        if (container) container.style.zIndex = '10000';
+      },
     }).then((result: any) => {
       if (result.isConfirmed) {
         doSave(ids);
@@ -352,6 +365,31 @@ export default function BulkUpdateMemberForm({
           className="col-span-full"
           value={accountName}
           onChange={(e) => setAccountName(e.target.value)}
+        />
+
+        <div className="col-span-full mt-2 text-xs font-bold uppercase tracking-wide text-gray-500">
+          Informasi NPWP
+        </div>
+
+        <Input
+          label="Nama Pada NPWP"
+          placeholder="Nama Pada NPWP"
+          value={npwpName}
+          onChange={(e) => setNpwpName(e.target.value)}
+        />
+        <Input
+          label="No. NPWP"
+          placeholder="No. NPWP"
+          value={npwpNumber}
+          onChange={(e) => setNpwpNumber(e.target.value)}
+        />
+        <Textarea
+          label="Alamat NPWP"
+          placeholder="Alamat NPWP"
+          className="col-span-full"
+          value={npwpAddress}
+          onChange={(e) => setNpwpAddress(e.target.value)}
+          textareaClassName="h-10"
         />
 
         <div className="col-span-full mt-2 text-xs font-bold uppercase tracking-wide text-gray-500">

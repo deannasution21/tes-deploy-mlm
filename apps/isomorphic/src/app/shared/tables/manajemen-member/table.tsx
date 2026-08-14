@@ -4,7 +4,7 @@ import Table from '@core/components/table';
 import { useTanStackTable } from '@core/components/table/custom/use-TanStack-Table';
 import TablePagination from '@core/components/table/pagination';
 import Filters from './filters';
-import { Alert, Button, Checkbox, TableVariantProps, Text } from 'rizzui';
+import { Alert, Button, TableVariantProps, Text } from 'rizzui';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
@@ -147,24 +147,6 @@ export default function ManajemenMemberTable({
   const columnHelperNew = createColumnHelper<UserListItem>();
 
   const columns = [
-    {
-      id: 'select',
-      size: 40,
-      header: ({ table }: { table: any }) => (
-        <Checkbox
-          aria-label="Pilih Semua"
-          checked={table.getIsAllPageRowsSelected()}
-          onChange={table.getToggleAllPageRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }: { row: any }) => (
-        <Checkbox
-          aria-label="Pilih Baris"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-    },
     {
       id: 'no',
       header: '#',
@@ -449,7 +431,6 @@ export default function ManajemenMemberTable({
     columnConfig: columns,
     options: {
       manualPagination: true, // 🔥 important
-      enableRowSelection: true,
       initialState: {
         pagination: {
           pageIndex: 0,
@@ -460,21 +441,12 @@ export default function ManajemenMemberTable({
     },
   });
 
-  const { openModal, closeModal } = useModal();
-  const selectedUsernames = table
-    .getSelectedRowModel()
-    .rows.map((row) => row.original.id as string);
+  const { openModal } = useModal();
 
   const handleBulkUpdate = () => {
     openModal({
       view: (
-        <BulkUpdateMemberForm
-          usernames={selectedUsernames}
-          onSuccess={() => {
-            table.resetRowSelection();
-            fetchDataMember();
-          }}
-        />
+        <BulkUpdateMemberForm onSuccess={() => fetchDataMember()} />
       ),
       customSize: '900px',
     });
@@ -509,37 +481,24 @@ export default function ManajemenMemberTable({
             actionClassName="w-full ps-0 items-center weee"
             headerClassName="mb-6 items-start flex-col @[57rem]:flex-row @[57rem]:items-center px-5 pt-5 lg:pt-7 lg:px-7"
             action={
-              <Filters
-                table={table}
-                type={type}
-                setType={setType}
-                searchBy={searchBy}
-                setSearchBy={setSearchBy}
-                username={username}
-                setUsername={setUsername}
-                handleSearch={handleSearch}
-              />
+              <div className="flex w-full flex-col gap-3 @[57rem]:flex-row @[57rem]:items-center @[57rem]:justify-between">
+                <Button size="sm" onClick={handleBulkUpdate} className="shrink-0">
+                  <PiPencil className="me-1.5 h-4 w-4" />
+                  Bulk Update
+                </Button>
+                <Filters
+                  table={table}
+                  type={type}
+                  setType={setType}
+                  searchBy={searchBy}
+                  setSearchBy={setSearchBy}
+                  username={username}
+                  setUsername={setUsername}
+                  handleSearch={handleSearch}
+                />
+              </div>
             }
           >
-            {selectedUsernames.length > 0 && (
-              <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-md border border-amber-300 bg-amber-50 px-4 py-3">
-                <Text className="text-sm font-medium text-amber-800">
-                  <strong>{selectedUsernames.length}</strong> member dipilih
-                </Text>
-                <div className="flex items-center gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => table.resetRowSelection()}
-                  >
-                    Batal Pilih
-                  </Button>
-                  <Button size="sm" onClick={handleBulkUpdate}>
-                    Update Bulk
-                  </Button>
-                </div>
-              </div>
-            )}
             <Table table={table} variant="modern" />
             {/* <TablePagination table={table} className="p-4" /> */}
             <ApiPagination meta={meta} onPageChange={(p) => setPage(p)} />

@@ -1,26 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import {
-  useForm,
-  FormProvider,
-  Controller,
-  type SubmitHandler,
-  useFormContext,
-} from 'react-hook-form';
 import { Button, Input, Select, Text, Textarea, Title } from 'rizzui';
-import { FormBlockWrapper } from '@/app/shared/invoice/form-utils';
 import { toast } from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { BankStatusResponse, OptionType } from '@/types';
+import { BankStatusResponse, OptionType, Province, Regencies } from '@/types';
 import { useModal } from '@/app/shared/modal-views/use-modal';
-import {
-  BulkUpdateMemberInput,
-  bulkUpdateMemberSchema,
-} from '@/validators/bulk-update-member-schema';
 
 const pasangan = [
   { label: 'Suami', value: 'Husband' },
@@ -30,209 +17,39 @@ const pasangan = [
   { label: 'Ibu Kandung', value: 'Mother' },
 ];
 
-function Formnya({
-  isLoading,
-  dataBank,
-  onCancel,
-  count,
-}: {
-  isLoading: boolean;
-  dataBank: OptionType[];
-  onCancel: () => void;
-  count: number;
-}) {
-  const {
-    control,
-    register,
-    formState: { errors },
-  } = useFormContext();
-
-  return (
-    <>
-      <div className="grid grid-cols-1 gap-8 divide-y divide-dashed divide-gray-200 @2xl:gap-10">
-        <FormBlockWrapper title={'Informasi Pribadi:'}>
-          <Input
-            label="Nama Lengkap"
-            placeholder="Kosongkan jika tidak ingin diubah"
-            {...register('full_name')}
-            error={errors?.full_name?.message as any}
-          />
-          <Input
-            label="Email"
-            placeholder="Kosongkan jika tidak ingin diubah"
-            {...register('email')}
-            error={errors?.email?.message as any}
-          />
-          <Input
-            label="No. HP/WA"
-            placeholder="Kosongkan jika tidak ingin diubah"
-            {...register('phone')}
-            error={errors?.phone?.message as any}
-          />
-          <Input
-            label="NIK"
-            placeholder="Kosongkan jika tidak ingin diubah"
-            {...register('nik')}
-            error={errors?.nik?.message as any}
-          />
-          <Input
-            label="Provinsi"
-            placeholder="Kosongkan jika tidak ingin diubah"
-            {...register('province')}
-            error={errors?.province?.message as any}
-          />
-          <Input
-            label="Kota/Kabupaten"
-            placeholder="Kosongkan jika tidak ingin diubah"
-            {...register('city')}
-            error={errors?.city?.message as any}
-          />
-        </FormBlockWrapper>
-
-        <FormBlockWrapper
-          title={'Informasi Rekening:'}
-          className="pt-7 @2xl:pt-9"
-        >
-          <Controller
-            control={control}
-            name="bank_name"
-            render={({ field: { onChange, value } }) => (
-              <Select
-                label="Bank"
-                dropdownClassName="!z-10 h-fit"
-                inPortal={false}
-                placeholder="Kosongkan jika tidak ingin diubah"
-                options={dataBank}
-                onChange={onChange}
-                value={value}
-                searchable={true}
-                clearable={true}
-                onClear={() => onChange('')}
-                getOptionValue={(option) => option.value}
-                displayValue={(selected) =>
-                  dataBank.find((k) => k.value === selected)?.label ?? ''
-                }
-                error={errors?.bank_name?.message as string | undefined}
-              />
-            )}
-          />
-          <Input
-            label="No. Rekening"
-            placeholder="Kosongkan jika tidak ingin diubah"
-            {...register('bank_account_number')}
-            error={errors?.bank_account_number?.message as any}
-          />
-          <Input
-            label="Atas Nama"
-            placeholder="Kosongkan jika tidak ingin diubah"
-            {...register('bank_account_name')}
-            error={errors?.bank_account_name?.message as any}
-          />
-        </FormBlockWrapper>
-
-        <FormBlockWrapper title={'Informasi NPWP:'} className="pt-7 @2xl:pt-9">
-          <Input
-            label="Nama Pada NPWP"
-            placeholder="Kosongkan jika tidak ingin diubah"
-            {...register('npwp_name')}
-            error={errors?.npwp_name?.message as any}
-          />
-          <Input
-            label="No. NPWP"
-            placeholder="Kosongkan jika tidak ingin diubah"
-            {...register('npwp_number')}
-            error={errors?.npwp_number?.message as any}
-          />
-          <Textarea
-            label="Alamat NPWP"
-            placeholder="Kosongkan jika tidak ingin diubah"
-            {...register('npwp_address')}
-            error={errors?.npwp_address?.message as string}
-            textareaClassName="h-10"
-          />
-        </FormBlockWrapper>
-
-        <FormBlockWrapper title={'Ahli Waris:'} className="pt-7 @2xl:pt-9">
-          <Input
-            label="Nama Ahli Waris"
-            placeholder="Kosongkan jika tidak ingin diubah"
-            {...register('heir_name')}
-            error={errors?.heir_name?.message as any}
-          />
-          <Controller
-            name="heir_relationship"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <Select
-                label="Status Ahli Waris"
-                dropdownClassName="!z-10 h-fit"
-                inPortal={false}
-                placeholder="Kosongkan jika tidak ingin diubah"
-                options={pasangan}
-                onChange={onChange}
-                value={value}
-                clearable={true}
-                onClear={() => onChange('')}
-                getOptionValue={(option) => option.value}
-                displayValue={(selected) =>
-                  pasangan.find((con) => con.value === selected)?.label ?? ''
-                }
-                error={errors?.heir_relationship?.message as string}
-              />
-            )}
-          />
-        </FormBlockWrapper>
-      </div>
-
-      <div className="mt-6 flex items-center justify-end gap-4 border-t pt-4">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onCancel}
-          disabled={isLoading}
-        >
-          Batal
-        </Button>
-        <Button type="submit" isLoading={isLoading} disabled={isLoading}>
-          Terapkan ke {count} Member
-        </Button>
-      </div>
-    </>
-  );
-}
+const normalizeUsernames = (raw: string) =>
+  raw
+    .split(/[\n,]+/)
+    .map((s) => s.trim().replace(/^[-•·*]\s*/, '').trim())
+    .filter(Boolean);
 
 export default function BulkUpdateMemberForm({
-  usernames,
   onSuccess,
 }: {
-  usernames: string[];
   onSuccess?: () => void;
 }) {
   const { data: session } = useSession();
   const { closeModal } = useModal();
 
-  const [isLoadingS, setLoadingS] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [dataBank, setDataBank] = useState<OptionType[]>([]);
+  const [dataProvinsi, setDataProvinsi] = useState<OptionType[]>([]);
+  const [dataKabupaten, setDataKabupaten] = useState<OptionType[]>([]);
 
-  const methods = useForm({
-    defaultValues: {
-      full_name: '',
-      email: '',
-      phone: '',
-      nik: '',
-      province: '',
-      city: '',
-      bank_name: '',
-      bank_account_name: '',
-      bank_account_number: '',
-      npwp_name: '',
-      npwp_number: '',
-      npwp_address: '',
-      heir_name: '',
-      heir_relationship: '',
-    },
-    resolver: zodResolver(bulkUpdateMemberSchema),
-  });
+  const [username, setUsername] = useState('');
+  const [namaLengkap, setNamaLengkap] = useState('');
+  const [email, setEmail] = useState('');
+  const [noHp, setNoHp] = useState('');
+  const [nik, setNik] = useState('');
+  const [provinceId, setProvinceId] = useState('');
+  const [provinceName, setProvinceName] = useState('');
+  const [cityId, setCityId] = useState('');
+  const [cityName, setCityName] = useState('');
+  const [bankCode, setBankCode] = useState('');
+  const [accountNumber, setAccountNumber] = useState('');
+  const [accountName, setAccountName] = useState('');
+  const [heirName, setHeirName] = useState('');
+  const [heirRelationship, setHeirRelationship] = useState('');
 
   useEffect(() => {
     if (!session?.accessToken) return;
@@ -250,46 +67,74 @@ export default function BulkUpdateMemberForm({
           }))
         );
       })
-      .catch((error) => {
-        console.error(error);
-        setDataBank([]);
-      });
+      .catch((error) => console.error(error));
+
+    fetch('/api/wilayah/provinces')
+      .then((res) => res.json())
+      .then((data) => {
+        setDataProvinsi(
+          (data as Province[]).map((p: any) => ({ value: p.id, label: p.name }))
+        );
+      })
+      .catch((error) => console.error(error));
   }, [session?.accessToken]);
 
-  const doSave = async (payload: any) => {
+  const fetchKabupaten = async (idProv: string) => {
+    setCityId('');
+    setCityName('');
+    setDataKabupaten([]);
+    if (!idProv) return;
+
+    const res = await fetch(`/api/wilayah/regencies/${idProv}`);
+    const data = (await res.json()) as Regencies[];
+    setDataKabupaten(data.map((k: any) => ({ value: k.id, label: k.name })));
+  };
+
+  const handlePhoneInput = (value: string) => {
+    let v = value.replace(/\D/g, '');
+    if (v.startsWith('08')) v = '628' + v.slice(2);
+    setNoHp(v);
+  };
+
+  const resetForm = () => {
+    setUsername('');
+    setNamaLengkap('');
+    setEmail('');
+    setNoHp('');
+    setNik('');
+    setProvinceId('');
+    setProvinceName('');
+    setCityId('');
+    setCityName('');
+    setDataKabupaten([]);
+    setBankCode('');
+    setAccountNumber('');
+    setAccountName('');
+    setHeirName('');
+    setHeirRelationship('');
+  };
+
+  const doSave = (ids: string[]) => {
     if (!session?.accessToken) return;
 
-    setLoadingS(true);
-
-    const fieldMap: Record<string, string> = {
-      full_name: 'nama',
-      email: 'email',
-      phone: 'no_hp',
-      nik: 'nik',
-      province: 'province',
-      city: 'city',
-      bank_account_name: 'account_name',
-      bank_account_number: 'account_number',
-      bank_name: 'bank_code',
-      npwp_name: 'npwp_name',
-      npwp_number: 'npwp_number',
-      npwp_address: 'npwp_address',
-      heir_name: 'heir_name',
-      heir_relationship: 'heir_relationship',
-    };
+    setLoading(true);
 
     const body: Record<string, any> = {
-      username: usernames.join(', '),
+      username: ids.join(', '),
       type: 'member',
     };
 
-    // Cuma kirim field yang diisi, biar field kosong tidak menimpa data existing di seluruh member terpilih
-    Object.entries(fieldMap).forEach(([formKey, apiKey]) => {
-      const value = payload?.[formKey];
-      if (typeof value === 'string' && value.trim() !== '') {
-        body[apiKey] = value.trim();
-      }
-    });
+    if (namaLengkap) body.nama = namaLengkap;
+    if (email) body.email = email;
+    if (noHp) body.no_hp = noHp;
+    if (nik) body.nik = nik;
+    if (provinceName) body.province = provinceName;
+    if (cityName) body.city = cityName;
+    if (bankCode) body.bank_code = bankCode;
+    if (accountNumber) body.account_number = accountNumber;
+    if (accountName) body.account_name = accountName;
+    if (heirName) body.heir_name = heirName;
+    if (heirRelationship) body.heir_relationship = heirRelationship;
 
     fetchWithAuth<any>(
       `/_users/bulk-update`,
@@ -302,41 +147,56 @@ export default function BulkUpdateMemberForm({
       .then((data) => {
         toast.success(
           <Text as="b">
-            {data?.message ??
-              `Data ${usernames.length} member berhasil diperbarui`}
+            {data?.message ?? `Bulk update berhasil untuk ${ids.length} member`}
           </Text>
         );
+        resetForm();
         closeModal();
         onSuccess?.();
       })
       .catch((error: any) => {
         console.error(error);
         toast.error(
-          <Text as="b">{error?.message ?? 'Update bulk data gagal'}</Text>
+          <Text as="b">{error?.message ?? 'Bulk update gagal, silakan coba lagi'}</Text>
         );
       })
-      .finally(() => setLoadingS(false));
+      .finally(() => setLoading(false));
   };
 
-  const onSubmit: SubmitHandler<BulkUpdateMemberInput> = (data) => {
-    const filledFields = Object.values(data).filter(
-      (v) => typeof v === 'string' && v.trim() !== ''
-    );
+  const handleSubmit = () => {
+    const ids = normalizeUsernames(username);
 
-    if (filledFields.length === 0) {
-      toast.error(
-        <Text as="b">Isi minimal 1 field yang ingin diubah</Text>
-      );
+    if (ids.length === 0) {
+      toast.error(<Text as="b">Masukkan minimal satu username</Text>);
       return;
     }
 
+    if (noHp && !/^62\d{8,13}$/.test(noHp)) {
+      toast.error(<Text as="b">Format No. HP tidak valid, gunakan format 62xxx</Text>);
+      return;
+    }
+
+    const idListHtml = ids
+      .map(
+        (id) =>
+          `<span style="display:inline-block;background:#f3e8c8;color:#5a2a0a;border-radius:4px;padding:2px 8px;margin:2px;font-size:12px;font-family:monospace;font-weight:600;text-transform:uppercase">${id}</span>`
+      )
+      .join('');
+
     Swal.fire({
-      title: 'Konfirmasi Update Bulk',
-      html: `Data akan diterapkan ke <strong>${usernames.length}</strong> member sekaligus:<br/><span class="uppercase">${usernames.join(', ')}</span><br/><br/>Pastikan data sudah benar. Lanjutkan?`,
+      title: 'Konfirmasi Bulk Update',
+      html: `
+        <p style="margin-bottom:10px">Data akan diperbarui untuk <strong>${ids.length} member</strong> berikut:</p>
+        <div style="max-height:160px;overflow-y:auto;background:#fafafa;border:1px solid #e0c97a;border-radius:8px;padding:10px;text-align:left;margin-bottom:10px">
+          ${idListHtml}
+        </div>
+        <p style="font-size:13px;color:#6b6b6b">Pastikan semua ID sudah benar sebelum melanjutkan.</p>
+      `,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Ya, Terapkan',
+      confirmButtonText: 'Ya, Update',
       cancelButtonText: 'Batal',
+      allowOutsideClick: false,
       customClass: {
         confirmButton:
           'bg-[#AA8453] hover:bg-[#a16207] text-white font-semibold px-4 py-2 rounded me-3',
@@ -346,34 +206,202 @@ export default function BulkUpdateMemberForm({
       buttonsStyling: false,
     }).then((result: any) => {
       if (result.isConfirmed) {
-        doSave(data);
+        doSave(ids);
       } else {
-        toast.success(<Text as="b">Update bulk dibatalkan!</Text>);
+        toast.success(<Text as="b">Bulk update dibatalkan!</Text>);
       }
     });
   };
 
+  const idCount = normalizeUsernames(username).length;
+
   return (
     <div className="m-auto max-h-[90vh] overflow-y-auto p-6">
       <Title as="h4" className="mb-1">
-        Update Data Bulk
+        Bulk Update Member
       </Title>
       <Text className="mb-6 text-gray-500">
-        Perubahan akan diterapkan ke{' '}
-        <strong>{usernames.length} member</strong> yang dipilih:{' '}
-        <span className="uppercase">{usernames.join(', ')}</span>
+        Data yang diisi akan diaplikasikan ke semua ID yang dimasukkan
       </Text>
 
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Formnya
-            isLoading={isLoadingS}
-            dataBank={dataBank}
-            onCancel={closeModal}
-            count={usernames.length}
+      <div className="grid grid-cols-1 gap-5 @2xl:grid-cols-2">
+        <div className="col-span-full">
+          <Textarea
+            label="Daftar ID Member"
+            placeholder={
+              'IPG0023302, IPG0024748, IPG0024079\natau satu per baris\nIPG0023302\nIPG0024748'
+            }
+            rows={4}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            textareaClassName="font-mono text-xs uppercase"
           />
-        </form>
-      </FormProvider>
+          <Text className="mt-1 text-xs text-gray-500">
+            Pisahkan dengan koma atau baris baru. Jumlah ID:{' '}
+            <strong>{idCount}</strong>
+          </Text>
+        </div>
+
+        <Input
+          label="Nama Lengkap"
+          placeholder="Nama Lengkap"
+          value={namaLengkap}
+          onChange={(e) => setNamaLengkap(e.target.value)}
+        />
+        <Input
+          label="Email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <Input
+          label="No. HP/WA"
+          placeholder="08xxxxxxxxxx"
+          value={noHp}
+          onChange={(e) => handlePhoneInput(e.target.value)}
+        />
+        <Input
+          label="NIK"
+          placeholder="NIK"
+          value={nik}
+          onChange={(e) => setNik(e.target.value)}
+        />
+
+        <Select
+          label="Provinsi"
+          dropdownClassName="!z-10 h-fit max-h-[250px]"
+          inPortal={false}
+          placeholder="Pilih Provinsi"
+          options={dataProvinsi}
+          onChange={(selectedId) => {
+            const selected = dataProvinsi.find((p) => p.value === selectedId);
+            setProvinceId(selectedId as string);
+            setProvinceName(selected?.label ?? '');
+            fetchKabupaten(selectedId as string);
+          }}
+          value={provinceId}
+          searchable={true}
+          clearable={true}
+          onClear={() => {
+            setProvinceId('');
+            setProvinceName('');
+            setCityId('');
+            setCityName('');
+            setDataKabupaten([]);
+          }}
+          getOptionValue={(option) => option.value}
+          displayValue={(selected) =>
+            dataProvinsi.find((p) => p.value === selected)?.label ?? ''
+          }
+        />
+
+        <Select
+          label="Kota/Kabupaten"
+          dropdownClassName="!z-10 h-fit max-h-[250px]"
+          inPortal={false}
+          placeholder="Pilih Kota/Kabupaten"
+          options={dataKabupaten}
+          onChange={(selectedId) => {
+            const selected = dataKabupaten.find((k) => k.value === selectedId);
+            setCityId(selectedId as string);
+            setCityName(selected?.label ?? '');
+          }}
+          value={cityId}
+          searchable={true}
+          clearable={true}
+          onClear={() => {
+            setCityId('');
+            setCityName('');
+          }}
+          getOptionValue={(option) => option.value}
+          displayValue={(selected) =>
+            dataKabupaten.find((k) => k.value === selected)?.label ?? ''
+          }
+          disabled={!provinceId}
+        />
+
+        <div className="col-span-full mt-2 text-xs font-bold uppercase tracking-wide text-gray-500">
+          Informasi Rekening
+        </div>
+
+        <Select
+          label="Bank"
+          dropdownClassName="!z-10 h-fit"
+          inPortal={false}
+          placeholder="Pilih Bank"
+          options={dataBank}
+          onChange={(value) => setBankCode(value as string)}
+          value={bankCode}
+          searchable={true}
+          clearable={true}
+          onClear={() => setBankCode('')}
+          getOptionValue={(option) => option.value}
+          displayValue={(selected) =>
+            dataBank.find((k) => k.value === selected)?.label ?? ''
+          }
+        />
+        <Input
+          label="No. Rekening"
+          placeholder="No. Rekening"
+          value={accountNumber}
+          onChange={(e) => setAccountNumber(e.target.value)}
+        />
+        <Input
+          label="Atas Nama Rekening"
+          placeholder="Atas Nama Rekening"
+          className="col-span-full"
+          value={accountName}
+          onChange={(e) => setAccountName(e.target.value)}
+        />
+
+        <div className="col-span-full mt-2 text-xs font-bold uppercase tracking-wide text-gray-500">
+          Ahli Waris (Opsional)
+        </div>
+
+        <Input
+          label="Nama Ahli Waris"
+          placeholder="Nama Ahli Waris"
+          value={heirName}
+          onChange={(e) => setHeirName(e.target.value)}
+        />
+        <Select
+          label="Hubungan Ahli Waris"
+          dropdownClassName="!z-10 h-fit"
+          inPortal={false}
+          placeholder="Pilih Hubungan"
+          options={pasangan}
+          onChange={(value) => setHeirRelationship(value as string)}
+          value={heirRelationship}
+          clearable={true}
+          onClear={() => setHeirRelationship('')}
+          getOptionValue={(option) => option.value}
+          displayValue={(selected) =>
+            pasangan.find((p) => p.value === selected)?.label ?? ''
+          }
+        />
+      </div>
+
+      <div className="mt-6 flex items-center justify-end gap-4 border-t pt-4">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => {
+            resetForm();
+            closeModal();
+          }}
+          disabled={isLoading}
+        >
+          Batal
+        </Button>
+        <Button
+          type="button"
+          isLoading={isLoading}
+          disabled={isLoading}
+          onClick={handleSubmit}
+        >
+          Simpan Perubahan
+        </Button>
+      </div>
     </div>
   );
 }

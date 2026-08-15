@@ -6,8 +6,15 @@ import { toast } from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
-import { BankStatusResponse, OptionType, Province, Regencies } from '@/types';
+import {
+  BankStatusResponse,
+  OptionType,
+  Province,
+  Regencies,
+  UserDataResponse,
+} from '@/types';
 import { useModal } from '@/app/shared/modal-views/use-modal';
+import { PiDownloadSimpleBold } from 'react-icons/pi';
 
 const pasangan = [
   { label: 'Suami', value: 'Husband' },
@@ -32,6 +39,9 @@ export default function BulkUpdateMemberForm({
   const { closeModal } = useModal();
 
   const [isLoading, setLoading] = useState(false);
+  const [isFetchingRef, setFetchingRef] = useState(false);
+  const [hasFetched, setHasFetched] = useState(false);
+  const [refId, setRefId] = useState('');
   const [dataBank, setDataBank] = useState<OptionType[]>([]);
   const [dataProvinsi, setDataProvinsi] = useState<OptionType[]>([]);
   const [dataKabupaten, setDataKabupaten] = useState<OptionType[]>([]);
@@ -93,6 +103,91 @@ export default function BulkUpdateMemberForm({
     setDataKabupaten(data.map((k: any) => ({ value: k.id, label: k.name })));
   };
 
+  const handleFetchData = async () => {
+    if (!session?.accessToken) return;
+
+    const ids = normalizeUsernames(username);
+    if (ids.length === 0) {
+      toast.error(<Text as="b">Masukkan minimal satu username terlebih dahulu</Text>);
+      return;
+    }
+
+    const target = ids[0];
+    setFetchingRef(true);
+
+    try {
+      const res = await fetchWithAuth<UserDataResponse>(
+        `/_users/${target}`,
+        { method: 'GET' },
+        session.accessToken
+      );
+      const data = res?.data?.attribute;
+
+      if (!data) {
+        toast.error(<Text as="b">Data untuk {target.toUpperCase()} tidak ditemukan</Text>);
+        return;
+      }
+
+      setNamaLengkap(data.nama ?? '');
+      setEmail(data.email ?? '');
+      setNoHp(data.no_hp ?? '');
+      setNik(data.nik ?? '');
+      setBankCode(data.code_bank ?? '');
+      setAccountNumber(data.no_rekening ?? '');
+      setAccountName(data.nama_pemilik_rekening ?? '');
+      setNpwpName(data.npwp_name ?? '');
+      setNpwpNumber(data.npwp_number ?? '');
+      setNpwpAddress(data.npwp_address ?? '');
+      setHeirName(data.heir_name ?? '');
+      setHeirRelationship(data.heir_relationship ?? '');
+
+      // Cocokkan nama provinsi/kota dari data existing ke opsi Select (id-based)
+      const matchedProvince = dataProvinsi.find(
+        (p) => p.label.toLowerCase() === (data.province ?? '').toLowerCase()
+      );
+
+      if (matchedProvince) {
+        setProvinceId(matchedProvince.value as string);
+        setProvinceName(matchedProvince.label);
+
+        const kabRes = await fetch(
+          `/api/wilayah/regencies/${matchedProvince.value}`
+        );
+        const kabData = (await kabRes.json()) as Regencies[];
+        const kabOptions = kabData.map((k: any) => ({
+          value: k.id,
+          label: k.name,
+        }));
+        setDataKabupaten(kabOptions);
+
+        const matchedCity = kabOptions.find(
+          (k) => k.label.toLowerCase() === (data.city ?? '').toLowerCase()
+        );
+        setCityId((matchedCity?.value as string) ?? '');
+        setCityName(matchedCity?.label ?? data.city ?? '');
+      } else {
+        setProvinceId('');
+        setProvinceName(data.province ?? '');
+        setCityId('');
+        setCityName(data.city ?? '');
+        setDataKabupaten([]);
+      }
+
+      setRefId(target);
+      setHasFetched(true);
+      toast.success(
+        <Text as="b">Data referensi berhasil ditarik dari {target.toUpperCase()}</Text>
+      );
+    } catch (error: any) {
+      console.error(error);
+      toast.error(
+        <Text as="b">{error?.message ?? 'Gagal menarik data referensi'}</Text>
+      );
+    } finally {
+      setFetchingRef(false);
+    }
+  };
+
   const handlePhoneInput = (value: string) => {
     let v = value.replace(/\D/g, '');
     if (v.startsWith('08')) v = '628' + v.slice(2);
@@ -101,6 +196,8 @@ export default function BulkUpdateMemberForm({
 
   const resetForm = () => {
     setUsername('');
+    setHasFetched(false);
+    setRefId('');
     setNamaLengkap('');
     setEmail('');
     setNoHp('');
@@ -125,25 +222,27 @@ export default function BulkUpdateMemberForm({
 
     setLoading(true);
 
+    // Payload dikirim lengkap (bukan hanya field yang diubah) karena endpoint
+    // bulk-update menimpa seluruh data member — field yang tidak diubah tetap
+    // terbawa dari hasil "Tarik Data" di atas.
     const body: Record<string, any> = {
       username: ids.join(', '),
       type: 'member',
+      nama: namaLengkap,
+      email,
+      no_hp: noHp,
+      nik,
+      province: provinceName,
+      city: cityName,
+      bank_code: bankCode,
+      account_number: accountNumber,
+      account_name: accountName,
+      heir_name: heirName,
+      heir_relationship: heirRelationship,
+      npwp_name: npwpName,
+      npwp_number: npwpNumber,
+      npwp_address: npwpAddress,
     };
-
-    if (namaLengkap) body.nama = namaLengkap;
-    if (email) body.email = email;
-    if (noHp) body.no_hp = noHp;
-    if (nik) body.nik = nik;
-    if (provinceName) body.province = provinceName;
-    if (cityName) body.city = cityName;
-    if (bankCode) body.bank_code = bankCode;
-    if (accountNumber) body.account_number = accountNumber;
-    if (accountName) body.account_name = accountName;
-    if (heirName) body.heir_name = heirName;
-    if (heirRelationship) body.heir_relationship = heirRelationship;
-    if (npwpName) body.npwp_name = npwpName;
-    if (npwpNumber) body.npwp_number = npwpNumber;
-    if (npwpAddress) body.npwp_address = npwpAddress;
 
     fetchWithAuth<any>(
       `/_users/bulk-update`,
@@ -177,6 +276,16 @@ export default function BulkUpdateMemberForm({
 
     if (ids.length === 0) {
       toast.error(<Text as="b">Masukkan minimal satu username</Text>);
+      return;
+    }
+
+    if (!hasFetched) {
+      toast.error(
+        <Text as="b">
+          Klik &quot;Tarik Data&quot; terlebih dahulu sebelum menyimpan
+          perubahan
+        </Text>
+      );
       return;
     }
 
@@ -234,7 +343,9 @@ export default function BulkUpdateMemberForm({
         Bulk Update Member
       </Title>
       <Text className="mb-6 text-gray-500">
-        Data yang diisi akan diaplikasikan ke semua ID yang dimasukkan
+        Tarik data dari salah satu ID sebagai referensi, lalu ubah hanya
+        field yang perlu diganti — field lain akan tetap terbawa apa adanya
+        ke seluruh ID yang dimasukkan.
       </Text>
 
       <div className="grid grid-cols-1 gap-5 @2xl:grid-cols-2">
@@ -246,13 +357,36 @@ export default function BulkUpdateMemberForm({
             }
             rows={4}
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => {
+              setUsername(e.target.value);
+              setHasFetched(false);
+            }}
             textareaClassName="font-mono text-xs uppercase"
           />
-          <Text className="mt-1 text-xs text-gray-500">
-            Pisahkan dengan koma atau baris baru. Jumlah ID:{' '}
-            <strong>{idCount}</strong>
-          </Text>
+          <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
+            <Text className="text-xs text-gray-500">
+              Pisahkan dengan koma atau baris baru. Jumlah ID:{' '}
+              <strong>{idCount}</strong>
+            </Text>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              isLoading={isFetchingRef}
+              disabled={isFetchingRef || idCount === 0}
+              onClick={handleFetchData}
+            >
+              <PiDownloadSimpleBold className="me-1.5 h-4 w-4" />
+              Tarik Data
+            </Button>
+          </div>
+          {hasFetched && (
+            <Text className="mt-1 text-xs font-medium text-green-600">
+              Data referensi berhasil ditarik dari{' '}
+              <span className="uppercase">{refId}</span>. Field di bawah
+              sudah terisi otomatis — ubah sesuai kebutuhan.
+            </Text>
+          )}
         </div>
 
         <Input
@@ -434,7 +568,7 @@ export default function BulkUpdateMemberForm({
         <Button
           type="button"
           isLoading={isLoading}
-          disabled={isLoading}
+          disabled={isLoading || !hasFetched}
           onClick={handleSubmit}
         >
           Simpan Perubahan

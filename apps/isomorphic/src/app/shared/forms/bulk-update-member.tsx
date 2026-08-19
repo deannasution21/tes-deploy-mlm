@@ -128,9 +128,14 @@ export default function BulkUpdateMemberForm({
         return;
       }
 
+      let fetchedPhone = (data.no_hp ?? '').replace(/\D/g, '');
+      if (fetchedPhone.startsWith('08')) {
+        fetchedPhone = '628' + fetchedPhone.slice(2);
+      }
+
       setNamaLengkap(data.nama ?? '');
       setEmail(data.email ?? '');
-      setNoHp(data.no_hp ?? '');
+      setNoHp(fetchedPhone);
       setNik(data.nik ?? '');
       setBankCode(data.code_bank ?? '');
       setAccountNumber(data.no_rekening ?? '');

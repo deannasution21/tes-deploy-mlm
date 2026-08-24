@@ -785,6 +785,11 @@ export const menuItemsUser = [
     href: routes.profil.ubahPassword,
     icon: <PiLock />,
   },
+  {
+    name: 'Login MyCuan',
+    href: routes.loginMycuan.index,
+    icon: <PiWallet />,
+  },
 ];
 
 export const menuItemsStockist = [

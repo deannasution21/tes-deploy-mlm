@@ -9,6 +9,9 @@ export const routes = {
     index: '/profil',
     ubahPassword: '/profil/ubah-password',
   },
+  loginMycuan: {
+    index: '/login-mycuan',
+  },
   perubahanData: {
     index: '/perubahan-data',
   },

@@ -66,7 +66,7 @@ export async function fetchWithAuth<T = any>(
       handleSessionError('Tidak ada koneksi internet');
     } else if (error.message === 'Unauthorized') {
       // 401 handled above, but safe fallback
-      handleSessionExpired('Sesi telah habis, silakan login ulang');
+      handleSessionExpired(undefined, 'Sesi telah habis, silakan login ulang');
     } else {
       handleSessionError(error.message || 'Terjadi kesalahan tak terduga');
     }
@@ -125,7 +125,7 @@ export async function fetchWithAuthBU<T = any>(
       handleSessionError('Tidak ada koneksi internet');
     } else if (error.message === 'Unauthorized') {
       // 401 handled above, but safe fallback
-      handleSessionExpired('Sesi telah habis, silakan login ulang');
+      handleSessionExpired(undefined, 'Sesi telah habis, silakan login ulang');
     } else {
       handleSessionError(error.message || 'Terjadi kesalahan tak terduga');
     }

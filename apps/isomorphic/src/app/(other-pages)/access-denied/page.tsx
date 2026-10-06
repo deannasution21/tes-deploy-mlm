@@ -30,7 +30,7 @@ export default function AccessDeniedPage() {
         <p className="mt-3 text-sm leading-loose text-gray-500 lg:mt-6 lg:text-base lg:leading-loose">
           Maaf, Anda tidak memiliki akses pada halaman ini
         </p>
-        <Link href={'/dashboard'}>
+        <Link prefetch={false} href={'/dashboard'}>
           <Button
             size="xl"
             as="span"

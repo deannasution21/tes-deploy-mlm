@@ -307,7 +307,7 @@ export default function WithdrawalBonusForm(slug: any) {
                     </div>
                   </div>
                   <div className="-mb-4 flex items-center justify-end gap-4 border-t py-4 dark:bg-gray-50">
-                    <Link href="/withdrawal-bonus">
+                    <Link prefetch={false} href="/withdrawal-bonus">
                       <Button variant="outline" className="w-full @xl:w-auto">
                         Batal
                       </Button>

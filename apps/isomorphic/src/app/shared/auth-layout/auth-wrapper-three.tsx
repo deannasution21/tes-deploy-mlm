@@ -27,6 +27,7 @@ export default function AuthWrapperThree({
     <>
       <div className="relative flex min-h-screen w-full flex-col justify-center bg-gradient-to-tr from-[#136A8A] to-[#267871] p-4 md:p-12 lg:p-28">
         <Link
+          prefetch={false}
           href={'/'}
           className="mb:pb-3 start-4 z-10 flex items-center justify-center pb-6 pt-3 text-sm font-medium text-white/80 hover:text-white md:absolute md:top-1/2 md:-translate-y-1/2 md:rounded-full"
         >
@@ -40,7 +41,11 @@ export default function AuthWrapperThree({
           )}
         >
           <div className="flex flex-col items-center">
-            <Link href={'/'} className="mb-7 inline-block max-w-[64px] lg:mb-9">
+            <Link
+              prefetch={false}
+              href={'/'}
+              className="mb-7 inline-block max-w-[64px] lg:mb-9"
+            >
               <Image src={logoImg} alt="Isomorphic" className="dark:invert" />
             </Link>
             <Title

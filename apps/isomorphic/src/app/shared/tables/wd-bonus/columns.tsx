@@ -53,6 +53,7 @@ export const getWDBonusColumns = (plan: string) => [
 
       return (
         <Link
+          prefetch={false}
           href={`withdrawal-bonus/${generateSlug(username)}/withdrawal?plan=${plan}`}
         >
           <Button size="sm">
@@ -72,6 +73,7 @@ export const getWDBonusColumns = (plan: string) => [
       const count = row?.original?.withdrawal?.count;
       return (
         <Link
+          prefetch={false}
           href={
             count > 0
               ? `withdrawal-bonus/${generateSlug(username)}/history`

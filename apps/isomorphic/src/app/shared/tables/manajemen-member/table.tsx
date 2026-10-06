@@ -164,6 +164,7 @@ export default function ManajemenMemberTable({
         return (
           <div className="flex flex-col gap-2 md:flex-row">
             <Link
+              prefetch={false}
               href={routes.member.manajemen.edit(id as string)}
               className="inline-flex"
             >
@@ -176,6 +177,7 @@ export default function ManajemenMemberTable({
               </Button>
             </Link>
             <Link
+              prefetch={false}
               href={routes.member.manajemen.ubahPassword(id as string)}
               className="inline-flex"
             >
@@ -445,9 +447,7 @@ export default function ManajemenMemberTable({
 
   const handleBulkUpdate = () => {
     openModal({
-      view: (
-        <BulkUpdateMemberForm onSuccess={() => fetchDataMember()} />
-      ),
+      view: <BulkUpdateMemberForm onSuccess={() => fetchDataMember()} />,
       customSize: '900px',
     });
   };
@@ -482,7 +482,11 @@ export default function ManajemenMemberTable({
             headerClassName="mb-6 items-start flex-col @[57rem]:flex-row @[57rem]:items-center px-5 pt-5 lg:pt-7 lg:px-7"
             action={
               <div className="flex w-full flex-col gap-3 @[57rem]:flex-row @[57rem]:items-center @[57rem]:justify-between">
-                <Button size="sm" onClick={handleBulkUpdate} className="shrink-0">
+                <Button
+                  size="sm"
+                  onClick={handleBulkUpdate}
+                  className="shrink-0"
+                >
                   <PiPencil className="me-1.5 h-4 w-4" />
                   Bulk Update
                 </Button>

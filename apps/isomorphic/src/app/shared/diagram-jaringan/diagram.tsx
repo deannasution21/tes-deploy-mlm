@@ -55,6 +55,7 @@ function Tree({ data, session }: TreeProps) {
         {node.user_id ? (
           // ✅ Non-null data
           <Link
+            prefetch={false}
             href={`/diagram-jaringan/${node.user_id}`}
             className="rounded-md bg-yellow-50 p-3 text-center shadow-md transition-all hover:bg-yellow-200"
           >
@@ -187,6 +188,7 @@ function Tree({ data, session }: TreeProps) {
             {/* Only show actions if we have a valid upline */}
             <div className="flex gap-3">
               <Link
+                prefetch={false}
                 href={`/diagram-jaringan/${currentUpline}/clone?position=${node.position}`}
               >
                 <Button size="sm" variant="flat" disabled={!upline}>
@@ -195,6 +197,7 @@ function Tree({ data, session }: TreeProps) {
                 </Button>
               </Link>
               <Link
+                prefetch={false}
                 href={`/diagram-jaringan/${currentUpline}/posting?position=${node.position}`}
               >
                 <Button size="sm" disabled={!upline}>
@@ -259,6 +262,7 @@ function Tree({ data, session }: TreeProps) {
                 <div className="flex flex-col justify-center text-center">
                   <div>
                     <Link
+                      prefetch={false}
                       href={`/diagram-jaringan/${data.upline}`}
                       className="inline-block"
                     >
@@ -307,6 +311,7 @@ function Tree({ data, session }: TreeProps) {
                   <div className="flex flex-col justify-center text-center">
                     <div>
                       <Link
+                        prefetch={false}
                         href={`/diagram-jaringan/${data.upline}`}
                         className="inline-block"
                       >

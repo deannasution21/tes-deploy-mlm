@@ -44,7 +44,7 @@ export default function OrderSummery({
       <div className="rounded-lg border border-muted p-4 @xs:p-6 @5xl:rounded-none @5xl:border-none @5xl:px-0">
         <div className="flex justify-between rounded-tl-lg rounded-tr-lg border-b border-muted pb-4 @xs:pb-6">
           Produk
-          <Link href={routes.produk.index}>
+          <Link prefetch={false} href={routes.produk.index}>
             <Button
               as="span"
               variant="text"
@@ -102,7 +102,7 @@ export default function OrderSummery({
               {params?.id ? 'Ubah Pesanan' : 'Buat Pesanan'}
             </Button>
           ) : (
-            <Link href={routes.eCommerce.shop}>
+            <Link prefetch={false} href={routes.eCommerce.shop}>
               <Button
                 as="span"
                 className="mt-3 w-full text-base @md:h-12"

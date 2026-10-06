@@ -46,7 +46,11 @@ export default function AuthWrapperFour({
         >
           <div className="flex flex-col items-center">
             <div className="flex items-center justify-center gap-3">
-              <Link href={'/'} className="mb-7 inline-block lg:mb-9">
+              <Link
+                prefetch={false}
+                href={'/'}
+                className="mb-7 inline-block lg:mb-9"
+              >
                 <Image src={logoImg} alt={siteConfig.title} height={250} />
               </Link>
               <div className="mb-7 inline-block lg:mb-9">

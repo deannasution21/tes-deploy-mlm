@@ -72,6 +72,7 @@ export const stokColumnsNew = () => {
         return (
           <div className="flex flex-col gap-2 md:flex-row">
             <Link
+              prefetch={false}
               href={routes.stok.manajemen.edit(id as string)}
               className="inline-flex"
             >

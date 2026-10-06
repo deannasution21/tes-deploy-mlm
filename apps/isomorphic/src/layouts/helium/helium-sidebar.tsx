@@ -32,7 +32,11 @@ export default function HeliumSidebar({ className }: { className?: string }) {
           }
         `}</style>
         <div className="sticky top-0 z-40 flex justify-center px-6 pb-5 pt-5 2xl:px-8 2xl:pt-6">
-          <Link href={routes.dashboard.index} aria-label="Site Logo">
+          <Link
+            prefetch={false}
+            href={routes.dashboard.index}
+            aria-label="Site Logo"
+          >
             <div className="relative aspect-square h-24">
               <Image
                 src={logoImg}

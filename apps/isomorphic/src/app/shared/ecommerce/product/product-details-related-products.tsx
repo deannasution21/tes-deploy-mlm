@@ -11,7 +11,7 @@ export default function ProductDetailsRelatedProducts() {
         <Title as="h3" className="font-semibold">
           Similar Products
         </Title>
-        <Link href={routes.eCommerce.shop}>
+        <Link prefetch={false} href={routes.eCommerce.shop}>
           <Button as="span" variant="text" className="py-0 underline">
             See All
           </Button>

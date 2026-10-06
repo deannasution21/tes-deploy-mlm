@@ -162,6 +162,7 @@ export default function ManajemenStockistTable({
         return (
           <div className="flex flex-col gap-2 md:flex-row">
             <Link
+              prefetch={false}
               href={routes.stockist.manajemen.edit(id as string)}
               className="inline-flex"
             >

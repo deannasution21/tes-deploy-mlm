@@ -47,6 +47,7 @@ export default function EditOrderPage({ params }: any) {
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
         <Link
+          prefetch={false}
           href={routes.eCommerce.orders}
           className="mt-4 w-full @lg:mt-0 @lg:w-auto"
         >

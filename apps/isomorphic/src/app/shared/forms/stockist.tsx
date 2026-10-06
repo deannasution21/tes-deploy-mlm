@@ -560,7 +560,7 @@ export default function FormEditStockist({
                 session={session}
               />
               <div className="-mb-4 flex items-center justify-end gap-4 border-t py-4 dark:bg-gray-50">
-                <Link href={routes.stockist.manajemen.index}>
+                <Link prefetch={false} href={routes.stockist.manajemen.index}>
                   <Button variant="outline" className="w-full @xl:w-auto">
                     Batal
                   </Button>

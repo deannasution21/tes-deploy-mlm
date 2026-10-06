@@ -766,7 +766,7 @@ export default function FormEditMember({ className }: { className?: string }) {
                 session={session}
               />
               <div className="-mb-4 flex items-center justify-end gap-4 border-t py-4 dark:bg-gray-50">
-                <Link href={routes.dashboard.index}>
+                <Link prefetch={false} href={routes.dashboard.index}>
                   <Button variant="outline" className="w-full @xl:w-auto">
                     Batal
                   </Button>

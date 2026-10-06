@@ -237,7 +237,7 @@ export const getColumns = ({
           placement="top"
           color="invert"
         >
-          <Link href={routes.eCommerce.ediProduct(row.id)}>
+          <Link prefetch={false} href={routes.eCommerce.ediProduct(row.id)}>
             <ActionIcon size="sm" variant="outline" aria-label={'Edit Product'}>
               <PencilIcon className="h-4 w-4" />
             </ActionIcon>
@@ -249,7 +249,7 @@ export const getColumns = ({
           placement="top"
           color="invert"
         >
-          <Link href={routes.eCommerce.productDetails(row.id)}>
+          <Link prefetch={false} href={routes.eCommerce.productDetails(row.id)}>
             <ActionIcon size="sm" variant="outline" aria-label={'View Product'}>
               <EyeIcon className="h-4 w-4" />
             </ActionIcon>

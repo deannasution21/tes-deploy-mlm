@@ -139,6 +139,7 @@ function DropdownMenu({
         <div className="grid px-3.5 py-3.5 font-medium text-gray-700">
           {menuItems.map((item) => (
             <Link
+              prefetch={false}
               key={item.name}
               href={item.href}
               className="group my-0.5 flex items-center rounded-md px-2.5 py-2 hover:bg-gray-100 focus:outline-none hover:dark:bg-gray-50/50"

@@ -70,7 +70,11 @@ export default function FleetStatus({
               className="flex items-center justify-between border-b border-gray-300 py-3"
             >
               <Title as="h5" className="uppercase text-primary">
-                {plan === 'plan_a' ? 'Reguler' : plan === 'free' ? 'Pasif' : plan}
+                {plan === 'plan_a'
+                  ? 'Reguler'
+                  : plan === 'free'
+                    ? 'Pasif'
+                    : plan}
               </Title>
               <Title as="h4" className="text-end text-primary">
                 {count ?? 0} PIN
@@ -87,13 +91,21 @@ export default function FleetStatus({
           </div>
         </div>
         <div className="relative grid grid-cols-2 gap-3 border-t border-gray-300 pb-3 pt-5">
-          <Link href={routes.lihatPin.index} className="w-auto">
+          <Link
+            prefetch={false}
+            href={routes.lihatPin.index}
+            className="w-auto"
+          >
             <Button className="w-full">
               <PiTrophy className="me-1.5 h-[17px] w-[17px]" />
               Lihat PIN
             </Button>
           </Link>
-          <Link href={routes.transferPin.index} className="w-auto">
+          <Link
+            prefetch={false}
+            href={routes.transferPin.index}
+            className="w-auto"
+          >
             <Button variant="outline" className="w-full">
               <PiArrowsHorizontal className="me-1.5 h-[17px] w-[17px]" />
               Transfer PIN

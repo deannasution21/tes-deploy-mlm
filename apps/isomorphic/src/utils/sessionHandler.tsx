@@ -1,13 +1,12 @@
 import { signOut } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { Text } from 'rizzui'; // adjust if your Text component is elsewhere
 
 let hasSignedOut = false;
 
+// Dipanggil dari luar komponen (fetchWithAuth, interval), jadi tidak boleh
+// pakai hook seperti useRouter(); redirect lewat window.location.
 export function handleSessionExpired(role?: string, message?: string) {
-  const router = useRouter();
-
   if (hasSignedOut) return;
   hasSignedOut = true;
   toast.error(
@@ -16,11 +15,10 @@ export function handleSessionExpired(role?: string, message?: string) {
   );
   setTimeout(async () => {
     await signOut({ redirect: false });
-    router.push(
+    window.location.href =
       role === 'admin' || role === 'admin_stock' || role === 'admin_member'
         ? '/signin-admin-ipg-2025'
-        : '/signin'
-    );
+        : '/signin';
   }, 5000);
 }
 

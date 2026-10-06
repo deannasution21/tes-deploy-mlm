@@ -67,6 +67,7 @@ export default function CartDrawerView({
         </div>
       ) : (
         <Link
+          prefetch={false}
           href={routes.produk.checkout}
           className={cn(
             'relative z-[9999] mx-4 mb-6 mt-auto flex items-center justify-between rounded-md bg-primary px-5 py-2 font-medium text-primary-foreground md:mx-6'

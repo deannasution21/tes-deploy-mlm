@@ -59,7 +59,11 @@ export const ordersColumnsNew = (
               )
             : routes.produk.pesanan.detail(row.original.attributes.ref_id);
         return (
-          <Link href={url} className="text-xs font-medium text-primary">
+          <Link
+            prefetch={false}
+            href={url}
+            className="text-xs font-medium text-primary"
+          >
             <u>{row.original.attributes.ref_id}</u>
           </Link>
         );

@@ -115,7 +115,11 @@ export default function DashboardPage() {
           {session?.user?.role === 'stockist' ||
             (session?.user?.role === 'admin_stock' && (
               <div className="flex gap-2">
-                <Link href={routes.produk.index} className="inline-flex">
+                <Link
+                  prefetch={false}
+                  href={routes.produk.index}
+                  className="inline-flex"
+                >
                   <Button as="span" className="h-[38px] shadow md:h-10">
                     <PiShoppingCart className="me-1 h-4 w-4" /> Beli Produk
                   </Button>
@@ -124,6 +128,7 @@ export default function DashboardPage() {
                   session?.user?.id === 'admin_stock' ||
                   session?.user?.id === 'adminpin2026') && (
                   <Link
+                    prefetch={false}
                     href={routes.produk.pesananStockist.index}
                     className="inline-flex"
                   >

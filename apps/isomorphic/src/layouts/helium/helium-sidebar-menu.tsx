@@ -172,6 +172,7 @@ export function HeliumSidebarMenu() {
 
                         return (
                           <Link
+                            prefetch={false}
                             href={dropdownItem?.href}
                             key={dropdownItem?.name + index}
                             className={cn(
@@ -200,6 +201,7 @@ export function HeliumSidebarMenu() {
                     </Collapse>
                   ) : (
                     <Link
+                      prefetch={false}
                       href={item?.href}
                       className={cn(
                         'group relative mx-3 my-0.5 flex items-center justify-between rounded-md px-3 py-2 font-medium capitalize lg:my-1 2xl:mx-5 2xl:my-2',
@@ -247,6 +249,7 @@ export function HeliumSidebarMenu() {
           )}
         ></Title>
         <Link
+          prefetch={false}
           href="#"
           onClick={(e) => {
             e.preventDefault(); // prevent page reload

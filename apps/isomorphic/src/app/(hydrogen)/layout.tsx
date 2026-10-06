@@ -20,13 +20,14 @@ function LayoutProvider({ children }: LayoutProps) {
   const role = session?.user?.role ?? 'member';
 
   useEffect(() => {
-    // periodically re-check session validity every 5 minutes
+    // periodically re-check session validity every 10 minutes
+    // (must stay below session maxAge of 20 minutes in auth-options.ts)
     const interval = setInterval(
       async () => {
         const newSession = await update();
         if (!newSession) handleSessionExpired(role);
       },
-      5 * 60 * 1000
+      10 * 60 * 1000
     );
 
     return () => clearInterval(interval);

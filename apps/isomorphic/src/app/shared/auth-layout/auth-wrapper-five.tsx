@@ -58,6 +58,7 @@ export default function AuthWrapperFive({
   return (
     <>
       <Link
+        prefetch={false}
         href={'/'}
         className="sticky top-0 z-20 block w-full border-gray-300 bg-blue p-4 py-2 text-sm font-medium text-white lg:absolute lg:start-1/2 lg:-translate-x-1/2 lg:justify-start lg:bg-transparent lg:text-gray-700 xl:py-6"
       >
@@ -86,6 +87,7 @@ export default function AuthWrapperFive({
           >
             <div className="mb-10 px-4 text-center lg:px-0 lg:text-start">
               <Link
+                prefetch={false}
                 href={'/'}
                 className="mb-6 inline-block max-w-[168px] xl:mb-8"
               >
@@ -103,6 +105,7 @@ export default function AuthWrapperFive({
                 <div className="mb-10 flex flex-wrap justify-center gap-4 lg:justify-start lg:gap-6">
                   {socialShare.map((item) => (
                     <Link
+                      prefetch={false}
                       href="/"
                       className="flex shrink-0 flex-col items-center text-sm text-gray-700 transition-colors hover:text-primary lg:gap-y-0 xl:text-base [&>svg]:w-5 xl:[&>svg]:w-6"
                       key={item.title}

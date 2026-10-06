@@ -26,6 +26,7 @@ function MessagesList({
           Messages
         </Title>
         <Link
+          prefetch={false}
           href={routes.support.inbox}
           onClick={() => setIsOpen(false)}
           className="hover:underline"

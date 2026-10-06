@@ -9,5 +9,11 @@ export default function AuthProvider({
   children: React.ReactNode;
   session: any;
 }): React.ReactNode {
-  return <SessionProvider session={session}>{children}</SessionProvider>;
+  // session is kept alive by the interval in (hydrogen)/layout.tsx,
+  // so skip the extra /api/auth/session call on every tab focus
+  return (
+    <SessionProvider session={session} refetchOnWindowFocus={false}>
+      {children}
+    </SessionProvider>
+  );
 }

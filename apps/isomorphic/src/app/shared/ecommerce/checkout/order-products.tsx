@@ -75,6 +75,7 @@ export default function OrderProducts({
                   className="mb-1 text-sm font-medium text-gray-700"
                 >
                   <Link
+                    prefetch={false}
                     href={routes.produk.detail(
                       generateSlug(`${item.name}-${item.id}`)
                     )}

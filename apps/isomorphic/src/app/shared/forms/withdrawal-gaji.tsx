@@ -401,7 +401,7 @@ export default function WithdrawalGajiForm(slug: any) {
                     </div>
                   </div>
                   <div className="-mb-4 flex items-center justify-end gap-4 border-t py-4 dark:bg-gray-50">
-                    <Link href="/withdrawal-gaji">
+                    <Link prefetch={false} href="/withdrawal-gaji">
                       <Button variant="outline" className="w-full @xl:w-auto">
                         Batal
                       </Button>

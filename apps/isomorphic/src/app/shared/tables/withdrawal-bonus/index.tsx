@@ -94,7 +94,8 @@ export default function WithdrawalBonusTable({
         {isLoading ? (
           <p className="py-20 text-center">Sedang memuat data...</p>
         ) : selectedPlan === 'free' &&
-          dataUser?.detail_users?.can_withdrawal_bonus?.member_pasif === true ? (
+          dataUser?.detail_users?.can_withdrawal_bonus?.member_pasif ===
+            true ? (
           <Alert variant="flat" color="danger">
             <Text className="font-semibold">
               Anda Belum Aktivasi sebagai Member Pasif
@@ -103,7 +104,7 @@ export default function WithdrawalBonusTable({
               {dataUser?.detail_users?.can_withdrawal_bonus?.message ??
                 'Data bonus tidak dapat ditampilkan karena status Anda masih Member Pasif dan belum diaktivasi.'}
             </Text>
-            <Link href={routes.promo.pasif.index}>
+            <Link prefetch={false} href={routes.promo.pasif.index}>
               <Button size="sm" className="mt-3">
                 Aktivasi Sekarang
               </Button>
@@ -166,8 +167,8 @@ export default function WithdrawalBonusTable({
                   <li>
                     <Text className="break-normal">
                       Anda memiliki total{' '}
-                      <strong>{dataUser?.count ?? 0} ID</strong> dengan
-                      rekening yang sama
+                      <strong>{dataUser?.count ?? 0} ID</strong> dengan rekening
+                      yang sama
                     </Text>
                   </li>
                   <li>
@@ -179,7 +180,10 @@ export default function WithdrawalBonusTable({
                 </ol>
               </Alert>
             </div>
-            <WDBonusTable datanya={dataUser?.summary ?? []} plan={selectedPlan} />
+            <WDBonusTable
+              datanya={dataUser?.summary ?? []}
+              plan={selectedPlan}
+            />
           </>
         )}
       </div>

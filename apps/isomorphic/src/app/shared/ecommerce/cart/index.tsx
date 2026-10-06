@@ -95,7 +95,7 @@ function CartCalculations() {
           Total
           <span className="font-medium text-gray-1000">{totalPrice}</span>
         </div>
-        <Link href={routes.produk.checkout}>
+        <Link prefetch={false} href={routes.produk.checkout}>
           <Button
             size="xl"
             rounded="pill"

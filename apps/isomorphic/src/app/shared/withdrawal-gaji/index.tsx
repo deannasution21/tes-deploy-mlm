@@ -121,7 +121,10 @@ function FleetStatus({
               Cairkan Gaji
             </Button>
           ) : (
-            <Link href={`${routes.withdrawalGaji.withdrawal}?plan=${plan}`}>
+            <Link
+              prefetch={false}
+              href={`${routes.withdrawalGaji.withdrawal}?plan=${plan}`}
+            >
               <Button className="w-full">Cairkan Gaji</Button>
             </Link>
           )}
@@ -197,7 +200,7 @@ export default function WithdrawalGajiPage() {
             {dataGaji?.detail_users?.can_withdrawal_salary?.message ??
               'Data gaji tidak dapat ditampilkan karena status Anda masih Member Pasif dan belum diaktivasi.'}
           </Text>
-          <Link href={routes.promo.pasif.index}>
+          <Link prefetch={false} href={routes.promo.pasif.index}>
             <Button size="sm" className="mt-3">
               Aktivasi Sekarang
             </Button>

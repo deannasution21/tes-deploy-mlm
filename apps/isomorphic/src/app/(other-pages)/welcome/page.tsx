@@ -25,7 +25,7 @@ export default function WelcomePage() {
             Jadilah Orang Pertama di Kota Anda!
           </Text>
           <div className="mt-8 flex flex-col justify-center gap-4 lg:flex-row lg:justify-start xl:gap-6">
-            <Link href={routes.signIn}>
+            <Link prefetch={false} href={routes.signIn}>
               <Button
                 color="primary"
                 size="lg"

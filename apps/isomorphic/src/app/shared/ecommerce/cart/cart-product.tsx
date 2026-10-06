@@ -28,6 +28,7 @@ export default function CartProduct({ product }: { product: ProductCartItem }) {
             className="truncate text-base font-medium transition-colors hover:text-primary 3xl:text-lg"
           >
             <Link
+              prefetch={false}
               href={routes.eCommerce.productDetails(product?.slug as string)}
             >
               {product.name}

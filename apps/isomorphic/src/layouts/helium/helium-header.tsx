@@ -35,6 +35,7 @@ export default function Header() {
           }
         />
         <Link
+          prefetch={false}
           href={'/'}
           aria-label="Site Logo"
           className="me-4 shrink-0 text-gray-800 hover:text-gray-900 lg:me-5 xl:hidden"

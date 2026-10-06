@@ -11,7 +11,7 @@ import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import WidgetCard from '@core/components/cards/widget-card';
 import cn from '@core/utils/class-names';
 import { UserListItem, UserListResponse } from '@/types/member';
-import { PiPencil, PiSignIn, PiTrash } from 'react-icons/pi';
+import { PiKey, PiPencil, PiSignIn, PiTrash } from 'react-icons/pi';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { createColumnHelper } from '@tanstack/react-table';
@@ -19,6 +19,8 @@ import { UserBankResponse } from '../../pindah-id';
 import { toast } from 'react-hot-toast';
 import { routes } from '@/config/routes';
 import Link from 'next/link';
+import { useModal } from '@/app/shared/modal-views/use-modal';
+import BulkUpdateMemberForm from '@/app/shared/forms/bulk-update-member';
 
 const doLogin = ({
   router,
@@ -153,7 +155,7 @@ export default function ManajemenMemberTable({
     },
     columnHelperNew.accessor('id', {
       id: 'aksi',
-      size: 150,
+      size: 220,
       header: 'Aksi',
       enableSorting: false,
       cell: ({ row }) => {
@@ -171,6 +173,18 @@ export default function ManajemenMemberTable({
               >
                 <PiPencil className="mr-2 h-4 w-4" />
                 <span>Edit</span>
+              </Button>
+            </Link>
+            <Link
+              href={routes.member.manajemen.ubahPassword(id as string)}
+              className="inline-flex"
+            >
+              <Button
+                size="sm"
+                className="w-full bg-amber-200 text-amber-900 hover:bg-amber-300"
+              >
+                <PiKey className="mr-2 h-4 w-4" />
+                <span>Password</span>
               </Button>
             </Link>
             {/* <Button size="sm" color="danger" variant="flat">
@@ -427,6 +441,17 @@ export default function ManajemenMemberTable({
     },
   });
 
+  const { openModal } = useModal();
+
+  const handleBulkUpdate = () => {
+    openModal({
+      view: (
+        <BulkUpdateMemberForm onSuccess={() => fetchDataMember()} />
+      ),
+      customSize: '900px',
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="py-20 text-center">
@@ -456,16 +481,22 @@ export default function ManajemenMemberTable({
             actionClassName="w-full ps-0 items-center weee"
             headerClassName="mb-6 items-start flex-col @[57rem]:flex-row @[57rem]:items-center px-5 pt-5 lg:pt-7 lg:px-7"
             action={
-              <Filters
-                table={table}
-                type={type}
-                setType={setType}
-                searchBy={searchBy}
-                setSearchBy={setSearchBy}
-                username={username}
-                setUsername={setUsername}
-                handleSearch={handleSearch}
-              />
+              <div className="flex w-full flex-col gap-3 @[57rem]:flex-row @[57rem]:items-center @[57rem]:justify-between">
+                <Button size="sm" onClick={handleBulkUpdate} className="shrink-0">
+                  <PiPencil className="me-1.5 h-4 w-4" />
+                  Bulk Update
+                </Button>
+                <Filters
+                  table={table}
+                  type={type}
+                  setType={setType}
+                  searchBy={searchBy}
+                  setSearchBy={setSearchBy}
+                  username={username}
+                  setUsername={setUsername}
+                  handleSearch={handleSearch}
+                />
+              </div>
             }
           >
             <Table table={table} variant="modern" />

@@ -1,7 +1,7 @@
 'use client';
 
 import { use, useEffect, useState } from 'react';
-import { SubmitHandler } from 'react-hook-form';
+import { Controller, SubmitHandler } from 'react-hook-form';
 import { Form } from '@core/ui/form';
 import { Text, Input, ActionIcon, Button, Password, Alert } from 'rizzui';
 import { FormBlockWrapper } from '@/app/shared/invoice/form-utils';
@@ -21,7 +21,7 @@ import {
 } from '@/validators/withdrawal-bonus-schema';
 import Link from 'next/link';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
-import { getBankNameByCode } from '@/utils/helper';
+import { formatRupiah, getBankNameByCode, parseRupiah } from '@/utils/helper';
 import { handleSessionExpired } from '@/utils/sessionHandler';
 import { useRouter } from 'next/navigation';
 import { routes } from '@/config/routes';
@@ -157,6 +157,7 @@ export default function WithdrawalBonusForm(slug: any) {
       if (result.isConfirmed) {
         if (data.amount < 50000) {
           toast.error(<Text>Min Rp 50.000,00 dalam sekali pencairan</Text>);
+          setProses(false);
         } else {
           doWD(data);
         }
@@ -296,12 +297,25 @@ export default function WithdrawalBonusForm(slug: any) {
                         title={'Nominal Pencairan:'}
                         className="pt-7 @2xl:pt-9 @3xl:pt-11"
                       >
-                        <Input
-                          label="Nominal Pencairan"
-                          {...register('amount')}
-                          prefix={'Rp'}
-                          type="number"
-                          error={errors?.amount?.message as string}
+                        {/* Masked: tampil "150.000", tersimpan 150000. Dulu type="number"
+                            membaca "150.000" sebagai 150 sehingga kena minimum. */}
+                        <Controller
+                          name="amount"
+                          control={control}
+                          render={({ field: { value, onChange, onBlur } }) => (
+                            <Input
+                              label="Nominal Pencairan"
+                              prefix={'Rp'}
+                              inputMode="numeric"
+                              placeholder="50.000"
+                              value={value ? formatRupiah(value) : ''}
+                              onChange={(e) =>
+                                onChange(parseRupiah(e.target.value))
+                              }
+                              onBlur={onBlur}
+                              error={errors?.amount?.message as string}
+                            />
+                          )}
                         />
                       </FormBlockWrapper>
                     </div>

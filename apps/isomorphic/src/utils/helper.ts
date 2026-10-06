@@ -40,6 +40,17 @@ export function formatToYMD(dateStr: any) {
   return `${year}-${month}-${day}`;
 }
 
+// 150000 -> "150.000"
+export function formatRupiah(value: number | string) {
+  return Number(value).toLocaleString('id-ID', { maximumFractionDigits: 0 });
+}
+
+// "150.000" / "Rp 150.000,00" -> 150000 (desimal setelah koma dibuang)
+export function parseRupiah(str: string) {
+  const digits = str.split(',')[0].replace(/\D/g, '');
+  return digits ? Number(digits) : 0;
+}
+
 export function underscoreToCaptalize(str: string) {
   return str.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }

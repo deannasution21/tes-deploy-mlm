@@ -38,3 +38,6 @@ dist/
 
 .vercel
 .vscode
+
+# api docs (postman)
+*.postman_collection.json

@@ -20,8 +20,13 @@ export const PLAN_OPTIONS: { value: TypePlan; label: string }[] = [
 // pilihan plan di halaman withdrawal bonus & gaji (Pasif tidak bisa WD)
 export const WD_PLAN_OPTIONS = PLAN_OPTIONS.filter((p) => p.value !== 'free');
 
+// API kadang kirim "PLAN A" / "PLAN B" / "FREE" (riwayat komisi)
+export function normalizePlan(plan?: string | null) {
+  return plan?.trim().toLowerCase().replace(/\s+/g, '_') ?? '';
+}
+
 export function getPlanLabel(plan?: string | null) {
-  return PLAN_LABEL[plan as TypePlan] ?? plan ?? '-';
+  return PLAN_LABEL[normalizePlan(plan) as TypePlan] ?? plan ?? '-';
 }
 
 export function getPinLabel(plan?: string | null) {

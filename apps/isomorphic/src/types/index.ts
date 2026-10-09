@@ -1,4 +1,5 @@
 import { CouponType } from '@/config/enums';
+import { LockStatus } from '@/config/plans';
 import { StaticImageData } from 'next/image';
 
 export interface Coupon {
@@ -569,6 +570,8 @@ export interface HistoryBonusData {
   count: number;
   bonus_sponsor: BonusCategory;
   bonus_pairing: BonusCategory;
+  bonus_salary?: BonusCategory;
+  // total dari backend ikut menjumlahkan LOCKED & EXPIRED
   grand_total: GrandTotal;
 }
 
@@ -596,7 +599,13 @@ export interface BonusAttribute {
   from: string;
   total: AmountCurrency;
   description: string;
-  type: 'bonus_sponsor' | 'bonus_pairing';
+  type: 'bonus_sponsor' | 'bonus_pairing' | 'bonus_salary';
+  commission_key?: string;
+  // ACTIVE = cair, LOCKED = terkunci, EXPIRED = hangus permanen
+  lock_status?: LockStatus;
+  // LOCKED tanpa batas waktu (mis. gaji pertama Star sampai upgrade Business)
+  no_expiry?: boolean;
+  expires_at?: string | null;
 }
 
 export interface WithdrawalSummaryResponse {

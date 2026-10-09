@@ -7,7 +7,6 @@ import {
   AmountCurrency,
   BonusCategory,
   BonusItem,
-  GrandTotal,
   HistoryBonusData,
   HistoryBonusResponse,
 } from '@/types';
@@ -20,6 +19,13 @@ import Image from 'next/image';
 import pinImg from '@public/assets/img/golden-gift.png';
 import { toCurrency } from '@core/utils/to-currency';
 import HistoryBonusTable from '../tables/history-bonus';
+import { LockStatus } from '@/config/plans';
+
+// total dari backend ikut menjumlahkan LOCKED & EXPIRED, jadi hitung sendiri
+const sumByStatus = (items: BonusItem[] = [], status: LockStatus) =>
+  items
+    .filter((i) => (i.attribute.lock_status ?? 'ACTIVE') === status)
+    .reduce((acc, i) => acc + (i.attribute.total?.amount ?? 0), 0);
 
 const getColumns = () => [
   {
@@ -120,11 +126,11 @@ function PerBonus({ data, type }: { data: BonusCategory; type: string }) {
               as="span"
               className="text-lg font-semibold text-primary md:text-2xl"
             >
-              {data?.total?.currency}
+              {toCurrency(sumByStatus(data?.items, 'ACTIVE'))}
             </Text>{' '}
             <Text as="span">
-              total dari{' '}
-              <strong className="text-gray-700">{data?.count}</strong> data
+              cair dari total {data?.total?.currency} (
+              <strong className="text-gray-700">{data?.count}</strong> data)
             </Text>
           </div>
         </div>
@@ -137,9 +143,16 @@ function FleetStatus({
   data,
   className,
 }: {
-  data: GrandTotal;
+  data: HistoryBonusData;
   className?: string;
 }) {
+  const items = [
+    ...(data?.bonus_sponsor?.items ?? []),
+    ...(data?.bonus_pairing?.items ?? []),
+  ];
+  const sponsorCair = sumByStatus(data?.bonus_sponsor?.items, 'ACTIVE');
+  const pairingCair = sumByStatus(data?.bonus_pairing?.items, 'ACTIVE');
+
   return (
     <div className={cn('flex flex-col gap-5 border-0 p-0 lg:p-0', className)}>
       <div className="grid items-start rounded-lg border border-muted p-5 @xl:grid-cols-2 lg:p-7">
@@ -165,29 +178,43 @@ function FleetStatus({
           <div className="mb-4 flex items-center justify-between border-b border-muted pb-4 last:mb-0 last:border-0 last:pb-0">
             <div className="flex items-center justify-start">
               <Title as="h5" className="text-sm font-semibold">
-                Sponsor
+                Sponsor (Cair)
               </Title>
             </div>
-            <Text as="span">{data?.sponsor?.currency ?? 'Rp 0.00'}</Text>
+            <Text as="span">{toCurrency(sponsorCair)}</Text>
           </div>
           <div className="mb-4 flex items-center justify-between border-b border-muted pb-4 last:mb-0 last:border-0 last:pb-0">
             <div className="flex items-center justify-start">
               <Title as="h5" className="text-sm font-semibold">
-                Pasangan
+                Pasangan (Cair)
               </Title>
             </div>
-            <Text as="span">{data?.pairing?.currency ?? 'Rp 0.00'}</Text>
+            <Text as="span">{toCurrency(pairingCair)}</Text>
+          </div>
+          <div className="mb-4 flex items-center justify-between border-b border-muted pb-4 last:mb-0 last:border-0 last:pb-0">
+            <div className="flex items-center justify-start">
+              <Title as="h5" className="text-sm font-semibold">
+                Terkunci
+              </Title>
+            </div>
+            <Text as="span">{toCurrency(sumByStatus(items, 'LOCKED'))}</Text>
+          </div>
+          <div className="mb-4 flex items-center justify-between border-b border-muted pb-4 last:mb-0 last:border-0 last:pb-0">
+            <div className="flex items-center justify-start">
+              <Title as="h5" className="text-sm font-semibold">
+                Hangus
+              </Title>
+            </div>
+            <Text as="span">{toCurrency(sumByStatus(items, 'EXPIRED'))}</Text>
           </div>
           <div className="flex items-center justify-between border-b border-muted pb-4 last:mb-0 last:border-0 last:pb-0">
             <div className="flex items-center justify-start">
               <Title as="h5" className="text-sm font-semibold">
-                Total
+                Total Cair
               </Title>
             </div>
             <Title as="h5" className="text-primary">
-              {toCurrency(
-                (data?.total?.amount ?? 0) - (data?.salary?.amount ?? 0)
-              )}
+              {toCurrency(sponsorCair + pairingCair)}
             </Title>
           </div>
         </div>
@@ -261,7 +288,7 @@ export default function HistoryBonusPage({
               </div>
             </div>
             <FleetStatus
-              data={dataBonus?.grand_total}
+              data={dataBonus}
               className="h-[464px] @sm:h-[520px] @7xl:col-span-4 @7xl:col-start-9 @7xl:row-start-1 @7xl:row-end-3 @7xl:h-full"
             />
           </div>

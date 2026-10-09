@@ -675,6 +675,16 @@ export const menuItemsUser = [
     ],
   },
   {
+    name: 'Reward Pasif',
+    href: routes.rewardPasif.index,
+    icon: <PiTrophy />,
+  },
+  {
+    name: 'Upgrade Paket',
+    href: routes.upgradePaket.index,
+    icon: <PiRocketLaunch />,
+  },
+  {
     name: 'Withdrawal Gaji',
     href: '#',
     icon: <PiCurrencyCircleDollarDuotone />,
@@ -745,10 +755,6 @@ export const menuItemsUser = [
       {
         name: 'Promo Wisata',
         href: routes.promo.wisata.index,
-      },
-      {
-        name: 'Promo Pasif',
-        href: routes.promo.pasif.index,
       },
     ],
   },

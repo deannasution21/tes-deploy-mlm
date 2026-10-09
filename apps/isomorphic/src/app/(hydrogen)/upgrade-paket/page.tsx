@@ -1,25 +1,21 @@
 import PageHeader from '@/app/shared/page-header';
-import PromoPasifPage from '@/app/shared/promo/pasif';
+import UpgradePaketPage from '@/app/shared/upgrade-paket';
 import { routes } from '@/config/routes';
 import { metaObject } from '@/config/site.config';
 
 export const metadata = {
-  ...metaObject('Promo Pasif'),
+  ...metaObject('Upgrade Paket'),
 };
 
 const pageHeader = {
-  title: 'Promo Pasif',
+  title: 'Upgrade Paket',
   breadcrumb: [
     {
       href: routes.dashboard.index,
       name: 'Dashboard',
     },
     {
-      href: routes.promo.index,
-      name: 'Promo',
-    },
-    {
-      name: 'Pasif',
+      name: 'Upgrade Paket',
     },
   ],
 };
@@ -29,7 +25,7 @@ export default function Page() {
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
 
-      <PromoPasifPage />
+      <UpgradePaketPage />
     </>
   );
 }

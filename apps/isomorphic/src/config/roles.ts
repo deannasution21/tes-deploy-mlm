@@ -18,6 +18,8 @@ export const rolePermissions = {
       '/withdrawal-bonus/:path*',
       '/withdrawal-gaji',
       '/withdrawal-gaji/:path*',
+      '/reward-pasif',
+      '/upgrade-paket',
       '/lihat-pin',
       '/lihat-pin/:path*',
       '/transfer-pin',
@@ -60,7 +62,6 @@ export const rolePermissions = {
       '/profil',
       '/profil/:path*',
 
-      // Promo Pasif khusus member, jadi tidak ada wildcard /promo/:path* di sini
       '/promo',
       '/promo/tahunan',
       '/promo/reward-stockist',

@@ -8,15 +8,11 @@ import { Alert, Button, Select, Text } from 'rizzui';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { getBankNameByCode } from '@/utils/helper';
 import { routes } from '@/config/routes';
+import { WD_PLAN_OPTIONS } from '@/config/plans';
 import WDBonusTable from '../wd-bonus';
 import { SummaryData, SummaryResponse } from '@/types/wd-bonus';
 
-const tipePlan = [
-  {
-    value: 'plan_a',
-    label: 'Reguler',
-  },
-];
+const tipePlan = WD_PLAN_OPTIONS;
 
 export default function WithdrawalBonusTable({
   className,
@@ -48,7 +44,7 @@ export default function WithdrawalBonusTable({
       });
   }, [session?.accessToken]);
 
-  // Ringkasan bonus berbeda per plan (Pasif / Reguler), jadi refetch tiap plan berubah
+  // Ringkasan bonus berbeda per plan (Star / Business), jadi refetch tiap plan berubah
   useEffect(() => {
     if (!session?.accessToken) return;
 
@@ -93,20 +89,17 @@ export default function WithdrawalBonusTable({
 
         {isLoading ? (
           <p className="py-20 text-center">Sedang memuat data...</p>
-        ) : selectedPlan === 'free' &&
-          dataUser?.detail_users?.can_withdrawal_bonus?.member_pasif ===
-            true ? (
+        ) : dataUser?.detail_users?.can_withdrawal_bonus?.member_pasif ===
+          true ? (
           <Alert variant="flat" color="danger">
-            <Text className="font-semibold">
-              Anda Belum Aktivasi sebagai Member Pasif
-            </Text>
+            <Text className="font-semibold">Akun Anda Masih Member Pasif</Text>
             <Text className="mt-1 break-normal">
               {dataUser?.detail_users?.can_withdrawal_bonus?.message ??
-                'Data bonus tidak dapat ditampilkan karena status Anda masih Member Pasif dan belum diaktivasi.'}
+                'ID belum aktif, silakan aktivasi terlebih dahulu untuk dapat melakukan penarikan bonus.'}
             </Text>
-            <Link prefetch={false} href={routes.promo.pasif.index}>
+            <Link prefetch={false} href={routes.upgradePaket.index}>
               <Button size="sm" className="mt-3">
-                Aktivasi Sekarang
+                Upgrade Paket
               </Button>
             </Link>
           </Alert>

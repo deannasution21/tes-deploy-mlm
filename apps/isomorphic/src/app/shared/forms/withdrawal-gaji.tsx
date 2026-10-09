@@ -16,6 +16,7 @@ import { getBankNameByCode } from '@/utils/helper';
 import { handleSessionExpired } from '@/utils/sessionHandler';
 import { useRouter } from 'next/navigation';
 import { routes } from '@/config/routes';
+import { isValidPlan } from '@/config/plans';
 import {
   WithdrawalGajiInput,
   withdrawalGajiSchema,
@@ -154,25 +155,12 @@ export interface DetailSalaryWithdrawal {
   salary_balance: AmountCurrency;
 }
 
-const tipePlan = [
-  {
-    value: 'free',
-    label: 'Pasif',
-  },
-  {
-    value: 'plan_a',
-    label: 'Reguler',
-  },
-];
-
 export default function WithdrawalGajiForm(slug: any) {
   const { data: session } = useSession();
   const router = useRouter();
   // Plan dibawa dari halaman dashboard withdrawal-gaji (?plan=...) supaya user
   // tidak perlu pilih ulang; fallback ke 'plan_a' kalau tidak valid/tidak ada.
-  const selectedPlan = tipePlan.some((p) => p.value === slug?.plan)
-    ? (slug.plan as string)
-    : 'plan_a';
+  const selectedPlan = isValidPlan(slug?.plan) ? slug.plan : 'plan_a';
   const [isLoading, setLoading] = useState(true);
   const [proses, setProses] = useState(false);
 

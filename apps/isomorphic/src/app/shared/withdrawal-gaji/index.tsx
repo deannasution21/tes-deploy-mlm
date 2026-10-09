@@ -9,6 +9,7 @@ import Image from 'next/image';
 import pinImg from '@public/assets/img/golden-coin.png';
 import Link from 'next/link';
 import { routes } from '@/config/routes';
+import { WD_PLAN_OPTIONS } from '@/config/plans';
 import WithdrawalGajiTable from '../tables/withdrawal-gaji';
 import {
   DetailUsers,
@@ -16,12 +17,7 @@ import {
   WithdrawalSummaryResponse,
 } from '@/types/wd-gaji';
 
-const tipePlan = [
-  {
-    value: 'plan_a',
-    label: 'Reguler',
-  },
-];
+const tipePlan = WD_PLAN_OPTIONS;
 
 function FleetStatus({
   data,
@@ -108,12 +104,19 @@ function FleetStatus({
             Akumulasi Gaji Anda:{' '}
             <strong className="text-xl text-primary">{akumulasiGaji}</strong>
           </Title>
-          <Text as="p" className="text-stone-500">
-            Withdrawal Gaji dapat dlakukan jika poin Anda sudah mencapai{' '}
-            <strong className="text-primary">30 poin</strong>, dan akan
-            dicairkan menjadi{' '}
-            <strong className="text-primary">Rp 1.500.000</strong>
-          </Text>
+          {plan === 'plan_a' && (
+            <Text as="p" className="text-stone-500">
+              Withdrawal Gaji dapat dlakukan jika poin Anda sudah mencapai{' '}
+              <strong className="text-primary">30 poin</strong>, dan akan
+              dicairkan menjadi{' '}
+              <strong className="text-primary">Rp 1.500.000</strong>
+            </Text>
+          )}
+          {data?.can_withdrawal_salary?.message && (
+            <Text as="p" className="mt-2 text-stone-500">
+              {data.can_withdrawal_salary.message}
+            </Text>
+          )}
         </div>
         <div className="relative pb-3 pt-7">
           {!data?.can_withdrawal_salary.can_withdrawal ? (
@@ -167,7 +170,6 @@ export default function WithdrawalGajiPage() {
     return <p className="py-20 text-center">Sedang memuat data...</p>;
 
   const belumAktivasiPasif =
-    selectedPlan === 'free' &&
     dataGaji?.detail_users?.can_withdrawal_salary?.member_pasif === true;
 
   return (
@@ -193,16 +195,14 @@ export default function WithdrawalGajiPage() {
 
       {belumAktivasiPasif ? (
         <Alert variant="flat" color="danger">
-          <Text className="font-semibold">
-            Anda Belum Aktivasi sebagai Member Pasif
-          </Text>
+          <Text className="font-semibold">Akun Anda Masih Member Pasif</Text>
           <Text className="mt-1 break-normal">
             {dataGaji?.detail_users?.can_withdrawal_salary?.message ??
-              'Data gaji tidak dapat ditampilkan karena status Anda masih Member Pasif dan belum diaktivasi.'}
+              'ID belum aktif, silakan aktivasi terlebih dahulu untuk dapat melakukan penarikan gaji.'}
           </Text>
-          <Link prefetch={false} href={routes.promo.pasif.index}>
+          <Link prefetch={false} href={routes.upgradePaket.index}>
             <Button size="sm" className="mt-3">
-              Aktivasi Sekarang
+              Upgrade Paket
             </Button>
           </Link>
         </Alert>

@@ -25,6 +25,7 @@ import { formatRupiah, getBankNameByCode, parseRupiah } from '@/utils/helper';
 import { handleSessionExpired } from '@/utils/sessionHandler';
 import { useRouter } from 'next/navigation';
 import { routes } from '@/config/routes';
+import { isValidPlan } from '@/config/plans';
 
 // Root transaction structure
 export interface Transaction {
@@ -71,25 +72,12 @@ export interface Status {
   message: string;
 }
 
-const tipePlan = [
-  {
-    value: 'free',
-    label: 'Pasif',
-  },
-  {
-    value: 'plan_a',
-    label: 'Reguler',
-  },
-];
-
 export default function WithdrawalBonusForm(slug: any) {
   const { data: session } = useSession();
   const usernamenya = slug?.slug ?? null;
   // Plan dibawa dari halaman list withdrawal-bonus (?plan=...) supaya user
   // tidak perlu pilih ulang; fallback ke 'plan_a' kalau tidak valid/tidak ada.
-  const initialPlan = tipePlan.some((p) => p.value === slug?.plan)
-    ? (slug.plan as string)
-    : 'plan_a';
+  const initialPlan = isValidPlan(slug?.plan) ? slug.plan : 'plan_a';
   const router = useRouter();
   const [isLoading, setLoading] = useState(true);
   const [proses, setProses] = useState(false);
@@ -186,7 +174,7 @@ export default function WithdrawalBonusForm(slug: any) {
       });
   }, [session?.accessToken]);
 
-  // Saldo bonus berbeda per plan (Pasif / Reguler), jadi refetch tiap plan berubah
+  // Saldo bonus berbeda per plan (Pasif / Star / Business), jadi refetch tiap plan berubah
   useEffect(() => {
     if (!session?.accessToken) return;
 

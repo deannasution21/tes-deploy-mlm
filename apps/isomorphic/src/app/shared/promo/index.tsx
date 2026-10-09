@@ -9,7 +9,6 @@ import imgMobilJan from '@public/assets/img/promo-mobil-januari-2026.jpeg';
 import imgTripVietnam from '@public/assets/img/promo-vietnam-januari-2026.jpeg';
 import imgStockistAkumulasi from '@public/assets/img/promo-stockist-akumulasi.jpg';
 import imgTemplate from '@public/assets/img/logo/logo-diagram-jaringan.jpeg';
-import imgPromoPasif from '@public/assets/img/promo-pasif.png';
 import dynamic from 'next/dynamic';
 
 const Slider = dynamic(() => import('react-slick'), {
@@ -56,12 +55,6 @@ export default function PromoPage({ className }: { className?: string }) {
       role: 'stockist',
       src: imgTemplate,
       url: routes.promo.umroh2026Stockist,
-    },
-    {
-      id: 6,
-      role: 'member',
-      src: imgPromoPasif,
-      url: routes.promo.pasif.index,
     },
   ];
 

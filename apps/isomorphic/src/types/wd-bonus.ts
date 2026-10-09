@@ -22,7 +22,7 @@ export interface SummaryData {
 export interface CanWithdrawalBonus {
   can_withdrawal: boolean;
   message: string | null;
-  // false = SUDAH aktivasi member pasif, true = BELUM aktivasi
+  // true = masih member Pasif (belum upgrade), WD ditolak backend
   member_pasif: boolean;
 }
 

@@ -236,7 +236,7 @@ export interface UserData {
   master_username?: string;
   address?: string;
 
-  // status keanggotaan promo pasif — false = sudah aktivasi, true = belum aktivasi
+  // true = paket Registrasi / Pasif (type_plan free), false = sudah Star / Business
   member_pasif?: boolean;
   type_plan?: string;
   // riwayat membership per plan (key = type_plan, mis. "free"/"plan_a")

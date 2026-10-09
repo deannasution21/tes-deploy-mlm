@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Badge, Button } from 'rizzui';
 import { useSession } from 'next-auth/react';
-import { NetworkDiagramResponse, NetworkNode } from '@/types';
+import { NetworkDiagramResponse, NetworkNode, SourceLockStatus } from '@/types';
 import placeholderDiagram from '@public/assets/img/logo/logo-diagram-jaringan.jpeg';
 import Image from 'next/image';
 import FiltersDiagramJaringan from './filters';
@@ -16,6 +16,71 @@ import Head from 'next/head';
 import imgArrowUp from '@public/assets/img/arrow-up-golden.png';
 import imgRibbon from '@public/assets/img/golden-ribbon.png';
 import { useRouter } from 'next/navigation';
+
+const formatDate = (date: string) =>
+  new Date(date).toLocaleDateString('id-ID', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+
+// Poin per jalur: active = bisa dipakai, view = akumulasi, expired = hangus
+function PointRow({
+  label,
+  textClass,
+  color,
+  active,
+  view,
+  expired,
+  lock,
+}: {
+  label: string;
+  textClass: string;
+  color: 'danger' | 'warning' | 'primary';
+  active: [number?, number?];
+  view: [number?, number?];
+  expired: [number?, number?];
+  lock?: SourceLockStatus;
+}) {
+  const hasExpired = (expired[0] ?? 0) > 0 || (expired[1] ?? 0) > 0;
+  // field view baru ada di API baru; jangan tampilkan detail kalau belum ada
+  const showDetail =
+    view[0] !== undefined &&
+    (hasExpired || view[0] !== active[0] || view[1] !== active[1]);
+
+  return (
+    <>
+      <p className={`text-[10px] ${textClass}`}>{label}:</p>
+      <div className="flex justify-center gap-2">
+        {active.map((value, i) => (
+          <Badge
+            key={i}
+            variant="flat"
+            rounded="pill"
+            className="font-medium"
+            color={color}
+            size="sm"
+          >
+            {value ?? 0}
+          </Badge>
+        ))}
+      </div>
+      {showDetail && (
+        <p className="text-[9px] text-gray-500">
+          Akumulasi {view[0] ?? 0}/{view[1] ?? 0} · Hangus {expired[0] ?? 0}/
+          {expired[1] ?? 0}
+        </p>
+      )}
+      {lock && !lock.unlocked && lock.expires_at && (
+        <p className="text-[9px] text-gray-500">
+          {lock.expired
+            ? `Window berakhir ${formatDate(lock.expires_at)}`
+            : `Terkunci, hangus ${formatDate(lock.expires_at)}`}
+        </p>
+      )}
+    </>
+  );
+}
 
 type TreeProps = {
   data: NetworkNode;
@@ -93,27 +158,33 @@ function Tree({ data, session }: TreeProps) {
                 RO: {node.ro_count ?? 0}
               </Badge>
             </div>
-            <p className="text-[10px] text-red-600">Point Plan Regular:</p>
-            <div className="flex justify-center gap-2">
-              <Badge
-                variant="flat"
-                rounded="pill"
-                className="font-medium"
-                color="danger"
-                size="sm"
-              >
-                {node.point_left ?? 0}
-              </Badge>
-              <Badge
-                variant="flat"
-                rounded="pill"
-                className="font-medium"
-                color="danger"
-                size="sm"
-              >
-                {node.point_right ?? 0}
-              </Badge>
-            </div>
+            <PointRow
+              label="Point Business"
+              textClass="text-red-600"
+              color="danger"
+              active={[
+                node.point_plan_a_left ?? node.point_left,
+                node.point_plan_a_right ?? node.point_right,
+              ]}
+              view={[node.point_plan_a_view_left, node.point_plan_a_view_right]}
+              expired={[
+                node.point_plan_a_expired_left,
+                node.point_plan_a_expired_right,
+              ]}
+              lock={node.lock_status?.plan_a_source}
+            />
+            <PointRow
+              label="Point Star"
+              textClass="text-primary"
+              color="primary"
+              active={[node.point_plan_b_left, node.point_plan_b_right]}
+              view={[node.point_plan_b_view_left, node.point_plan_b_view_right]}
+              expired={[
+                node.point_plan_b_expired_left,
+                node.point_plan_b_expired_right,
+              ]}
+              lock={node.lock_status?.plan_b_source}
+            />
             {node?.promo_points && (
               <>
                 <p className="text-[10px] text-green-600">Point Promo Mobil:</p>
@@ -160,27 +231,18 @@ function Tree({ data, session }: TreeProps) {
                 </div>
               </>
             )}
-            <p className="text-[10px] text-orange-600">Point Pasif:</p>
-            <div className="flex justify-center gap-2">
-              <Badge
-                variant="flat"
-                rounded="pill"
-                className="font-medium"
-                color="warning"
-                size="sm"
-              >
-                {node.point_pasif_left ?? 0}
-              </Badge>
-              <Badge
-                variant="flat"
-                rounded="pill"
-                className="font-medium"
-                color="warning"
-                size="sm"
-              >
-                {node.point_pasif_right ?? 0}
-              </Badge>
-            </div>
+            <PointRow
+              label="Point Pasif"
+              textClass="text-orange-600"
+              color="warning"
+              active={[node.point_pasif_left, node.point_pasif_right]}
+              view={[node.point_pasif_view_left, node.point_pasif_view_right]}
+              expired={[
+                node.point_pasif_expired_left,
+                node.point_pasif_expired_right,
+              ]}
+              lock={node.lock_status?.free_source}
+            />
           </Link>
         ) : currentUpline ? (
           // ❗ Null node (potential downline)

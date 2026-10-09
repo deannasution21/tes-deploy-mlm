@@ -245,7 +245,16 @@ export interface UserData {
 
 export interface MembershipInfo {
   status: string;
-  created_at: string;
+  crtd_at?: string;
+  created_at?: string;
+}
+
+// window 30 hari per sumber poin (GET /_network-diagrams)
+export interface SourceLockStatus {
+  unlocked: boolean;
+  started_at: string | null;
+  expires_at: string | null;
+  expired: boolean;
 }
 
 export interface PinResponse {
@@ -329,10 +338,32 @@ export interface NetworkNode {
   name: string | null;
   location: string | null;
   position: 'left' | 'right' | null;
+  // point_left/right = mirror point_plan_a (active)
   point_left: number;
   point_right: number;
   point_pasif_left?: number;
   point_pasif_right?: number;
+  point_pasif_view_left?: number;
+  point_pasif_view_right?: number;
+  point_pasif_expired_left?: number;
+  point_pasif_expired_right?: number;
+  point_plan_b_left?: number;
+  point_plan_b_right?: number;
+  point_plan_b_view_left?: number;
+  point_plan_b_view_right?: number;
+  point_plan_b_expired_left?: number;
+  point_plan_b_expired_right?: number;
+  point_plan_a_left?: number;
+  point_plan_a_right?: number;
+  point_plan_a_view_left?: number;
+  point_plan_a_view_right?: number;
+  point_plan_a_expired_left?: number;
+  point_plan_a_expired_right?: number;
+  lock_status?: {
+    free_source?: SourceLockStatus;
+    plan_b_source?: SourceLockStatus;
+    plan_a_source?: SourceLockStatus;
+  };
   type_plan?: string;
   ro_count: number;
   upline: string;

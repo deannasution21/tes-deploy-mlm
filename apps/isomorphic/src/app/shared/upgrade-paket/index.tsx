@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Alert, Badge, Button, Text } from 'rizzui';
+import { Alert, Button, Text } from 'rizzui';
 import Swal from 'sweetalert2';
 import WidgetCard from '@core/components/cards/widget-card';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
@@ -195,7 +195,7 @@ export default function UpgradePaketPage() {
               <Text className="break-normal">
                 Window <strong>30 hari</strong> dimulai saat ada posting pertama
                 di bawah Anda dari suatu paket. Window dihitung terpisah untuk
-                setiap paket (Pasif, Star, Business).
+                setiap paket (Pendaftaran, Star, Business).
               </Text>
             </li>
             <li>
@@ -222,11 +222,6 @@ export default function UpgradePaketPage() {
             <Text className="text-2xl font-bold text-gray-800">
               {getPlanLabel(currentPlan)}
             </Text>
-            {user.member_pasif && (
-              <Badge variant="flat" color="warning">
-                Member Pasif
-              </Badge>
-            )}
           </div>
         </WidgetCard>
 

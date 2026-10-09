@@ -16,7 +16,7 @@ import { getBankNameByCode } from '@/utils/helper';
 import { handleSessionExpired } from '@/utils/sessionHandler';
 import { useRouter } from 'next/navigation';
 import { routes } from '@/config/routes';
-import { isValidPlan } from '@/config/plans';
+import { isValidPlan, SALARY_RULE, TypePlan } from '@/config/plans';
 import {
   WithdrawalGajiInput,
   withdrawalGajiSchema,
@@ -161,6 +161,7 @@ export default function WithdrawalGajiForm(slug: any) {
   // Plan dibawa dari halaman dashboard withdrawal-gaji (?plan=...) supaya user
   // tidak perlu pilih ulang; fallback ke 'plan_a' kalau tidak valid/tidak ada.
   const selectedPlan = isValidPlan(slug?.plan) ? slug.plan : 'plan_a';
+  const salaryRule = SALARY_RULE[selectedPlan as TypePlan];
   const [isLoading, setLoading] = useState(true);
   const [proses, setProses] = useState(false);
 
@@ -309,13 +310,23 @@ export default function WithdrawalGajiForm(slug: any) {
                             <strong>{dataGaji?.point?.total_point}</strong> poin
                           </Text>
                         </li>
-                        <li>
-                          <Text className="break-normal">
-                            Withdrawal Gaji dapat dilakukan jika poin Anda sudah
-                            mencapai <strong>30 poin</strong>, dan akan
-                            dicairkan menjadi <strong>Rp 1.500.000</strong>
-                          </Text>
-                        </li>
+                        {salaryRule && (
+                          <li>
+                            <Text className="break-normal">
+                              Withdrawal Gaji dapat dilakukan setiap kelipatan{' '}
+                              <strong>{salaryRule!.point} poin</strong>, dan
+                              akan dicairkan menjadi{' '}
+                              <strong>{salaryRule!.amount}</strong>
+                            </Text>
+                          </li>
+                        )}
+                        {salaryRule?.note && (
+                          <li>
+                            <Text className="break-normal">
+                              {salaryRule!.note}
+                            </Text>
+                          </li>
+                        )}
                         <li>
                           <Text className="break-normal font-semibold uppercase text-primary">
                             Anda dapat melakukan Withdrawal Gaji sebanyak{' '}

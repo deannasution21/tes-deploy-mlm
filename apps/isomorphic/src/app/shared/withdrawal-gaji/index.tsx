@@ -9,7 +9,7 @@ import Image from 'next/image';
 import pinImg from '@public/assets/img/golden-coin.png';
 import Link from 'next/link';
 import { routes } from '@/config/routes';
-import { WD_PLAN_OPTIONS } from '@/config/plans';
+import { SALARY_RULE, TypePlan, WD_PLAN_OPTIONS } from '@/config/plans';
 import WithdrawalGajiTable from '../tables/withdrawal-gaji';
 import {
   DetailUsers,
@@ -104,12 +104,21 @@ function FleetStatus({
             Akumulasi Gaji Anda:{' '}
             <strong className="text-xl text-primary">{akumulasiGaji}</strong>
           </Title>
-          {plan === 'plan_a' && (
+          {SALARY_RULE[plan as TypePlan] && (
             <Text as="p" className="text-stone-500">
-              Withdrawal Gaji dapat dlakukan jika poin Anda sudah mencapai{' '}
-              <strong className="text-primary">30 poin</strong>, dan akan
-              dicairkan menjadi{' '}
-              <strong className="text-primary">Rp 1.500.000</strong>
+              Withdrawal Gaji dapat dilakukan setiap kelipatan{' '}
+              <strong className="text-primary">
+                {SALARY_RULE[plan as TypePlan]!.point} poin
+              </strong>
+              , dan akan dicairkan menjadi{' '}
+              <strong className="text-primary">
+                {SALARY_RULE[plan as TypePlan]!.amount}
+              </strong>
+            </Text>
+          )}
+          {SALARY_RULE[plan as TypePlan]?.note && (
+            <Text as="p" className="mt-2 text-stone-500">
+              {SALARY_RULE[plan as TypePlan]!.note}
             </Text>
           )}
           {data?.can_withdrawal_salary?.message && (
@@ -195,7 +204,9 @@ export default function WithdrawalGajiPage() {
 
       {belumAktivasiPasif ? (
         <Alert variant="flat" color="danger">
-          <Text className="font-semibold">Akun Anda Masih Member Pasif</Text>
+          <Text className="font-semibold">
+            Akun Anda Masih Paket Pendaftaran
+          </Text>
           <Text className="mt-1 break-normal">
             {dataGaji?.detail_users?.can_withdrawal_salary?.message ??
               'ID belum aktif, silakan aktivasi terlebih dahulu untuk dapat melakukan penarikan gaji.'}

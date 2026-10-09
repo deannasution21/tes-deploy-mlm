@@ -92,7 +92,9 @@ export default function WithdrawalBonusTable({
         ) : dataUser?.detail_users?.can_withdrawal_bonus?.member_pasif ===
           true ? (
           <Alert variant="flat" color="danger">
-            <Text className="font-semibold">Akun Anda Masih Member Pasif</Text>
+            <Text className="font-semibold">
+              Akun Anda Masih Paket Pendaftaran
+            </Text>
             <Text className="mt-1 break-normal">
               {dataUser?.detail_users?.can_withdrawal_bonus?.message ??
                 'ID belum aktif, silakan aktivasi terlebih dahulu untuk dapat melakukan penarikan bonus.'}

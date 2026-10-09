@@ -225,7 +225,11 @@ export default function RewardPasifPage() {
                         {status.label}
                       </Badge>
                       <p className="text-xl font-bold text-gray-800">
-                        {tier.point_required.toLocaleString('id-ID')} Poin Pasif
+                        {tier.point_required.toLocaleString('id-ID')} :{' '}
+                        {tier.point_required.toLocaleString('id-ID')}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Poin pasif kiri : kanan
                       </p>
                       {tier.amount > 0 && (
                         <p className="text-sm text-gray-600">

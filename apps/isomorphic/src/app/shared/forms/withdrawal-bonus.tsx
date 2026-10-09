@@ -174,7 +174,7 @@ export default function WithdrawalBonusForm(slug: any) {
       });
   }, [session?.accessToken]);
 
-  // Saldo bonus berbeda per plan (Pasif / Star / Business), jadi refetch tiap plan berubah
+  // Saldo bonus berbeda per plan (Pendaftaran / Star / Business), jadi refetch tiap plan berubah
   useEffect(() => {
     if (!session?.accessToken) return;
 

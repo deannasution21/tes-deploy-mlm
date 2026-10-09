@@ -1,6 +1,7 @@
 'use client';
 
 import { Badge, Button, Flex, Input, Select, Text } from 'rizzui';
+import { PLAN_OPTIONS } from '@/config/plans';
 import { type Table as ReactTableType } from '@tanstack/react-table';
 import StatusField from '@core/components/controlled-table/status-field';
 import { PiMagnifyingGlassBold, PiTrashDuotone } from 'react-icons/pi';
@@ -22,16 +23,7 @@ const statusOptions = [
   },
 ];
 
-const planOptions = [
-  {
-    value: 'free',
-    label: 'Pasif',
-  },
-  {
-    value: 'plan_a',
-    label: 'Reguler',
-  },
-];
+const planOptions = PLAN_OPTIONS;
 
 interface TableToolbarProps<T extends Record<string, any>> {
   table: ReactTableType<T>;

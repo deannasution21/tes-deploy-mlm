@@ -4,6 +4,7 @@ import { use, useEffect, useState } from 'react';
 import { SubmitHandler, Controller } from 'react-hook-form';
 import { Form } from '@core/ui/form';
 import { Text, Input, ActionIcon, Button, Alert, Select } from 'rizzui';
+import { getPlanLabel } from '@/config/plans';
 import { FormBlockWrapper } from '@/app/shared/invoice/form-utils';
 import { toast } from 'react-hot-toast';
 import WidgetCard from '@core/components/cards/widget-card';
@@ -140,7 +141,7 @@ export default function TransferPinPage() {
         const options = Object.entries(data?.data.summary)
           .filter(([_, count]) => count > 0) // optional: only include those with >0
           .map(([key]) => ({
-            label: key === 'plan_a' ? 'Reguler' : key === 'free' ? 'Pasif' : key,
+            label: getPlanLabel(key),
             value: key,
           }));
 
@@ -180,12 +181,7 @@ export default function TransferPinPage() {
 
     setLoadingS(true);
 
-    const pin =
-      payload?.type_pin === 'plan_a'
-        ? 'REGULER'
-        : payload?.type_pin === 'free'
-          ? 'PASIF'
-          : payload?.type_pin?.toUpperCase();
+    const pin = getPlanLabel(payload?.type_pin).toUpperCase();
 
     fetchWithAuth<any>(
       `/_pins/transfer`,
@@ -329,12 +325,7 @@ export default function TransferPinPage() {
                                   <Text className="break-normal">
                                     Anda memiliki{' '}
                                     <strong className="uppercase">
-                                      {count} PIN{' '}
-                                      {plan === 'plan_a'
-                                        ? 'Reguler'
-                                        : plan === 'free'
-                                          ? 'Pasif'
-                                          : plan}
+                                      {count} PIN {getPlanLabel(plan)}
                                     </strong>
                                   </Text>
                                 </li>

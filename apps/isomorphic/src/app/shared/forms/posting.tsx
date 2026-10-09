@@ -32,6 +32,7 @@ import {
 import { PostingInput, postingSchema } from '@/validators/posting-schema';
 import Swal from 'sweetalert2';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
+import { getPinLabel } from '@/config/plans';
 
 function Formnya({
   setSelectedProvinceName,
@@ -811,7 +812,7 @@ export default function Posting({
         setDataPin(
           (pinData?.data?.pins ?? []).map((p: any) => ({
             value: p.pin_true,
-            label: p.pin_code,
+            label: `${p.pin_code} (${getPinLabel(p.type)})`,
           }))
         );
         setDataPin2(pinData?.data?.pins ?? []);

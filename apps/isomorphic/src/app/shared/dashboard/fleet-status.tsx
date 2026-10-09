@@ -7,6 +7,7 @@ import Image from 'next/image';
 import TagIcon from '@core/components/icons/tag';
 import TagIcon2 from '@core/components/icons/tag-2';
 import { routes } from '@/config/routes';
+import { getPlanLabel } from '@/config/plans';
 import Link from 'next/link';
 import { DealerSummaryData } from '@/types';
 import { PiArrowsHorizontal, PiTrophy } from 'react-icons/pi';
@@ -70,11 +71,7 @@ export default function FleetStatus({
               className="flex items-center justify-between border-b border-gray-300 py-3"
             >
               <Title as="h5" className="uppercase text-primary">
-                {plan === 'plan_a'
-                  ? 'Reguler'
-                  : plan === 'free'
-                    ? 'Pasif'
-                    : plan}
+                {getPlanLabel(plan)}
               </Title>
               <Title as="h4" className="text-end text-primary">
                 {count ?? 0} PIN

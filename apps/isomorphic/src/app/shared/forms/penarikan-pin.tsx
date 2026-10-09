@@ -31,6 +31,7 @@ import Swal from 'sweetalert2';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { useRouter } from 'next/navigation';
 import { routes } from '@/config/routes';
+import { getPinLabel, getPlanLabel } from '@/config/plans';
 
 function QuantityInput({
   name,
@@ -152,7 +153,7 @@ export default function PenarikanPinPage() {
         const options = Object.entries(data?.data.summary)
           .filter(([_, count]) => count > 0) // optional: only include those with >0
           .map(([key]) => ({
-            label: key === 'plan_a' ? 'PIN Normal' : 'PIN Free',
+            label: getPinLabel(key),
             value: key,
           }));
 
@@ -192,10 +193,7 @@ export default function PenarikanPinPage() {
 
     setLoadingS(true);
 
-    const pin =
-      payload?.type_pin === 'plan_a'
-        ? 'PLAN'
-        : payload?.type_pin?.toUpperCase();
+    const pin = getPlanLabel(payload?.type_pin).toUpperCase();
 
     fetchWithAuth<any>(
       `/_pins/transfer`,

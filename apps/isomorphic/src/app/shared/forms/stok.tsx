@@ -126,7 +126,11 @@ function Formnya({
   const tipePlan = [
     {
       value: 'plan_a',
-      label: 'Plan Normal',
+      label: 'Plan Business',
+    },
+    {
+      value: 'plan_b',
+      label: 'Plan Star',
     },
     {
       value: 'free',

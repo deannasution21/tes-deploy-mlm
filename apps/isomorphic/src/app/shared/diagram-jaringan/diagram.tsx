@@ -75,7 +75,7 @@ function PointRow({
         <p className="text-[9px] text-gray-500">
           {lock.expired
             ? `Window berakhir ${formatDate(lock.expires_at)}`
-            : `Terkunci, hangus ${formatDate(lock.expires_at)}`}
+            : `Upgrade sebelum ${formatDate(lock.expires_at)}`}
         </p>
       )}
     </>

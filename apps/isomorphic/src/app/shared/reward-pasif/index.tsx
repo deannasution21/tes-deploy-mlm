@@ -241,7 +241,9 @@ export default function RewardPasifPage() {
                         <p className="text-xs text-gray-500">
                           {tier.status === 'expired'
                             ? 'Hangus sejak'
-                            : 'Berlaku sampai'}{' '}
+                            : tier.lock_status === 'LOCKED'
+                              ? 'Upgrade sebelum'
+                              : 'Berlaku sampai'}{' '}
                           {formatDateID(tier.expires_at)}
                         </p>
                       )}

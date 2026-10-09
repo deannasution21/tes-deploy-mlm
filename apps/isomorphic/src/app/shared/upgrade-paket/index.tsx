@@ -15,7 +15,14 @@ import {
   PLAN_OPTIONS,
   TypePlan,
 } from '@/config/plans';
-import { DealerSummaryResponse, UserData, UserDataResponse } from '@/types';
+import {
+  DealerSummaryResponse,
+  NetworkDiagramResponse,
+  NetworkNode,
+  SourceLockStatus,
+  UserData,
+  UserDataResponse,
+} from '@/types';
 
 const PIN_PRICE: Record<TypePlan, string> = {
   free: 'Rp25.000',
@@ -26,6 +33,23 @@ const PIN_PRICE: Record<TypePlan, string> = {
 const planRank = (plan?: string | null) =>
   PLAN_OPTIONS.findIndex((p) => p.value === plan);
 
+// sumber bonus = paket dari downline yang posting di bawah akun
+const SOURCES: {
+  key: keyof NonNullable<NetworkNode['lock_status']>;
+  plan: TypePlan;
+}[] = [
+  { key: 'free_source', plan: 'free' },
+  { key: 'plan_b_source', plan: 'plan_b' },
+  { key: 'plan_a_source', plan: 'plan_a' },
+];
+
+const formatDateID = (date: string) =>
+  new Date(date).toLocaleDateString('id-ID', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+
 export default function UpgradePaketPage() {
   const { data: session } = useSession();
   const router = useRouter();
@@ -34,6 +58,7 @@ export default function UpgradePaketPage() {
   const [upgrading, setUpgrading] = useState<TypePlan | null>(null);
   const [user, setUser] = useState<UserData | null>(null);
   const [pinSummary, setPinSummary] = useState<Record<string, number>>({});
+  const [lockStatus, setLockStatus] = useState<NetworkNode['lock_status']>();
 
   const getData = () => {
     if (!session?.accessToken) return;
@@ -52,10 +77,17 @@ export default function UpgradePaketPage() {
         { method: 'GET' },
         session.accessToken
       ),
+      // hanya untuk info window; halaman tetap jalan kalau gagal
+      fetchWithAuth<NetworkDiagramResponse>(
+        `/_network-diagrams/${id}`,
+        { method: 'GET' },
+        session.accessToken
+      ).catch(() => null),
     ])
-      .then(([userRes, pinRes]) => {
+      .then(([userRes, pinRes, diagramRes]) => {
         setUser(userRes?.data?.attribute ?? null);
         setPinSummary(pinRes?.data?.summary ?? {});
+        setLockStatus(diagramRes?.data?.lock_status);
       })
       .catch((error: any) => {
         console.error(error);
@@ -161,16 +193,22 @@ export default function UpgradePaketPage() {
             </li>
             <li>
               <Text className="break-normal">
-                Bonus dari setiap sumber memiliki window{' '}
-                <strong>30 hari</strong>. Bonus di dalam window yang belum
-                di-upgrade sampai window berakhir akan{' '}
+                Window <strong>30 hari</strong> dimulai saat ada posting pertama
+                di bawah Anda dari suatu paket. Window dihitung terpisah untuk
+                setiap paket (Pasif, Star, Business).
+              </Text>
+            </li>
+            <li>
+              <Text className="break-normal">
+                Upgrade sebelum window berakhir agar bonus dari posting tersebut
+                bisa dicairkan. Jika tidak, bonus di dalam window akan{' '}
                 <strong>hangus permanen</strong>.
               </Text>
             </li>
             <li>
               <Text className="break-normal">
-                Bonus dari posting setelah window berakhir berstatus{' '}
-                <strong>terkunci</strong> dan akan cair setelah Anda upgrade.
+                Bonus dari posting setelah window berakhir tidak hangus, tetapi{' '}
+                <strong>terkunci</strong> sampai Anda upgrade.
               </Text>
             </li>
           </ol>
@@ -191,6 +229,8 @@ export default function UpgradePaketPage() {
             )}
           </div>
         </WidgetCard>
+
+        <WindowStatus lockStatus={lockStatus} />
 
         {upgradeOptions.length === 0 ? (
           <Alert variant="flat" color="success">
@@ -245,5 +285,53 @@ export default function UpgradePaketPage() {
         )}
       </div>
     </div>
+  );
+}
+
+function WindowStatus({
+  lockStatus,
+}: {
+  lockStatus?: NetworkNode['lock_status'];
+}) {
+  // hanya sumber yang masih terkunci dan window-nya sudah dimulai
+  const windows = SOURCES.map(({ key, plan }) => ({
+    plan,
+    lock: lockStatus?.[key] as SourceLockStatus | undefined,
+  })).filter(({ lock }) => lock && !lock.unlocked && lock.started_at);
+
+  if (windows.length === 0) return null;
+
+  return (
+    <WidgetCard
+      title={<span className="text-[#c69731]">Window Bonus Anda</span>}
+      titleClassName="text-gray-700 font-bold text-2xl sm:text-2xl font-inter mb-5"
+    >
+      <div className="grid grid-cols-1 gap-3">
+        {windows.map(({ plan, lock }) => (
+          <Alert
+            key={plan}
+            variant="flat"
+            color={lock!.expired ? 'danger' : 'warning'}
+          >
+            <Text className="font-semibold">
+              Bonus dari posting {getPlanLabel(plan)}
+            </Text>
+            {lock!.expired ? (
+              <Text className="mt-1 break-normal">
+                Window berakhir {formatDateID(lock!.expires_at!)}. Bonus di
+                dalam window tersebut sudah hangus; bonus dari posting
+                berikutnya terkunci sampai Anda upgrade.
+              </Text>
+            ) : (
+              <Text className="mt-1 break-normal">
+                Window dimulai {formatDateID(lock!.started_at!)}. Upgrade
+                sebelum <strong>{formatDateID(lock!.expires_at!)}</strong> agar
+                bonus ini bisa dicairkan.
+              </Text>
+            )}
+          </Alert>
+        ))}
+      </div>
+    </WidgetCard>
   );
 }

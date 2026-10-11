@@ -130,8 +130,8 @@ export const routes = {
   sertifikat: {
     index: '/sertifikat',
   },
-  rewardPasif: {
-    index: '/reward-pasif',
+  reward: {
+    index: '/reward',
   },
   upgradePaket: {
     index: '/upgrade-paket',

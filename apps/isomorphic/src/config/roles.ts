@@ -18,7 +18,7 @@ export const rolePermissions = {
       '/withdrawal-bonus/:path*',
       '/withdrawal-gaji',
       '/withdrawal-gaji/:path*',
-      '/reward-pasif',
+      '/reward',
       '/upgrade-paket',
       '/lihat-pin',
       '/lihat-pin/:path*',

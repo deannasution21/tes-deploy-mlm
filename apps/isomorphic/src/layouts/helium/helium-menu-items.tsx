@@ -675,8 +675,8 @@ export const menuItemsUser = [
     ],
   },
   {
-    name: 'Reward Pasif',
-    href: routes.rewardPasif.index,
+    name: 'Reward',
+    href: routes.reward.index,
     icon: <PiTrophy />,
   },
   {

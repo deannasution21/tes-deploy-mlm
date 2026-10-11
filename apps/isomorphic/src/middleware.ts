@@ -74,7 +74,7 @@ export const config = {
     '/withdrawal-bonus/:path*',
     '/withdrawal-gaji',
     '/withdrawal-gaji/:path*',
-    '/reward-pasif',
+    '/reward',
     '/upgrade-paket',
     '/voucher-reward',
 

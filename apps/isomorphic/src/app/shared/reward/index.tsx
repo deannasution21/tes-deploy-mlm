@@ -135,7 +135,7 @@ const formatDateID = (date?: string | null) => {
   });
 };
 
-export default function RewardPasifPage() {
+export default function RewardPage() {
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -278,7 +278,8 @@ export default function RewardPasifPage() {
           <ol className="list-disc ps-5">
             <li>
               <Text className="break-normal">
-                Reward dihitung dari poin pasif (pasangan kiri &amp; kanan).
+                Kumpulkan pasangan poin reward (kiri : kanan) dari jaringan Anda
+                dan tukarkan dengan hadiah.
               </Text>
             </li>
             <li>
@@ -330,12 +331,12 @@ export default function RewardPasifPage() {
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <SummaryCard
-            title="Poin Pasif Efektif"
+            title="Poin Reward Efektif"
             value={(user?.effective_point ?? 0).toLocaleString('id-ID')}
           />
           <SummaryCard
-            title="Poin Pasif Kiri / Kanan"
-            value={`${(user?.point_pasif_left ?? 0).toLocaleString('id-ID')} / ${(user?.point_pasif_right ?? 0).toLocaleString('id-ID')}`}
+            title="Poin Reward Kiri : Kanan"
+            value={`${(user?.point_pasif_left ?? 0).toLocaleString('id-ID')} : ${(user?.point_pasif_right ?? 0).toLocaleString('id-ID')}`}
           />
           <SummaryCard
             title="Total Reward Tunai Diklaim"
@@ -503,7 +504,7 @@ function TierCard({
           <strong className="text-gray-700">
             {target} : {target}
           </strong>{' '}
-          pasang poin pasif
+          pasang poin reward
         </p>
         {tier.reward_type !== 'voucher' && tier.amount > 0 && (
           <p className="mt-1 text-sm font-semibold text-gray-700">

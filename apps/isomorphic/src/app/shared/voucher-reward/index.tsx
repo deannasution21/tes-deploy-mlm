@@ -17,7 +17,7 @@ import {
 } from '@/types/reward-pasif';
 import VoucherPrint, {
   PrintVoucherButton,
-} from '@/app/shared/reward-pasif/voucher-print';
+} from '@/app/shared/reward/voucher-print';
 
 const formatDateID = (date: string) =>
   new Date(date).toLocaleDateString('id-ID', {
@@ -125,7 +125,7 @@ export default function VoucherRewardPage() {
               <Info label="Nama" value={user.name} />
               <Info label="Paket" value={getPlanLabel(user.type_plan)} />
               <Info
-                label="Poin Pasif Kiri : Kanan"
+                label="Poin Reward Kiri : Kanan"
                 value={`${(user.point_pasif_left ?? 0).toLocaleString('id-ID')} : ${(user.point_pasif_right ?? 0).toLocaleString('id-ID')}`}
               />
             </div>

@@ -1,21 +1,21 @@
 import PageHeader from '@/app/shared/page-header';
-import RewardPasifPage from '@/app/shared/reward-pasif';
+import RewardPage from '@/app/shared/reward';
 import { routes } from '@/config/routes';
 import { metaObject } from '@/config/site.config';
 
 export const metadata = {
-  ...metaObject('Reward Pasif'),
+  ...metaObject('Reward'),
 };
 
 const pageHeader = {
-  title: 'Reward Pasif',
+  title: 'Reward',
   breadcrumb: [
     {
       href: routes.dashboard.index,
       name: 'Dashboard',
     },
     {
-      name: 'Reward Pasif',
+      name: 'Reward',
     },
   ],
 };
@@ -25,7 +25,7 @@ export default function Page() {
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb} />
 
-      <RewardPasifPage />
+      <RewardPage />
     </>
   );
 }

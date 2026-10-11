@@ -3,7 +3,7 @@ import { Button } from 'rizzui';
 import { PiPrinterBold } from 'react-icons/pi';
 import { VoucherDetail } from '@/types/reward-pasif';
 
-// dipakai di Reward Pasif (member) dan Voucher Reward (admin)
+// dipakai di Reward (member) dan Voucher Reward (admin)
 export function PrintVoucherButton({ onClick }: { onClick: () => void }) {
   return (
     <Button

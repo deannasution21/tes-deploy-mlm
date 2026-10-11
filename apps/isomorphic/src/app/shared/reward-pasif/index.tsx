@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useReactToPrint } from 'react-to-print';
-import { Alert, Badge, Button, Text } from 'rizzui';
+import { Alert, Button, Text } from 'rizzui';
 import Swal from 'sweetalert2';
 import { toast } from 'react-hot-toast';
 import WidgetCard from '@core/components/cards/widget-card';
@@ -20,21 +20,112 @@ import {
   VoucherDetail,
 } from '@/types/reward-pasif';
 import VoucherPrint from './voucher-print';
+import {
+  PiCheckCircleBold,
+  PiGiftBold,
+  PiHourglassBold,
+  PiLockBold,
+  PiPrinterBold,
+  PiRocketLaunchBold,
+  PiTargetBold,
+  PiXCircleBold,
+} from 'react-icons/pi';
+import cn from '@core/utils/class-names';
 
-const TIER_STATUS: Record<
+// tampilan kartu per status. "Belum tercapai" sengaja dibuat hidup (bukan
+// disabled) supaya member tetap semangat mengejar target.
+const TIER_THEME: Record<
   RewardTierStatus,
   {
     label: string;
-    color: 'success' | 'warning' | 'danger' | 'info' | 'secondary';
+    accent: string;
+    iconWrap: string;
+    badge: string;
+    bar: string;
+    card: string;
+    icon: React.ReactNode;
   }
 > = {
-  not_reached: { label: 'Belum Tercapai', color: 'secondary' },
-  pending: { label: 'Menunggu', color: 'info' },
-  locked: { label: 'Terkunci', color: 'warning' },
-  eligible: { label: 'Bisa Diklaim', color: 'success' },
-  claimed: { label: 'Sudah Diklaim', color: 'info' },
-  expired: { label: 'Hangus', color: 'danger' },
+  eligible: {
+    label: 'Siap Diklaim',
+    accent: 'bg-gradient-to-r from-emerald-400 to-green-500',
+    iconWrap: 'bg-emerald-50 text-emerald-600',
+    badge: 'bg-emerald-50 text-emerald-700',
+    bar: 'bg-gradient-to-r from-emerald-400 to-green-500',
+    card: 'border-emerald-200 shadow-md ring-1 ring-emerald-100',
+    icon: <PiGiftBold className="h-6 w-6" />,
+  },
+  claimed: {
+    label: 'Sudah Diklaim',
+    accent: 'bg-gradient-to-r from-[#c69731] to-[#e0b84a]',
+    iconWrap: 'bg-amber-50 text-[#c69731]',
+    badge: 'bg-amber-50 text-amber-700',
+    bar: 'bg-gradient-to-r from-[#c69731] to-[#e0b84a]',
+    card: 'border-amber-200',
+    icon: <PiCheckCircleBold className="h-6 w-6" />,
+  },
+  not_reached: {
+    label: 'Sedang Dikejar',
+    accent: 'bg-gradient-to-r from-sky-400 to-indigo-500',
+    iconWrap: 'bg-indigo-50 text-indigo-600',
+    badge: 'bg-indigo-50 text-indigo-700',
+    bar: 'bg-gradient-to-r from-sky-400 to-indigo-500',
+    card: 'border-gray-200',
+    icon: <PiTargetBold className="h-6 w-6" />,
+  },
+  locked: {
+    label: 'Terkunci',
+    accent: 'bg-gradient-to-r from-orange-400 to-amber-400',
+    iconWrap: 'bg-orange-50 text-orange-500',
+    badge: 'bg-orange-50 text-orange-700',
+    bar: 'bg-gradient-to-r from-orange-400 to-amber-400',
+    card: 'border-orange-200',
+    icon: <PiLockBold className="h-6 w-6" />,
+  },
+  pending: {
+    label: 'Menunggu',
+    accent: 'bg-gradient-to-r from-sky-400 to-blue-500',
+    iconWrap: 'bg-sky-50 text-sky-600',
+    badge: 'bg-sky-50 text-sky-700',
+    bar: 'bg-gradient-to-r from-sky-400 to-blue-500',
+    card: 'border-sky-200',
+    icon: <PiHourglassBold className="h-6 w-6" />,
+  },
+  expired: {
+    label: 'Hangus',
+    accent: 'bg-gray-300',
+    iconWrap: 'bg-gray-100 text-gray-400',
+    badge: 'bg-red-50 text-red-600',
+    bar: 'bg-gray-300',
+    card: 'border-gray-200 bg-gray-50/70',
+    icon: <PiXCircleBold className="h-6 w-6" />,
+  },
 };
+
+// filter chip di Daftar Reward; "Siap Diklaim" hanya muncul kalau ada isinya
+type TierFilter = 'all' | 'eligible' | 'not_reached' | 'claimed' | 'expired';
+
+const TIER_FILTERS: {
+  value: TierFilter;
+  label: string;
+  match: (status: RewardTierStatus) => boolean;
+  hideWhenEmpty?: boolean;
+}[] = [
+  { value: 'all', label: 'Semua', match: () => true },
+  {
+    value: 'eligible',
+    label: 'Siap Diklaim',
+    match: (s) => s === 'eligible',
+    hideWhenEmpty: true,
+  },
+  {
+    value: 'not_reached',
+    label: 'Belum Tercapai',
+    match: (s) => s === 'not_reached' || s === 'locked' || s === 'pending',
+  },
+  { value: 'claimed', label: 'Sudah Diklaim', match: (s) => s === 'claimed' },
+  { value: 'expired', label: 'Hangus', match: (s) => s === 'expired' },
+];
 
 const formatDateID = (date?: string | null) => {
   if (!date) return '-';
@@ -51,6 +142,7 @@ export default function RewardPasifPage() {
 
   const [isLoading, setLoading] = useState(true);
   const [claimingId, setClaimingId] = useState<string | null>(null);
+  const [tierFilter, setTierFilter] = useState<TierFilter>('all');
   const [data, setData] = useState<RewardPasifData | null>(null);
 
   // voucher yang sedang dicetak; react-to-print membuka dialog print
@@ -175,6 +267,9 @@ export default function RewardPasifPage() {
 
   const user = data.detail_users;
   const tiers = data.reward_tiers ?? [];
+  const activeFilter =
+    TIER_FILTERS.find((f) => f.value === tierFilter) ?? TIER_FILTERS[0];
+  const filteredTiers = tiers.filter((t) => activeFilter.match(t.status));
 
   return (
     <div className="@container">
@@ -253,92 +348,57 @@ export default function RewardPasifPage() {
           title={<span className="text-[#c69731]">Daftar Reward</span>}
           titleClassName="text-gray-700 font-bold text-2xl sm:text-2xl font-inter mb-5"
         >
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {tiers.map((tier) => {
-              const status = TIER_STATUS[tier.status] ?? {
-                label: tier.status,
-                color: 'secondary' as const,
-              };
+          <div className="mb-5 flex flex-wrap gap-2">
+            {TIER_FILTERS.map(({ value, label, match, hideWhenEmpty }) => {
+              const count = tiers.filter((t) => match(t.status)).length;
+              if (hideWhenEmpty && count === 0) return null;
+              const active = tierFilter === value;
 
               return (
-                <div
-                  key={tier.id}
-                  className="flex flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition-all duration-300 hover:shadow-lg"
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setTierFilter(value)}
+                  className={cn(
+                    'inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors',
+                    active
+                      ? 'border-[#c69731] bg-[#c69731] text-white shadow-sm'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-[#c69731] hover:text-[#c69731]'
+                  )}
                 >
-                  <div className="bg-gradient-to-r from-blue-500 to-teal-400 px-4 py-3">
-                    <h3 className="text-sm font-semibold leading-tight text-white">
-                      {tier.name}
-                    </h3>
-                  </div>
-
-                  <div className="flex flex-1 flex-col justify-between p-4">
-                    <div className="space-y-2">
-                      <Badge variant="flat" color={status.color} size="sm">
-                        {status.label}
-                      </Badge>
-                      <p className="text-xl font-bold text-gray-800">
-                        {tier.point_required.toLocaleString('id-ID')} :{' '}
-                        {tier.point_required.toLocaleString('id-ID')}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Poin pasif kiri : kanan
-                      </p>
-                      {tier.reward_type !== 'voucher' && tier.amount > 0 && (
-                        <p className="text-sm text-gray-600">
-                          Rp {tier.amount.toLocaleString('id-ID')}
-                        </p>
-                      )}
-                      {tier.status === 'claimed' && tier.claimed_at && (
-                        <p className="text-xs text-gray-500">
-                          Diklaim {formatDateID(tier.claimed_at)}
-                        </p>
-                      )}
-                      <p className="text-xs text-gray-500">
-                        Progress: {tier.progress?.effective_point ?? 0} /{' '}
-                        {tier.point_required.toLocaleString('id-ID')} (
-                        {tier.progress?.percent ?? 0}%)
-                      </p>
-                      {tier.expires_at && tier.status !== 'claimed' && (
-                        <p className="text-xs text-gray-500">
-                          {tier.status === 'expired'
-                            ? 'Hangus sejak'
-                            : tier.lock_status === 'LOCKED'
-                              ? 'Upgrade sebelum'
-                              : 'Berlaku sampai'}{' '}
-                          {formatDateID(tier.expires_at)}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="my-3 border-t"></div>
-
-                    {tier.can_claim === true ? (
-                      <Button
-                        size="sm"
-                        disabled={!!claimingId}
-                        isLoading={claimingId === tier.id}
-                        onClick={() => handleClaim(tier)}
-                      >
-                        Klaim Reward
-                      </Button>
-                    ) : tier.status === 'claimed' &&
-                      tier.voucher_detail?.printable ? (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setPrintVoucher(tier.voucher_detail!)}
-                      >
-                        Download / Print Voucher
-                      </Button>
-                    ) : (
-                      <Button size="sm" disabled>
-                        {tier.status === 'claimed' ? 'Selesai' : status.label}
-                      </Button>
+                  {label}
+                  <span
+                    className={cn(
+                      'rounded-full px-2 py-0.5 text-xs font-semibold',
+                      active
+                        ? 'bg-white/25 text-white'
+                        : 'bg-gray-100 text-gray-600'
                     )}
-                  </div>
-                </div>
+                  >
+                    {count}
+                  </span>
+                </button>
               );
             })}
+          </div>
+
+          {filteredTiers.length === 0 && (
+            <p className="py-10 text-center text-sm text-gray-500">
+              Belum ada reward di kategori ini.
+            </p>
+          )}
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {filteredTiers.map((tier) => (
+              <TierCard
+                key={tier.id}
+                tier={tier}
+                claiming={claimingId === tier.id}
+                disabled={!!claimingId}
+                onClaim={() => handleClaim(tier)}
+                onPrint={() => setPrintVoucher(tier.voucher_detail!)}
+              />
+            ))}
           </div>
         </WidgetCard>
 
@@ -365,13 +425,9 @@ export default function RewardPasifPage() {
                     </p>
                   </div>
                   {voucher.printable && (
-                    <Button
-                      size="sm"
-                      variant="outline"
+                    <PrintVoucherButton
                       onClick={() => setPrintVoucher(voucher)}
-                    >
-                      Download / Print Voucher
-                    </Button>
+                    />
                   )}
                 </div>
               ))}
@@ -385,6 +441,227 @@ export default function RewardPasifPage() {
         {printVoucher && <VoucherPrint ref={printRef} voucher={printVoucher} />}
       </div>
     </div>
+  );
+}
+
+function TierCard({
+  tier,
+  claiming,
+  disabled,
+  onClaim,
+  onPrint,
+}: {
+  tier: RewardPasifTier;
+  claiming: boolean;
+  disabled: boolean;
+  onClaim: () => void;
+  onPrint: () => void;
+}) {
+  const theme = TIER_THEME[tier.status] ?? TIER_THEME.not_reached;
+  const percent = Math.min(tier.progress?.percent ?? 0, 100);
+  const target = tier.point_required.toLocaleString('id-ID');
+  const isExpired = tier.status === 'expired';
+
+  return (
+    <div
+      className={cn(
+        'relative flex flex-col gap-4 overflow-hidden rounded-2xl border bg-white p-5 pt-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg',
+        theme.card
+      )}
+    >
+      <div className={cn('absolute inset-x-0 top-0 h-1.5', theme.accent)} />
+
+      <div className="flex items-start justify-between gap-3">
+        <span
+          className={cn(
+            'grid h-11 w-11 shrink-0 place-items-center rounded-xl',
+            theme.iconWrap
+          )}
+        >
+          {theme.icon}
+        </span>
+        <span
+          className={cn(
+            'rounded-full px-2.5 py-1 text-xs font-semibold',
+            theme.badge
+          )}
+        >
+          {theme.label}
+        </span>
+      </div>
+
+      <div>
+        <p
+          className={cn(
+            'text-base font-semibold leading-snug',
+            isExpired ? 'text-gray-500' : 'text-gray-900'
+          )}
+        >
+          {tier.name}
+        </p>
+        <p className="mt-1 text-xs text-gray-500">
+          Target{' '}
+          <strong className="text-gray-700">
+            {target} : {target}
+          </strong>{' '}
+          pasang poin pasif
+        </p>
+        {tier.reward_type !== 'voucher' && tier.amount > 0 && (
+          <p className="mt-1 text-sm font-semibold text-gray-700">
+            Rp {tier.amount.toLocaleString('id-ID')}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <div className="mb-1.5 flex items-center justify-between text-xs text-gray-500">
+          <span>
+            {(tier.progress?.effective_point ?? 0).toLocaleString('id-ID')} /{' '}
+            {target}
+          </span>
+          <span className="font-semibold text-gray-700">{percent}%</span>
+        </div>
+        <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
+          <div
+            className={cn('h-full rounded-full transition-all', theme.bar)}
+            style={{ width: `${Math.max(percent, 2)}%` }}
+          />
+        </div>
+      </div>
+
+      <div className="mt-auto">
+        <TierFooter
+          tier={tier}
+          claiming={claiming}
+          disabled={disabled}
+          onClaim={onClaim}
+          onPrint={onPrint}
+        />
+      </div>
+    </div>
+  );
+}
+
+function TierNote({
+  className,
+  icon,
+  children,
+}: {
+  className: string;
+  icon?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs',
+        className
+      )}
+    >
+      {icon && <span className="shrink-0">{icon}</span>}
+      <span>{children}</span>
+    </div>
+  );
+}
+
+function TierFooter({
+  tier,
+  claiming,
+  disabled,
+  onClaim,
+  onPrint,
+}: {
+  tier: RewardPasifTier;
+  claiming: boolean;
+  disabled: boolean;
+  onClaim: () => void;
+  onPrint: () => void;
+}) {
+  if (tier.can_claim === true)
+    return (
+      <Button
+        size="sm"
+        disabled={disabled}
+        isLoading={claiming}
+        onClick={onClaim}
+        className="w-full gap-2 border-0 bg-gradient-to-r from-emerald-500 to-green-500 font-semibold text-white shadow-md hover:brightness-105"
+      >
+        <PiGiftBold className="h-4 w-4" />
+        Klaim Reward
+      </Button>
+    );
+
+  switch (tier.status) {
+    case 'claimed':
+      return (
+        <div className="space-y-2">
+          {tier.voucher_detail?.printable ? (
+            <PrintVoucherButton onClick={onPrint} />
+          ) : (
+            <TierNote className="bg-amber-50 text-amber-700">
+              Reward tunai menunggu pencairan oleh admin.
+            </TierNote>
+          )}
+          {tier.claimed_at && (
+            <p className="text-center text-xs text-gray-500">
+              Diklaim {formatDateID(tier.claimed_at)}
+            </p>
+          )}
+        </div>
+      );
+    case 'expired':
+      return (
+        <TierNote className="bg-gray-100 text-gray-500">
+          Reward hangus
+          {tier.expires_at ? ` sejak ${formatDateID(tier.expires_at)}` : ''}.
+        </TierNote>
+      );
+    case 'locked':
+      return (
+        <TierNote
+          className="bg-orange-50 text-orange-700"
+          icon={<PiLockBold className="h-4 w-4" />}
+        >
+          {tier.expires_at
+            ? `Upgrade ke Business sebelum ${formatDateID(tier.expires_at)} agar bisa diklaim.`
+            : 'Upgrade ke Business untuk membuka reward ini.'}
+        </TierNote>
+      );
+    case 'pending':
+      return (
+        <TierNote
+          className="bg-sky-50 text-sky-700"
+          icon={<PiHourglassBold className="h-4 w-4" />}
+        >
+          Reward sedang diproses.
+        </TierNote>
+      );
+    default:
+      return (
+        <TierNote
+          className="bg-indigo-50 text-indigo-700"
+          icon={<PiRocketLaunchBold className="h-4 w-4" />}
+        >
+          Kurang{' '}
+          <strong>
+            {(tier.progress?.remaining ?? 0).toLocaleString('id-ID')} pasang
+          </strong>{' '}
+          lagi. Semangat!
+        </TierNote>
+      );
+  }
+}
+
+function PrintVoucherButton({ onClick }: { onClick: () => void }) {
+  return (
+    <Button
+      size="sm"
+      onClick={onClick}
+      className="w-full gap-2 border-0 bg-gradient-to-r from-[#c69731] via-[#e0b84a] to-[#AA8453] font-semibold text-white shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:brightness-105 active:translate-y-0"
+    >
+      <PiPrinterBold className="h-4 w-4" />
+      Download / Print Voucher
+    </Button>
   );
 }
 

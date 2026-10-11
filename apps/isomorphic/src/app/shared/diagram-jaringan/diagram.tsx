@@ -82,6 +82,10 @@ function PointRow({
   );
 }
 
+// Point Promo Mobil, Promo Wisata & Pasif disembunyikan dari node diagram;
+// ubah ke true untuk menampilkan lagi
+const SHOW_EXTRA_POINTS = false;
+
 type TreeProps = {
   data: NetworkNode;
   session: Session | null;
@@ -185,7 +189,7 @@ function Tree({ data, session }: TreeProps) {
               ]}
               lock={node.lock_status?.plan_b_source}
             />
-            {node?.promo_points && (
+            {SHOW_EXTRA_POINTS && node?.promo_points && (
               <>
                 <p className="text-[10px] text-green-600">Point Promo Mobil:</p>
                 <div className="flex justify-center gap-2">
@@ -231,18 +235,20 @@ function Tree({ data, session }: TreeProps) {
                 </div>
               </>
             )}
-            <PointRow
-              label="Point Pasif"
-              textClass="text-orange-600"
-              color="warning"
-              active={[node.point_pasif_left, node.point_pasif_right]}
-              view={[node.point_pasif_view_left, node.point_pasif_view_right]}
-              expired={[
-                node.point_pasif_expired_left,
-                node.point_pasif_expired_right,
-              ]}
-              lock={node.lock_status?.free_source}
-            />
+            {SHOW_EXTRA_POINTS && (
+              <PointRow
+                label="Point Pasif"
+                textClass="text-orange-600"
+                color="warning"
+                active={[node.point_pasif_left, node.point_pasif_right]}
+                view={[node.point_pasif_view_left, node.point_pasif_view_right]}
+                expired={[
+                  node.point_pasif_expired_left,
+                  node.point_pasif_expired_right,
+                ]}
+                lock={node.lock_status?.free_source}
+              />
+            )}
           </Link>
         ) : currentUpline ? (
           // ❗ Null node (potential downline)

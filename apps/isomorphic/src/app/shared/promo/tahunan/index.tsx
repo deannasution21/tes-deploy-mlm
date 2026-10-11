@@ -30,6 +30,7 @@ const Slider = dynamic(() => import('react-slick'), {
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { FormBlockWrapper } from '../../invoice/form-utils';
+import { NetworkDiagramResponse, PromoPoints } from '@/types';
 
 export default function PromoTahunanPage({
   className,
@@ -248,6 +249,8 @@ export default function PromoTahunanPage({
               </Slider>
             </div>
           </div>
+
+          <PromoPointsCard />
 
           {dataWhole?.promo_status === 'active' && (
             <div>
@@ -602,5 +605,54 @@ export default function PromoTahunanPage({
         </div>
       </div>
     </>
+  );
+}
+
+const PROMO_CHANNELS = [
+  { key: 'car', label: 'Point Promo Mobil', className: 'text-green-600' },
+  { key: 'trip', label: 'Point Promo Wisata', className: 'text-blue-600' },
+];
+
+// Poin promo milik user (dulu tampil di node diagram jaringan).
+// Sumbernya sama dengan diagram: promo_points dari /_network-diagrams.
+function PromoPointsCard() {
+  const { data: session } = useSession();
+  const [promoPoints, setPromoPoints] = useState<PromoPoints | null>(null);
+
+  useEffect(() => {
+    if (!session?.accessToken || !session?.user?.id) return;
+
+    fetchWithAuth<NetworkDiagramResponse>(
+      `/_network-diagrams/${session.user.id}`,
+      { method: 'GET' },
+      session.accessToken
+    )
+      .then((res) => setPromoPoints(res?.data?.promo_points ?? null))
+      .catch(() => setPromoPoints(null));
+  }, [session?.accessToken, session?.user?.id]);
+
+  if (!promoPoints) return null;
+
+  return (
+    <WidgetCard
+      title={<span className="text-[#c69731]">Point Promo Anda</span>}
+      titleClassName="text-gray-700 font-bold text-2xl sm:text-2xl font-inter mb-5"
+    >
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {PROMO_CHANNELS.map(({ key, label, className }) => (
+          <div
+            key={key}
+            className="rounded-xl border border-gray-200 bg-gradient-to-br from-amber-50 to-white p-5"
+          >
+            <p className={cn('text-sm font-medium', className)}>{label}</p>
+            <p className="mt-1 text-2xl font-bold text-gray-800">
+              {promoPoints[key]?.effective_total?.left ?? 0} :{' '}
+              {promoPoints[key]?.effective_total?.right ?? 0}
+            </p>
+            <p className="text-xs text-gray-500">Kiri : Kanan</p>
+          </div>
+        ))}
+      </div>
+    </WidgetCard>
   );
 }

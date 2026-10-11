@@ -51,6 +51,11 @@ export const SALARY_RULE: Partial<
 
 // keuntungan per paket untuk ditampilkan di Upgrade Paket (sumber: materi klien)
 export const PLAN_BENEFITS: Partial<Record<TypePlan, string[]>> = {
+  free: [
+    'Ikut program Reward: wisata, umrah, mobil, hingga tunai',
+    'Hak bonus dari jaringan tetap tercatat',
+    'Bonus dapat dicairkan setelah upgrade ke Star / Business',
+  ],
   plan_b: [
     'Bonus Sponsor Rp20.000',
     'Bonus Pasangan Rp10.000 / pasang',

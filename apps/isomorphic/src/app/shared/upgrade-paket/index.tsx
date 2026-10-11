@@ -3,14 +3,14 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { Alert, Button, Text } from 'rizzui';
 import {
   PiCheckCircleFill,
   PiCrownFill,
-  PiShoppingCartBold,
   PiArrowCircleUpBold,
   PiStarFill,
+  PiUserPlusFill,
+  PiSealCheckFill,
 } from 'react-icons/pi';
 import cn from '@core/utils/class-names';
 import Swal from 'sweetalert2';
@@ -191,73 +191,74 @@ export default function UpgradePaketPage() {
   return (
     <div className="@container">
       <div className="grid grid-cols-1 gap-6 3xl:gap-8">
-        <Alert variant="flat" color="info">
-          <Text className="font-semibold">Informasi Upgrade</Text>
-          <ol className="list-disc ps-5">
-            <li>
-              <Text className="break-normal">
-                Upgrade menggunakan 1 PIN sesuai paket tujuan, diambil otomatis
-                dari PIN aktif milik Anda.
-              </Text>
-            </li>
-            <li>
-              <Text className="break-normal">
-                Window <strong>30 hari</strong> dimulai saat ada posting pertama
-                di bawah Anda dari suatu paket. Window dihitung terpisah untuk
-                setiap paket (Pendaftaran, Star, Business).
-              </Text>
-            </li>
-            <li>
-              <Text className="break-normal">
-                Upgrade sebelum window berakhir agar bonus dari posting tersebut
-                bisa dicairkan. Jika tidak, bonus di dalam window akan{' '}
-                <strong>hangus permanen</strong>.
-              </Text>
-            </li>
-            <li>
-              <Text className="break-normal">
-                Bonus dari posting setelah window berakhir tidak hangus, tetapi{' '}
-                <strong>terkunci</strong> sampai Anda upgrade.
-              </Text>
-            </li>
-          </ol>
-        </Alert>
-
-        <WidgetCard
-          title={<span className="text-[#c69731]">Paket Anda</span>}
-          titleClassName="text-gray-700 font-bold text-2xl sm:text-2xl font-inter mb-5"
-        >
-          <div className="flex flex-wrap items-center gap-3">
-            <Text className="text-2xl font-bold text-gray-800">
-              {getPlanLabel(currentPlan)}
-            </Text>
-          </div>
-        </WidgetCard>
+        {/* sudah paket tertinggi: tidak ada yang perlu dijelaskan soal upgrade */}
+        {upgradeOptions.length > 0 && (
+          <Alert variant="flat" color="info">
+            <Text className="font-semibold">Informasi Upgrade</Text>
+            <ol className="list-disc ps-5">
+              <li>
+                <Text className="break-normal">
+                  Upgrade menggunakan 1 PIN sesuai paket tujuan, diambil
+                  otomatis dari PIN aktif milik Anda.
+                </Text>
+              </li>
+              <li>
+                <Text className="break-normal">
+                  Window <strong>30 hari</strong> dimulai saat ada posting
+                  pertama di bawah Anda dari suatu paket. Window dihitung
+                  terpisah untuk setiap paket (Pendaftaran, Star, Business).
+                </Text>
+              </li>
+              <li>
+                <Text className="break-normal">
+                  Upgrade sebelum window berakhir agar bonus dari posting
+                  tersebut bisa dicairkan. Jika tidak, bonus di dalam window
+                  akan <strong>hangus permanen</strong>.
+                </Text>
+              </li>
+              <li>
+                <Text className="break-normal">
+                  Bonus dari posting setelah window berakhir tidak hangus,
+                  tetapi <strong>terkunci</strong> sampai Anda upgrade.
+                </Text>
+              </li>
+            </ol>
+          </Alert>
+        )}
 
         <WindowStatus lockStatus={lockStatus} />
 
-        {upgradeOptions.length === 0 ? (
-          <Alert variant="flat" color="success">
-            <Text className="break-normal">
-              Paket Anda sudah <strong>{getPlanLabel(currentPlan)}</strong>,
-              paket tertinggi saat ini.
-            </Text>
-          </Alert>
-        ) : (
-          <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2">
-            {upgradeOptions.map(({ value, label }) => (
-              <PlanCard
-                key={value}
-                plan={value}
-                label={label}
-                pinCount={pinSummary?.[value] ?? 0}
-                upgrading={upgrading === value}
-                disabled={!!upgrading}
-                onUpgrade={() => handleUpgrade(value)}
-              />
-            ))}
-          </div>
-        )}
+        {/* paket saat ini + pilihan upgrade dalam satu baris, seperti tabel harga */}
+        <div
+          className={cn(
+            'grid grid-cols-1 items-stretch gap-6',
+            upgradeOptions.length === 0
+              ? 'max-w-xl'
+              : upgradeOptions.length === 1
+                ? 'md:grid-cols-2'
+                : 'md:grid-cols-2 xl:grid-cols-3'
+          )}
+        >
+          <PlanCard
+            plan={currentPlan as TypePlan}
+            label={getPlanLabel(currentPlan)}
+            current={{
+              since: user.membership?.[currentPlan]?.crtd_at,
+              isHighest: upgradeOptions.length === 0,
+            }}
+          />
+          {upgradeOptions.map(({ value, label }) => (
+            <PlanCard
+              key={value}
+              plan={value}
+              label={label}
+              pinCount={pinSummary?.[value] ?? 0}
+              upgrading={upgrading === value}
+              disabled={!!upgrading}
+              onUpgrade={() => handleUpgrade(value)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -277,6 +278,14 @@ const PLAN_THEME: Partial<
     }
   >
 > = {
+  free: {
+    header: 'from-emerald-500 via-teal-500 to-cyan-600',
+    icon: <PiUserPlusFill className="h-7 w-7" />,
+    check: 'text-emerald-500',
+    button: 'from-emerald-500 to-teal-500',
+    ring: 'border-emerald-100',
+    tagline: 'Langkah awal bergabung bersama IPG',
+  },
   plan_b: {
     header: 'from-sky-500 via-blue-500 to-indigo-600',
     icon: <PiStarFill className="h-7 w-7" />,
@@ -296,30 +305,47 @@ const PLAN_THEME: Partial<
   },
 };
 
+const formatSince = (date?: string) =>
+  date
+    ? new Date(date.replace(' ', 'T')).toLocaleDateString('id-ID', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      })
+    : null;
+
 function PlanCard({
   plan,
   label,
-  pinCount,
-  upgrading,
-  disabled,
+  pinCount = 0,
+  upgrading = false,
+  disabled = false,
   onUpgrade,
+  current,
 }: {
   plan: TypePlan;
   label: string;
-  pinCount: number;
-  upgrading: boolean;
-  disabled: boolean;
-  onUpgrade: () => void;
+  pinCount?: number;
+  upgrading?: boolean;
+  disabled?: boolean;
+  onUpgrade?: () => void;
+  // diisi untuk kartu paket yang sedang dipakai member
+  current?: { since?: string; isHighest: boolean };
 }) {
   const theme = PLAN_THEME[plan];
   const benefits = PLAN_BENEFITS[plan] ?? [];
   const hasPin = pinCount > 0;
+  const since = formatSince(current?.since);
 
   return (
     <div
       className={cn(
-        'flex flex-col overflow-hidden rounded-3xl border bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl',
-        theme?.ring
+        'flex flex-col overflow-hidden rounded-3xl border bg-white shadow-sm transition-all duration-300',
+        theme?.ring,
+        // setelah theme.ring supaya ring hijau "Paket Anda" tidak tertimpa
+        current
+          ? 'ring-2 ring-green-400 ring-offset-2'
+          : 'hover:-translate-y-1 hover:shadow-xl'
       )}
     >
       <div
@@ -328,9 +354,10 @@ function PlanCard({
           theme?.header
         )}
       >
-        {theme?.badge && (
-          <span className="absolute right-5 top-5 rounded-full bg-white/25 px-3 py-1 text-xs font-semibold backdrop-blur">
-            {theme.badge}
+        {(current || theme?.badge) && (
+          <span className="absolute right-5 top-5 inline-flex items-center gap-1 rounded-full bg-white/25 px-3 py-1 text-xs font-semibold backdrop-blur">
+            {current && <PiSealCheckFill className="h-3.5 w-3.5" />}
+            {current ? 'Paket Anda' : theme?.badge}
           </span>
         )}
         <span className="mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-white/20">
@@ -358,46 +385,61 @@ function PlanCard({
           ))}
         </ul>
 
-        <div className="mt-auto space-y-3">
-          <div
-            className={cn(
-              'flex items-center justify-between rounded-xl px-4 py-2.5 text-sm',
-              hasPin ? 'bg-green-50 text-green-700' : 'bg-gray-50 text-gray-600'
+        {current ? (
+          <div className="mt-auto space-y-2">
+            <div className="flex items-center justify-center gap-2 rounded-xl bg-green-50 px-4 py-3 text-sm font-semibold text-green-700">
+              <PiSealCheckFill className="h-5 w-5" />
+              {current.isHighest
+                ? 'Anda sudah di paket tertinggi'
+                : 'Paket aktif Anda'}
+            </div>
+            {since && (
+              <p className="text-center text-xs text-gray-500">
+                Aktif sejak {since}
+              </p>
             )}
-          >
-            <span>{getPinLabel(plan)} aktif Anda</span>
-            <strong className="text-base">{pinCount}</strong>
           </div>
+        ) : (
+          <div className="mt-auto space-y-3">
+            <div
+              className={cn(
+                'flex items-center justify-between rounded-xl px-4 py-2.5 text-sm',
+                hasPin
+                  ? 'bg-green-50 text-green-700'
+                  : 'bg-gray-50 text-gray-600'
+              )}
+            >
+              <span>{getPinLabel(plan)} aktif Anda</span>
+              <strong className="text-base">{pinCount}</strong>
+            </div>
 
-          {hasPin ? (
+            {/* upgrade butuh 1 PIN paket tujuan; tanpa PIN tombol disabled */}
             <Button
               size="lg"
-              disabled={disabled}
+              disabled={!hasPin || disabled}
               isLoading={upgrading}
               onClick={onUpgrade}
               className={cn(
-                'w-full gap-2 border-0 bg-gradient-to-r font-semibold text-white shadow-md hover:brightness-105',
-                theme?.button
+                'w-full gap-2 border-0 font-semibold',
+                hasPin
+                  ? cn(
+                      'bg-gradient-to-r text-white shadow-md hover:brightness-105',
+                      theme?.button
+                    )
+                  : 'bg-gray-100 text-gray-400'
               )}
             >
               <PiArrowCircleUpBold className="h-5 w-5" />
-              Upgrade ke {label} Sekarang
+              Upgrade ke {label}
             </Button>
-          ) : (
-            <Link prefetch={false} href={routes.produk.index} className="block">
-              <Button
-                size="lg"
-                className={cn(
-                  'w-full gap-2 border-0 bg-gradient-to-r font-semibold text-white shadow-md hover:brightness-105',
-                  theme?.button
-                )}
-              >
-                <PiShoppingCartBold className="h-5 w-5" />
-                Beli {getPinLabel(plan)} untuk Upgrade
-              </Button>
-            </Link>
-          )}
-        </div>
+            {!hasPin && (
+              <p className="text-center text-xs text-gray-500">
+                Butuh 1 {getPinLabel(plan)}. Minta transfer PIN dari stockist
+                untuk mengaktifkan tombol upgrade.
+              </p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -49,6 +49,23 @@ export const SALARY_RULE: Partial<
   plan_a: { point: 30, amount: 'Rp 1.500.000' },
 };
 
+// keuntungan per paket untuk ditampilkan di Upgrade Paket (sumber: materi klien)
+export const PLAN_BENEFITS: Partial<Record<TypePlan, string[]>> = {
+  plan_b: [
+    'Bonus Sponsor Rp20.000',
+    'Bonus Pasangan Rp10.000 / pasang',
+    'Flush in 200 pasang / hari (Rp2.000.000 / hari)',
+    'Gaji berulang setiap 50 : 50 = Rp1.000.000, tanpa batas',
+  ],
+  plan_a: [
+    'Bonus Sponsor 5 generasi (Gen 1 Rp50.000, Gen 2–5 Rp10.000)',
+    'Bonus Pasangan Rp40.000 / pasang',
+    'Flush in maks. 50 pasang / hari (Rp2.000.000 / hari)',
+    'Gaji berulang setiap 30 : 30 = Rp1.500.000, tanpa batas',
+    'Berhak klaim semua reward & bonus yang terkunci',
+  ],
+};
+
 // status komisi / tier dari backend
 export type LockStatus = 'ACTIVE' | 'LOCKED' | 'EXPIRED';
 

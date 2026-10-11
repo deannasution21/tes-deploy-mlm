@@ -5,6 +5,14 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Alert, Button, Text } from 'rizzui';
+import {
+  PiCheckCircleFill,
+  PiCrownFill,
+  PiShoppingCartBold,
+  PiArrowCircleUpBold,
+  PiStarFill,
+} from 'react-icons/pi';
+import cn from '@core/utils/class-names';
 import Swal from 'sweetalert2';
 import WidgetCard from '@core/components/cards/widget-card';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
@@ -12,6 +20,7 @@ import { routes } from '@/config/routes';
 import {
   getPinLabel,
   getPlanLabel,
+  PLAN_BENEFITS,
   PLAN_OPTIONS,
   TypePlan,
 } from '@/config/plans';
@@ -235,49 +244,160 @@ export default function UpgradePaketPage() {
             </Text>
           </Alert>
         ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {upgradeOptions.map(({ value, label }) => {
-              const pinCount = pinSummary?.[value] ?? 0;
-
-              return (
-                <div
-                  key={value}
-                  className="flex flex-col justify-between rounded-2xl border bg-white p-5 shadow-sm"
-                >
-                  <div className="space-y-2">
-                    <Text className="text-xl font-bold text-gray-800">
-                      {label}
-                    </Text>
-                    <Text className="text-sm text-gray-600">
-                      Harga {getPinLabel(value)}: {PIN_PRICE[value]}
-                    </Text>
-                    <Text className="text-sm text-gray-600">
-                      {getPinLabel(value)} aktif Anda:{' '}
-                      <strong>{pinCount}</strong>
-                    </Text>
-                  </div>
-
-                  <div className="mt-4 flex flex-wrap gap-3">
-                    <Button
-                      disabled={pinCount < 1 || !!upgrading}
-                      isLoading={upgrading === value}
-                      onClick={() => handleUpgrade(value)}
-                    >
-                      Upgrade ke {label}
-                    </Button>
-                    {pinCount < 1 && (
-                      <Link prefetch={false} href={routes.produk.index}>
-                        <Button variant="outline">
-                          Beli {getPinLabel(value)}
-                        </Button>
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+          <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2">
+            {upgradeOptions.map(({ value, label }) => (
+              <PlanCard
+                key={value}
+                plan={value}
+                label={label}
+                pinCount={pinSummary?.[value] ?? 0}
+                upgrading={upgrading === value}
+                disabled={!!upgrading}
+                onUpgrade={() => handleUpgrade(value)}
+              />
+            ))}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+const PLAN_THEME: Partial<
+  Record<
+    TypePlan,
+    {
+      header: string;
+      icon: React.ReactNode;
+      check: string;
+      button: string;
+      ring: string;
+      tagline: string;
+      badge?: string;
+    }
+  >
+> = {
+  plan_b: {
+    header: 'from-sky-500 via-blue-500 to-indigo-600',
+    icon: <PiStarFill className="h-7 w-7" />,
+    check: 'text-blue-500',
+    button: 'from-sky-500 to-indigo-600',
+    ring: 'border-blue-100',
+    tagline: 'Mulai dapatkan bonus sponsor, pasangan & gaji berulang',
+  },
+  plan_a: {
+    header: 'from-[#AA8453] via-[#c69731] to-[#e0b84a]',
+    icon: <PiCrownFill className="h-7 w-7" />,
+    check: 'text-[#c69731]',
+    button: 'from-[#c69731] via-[#e0b84a] to-[#AA8453]',
+    ring: 'border-amber-200 ring-2 ring-amber-100',
+    tagline: 'Paket terlengkap: semua bonus, gaji & reward terbuka',
+    badge: 'Paling Lengkap',
+  },
+};
+
+function PlanCard({
+  plan,
+  label,
+  pinCount,
+  upgrading,
+  disabled,
+  onUpgrade,
+}: {
+  plan: TypePlan;
+  label: string;
+  pinCount: number;
+  upgrading: boolean;
+  disabled: boolean;
+  onUpgrade: () => void;
+}) {
+  const theme = PLAN_THEME[plan];
+  const benefits = PLAN_BENEFITS[plan] ?? [];
+  const hasPin = pinCount > 0;
+
+  return (
+    <div
+      className={cn(
+        'flex flex-col overflow-hidden rounded-3xl border bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl',
+        theme?.ring
+      )}
+    >
+      <div
+        className={cn(
+          'relative bg-gradient-to-br px-6 pb-6 pt-5 text-white',
+          theme?.header
+        )}
+      >
+        {theme?.badge && (
+          <span className="absolute right-5 top-5 rounded-full bg-white/25 px-3 py-1 text-xs font-semibold backdrop-blur">
+            {theme.badge}
+          </span>
+        )}
+        <span className="mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-white/20">
+          {theme?.icon}
+        </span>
+        <p className="text-2xl font-bold">{label}</p>
+        <p className="mt-1 text-sm text-white/85">{theme?.tagline}</p>
+        <p className="mt-4">
+          <span className="text-3xl font-extrabold">{PIN_PRICE[plan]}</span>
+          <span className="ms-1 text-sm text-white/80">
+            / {getPinLabel(plan)}
+          </span>
+        </p>
+      </div>
+
+      <div className="flex flex-1 flex-col gap-5 p-6">
+        <ul className="space-y-3">
+          {benefits.map((benefit) => (
+            <li key={benefit} className="flex items-start gap-2.5 text-sm">
+              <PiCheckCircleFill
+                className={cn('mt-0.5 h-5 w-5 shrink-0', theme?.check)}
+              />
+              <span className="text-gray-700">{benefit}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-auto space-y-3">
+          <div
+            className={cn(
+              'flex items-center justify-between rounded-xl px-4 py-2.5 text-sm',
+              hasPin ? 'bg-green-50 text-green-700' : 'bg-gray-50 text-gray-600'
+            )}
+          >
+            <span>{getPinLabel(plan)} aktif Anda</span>
+            <strong className="text-base">{pinCount}</strong>
+          </div>
+
+          {hasPin ? (
+            <Button
+              size="lg"
+              disabled={disabled}
+              isLoading={upgrading}
+              onClick={onUpgrade}
+              className={cn(
+                'w-full gap-2 border-0 bg-gradient-to-r font-semibold text-white shadow-md hover:brightness-105',
+                theme?.button
+              )}
+            >
+              <PiArrowCircleUpBold className="h-5 w-5" />
+              Upgrade ke {label} Sekarang
+            </Button>
+          ) : (
+            <Link prefetch={false} href={routes.produk.index} className="block">
+              <Button
+                size="lg"
+                className={cn(
+                  'w-full gap-2 border-0 bg-gradient-to-r font-semibold text-white shadow-md hover:brightness-105',
+                  theme?.button
+                )}
+              >
+                <PiShoppingCartBold className="h-5 w-5" />
+                Beli {getPinLabel(plan)} untuk Upgrade
+              </Button>
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );

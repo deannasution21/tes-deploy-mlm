@@ -82,8 +82,8 @@ function PointRow({
   );
 }
 
-// Point Promo Mobil, Promo Wisata & Pasif disembunyikan dari node diagram;
-// ubah ke true untuk menampilkan lagi
+// Point Promo Mobil & Promo Wisata disembunyikan dari node diagram
+// (tampil di halaman Promo Tahunan); ubah ke true untuk menampilkan lagi
 const SHOW_EXTRA_POINTS = false;
 
 type TreeProps = {
@@ -162,6 +162,31 @@ function Tree({ data, session }: TreeProps) {
                 RO: {node.ro_count ?? 0}
               </Badge>
             </div>
+            {/* point_pasif_* = poin dari paket Pendaftaran */}
+            <PointRow
+              label="Point Pendaftaran"
+              textClass="text-orange-600"
+              color="warning"
+              active={[node.point_pasif_left, node.point_pasif_right]}
+              view={[node.point_pasif_view_left, node.point_pasif_view_right]}
+              expired={[
+                node.point_pasif_expired_left,
+                node.point_pasif_expired_right,
+              ]}
+              lock={node.lock_status?.free_source}
+            />
+            <PointRow
+              label="Point Star"
+              textClass="text-primary"
+              color="primary"
+              active={[node.point_plan_b_left, node.point_plan_b_right]}
+              view={[node.point_plan_b_view_left, node.point_plan_b_view_right]}
+              expired={[
+                node.point_plan_b_expired_left,
+                node.point_plan_b_expired_right,
+              ]}
+              lock={node.lock_status?.plan_b_source}
+            />
             <PointRow
               label="Point Business"
               textClass="text-red-600"
@@ -176,18 +201,6 @@ function Tree({ data, session }: TreeProps) {
                 node.point_plan_a_expired_right,
               ]}
               lock={node.lock_status?.plan_a_source}
-            />
-            <PointRow
-              label="Point Star"
-              textClass="text-primary"
-              color="primary"
-              active={[node.point_plan_b_left, node.point_plan_b_right]}
-              view={[node.point_plan_b_view_left, node.point_plan_b_view_right]}
-              expired={[
-                node.point_plan_b_expired_left,
-                node.point_plan_b_expired_right,
-              ]}
-              lock={node.lock_status?.plan_b_source}
             />
             {SHOW_EXTRA_POINTS && node?.promo_points && (
               <>
@@ -234,20 +247,6 @@ function Tree({ data, session }: TreeProps) {
                   </Badge>
                 </div>
               </>
-            )}
-            {SHOW_EXTRA_POINTS && (
-              <PointRow
-                label="Point Pasif"
-                textClass="text-orange-600"
-                color="warning"
-                active={[node.point_pasif_left, node.point_pasif_right]}
-                view={[node.point_pasif_view_left, node.point_pasif_view_right]}
-                expired={[
-                  node.point_pasif_expired_left,
-                  node.point_pasif_expired_right,
-                ]}
-                lock={node.lock_status?.free_source}
-              />
             )}
           </Link>
         ) : currentUpline ? (

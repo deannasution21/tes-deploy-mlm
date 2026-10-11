@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useReactToPrint } from 'react-to-print';
 import { Alert, Badge, Button, Text } from 'rizzui';
 import Swal from 'sweetalert2';
 import { toast } from 'react-hot-toast';
@@ -15,7 +17,9 @@ import {
   RewardPasifResponse,
   RewardPasifTier,
   RewardTierStatus,
+  VoucherDetail,
 } from '@/types/reward-pasif';
+import VoucherPrint from './voucher-print';
 
 const TIER_STATUS: Record<
   RewardTierStatus,
@@ -49,6 +53,20 @@ export default function RewardPasifPage() {
   const [claimingId, setClaimingId] = useState<string | null>(null);
   const [data, setData] = useState<RewardPasifData | null>(null);
 
+  // voucher yang sedang dicetak; react-to-print membuka dialog print
+  // (bisa "Save as PDF") dari elemen VoucherPrint di bawah
+  const printRef = useRef<HTMLDivElement>(null);
+  const [printVoucher, setPrintVoucher] = useState<VoucherDetail | null>(null);
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: printVoucher?.voucher_code ?? 'Voucher',
+    onAfterPrint: () => setPrintVoucher(null),
+  });
+
+  useEffect(() => {
+    if (printVoucher) handlePrint();
+  }, [printVoucher]);
+
   const getData = () => {
     if (!session?.accessToken) return;
 
@@ -75,6 +93,7 @@ export default function RewardPasifPage() {
       {
         method: 'POST',
         body: JSON.stringify({
+          username: session.user?.id,
           type: 'claim_reward',
           tier_id: tier.id,
           type_plan: 'free',
@@ -83,13 +102,22 @@ export default function RewardPasifPage() {
       session.accessToken
     )
       .then((res) => {
+        const voucher = res?.data?.voucher_detail;
+        const message =
+          res?.message ?? `Reward <b>${tier.name}</b> berhasil diklaim.`;
+
         Swal.fire({
           title: 'Klaim Berhasil',
-          html: `${res?.message ?? `Reward <b>${tier.name}</b> berhasil diklaim.`}<br/><br/>Reward diklaim, menunggu pencairan oleh admin.`,
+          html: voucher
+            ? `${message}<br/><br/>Voucher Anda siap dicetak.`
+            : `${message}<br/><br/>Reward diklaim, menunggu pencairan oleh admin.`,
           icon: 'success',
-          confirmButtonText: 'Tutup',
+          confirmButtonText: voucher ? 'Cetak Voucher' : 'Tutup',
           confirmButtonColor: '#ca8a04',
-        }).then(() => getData());
+        }).then(() => {
+          if (voucher?.printable) setPrintVoucher(voucher);
+          getData();
+        });
       })
       .catch((error: any) => {
         console.error(error);
@@ -161,8 +189,18 @@ export default function RewardPasifPage() {
             </li>
             <li>
               <Text className="break-normal">
-                Reward yang sudah diklaim akan diproses dan menunggu pencairan
-                oleh admin.
+                Klaim reward hanya untuk akun paket <strong>Business</strong>.
+              </Text>
+            </li>
+            <li>
+              <Text className="break-normal">
+                Reward voucher dapat dicetak setelah diklaim. Tunjukkan voucher
+                ke perusahaan untuk penebusan hadiah.
+              </Text>
+            </li>
+            <li>
+              <Text className="break-normal">
+                Reward tunai yang sudah diklaim menunggu pencairan oleh admin.
               </Text>
             </li>
             <li>
@@ -174,12 +212,26 @@ export default function RewardPasifPage() {
           </ol>
         </Alert>
 
-        {!user?.can_claim_reward && (
+        {user?.type_plan !== 'plan_a' ? (
           <Alert variant="flat" color="warning">
             <Text className="break-normal">
-              Akun Anda saat ini belum dapat mengklaim reward.
+              Klaim reward hanya untuk akun paket Business. Upgrade paket Anda
+              agar reward yang tercapai dapat diklaim.
             </Text>
+            <Link prefetch={false} href={routes.upgradePaket.index}>
+              <Button size="sm" className="mt-3">
+                Upgrade Paket
+              </Button>
+            </Link>
           </Alert>
+        ) : (
+          !user?.can_claim_reward && (
+            <Alert variant="flat" color="warning">
+              <Text className="break-normal">
+                Akun Anda saat ini belum dapat mengklaim reward.
+              </Text>
+            </Alert>
+          )
         )}
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -192,7 +244,7 @@ export default function RewardPasifPage() {
             value={`${(user?.point_pasif_left ?? 0).toLocaleString('id-ID')} / ${(user?.point_pasif_right ?? 0).toLocaleString('id-ID')}`}
           />
           <SummaryCard
-            title="Total Reward Diklaim"
+            title="Total Reward Tunai Diklaim"
             value={`Rp ${(user?.claimed_total ?? 0).toLocaleString('id-ID')}`}
           />
         </div>
@@ -231,9 +283,14 @@ export default function RewardPasifPage() {
                       <p className="text-xs text-gray-500">
                         Poin pasif kiri : kanan
                       </p>
-                      {tier.amount > 0 && (
+                      {tier.reward_type !== 'voucher' && tier.amount > 0 && (
                         <p className="text-sm text-gray-600">
                           Rp {tier.amount.toLocaleString('id-ID')}
+                        </p>
+                      )}
+                      {tier.status === 'claimed' && tier.claimed_at && (
+                        <p className="text-xs text-gray-500">
+                          Diklaim {formatDateID(tier.claimed_at)}
                         </p>
                       )}
                       <p className="text-xs text-gray-500">
@@ -255,20 +312,77 @@ export default function RewardPasifPage() {
 
                     <div className="my-3 border-t"></div>
 
-                    <Button
-                      size="sm"
-                      disabled={tier.can_claim !== true || !!claimingId}
-                      isLoading={claimingId === tier.id}
-                      onClick={() => handleClaim(tier)}
-                    >
-                      {tier.can_claim === true ? 'Klaim Reward' : status.label}
-                    </Button>
+                    {tier.can_claim === true ? (
+                      <Button
+                        size="sm"
+                        disabled={!!claimingId}
+                        isLoading={claimingId === tier.id}
+                        onClick={() => handleClaim(tier)}
+                      >
+                        Klaim Reward
+                      </Button>
+                    ) : tier.status === 'claimed' &&
+                      tier.voucher_detail?.printable ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setPrintVoucher(tier.voucher_detail!)}
+                      >
+                        Download / Print Voucher
+                      </Button>
+                    ) : (
+                      <Button size="sm" disabled>
+                        {tier.status === 'claimed' ? 'Selesai' : status.label}
+                      </Button>
+                    )}
                   </div>
                 </div>
               );
             })}
           </div>
         </WidgetCard>
+
+        {(data.claimed_vouchers?.length ?? 0) > 0 && (
+          <WidgetCard
+            title={<span className="text-[#c69731]">Voucher Saya</span>}
+            titleClassName="text-gray-700 font-bold text-2xl sm:text-2xl font-inter mb-5"
+          >
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {data.claimed_vouchers!.map((voucher) => (
+                <div
+                  key={voucher.voucher_code}
+                  className="flex flex-col justify-between gap-3 rounded-xl border border-dashed border-[#c69731] p-4"
+                >
+                  <div>
+                    <p className="font-mono text-xs text-gray-500">
+                      {voucher.voucher_code}
+                    </p>
+                    <p className="text-lg font-bold text-gray-800">
+                      {voucher.title}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Diklaim {formatDateID(voucher.claimed_at)}
+                    </p>
+                  </div>
+                  {voucher.printable && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setPrintVoucher(voucher)}
+                    >
+                      Download / Print Voucher
+                    </Button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </WidgetCard>
+        )}
+      </div>
+
+      {/* sumber cetak, tidak tampil di layar */}
+      <div className="hidden">
+        {printVoucher && <VoucherPrint ref={printRef} voucher={printVoucher} />}
       </div>
     </div>
   );

@@ -14,7 +14,25 @@ export interface RewardPasifData {
   detail_users: RewardPasifUser;
   reward_config_key?: string;
   lock_rules_active?: boolean;
+  // voucher yang sudah diklaim, siap dicetak
+  claimed_vouchers?: VoucherDetail[];
   reward_tiers: RewardPasifTier[];
+}
+
+export type RewardType = 'voucher' | 'cash';
+
+// dicetak di FE (bukan file dari backend)
+export interface VoucherDetail {
+  voucher_code: string;
+  title: string;
+  tier_id?: string;
+  username?: string;
+  holder_name: string;
+  claimed_at: string;
+  claimed_by?: string;
+  status?: string;
+  printable: boolean;
+  note?: string;
 }
 
 export interface RewardPasifUser {
@@ -42,6 +60,10 @@ export interface RewardPasifTier {
   name: string;
   point_required: number;
   amount: number;
+  reward_type?: RewardType;
+  voucher?: string | null;
+  voucher_detail?: VoucherDetail | null;
+  claimed_at?: string | null;
   status: RewardTierStatus;
   lock_status: LockStatus | null;
   claim_status?: string | null;
@@ -56,14 +78,16 @@ export interface RewardPasifTier {
   };
 }
 
-// POST /_transactions { type: 'claim_reward', tier_id, type_plan: 'free' }
+// POST /_transactions { username, type: 'claim_reward', tier_id, type_plan: 'free' }
+// hanya untuk diri sendiri & paket Business (plan_a), selain itu 400
 export interface ClaimRewardResponse {
   code: number;
   message: string;
   data: {
     status: 'claimed';
-    tier: { id: string; name: string; amount: number };
-    claimed_at: string;
-    claimed_by: string;
+    reward_type?: RewardType;
+    voucher?: string | null;
+    // null untuk reward cash
+    voucher_detail?: VoucherDetail | null;
   };
 }

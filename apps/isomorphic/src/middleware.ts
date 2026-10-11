@@ -76,6 +76,7 @@ export const config = {
     '/withdrawal-gaji/:path*',
     '/reward-pasif',
     '/upgrade-paket',
+    '/voucher-reward',
 
     // pin
     '/lihat-pin',

@@ -82,6 +82,7 @@ export const rolePermissions = {
       '/member/:path*',
       '/stockist',
       '/stockist/:path*',
+      '/voucher-reward',
       '/profil',
       '/profil/:path*',
     ],

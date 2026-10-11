@@ -1,5 +1,21 @@
 import { forwardRef } from 'react';
+import { Button } from 'rizzui';
+import { PiPrinterBold } from 'react-icons/pi';
 import { VoucherDetail } from '@/types/reward-pasif';
+
+// dipakai di Reward Pasif (member) dan Voucher Reward (admin)
+export function PrintVoucherButton({ onClick }: { onClick: () => void }) {
+  return (
+    <Button
+      size="sm"
+      onClick={onClick}
+      className="w-full gap-2 border-0 bg-gradient-to-r from-[#c69731] via-[#e0b84a] to-[#AA8453] font-semibold text-white shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:brightness-105 active:translate-y-0"
+    >
+      <PiPrinterBold className="h-4 w-4" />
+      Download / Print Voucher
+    </Button>
+  );
+}
 
 const formatDateTimeID = (date: string) =>
   new Date(date).toLocaleString('id-ID', {

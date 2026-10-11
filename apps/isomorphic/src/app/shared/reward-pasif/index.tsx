@@ -19,13 +19,12 @@ import {
   RewardTierStatus,
   VoucherDetail,
 } from '@/types/reward-pasif';
-import VoucherPrint from './voucher-print';
+import VoucherPrint, { PrintVoucherButton } from './voucher-print';
 import {
   PiCheckCircleBold,
   PiGiftBold,
   PiHourglassBold,
   PiLockBold,
-  PiPrinterBold,
   PiRocketLaunchBold,
   PiTargetBold,
   PiXCircleBold,
@@ -650,19 +649,6 @@ function TierFooter({
         </TierNote>
       );
   }
-}
-
-function PrintVoucherButton({ onClick }: { onClick: () => void }) {
-  return (
-    <Button
-      size="sm"
-      onClick={onClick}
-      className="w-full gap-2 border-0 bg-gradient-to-r from-[#c69731] via-[#e0b84a] to-[#AA8453] font-semibold text-white shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:brightness-105 active:translate-y-0"
-    >
-      <PiPrinterBold className="h-4 w-4" />
-      Download / Print Voucher
-    </Button>
-  );
 }
 
 function SummaryCard({ title, value }: { title: string; value: string }) {

@@ -1230,6 +1230,11 @@ export const menuItemsAdmin = [
     icon: <PiTarget />,
   },
   {
+    name: 'Voucher Reward',
+    href: routes.voucherReward.index,
+    icon: <PiGift />,
+  },
+  {
     name: 'Pembayaran',
     href: '#',
     icon: <PiInvoice />,

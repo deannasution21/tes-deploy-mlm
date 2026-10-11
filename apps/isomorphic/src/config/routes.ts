@@ -136,6 +136,9 @@ export const routes = {
   upgradePaket: {
     index: '/upgrade-paket',
   },
+  voucherReward: {
+    index: '/voucher-reward',
+  },
   promo: {
     index: '/promo',
     tahunan: '/promo/tahunan',

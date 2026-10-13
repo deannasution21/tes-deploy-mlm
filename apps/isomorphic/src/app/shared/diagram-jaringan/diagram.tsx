@@ -17,23 +17,23 @@ import imgArrowUp from '@public/assets/img/arrow-up-golden.png';
 import imgRibbon from '@public/assets/img/golden-ribbon.png';
 import { useRouter } from 'next/navigation';
 
-// Poin aktif per jalur (kiri / kanan)
+// Poin per jalur (kiri / kanan) dari field *_view_* = akumulasi poin
 function PointRow({
   label,
   textClass,
   color,
-  active,
+  points,
 }: {
   label: string;
   textClass: string;
   color: 'danger' | 'warning' | 'primary';
-  active: [number?, number?];
+  points: [number?, number?];
 }) {
   return (
     <>
       <p className={`text-[10px] ${textClass}`}>{label}:</p>
       <div className="flex justify-center gap-2">
-        {active.map((value, i) => (
+        {points.map((value, i) => (
           <Badge
             key={i}
             variant="flat"
@@ -135,21 +135,24 @@ function Tree({ data, session }: TreeProps) {
               label="Point Pendaftaran"
               textClass="text-orange-600"
               color="warning"
-              active={[node.point_pasif_left, node.point_pasif_right]}
+              points={[node.point_pasif_view_left, node.point_pasif_view_right]}
             />
             <PointRow
               label="Point Star"
               textClass="text-primary"
               color="primary"
-              active={[node.point_plan_b_left, node.point_plan_b_right]}
+              points={[
+                node.point_plan_b_view_left,
+                node.point_plan_b_view_right,
+              ]}
             />
             <PointRow
               label="Point Business"
               textClass="text-red-600"
               color="danger"
-              active={[
-                node.point_plan_a_left ?? node.point_left,
-                node.point_plan_a_right ?? node.point_right,
+              points={[
+                node.point_plan_a_view_left ?? node.point_left,
+                node.point_plan_a_view_right ?? node.point_right,
               ]}
             />
             {SHOW_EXTRA_POINTS && node?.promo_points && (

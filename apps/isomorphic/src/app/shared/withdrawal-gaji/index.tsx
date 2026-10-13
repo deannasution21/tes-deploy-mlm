@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Alert, Badge, Button, Select, Text, Title } from 'rizzui';
+import { Badge, Button, Select, Text, Title } from 'rizzui';
 import { useSession } from 'next-auth/react';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import cn from '@core/utils/class-names';
@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { routes } from '@/config/routes';
 import { SALARY_RULE, TypePlan, WD_PLAN_OPTIONS } from '@/config/plans';
 import WithdrawalGajiTable from '../tables/withdrawal-gaji';
+import UpgradeToWithdrawBanner from '@/app/shared/upgrade-paket/upgrade-banner';
 import {
   DetailUsers,
   WithdrawalSummaryData,
@@ -202,22 +203,18 @@ export default function WithdrawalGajiPage() {
         />
       </div>
 
-      {belumAktivasiPasif ? (
-        <Alert variant="flat" color="danger">
-          <Text className="font-semibold">
-            Akun Anda Masih Paket Pendaftaran
-          </Text>
-          <Text className="mt-1 break-normal">
-            {dataGaji?.detail_users?.can_withdrawal_salary?.message ??
-              'ID belum aktif, silakan aktivasi terlebih dahulu untuk dapat melakukan penarikan gaji.'}
-          </Text>
-          <Link prefetch={false} href={routes.upgradePaket.index}>
-            <Button size="sm" className="mt-3">
-              Upgrade Paket
-            </Button>
-          </Link>
-        </Alert>
-      ) : dataHistory ? (
+      {/* member paket Pendaftaran: gaji tetap ditampilkan, tombol Cairkan
+          sudah disabled karena can_withdrawal false dari backend */}
+      {belumAktivasiPasif && (
+        <div className="mb-6">
+          <UpgradeToWithdrawBanner
+            what="gaji"
+            message={dataGaji?.detail_users?.can_withdrawal_salary?.message}
+          />
+        </div>
+      )}
+
+      {dataHistory ? (
         <>
           <div className="grid grid-cols-1 gap-6 @4xl:grid-cols-2 @7xl:grid-cols-12 3xl:gap-8">
             {/* FleetStatus first on small screens */}

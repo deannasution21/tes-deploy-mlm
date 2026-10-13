@@ -4,13 +4,16 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { Button, Text } from 'rizzui';
 import { generateSlug } from '@core/utils/generate-slug';
 import Link from 'next/link';
-import { PiGift } from 'react-icons/pi';
+import { PiGift, PiLockBold } from 'react-icons/pi';
+import { routes } from '@/config/routes';
 import ProjectWriteIcon from '@core/components/icons/project-write';
 import { SummaryItem } from '@/types/wd-bonus';
 
 const columnHelper = createColumnHelper<SummaryItem>();
 
-export const getWDBonusColumns = (plan: string) => [
+// canWithdraw=false (member paket Pendaftaran): saldo tetap tampil,
+// tombol diarahkan ke Upgrade Paket
+export const getWDBonusColumns = (plan: string, canWithdraw = true) => [
   {
     id: 'no',
     header: '#',
@@ -41,6 +44,22 @@ export const getWDBonusColumns = (plan: string) => [
       const username = row?.original?.username;
       const amount = row?.original?.balance?.amount;
       const isDisabled = !amount || amount <= 0;
+
+      if (!canWithdraw && !isDisabled) {
+        return (
+          <Link prefetch={false} href={routes.upgradePaket.index}>
+            <Button
+              size="sm"
+              className="gap-1.5 whitespace-nowrap border-0 bg-gradient-to-r from-[#c69731] via-[#e0b84a] to-[#AA8453] font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:brightness-105"
+            >
+              <span className="grid h-5 w-5 place-items-center rounded-full bg-white/25">
+                <PiLockBold className="h-3 w-3" />
+              </span>
+              <span>Upgrade untuk Cairkan</span>
+            </Button>
+          </Link>
+        );
+      }
 
       if (isDisabled) {
         return (

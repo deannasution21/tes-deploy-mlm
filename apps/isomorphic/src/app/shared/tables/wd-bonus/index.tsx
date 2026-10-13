@@ -12,15 +12,17 @@ import { SummaryItem } from '@/types/wd-bonus';
 export default function WDBonusTable({
   datanya,
   plan,
+  canWithdraw = true,
   className,
 }: {
   datanya: SummaryItem[];
   plan: string;
+  canWithdraw?: boolean;
   className?: string;
 }) {
   const { table, setData } = useTanStackTable<SummaryItem>({
     tableData: datanya,
-    columnConfig: getWDBonusColumns(plan),
+    columnConfig: getWDBonusColumns(plan, canWithdraw),
     options: {
       initialState: {
         pagination: {

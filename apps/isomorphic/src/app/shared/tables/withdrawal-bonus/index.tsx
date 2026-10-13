@@ -2,14 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
 import { BankData, BankStatusResponse } from '@/types';
-import { Alert, Button, Select, Text } from 'rizzui';
+import { Alert, Select, Text } from 'rizzui';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { getBankNameByCode } from '@/utils/helper';
-import { routes } from '@/config/routes';
 import { WD_PLAN_OPTIONS } from '@/config/plans';
 import WDBonusTable from '../wd-bonus';
+import UpgradeToWithdrawBanner from '@/app/shared/upgrade-paket/upgrade-banner';
 import { SummaryData, SummaryResponse } from '@/types/wd-bonus';
 
 const tipePlan = WD_PLAN_OPTIONS;
@@ -65,6 +64,10 @@ export default function WithdrawalBonusTable({
       .finally(() => setLoading(false));
   }, [session?.accessToken, selectedPlan]);
 
+  // member paket Pendaftaran: saldo tetap ditampilkan, pencairan dikunci
+  const isMemberPasif =
+    dataUser?.detail_users?.can_withdrawal_bonus?.member_pasif === true;
+
   return (
     <div className="@container">
       <div className="grid grid-cols-1 gap-6 3xl:gap-8">
@@ -89,24 +92,14 @@ export default function WithdrawalBonusTable({
 
         {isLoading ? (
           <p className="py-20 text-center">Sedang memuat data...</p>
-        ) : dataUser?.detail_users?.can_withdrawal_bonus?.member_pasif ===
-          true ? (
-          <Alert variant="flat" color="danger">
-            <Text className="font-semibold">
-              Akun Anda Masih Paket Pendaftaran
-            </Text>
-            <Text className="mt-1 break-normal">
-              {dataUser?.detail_users?.can_withdrawal_bonus?.message ??
-                'ID belum aktif, silakan aktivasi terlebih dahulu untuk dapat melakukan penarikan bonus.'}
-            </Text>
-            <Link prefetch={false} href={routes.upgradePaket.index}>
-              <Button size="sm" className="mt-3">
-                Upgrade Paket
-              </Button>
-            </Link>
-          </Alert>
         ) : (
           <>
+            {isMemberPasif && (
+              <UpgradeToWithdrawBanner
+                what="bonus"
+                message={dataUser?.detail_users?.can_withdrawal_bonus?.message}
+              />
+            )}
             <div className="rounded-lg border border-gray-300 p-5 @3xl:p-7">
               <ul className="grid gap-3">
                 <li className="flex items-center gap-1">
@@ -178,6 +171,7 @@ export default function WithdrawalBonusTable({
             <WDBonusTable
               datanya={dataUser?.summary ?? []}
               plan={selectedPlan}
+              canWithdraw={!isMemberPasif}
             />
           </>
         )}

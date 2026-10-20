@@ -226,7 +226,7 @@ export default function UpgradePaketPage() {
           </Alert>
         )}
 
-        <WindowStatus lockStatus={lockStatus} />
+        {/* <WindowStatus lockStatus={lockStatus} /> */}
 
         {/* paket saat ini + pilihan upgrade dalam satu baris, seperti tabel harga */}
         <div

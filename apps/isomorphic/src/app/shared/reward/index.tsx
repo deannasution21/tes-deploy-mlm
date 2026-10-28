@@ -307,7 +307,7 @@ export default function RewardPage() {
           </ol>
         </Alert>
 
-        {user?.type_plan !== 'plan_a' ? (
+        {user?.can_claim_reward === false && user?.type_plan !== 'plan_a' ? (
           <Alert variant="flat" color="warning">
             <Text className="break-normal">
               Klaim reward hanya untuk akun paket Business. Upgrade paket Anda
@@ -320,7 +320,7 @@ export default function RewardPage() {
             </Link>
           </Alert>
         ) : (
-          !user?.can_claim_reward && (
+          user?.can_claim_reward === false && (
             <Alert variant="flat" color="warning">
               <Text className="break-normal">
                 Akun Anda saat ini belum dapat mengklaim reward.
@@ -340,7 +340,12 @@ export default function RewardPage() {
           />
           <SummaryCard
             title="Total Reward Tunai Diklaim"
-            value={`Rp ${(user?.claimed_total ?? 0).toLocaleString('id-ID')}`}
+            value={formatRupiah(user?.claimed_total)}
+            note={
+              user?.balance !== undefined && user?.withdrawn_total !== undefined
+                ? `Sudah ditarik ${formatRupiah(user.withdrawn_total)} · Saldo ${formatRupiah(user.balance)}`
+                : undefined
+            }
           />
         </div>
 
@@ -397,6 +402,10 @@ export default function RewardPage() {
                 disabled={!!claimingId}
                 onClaim={() => handleClaim(tier)}
                 onPrint={() => setPrintVoucher(tier.voucher_detail!)}
+                cash={{
+                  balance: user?.balance,
+                  withdrawn: user?.withdrawn_total,
+                }}
               />
             ))}
           </div>
@@ -444,18 +453,22 @@ export default function RewardPage() {
   );
 }
 
+type CashInfo = { balance?: number; withdrawn?: number };
+
 function TierCard({
   tier,
   claiming,
   disabled,
   onClaim,
   onPrint,
+  cash,
 }: {
   tier: RewardPasifTier;
   claiming: boolean;
   disabled: boolean;
   onClaim: () => void;
   onPrint: () => void;
+  cash: CashInfo;
 }) {
   const theme = TIER_THEME[tier.status] ?? TIER_THEME.not_reached;
   const percent = Math.min(tier.progress?.percent ?? 0, 100);
@@ -536,6 +549,7 @@ function TierCard({
           disabled={disabled}
           onClaim={onClaim}
           onPrint={onPrint}
+          cash={cash}
         />
       </div>
     </div>
@@ -564,18 +578,57 @@ function TierNote({
   );
 }
 
+// Status reward tunai yang sudah diklaim. Teksnya tidak dikirim API; ditentukan
+// dari detail_users.balance (sisa) dan withdrawn_total (sudah ditarik).
+// Keduanya level akun, bukan per kartu.
+function CashClaimNote({ cash }: { cash: CashInfo }) {
+  const { balance, withdrawn } = cash;
+  const known = balance !== undefined && withdrawn !== undefined;
+
+  // field belum dikirim backend / masih ada saldo => belum ditarik
+  if (!known || balance > 0)
+    return (
+      <TierNote
+        className="bg-amber-50 text-amber-700"
+        icon={<PiHourglassBold className="h-4 w-4" />}
+      >
+        {known
+          ? `Reward tunai menunggu pencairan. Saldo reward Anda ${formatRupiah(balance)}.`
+          : 'Reward tunai menunggu pencairan oleh admin.'}
+      </TierNote>
+    );
+
+  if (withdrawn > 0)
+    return (
+      <TierNote
+        className="bg-green-50 text-green-700"
+        icon={<PiCheckCircleBold className="h-4 w-4" />}
+      >
+        Reward tunai sudah dicairkan ({formatRupiah(withdrawn)}).
+      </TierNote>
+    );
+
+  return (
+    <TierNote className="bg-amber-50 text-amber-700">
+      Reward tunai sudah diklaim.
+    </TierNote>
+  );
+}
+
 function TierFooter({
   tier,
   claiming,
   disabled,
   onClaim,
   onPrint,
+  cash,
 }: {
   tier: RewardPasifTier;
   claiming: boolean;
   disabled: boolean;
   onClaim: () => void;
   onPrint: () => void;
+  cash: CashInfo;
 }) {
   if (tier.can_claim === true)
     return (
@@ -597,9 +650,11 @@ function TierFooter({
         <div className="space-y-2">
           {tier.voucher_detail?.printable ? (
             <PrintVoucherButton onClick={onPrint} />
+          ) : tier.claim_as === 'cash' || tier.reward_type === 'cash' ? (
+            <CashClaimNote cash={cash} />
           ) : (
             <TierNote className="bg-amber-50 text-amber-700">
-              Reward tunai menunggu pencairan oleh admin.
+              Voucher sudah diklaim.
             </TierNote>
           )}
           {tier.claimed_at && (
@@ -652,11 +707,23 @@ function TierFooter({
   }
 }
 
-function SummaryCard({ title, value }: { title: string; value: string }) {
+const formatRupiah = (value?: number) =>
+  `Rp ${(value ?? 0).toLocaleString('id-ID')}`;
+
+function SummaryCard({
+  title,
+  value,
+  note,
+}: {
+  title: string;
+  value: string;
+  note?: string;
+}) {
   return (
     <div className="rounded-xl border border-gray-200 bg-gradient-to-br from-amber-50 to-white p-5">
       <p className="text-sm font-medium text-gray-500">{title}</p>
       <p className="mt-1 text-2xl font-bold text-amber-600">{value}</p>
+      {note && <p className="mt-1 text-xs text-gray-500">{note}</p>}
     </div>
   );
 }

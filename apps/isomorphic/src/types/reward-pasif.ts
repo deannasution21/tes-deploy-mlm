@@ -38,13 +38,19 @@ export interface VoucherDetail {
 export interface RewardPasifUser {
   username: string;
   name: string;
-  type_plan: string;
+  // bisa null untuk akun lama; jangan dipakai untuk menentukan hak klaim,
+  // gunakan can_claim_reward
+  type_plan: string | null;
   track_active?: boolean;
   can_claim_reward: boolean;
   point_pasif_left?: number;
   point_pasif_right?: number;
   effective_point: number;
   claimed_total: number;
+  // total reward tunai yang sudah ditarik & sisa saldo reward tunai
+  // (belum ada di semua environment backend, jadi opsional)
+  withdrawn_total?: number;
+  balance?: number;
 }
 
 export type RewardTierStatus =
@@ -61,6 +67,10 @@ export interface RewardPasifTier {
   point_required: number;
   amount: number;
   reward_type?: RewardType;
+  // pilihan saat klaim (cash / voucher); null sebelum diklaim
+  claim_as?: RewardType | null;
+  cash_amount?: number;
+  prize_amount?: number;
   voucher?: string | null;
   voucher_detail?: VoucherDetail | null;
   claimed_at?: string | null;
